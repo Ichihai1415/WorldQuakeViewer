@@ -302,8 +302,8 @@ namespace WorldQuakeViewer
                     USGS5.Text = $"{MMI.Replace("(", "").Replace(")", "")}";
                     USGS6.Text = $"{UpdateTime}発表\n{Latestchecktime}更新\n地図データ:NationalEarth";
                     USGS6.Location = new Point(400 - USGS6.Width, USGS6.Location.Y);
-                    string LogText_ = $"USGS地震情報【{MagType}{Mag}】{Time.Replace("※", "(")})\n{Shingen1}{Shingen2}\n{LatStLong},{LongStLong}　{Depth}\n改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}　{Arart.Replace("アラート:-","")}\n詳細:{LatestURL}";
-                    string RemoteTalkText = $"USGS地震情報。マグニチュード{Mag}、震源、{Shingen1.Replace(" ", "、").Replace("/", "、").Replace("震源:", "")}、{LatStLongJP}、{LongStLongJP}、深さ{Depth.Replace("深さ:", "")}。{$"改正メルカリ震度階級{MMI.Replace("(", "").Replace(")", "")}".Replace("改正メルカリ震度階級-", "")}、{Arart.Replace("アラート:-","")}";
+                    string LogText_ = $"USGS地震情報【{MagType}{Mag}】{Time.Replace("※", "(")})\n{Shingen1}{Shingen2}\n{LatStLong},{LongStLong}　{Depth}\n改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}　{Arart.Replace("アラート:-", "")}\n詳細:{LatestURL}";
+                    string RemoteTalkText = $"USGS地震情報。マグニチュード{Mag}、震源、{Shingen1.Replace(" ", "、").Replace("/", "、").Replace("震源:", "")}、{LatStLongJP}、{LongStLongJP}、深さ{Depth.Replace("深さ:", "")}。{$"改正メルカリ震度階級{MMI.Replace("(", "").Replace(")", "")}".Replace("改正メルカリ震度階級-", "")}、{Arart.Replace("アラート:-", "")}";
                     if (USGSQuakeJson[0].Features[0].Properties.Tsunami == 1)
                     {
                         LogText_ += "\n津波発生の可能性あり。最新情報を確認してください。https://www.tsunami.gov/";
@@ -459,7 +459,6 @@ namespace WorldQuakeViewer
 
                         }
                     }
-
                 }
                 else
                 {
@@ -1256,7 +1255,7 @@ namespace WorldQuakeViewer
         public string LatestId = "";
         public string LatestURL = "";
         public int NetWorkErrorPoint = 0;
-        
+
 
         private void RCsetting_Click(object sender, EventArgs e)
         {
