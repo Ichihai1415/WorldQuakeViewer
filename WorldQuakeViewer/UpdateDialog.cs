@@ -9,9 +9,9 @@ using WorldQuakeViewer.Properties;
 
 namespace WorldQuakeViewer
 {
-    public partial class Dialog : Form
+    public partial class UpdateDialog : Form
     {
-        public Dialog()
+        public UpdateDialog()
         {
             InitializeComponent();
         }

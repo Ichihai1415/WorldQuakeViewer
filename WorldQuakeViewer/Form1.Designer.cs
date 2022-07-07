@@ -106,7 +106,7 @@
             this.USGS6.Name = "USGS6";
             this.USGS6.Size = new System.Drawing.Size(178, 63);
             this.USGS6.TabIndex = 8;
-            this.USGS6.Text = "\r\n\r\nWorldQuakeViewer v2.3";
+            this.USGS6.Text = "\r\n\r\nWorldQuakeViewer v2.4";
             // 
             // USGS4
             // 

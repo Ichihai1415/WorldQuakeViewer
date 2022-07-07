@@ -1,6 +1,6 @@
 ﻿namespace WorldQuakeViewer
 {
-    partial class Dialog
+    partial class UpdateDialog
     {
         /// <summary>
         /// Required designer variable.

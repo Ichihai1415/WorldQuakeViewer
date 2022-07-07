@@ -22,12 +22,62 @@ namespace WorldQuakeViewer
         {
             InitializeComponent();
         }
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            if (Directory.Exists("Logs") == false)
+            {
+                Directory.CreateDirectory("Logs");
+            }
+            if (Directory.Exists("Logs\\ErrorLog") == false)
+            {
+                Directory.CreateDirectory("Logs\\ErrorLog");
+            }
+            if (Directory.Exists("Logs\\M4.5+") == false)
+            {
+                Directory.CreateDirectory("Logs\\M4.5+");
+            }
+            if (Directory.Exists("Logs\\M6.0+") == false)
+            {
+                Directory.CreateDirectory("Logs\\M6.0+");
+            }
+            if (Directory.Exists("Logs\\M8.0+") == false)
+            {
+                Directory.CreateDirectory("Logs\\M8.0+");
+            }
+            try
+            {
+                Settings.Default.Reload();
+                WebClient WC = new WebClient
+                {
+                    Encoding = Encoding.UTF8
+                };
+                Settings.Default.NowVersion = USGS6.Text.Remove(0, 22);
+                Settings.Default.NewVersion = WC.DownloadString("https://raw.githubusercontent.com/Project-S-31415/WorldQuakeViewer/main/Version.txt").Replace("\n", "");
+                Settings.Default.Save();
+
+                if (Settings.Default.NowVersion != Settings.Default.NewVersion)
+                {
+                    UpdateDialog dialog = new UpdateDialog();
+                    dialog.ShowDialog();
+                    if (dialog.DialogResult == DialogResult.OK)
+                    {
+                        Application.Exit();
+                    }
+                }
+            }
+            catch
+            {
+                throw new Exception("ネットワークに接続できません。");
+            }
+
+        }
         private void JsonTimer_Tick(object sender, EventArgs e)
         {
             Settings.Default.Reload();
             JsonTimer.Interval = 30000;
             try
             {
+                ErrorText.Text = "取得中…";
                 Console.WriteLine(DateTime.Now.ToString("HH:mm:ss.fff") + "　動作開始");
 
                 WebClient WC = new WebClient
@@ -252,8 +302,8 @@ namespace WorldQuakeViewer
                     USGS5.Text = $"{MMI.Replace("(", "").Replace(")", "")}";
                     USGS6.Text = $"{UpdateTime}発表\n{Latestchecktime}更新\n地図データ:NationalEarth";
                     USGS6.Location = new Point(400 - USGS6.Width, USGS6.Location.Y);
-                    string LogText_ = $"USGS地震情報【{MagType}{Mag}】{Time.Replace("※", "(")})\n{Shingen1}{Shingen2}\n{LatStLong},{LongStLong}　{Depth}\n改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}\n詳細:{LatestURL}";
-                    string RemoteTalkText = $"USGS地震情報。マグニチュード{Mag}、震源、{Shingen1.Replace(" ", "、").Replace("/", "、").Replace("震源:", "")}、{LatStLongJP}、{LongStLongJP}、深さ{Depth.Replace("深さ:", "")}。{$"改正メルカリ震度階級{MMI.Replace("(", "").Replace(")", "")}".Replace("改正メルカリ震度階級-", "")}、{Arart/*.Replace("アラート:-","")*/}\n情報:{LatestURL}";
+                    string LogText_ = $"USGS地震情報【{MagType}{Mag}】{Time.Replace("※", "(")})\n{Shingen1}{Shingen2}\n{LatStLong},{LongStLong}　{Depth}\n改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}　{Arart.Replace("アラート:-","")}\n詳細:{LatestURL}";
+                    string RemoteTalkText = $"USGS地震情報。マグニチュード{Mag}、震源、{Shingen1.Replace(" ", "、").Replace("/", "、").Replace("震源:", "")}、{LatStLongJP}、{LongStLongJP}、深さ{Depth.Replace("深さ:", "")}。{$"改正メルカリ震度階級{MMI.Replace("(", "").Replace(")", "")}".Replace("改正メルカリ震度階級-", "")}、{Arart.Replace("アラート:-","")}";
                     if (USGSQuakeJson[0].Features[0].Properties.Tsunami == 1)
                     {
                         LogText_ += "\n津波発生の可能性あり。最新情報を確認してください。https://www.tsunami.gov/";
@@ -266,7 +316,7 @@ namespace WorldQuakeViewer
                     }
                     try
                     {
-                        string LogText = File.ReadAllText($"Log\\M4.5+\\{DateTime.Now:yyyyMMdd}.txt") + "\n--------------------------------------------------\n" + LogText_;
+                        string LogText = File.ReadAllText($"Log\\M4.5+\\{DateTime.Now:yyyyMMdd}.txt") + "\n----------------------------------------------------------------------\n" + LogText_;
                         File.WriteAllText($"Log\\M4.5+\\{DateTime.Now:yyyyMMdd}.txt", LogText);
                     }
                     catch
@@ -317,7 +367,7 @@ namespace WorldQuakeViewer
                         }
                         try
                         {
-                            string LogText = File.ReadAllText($"Log\\M6.0+\\{DateTime.Now:yyyyMMdd}.txt") + "\n--------------------------------------------------\n" + LogText_;
+                            string LogText = File.ReadAllText($"Log\\M6.0+\\{DateTime.Now:yyyyMMdd}.txt") + "\n----------------------------------------------------------------------\n" + LogText_;
                             File.WriteAllText($"Log\\M6.0+\\{DateTime.Now:yyyyMMdd}.txt", LogText);
                         }
                         catch
@@ -341,7 +391,7 @@ namespace WorldQuakeViewer
                             USGS5.ForeColor = Color.Red;
                             try
                             {
-                                string LogText = File.ReadAllText($"Log\\M4.5+\\{DateTime.Now:yyyyMMdd}.txt") + "\n--------------------------------------------------\n" + LogText_;
+                                string LogText = File.ReadAllText($"Log\\M4.5+\\{DateTime.Now:yyyyMMdd}.txt") + "\n----------------------------------------------------------------------\n" + LogText_;
                                 File.WriteAllText($"Log\\M8.0+\\{DateTime.Now:yyyyMMdd}.txt", LogText);
                             }
                             catch
@@ -398,7 +448,7 @@ namespace WorldQuakeViewer
                     {
                         try
                         {
-                            Process.Start(File.ReadAllText("RemoteTalkPath.txt"), $"/Talk {RemoteTalkText.Replace("アラート:-", "")}");
+                            Process.Start(File.ReadAllText("RemoteTalkPath.txt"), $"/Talk {RemoteTalkText}");
                         }
                         catch (FileNotFoundException)
                         {
@@ -410,6 +460,10 @@ namespace WorldQuakeViewer
                         }
                     }
 
+                }
+                else
+                {
+                    ErrorText.Text = "";
                 }
                 USGS6.Text = $"{UpdateTime}発表\n{Latestchecktime}更新\n地図データ:NationalEarth";
                 USGS6.Location = new Point(400 - USGS6.Width, USGS6.Location.Y);
@@ -426,7 +480,7 @@ namespace WorldQuakeViewer
             }
             catch (Exception ex)
             {
-                ErrorText.Text = $"エラーが発生しました。次のフォルダがあることを\n確認してください。\n\n　/Log\n　/Log/ErrorLog\n　/Log/M4.5+\n　/Log/M6.0+\n　/Log/M8.0+\n\n分からない場合、エラーログの内容を\n製作者に報告してください。\n場所:Log/ErrorLog/{DateTime.Now:yyyyMMdd}.txt";
+                ErrorText.Text = $"エラーが発生しました。\nエラーログの内容を報告してください。\n場所:Log/ErrorLog/{DateTime.Now:yyyyMMdd}.txt";
                 try
                 {
                     string ErrorText = File.ReadAllText($"Log\\ErrorLog\\{DateTime.Now:yyyyMMdd}.txt") + "\n--------------------------------------------------\n" + ex;
@@ -1202,35 +1256,7 @@ namespace WorldQuakeViewer
         public string LatestId = "";
         public string LatestURL = "";
         public int NetWorkErrorPoint = 0;
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-            try
-            {
-                Settings.Default.Reload();
-                WebClient WC = new WebClient
-                {
-                    Encoding = Encoding.UTF8
-                };
-                Settings.Default.NowVersion = USGS6.Text.Remove(0, 22);
-                Settings.Default.NewVersion = WC.DownloadString("https://raw.githubusercontent.com/Project-S-31415/WorldQuakeViewer/main/Version.txt").Replace("\n", "");
-                Settings.Default.Save();
-
-                if (Settings.Default.NowVersion != Settings.Default.NewVersion)
-                {
-                    Dialog dialog = new Dialog();
-                    dialog.ShowDialog();
-                    if (dialog.DialogResult == DialogResult.OK)
-                    {
-                        Application.Exit();
-                    }
-                }
-            }
-            catch
-            {
-                throw new Exception("ネットワークに接続できません。");
-            }
-
-        }
+        
 
         private void RCsetting_Click(object sender, EventArgs e)
         {
