@@ -28,27 +28,53 @@ namespace WorldQuakeViewer
                 Main.Text = $"ダウンロードバージョン:v{Settings.Default.NewVersion}\nダウンロード中…";
                 try
                 {
-                    File.Delete($"Updates\\_temp.zip");
+                    File.Delete($"Update\\_temp.zip");
                 }
                 catch
                 {
+
                 }
-                WC.DownloadFile($"https://github.com/Project-S-31415/WorldQuakeViewer/releases/download/WorldQuakeViewer{Settings.Default.NewVersion}/WorldQuakeViewer.v{Settings.Default.NewVersion}.zip", $"Updates\\_temp.zip");
+                WC.DownloadFile($"https://github.com/Project-S-31415/WorldQuakeViewer/releases/download/WorldQuakeViewer{Settings.Default.NewVersion}/WorldQuakeViewer.v{Settings.Default.NewVersion}.zip", $"Update\\_temp.zip");
                 Main.Text += "\nダウンロード終了\n展開中…:";
-                ZipFile.ExtractToDirectory("Updates\\_temp.zip", $"Updates\\v{Settings.Default.NewVersion}");
+                ZipFile.ExtractToDirectory("Update\\_temp.zip", $"Update\\v{Settings.Default.NewVersion}");
                 Main.Text += "\n展開終了";
-                File.Delete("Updates\\_temp.zip");
+                File.Delete("Update\\_temp.zip");
                 Main.Text = $"DL・解凍が完了しました。\n\"v{Settings.Default.NewVersion}\"の中を現在の実行フォルダに\n上書きしてください。\n「終了」を押すと終了します。\n元ファイルの削除も忘れずに行ってください。";
                 string Directory = Path.GetFullPath("WorldQuakeViewerUpdater.exe").Replace("\\WorldQuakeViewerUpdater.exe", "");
                 Process.Start("explorer.exe", Directory);
-                Process.Start("explorer.exe", $"{Directory}\\Updates\\v{Settings.Default.NewVersion}");
+                Process.Start("explorer.exe", $"{Directory}\\Update\\v{Settings.Default.NewVersion}");
             }
             catch (IOException ex)
             {
-                Main.Text = $"エラーが発生しました。\n既にファイルがある可能性があります。\nUpdates/v{Settings.Default.NewVersion}フォルダを削除してください。";
-                Process.Start("explorer.exe", $"Updates");
-                File.WriteAllText($"Log\\ErrorLog\\UpdaterError {DateTime.Now:yyyy-MM-dd}.txt", $"{ex}");
-                Process.Start("notepad.exe", $"Log\\ErrorLog\\UpdaterError {DateTime.Now:yyyy-MM-dd}.txt");
+                Main.Text = $"既にファイルがあります。\nUpdate/v{Settings.Default.NewVersion}フォルダを削除してください。";
+                Process.Start("explorer.exe", $"Update");
+                try
+                {
+                    string ErrorText = File.ReadAllText($"Log\\ErrorLog\\UpdaterFile {DateTime.Now:yyyyMMdd}.txt") + "\n--------------------------------------------------\n" + ex;
+                    File.WriteAllText($"Log\\ErrorLog\\UpdaterFile {DateTime.Now:yyyy/MM/dd}.txt", ErrorText);
+                }
+                catch
+                {
+                    File.WriteAllText($"Log\\ErrorLog\\UpdaterFile {DateTime.Now:yyyyMMdd}.txt", $"{ex}");
+                }
+                Process.Start("notepad.exe", $"Log\\ErrorLog\\UpdaterFile {DateTime.Now:yyyyMMdd}.txt");
+            }
+            catch (WebException)
+            {
+                Main.Text = $"ネットワークに接続できません。";
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    string ErrorText = File.ReadAllText($"Log\\ErrorLog\\UpdaterMain {DateTime.Now:yyyyMMdd}.txt") + "\n--------------------------------------------------\n" + ex;
+                    File.WriteAllText($"Log\\ErrorLog\\UpdaterMain {DateTime.Now:yyyy/MM/dd}.txt", ErrorText);
+                }
+                catch
+                {
+                    File.WriteAllText($"Log\\ErrorLog\\UpdaterMain {DateTime.Now:yyyyMMdd}.txt", $"{ex}");
+                }
+                Process.Start("notepad.exe", $"Log\\ErrorLog\\UpdaterMain {DateTime.Now:yyyyMMdd}.txt");
             }
         }
     }

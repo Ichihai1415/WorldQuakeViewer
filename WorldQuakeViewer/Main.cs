@@ -24,28 +24,29 @@ namespace WorldQuakeViewer
         }
         private void MainForm_Load(object sender, EventArgs e)
         {
-            if (Directory.Exists("Logs") == false)
+            if (Directory.Exists("Log") == false)
             {
-                Directory.CreateDirectory("Logs");
+                Directory.CreateDirectory("Log");
             }
-            if (Directory.Exists("Logs\\ErrorLog") == false)
+            if (Directory.Exists("Log\\ErrorLog") == false)
             {
-                Directory.CreateDirectory("Logs\\ErrorLog");
+                Directory.CreateDirectory("Log\\ErrorLog");
             }
-            if (Directory.Exists("Logs\\M4.5+") == false)
+            if (Directory.Exists("Log\\M4.5+") == false)
             {
-                Directory.CreateDirectory("Logs\\M4.5+");
+                Directory.CreateDirectory("Log\\M4.5+");
             }
-            if (Directory.Exists("Logs\\M6.0+") == false)
+            if (Directory.Exists("Log\\M6.0+") == false)
             {
-                Directory.CreateDirectory("Logs\\M6.0+");
+                Directory.CreateDirectory("Log\\M6.0+");
             }
-            if (Directory.Exists("Logs\\M8.0+") == false)
+            if (Directory.Exists("Log\\M8.0+") == false)
             {
-                Directory.CreateDirectory("Logs\\M8.0+");
+                Directory.CreateDirectory("Log\\M8.0+");
             }
             try
             {
+                ErrorText.Text = "取得中…";
                 Settings.Default.Reload();
                 WebClient WC = new WebClient
                 {
@@ -65,9 +66,9 @@ namespace WorldQuakeViewer
                     }
                 }
             }
-            catch
+            catch (WebException)
             {
-                throw new Exception("ネットワークに接続できません。");
+                throw new WebException("ネットワークに接続できません。");
             }
 
         }
@@ -91,36 +92,12 @@ namespace WorldQuakeViewer
                 List<USGSQuake> USGSQuakeJson = JsonConvert.DeserializeObject<List<USGSQuake>>(USGSQuakeJson_);
                 Console.WriteLine(DateTime.Now.ToString("HH:mm:ss.fff") + "　デシアライズ終了");
                 DateTimeOffset Update = DateTimeOffset.FromUnixTimeMilliseconds((long)USGSQuakeJson[0].Features[0].Properties.Updated).ToLocalTime();
-                Console.WriteLine(Update);
-                string UpdateTime = "";
-                if (Update.Hour < 10)
-                {
-                    UpdateTime = Convert.ToString(Update).Remove(18, 7);
-                }
-                else
-                {
-                    UpdateTime = Convert.ToString(Update).Remove(19, 7);
-                }
+                string UpdateTime = $"{Update:yyyy/MM/dd HH:mm:ss}";
                 DateTimeOffset DataTimeNew = DateTimeOffset.FromUnixTimeMilliseconds((long)USGSQuakeJson[0].Features[0].Properties.Time).ToLocalTime();
-                string TimeNew = "";
-                if (DataTimeNew.Hour < 10)
-                {
-                    TimeNew = Convert.ToString(DataTimeNew).Remove(18, 7);
-                }
-                else
-                {
-                    TimeNew = Convert.ToString(DataTimeNew).Remove(19, 7);
-                }
                 DateTimeOffset DataTimeOld = DateTimeOffset.FromUnixTimeMilliseconds((long)USGSQuakeJson[0].Features[1].Properties.Time).ToLocalTime();
-                string TimeOld = "";
-                if (DataTimeOld.Hour < 10)
-                {
-                    TimeOld = Convert.ToString(DataTimeOld).Remove(18, 7);
-                }
-                else
-                {
-                    TimeOld = Convert.ToString(DataTimeOld).Remove(19, 7);
-                }
+                string TimeNew = $"{DataTimeNew:HHmm}";
+                string TimeOld = $"{DataTimeOld:HHmm}";
+                Console.WriteLine($"{DataTimeNew} {DataTimeOld} {TimeNew} {TimeOld}");
                 if (USGSQuakeJson[0].Features[0].Id != LatestId)
                 {
                     LatestId = USGSQuakeJson[0].Features[0].Id;
@@ -288,6 +265,7 @@ namespace WorldQuakeViewer
                     MainImg.Image = MainBitmap;
                     MainBitmap.Save("Latest.png", ImageFormat.Png);
                     graphics.Dispose();
+                    Console.WriteLine(DateTime.Now.ToString("HH:mm:ss.fff") + "　画像描画終了");
 
                     string MMI = "-";
                     if (USGSQuakeJson[0].Features[0].Properties.Mmi != null)
@@ -302,14 +280,14 @@ namespace WorldQuakeViewer
                     USGS5.Text = $"{MMI.Replace("(", "").Replace(")", "")}";
                     USGS6.Text = $"{UpdateTime}発表\n{Latestchecktime}更新\n地図データ:NationalEarth";
                     USGS6.Location = new Point(400 - USGS6.Width, USGS6.Location.Y);
-                    string LogText_ = $"USGS地震情報【{MagType}{Mag}】{Time.Replace("※", "(")})\n{Shingen1}{Shingen2}\n{LatStLong},{LongStLong}　{Depth}\n改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}　{Arart.Replace("アラート:-", "")}\n詳細:{LatestURL}";
+                    string LogText_ = $"USGS地震情報【{MagType}{Mag}】{Time.Replace("※", "(")})\n{Shingen1}{Shingen2}\n{LatStLong},{LongStLong}　{Depth}\n改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}　{Arart.Replace("アラート:-", "")}\n{LatestURL}";
                     string RemoteTalkText = $"USGS地震情報。マグニチュード{Mag}、震源、{Shingen1.Replace(" ", "、").Replace("/", "、").Replace("震源:", "")}、{LatStLongJP}、{LongStLongJP}、深さ{Depth.Replace("深さ:", "")}。{$"改正メルカリ震度階級{MMI.Replace("(", "").Replace(")", "")}".Replace("改正メルカリ震度階級-", "")}、{Arart.Replace("アラート:-", "")}";
                     if (USGSQuakeJson[0].Features[0].Properties.Tsunami == 1)
                     {
                         LogText_ += "\n津波発生の可能性あり。最新情報を確認してください。https://www.tsunami.gov/";
                         RemoteTalkText += "津波発生の可能性あり。";
                     }
-                    if (TimeOld.Remove(15, 3) == TimeNew.Remove(15, 3))
+                    if (TimeOld == TimeNew)
                     {
                         LogText_.Replace("USGS地震情報", "USGS地震情報(更新)");
                         RemoteTalkText.Replace("USGS地震情報", "USGS地震情報、更新");
@@ -318,16 +296,39 @@ namespace WorldQuakeViewer
                     {
                         string LogText = File.ReadAllText($"Log\\M4.5+\\{DateTime.Now:yyyyMMdd}.txt") + "\n----------------------------------------------------------------------\n" + LogText_;
                         File.WriteAllText($"Log\\M4.5+\\{DateTime.Now:yyyyMMdd}.txt", LogText);
+                    Console.WriteLine(DateTime.Now.ToString("HH:mm:ss.fff") + "　M4.5+ログ出力追加終了");
                     }
                     catch
                     {
                         try
                         {
                             File.WriteAllText($"Log\\M4.5+\\{DateTime.Now:yyyyMMdd}.txt", LogText_);
+                            Console.WriteLine(DateTime.Now.ToString("HH:mm:ss.fff") + "　M4.5+ログ出力新規終了");
                         }
                         catch
                         {
-
+                            if (Directory.Exists("Log") == false)
+                            {
+                                Directory.CreateDirectory("Log");
+                            }
+                            if (Directory.Exists("Log\\ErrorLog") == false)
+                            {
+                                Directory.CreateDirectory("Log\\ErrorLog");
+                            }
+                            if (Directory.Exists("Log\\M4.5+") == false)
+                            {
+                                Directory.CreateDirectory("Log\\M4.5+");
+                            }
+                            if (Directory.Exists("Log\\M6.0+") == false)
+                            {
+                                Directory.CreateDirectory("Log\\M6.0+");
+                            }
+                            if (Directory.Exists("Log\\M8.0+") == false)
+                            {
+                                Directory.CreateDirectory("Log\\M8.0+");
+                            }
+                            File.WriteAllText($"Log\\M4.5+\\{DateTime.Now:yyyyMMdd}.txt", LogText_);
+                            Console.WriteLine(DateTime.Now.ToString("HH:mm:ss.fff") + "　M4.5+ログ出力新規終了(フォルダ新規作成)");
                         }
                     }
                     if (USGSQuakeJson[0].Features[0].Properties.Mag >= 6.0)
@@ -415,14 +416,14 @@ namespace WorldQuakeViewer
                         USGS3.ForeColor = Color.White;
                         USGS4.ForeColor = Color.White;
                         USGS5.ForeColor = Color.White;
-                        string DebugTweetText = $"USGS地震情報【{(Mag.Replace(":", "") + ".0").Replace(".1.0", ".1").Replace(".2.0", ".2").Replace(".3.0", ".3").Replace(".4.0", ".4").Replace(".5.0", ".5").Replace(".6.0", ".6").Replace(".7.0", ".7").Replace(".8.0", ".8").Replace(".9.0", ".9")}】{Time.Replace("※", "(")})\n{Shingen1}{Shingen2}\n{LatStFull},{LongStFull}　{Depth}\n改正メルカリ震度階級:{MaxInt}{MMI}";
-                        Console.WriteLine(DebugTweetText);
                         /*
                         Rectangle Rectangle = new Rectangle(LocX - 185, LocY - 285, 400, 400);
                         Bitmap NewBitmap = MainBitmap.Clone(Rectangle, MainBitmap.PixelFormat);
                         NewBitmap.Save("Latest.png", ImageFormat.Png);
                         NewBitmap.Dispose();*/
                     }
+                    Console.WriteLine(DateTime.Now.ToString("HH:mm:ss.fff") + "　ログ出力終了");
+
                     if (USGSQuakeJson[0].Features[0].Properties.Alert == null)
                     {
                         USGS0.BackColor = Color.Black;
@@ -443,30 +444,51 @@ namespace WorldQuakeViewer
                         USGS0.BackColor = Color.Red;
                         USGS0.ForeColor = Color.White;
                     }
-
+                    Console.WriteLine(DateTime.Now.ToString("HH:mm:ss.fff") + "　RemoteTalk開始");
                     if (Settings.Default.IsRemoteTalk)
                     {
                         try
                         {
-                            Process.Start(File.ReadAllText("RemoteTalkPath.txt"), $"/Talk {RemoteTalkText}");
+                            string RemoteTalkPath = "";
+                            try
+                            {
+                                RemoteTalkPath = File.ReadAllText("RemoteTalkPath.txt");
+                            }
+                            catch (FileNotFoundException)
+                            {
+                                File.WriteAllText("RemoteTalkPath.txt", "");
+                                ErrorText.Text = $"RemoteTalkのパスを\"RemoteTalkPath\"に入力\nしてください。";
+                                Process.Start("notepad.exe", "RemoteTalkPath.txt");
+                            }
+                            Process.Start(RemoteTalkPath, $"/Talk {RemoteTalkText}");
                         }
                         catch (FileNotFoundException)
                         {
-                            File.WriteAllText("RemoteTalkPath.txt", "");
+                            ErrorText.Text = $"RemoteTalkが見つかりません。パスを確認してください。";
+                            Process.Start("notepad.exe", "RemoteTalkPath.txt");
                         }
-                        catch
+                        catch (Exception ex)
                         {
-
+                            ErrorText.Text = $"RemoteTalkへの送信が失敗しました。";
+                            try
+                            {
+                                string ErrorText = File.ReadAllText($"Log\\ErrorLog\\{DateTime.Now:yyyyMMdd}.txt") + "\n--------------------------------------------------\n" + ex;
+                                File.WriteAllText($"Log\\ErrorLog\\RemoteTalk {DateTime.Now:yyyy/MM/dd}.txt", ErrorText);
+                            }
+                            catch
+                            {
+                                File.WriteAllText($"Log\\ErrorLog\\RemoteTalk {DateTime.Now:yyyyMMdd}.txt", $"{ex}");
+                            }
                         }
                     }
+                    Console.WriteLine(DateTime.Now.ToString("HH:mm:ss.fff") + "　RemoteTalk終了");
                 }
                 else
                 {
-                    ErrorText.Text = "";
+                    ErrorText.Text = ErrorText.Text.Replace("取得中…","");
                 }
                 USGS6.Text = $"{UpdateTime}発表\n{Latestchecktime}更新\n地図データ:NationalEarth";
                 USGS6.Location = new Point(400 - USGS6.Width, USGS6.Location.Y);
-                ErrorText.Text = "";
             }
             catch (WebException)
             {
@@ -477,19 +499,33 @@ namespace WorldQuakeViewer
                     Application.Restart();
                 }
             }
-            catch (Exception ex)
+            catch(IOException ex)
             {
-                ErrorText.Text = $"エラーが発生しました。\nエラーログの内容を報告してください。\n場所:Log/ErrorLog/{DateTime.Now:yyyyMMdd}.txt";
+                ErrorText.Text = $"エラーが発生しました。\nエラーログの内容を報告してください。\n場所:Log/ErrorLog/File {DateTime.Now:yyyyMMdd}.txt";
                 try
                 {
-                    string ErrorText = File.ReadAllText($"Log\\ErrorLog\\{DateTime.Now:yyyyMMdd}.txt") + "\n--------------------------------------------------\n" + ex;
-                    File.WriteAllText($"Log\\ErrorLog\\{DateTime.Now:yyyy/MM/dd}.txt", ErrorText);
+                    string ErrorText = File.ReadAllText($"Log\\ErrorLog\\File {DateTime.Now:yyyyMMdd}.txt") + "\n--------------------------------------------------\n" + ex;
+                    File.WriteAllText($"Log\\ErrorLog\\File {DateTime.Now:yyyy/MM/dd}.txt", ErrorText);
                 }
                 catch
                 {
-                    string ErrorText = $"{ex}";
-                    File.WriteAllText($"Log\\ErrorLog\\{DateTime.Now:yyyyMMdd}.txt", ErrorText);
+                    File.WriteAllText($"Log\\ErrorLog\\File {DateTime.Now:yyyyMMdd}.txt", $"{ex}");
+                    Process.Start("notepad.exe", $"Log\\ErrorLog\\File {DateTime.Now:yyyyMMdd}.txt");
                 }
+            }
+            catch (Exception ex)
+            {
+                ErrorText.Text = $"エラーが発生しました。\nエラーログの内容を報告してください。\n場所:Log/ErrorLog/Main {DateTime.Now:yyyyMMdd}.txt";
+                try
+                {
+                    string ErrorText = File.ReadAllText($"Log\\ErrorLog\\Main {DateTime.Now:yyyyMMdd}.txt") + "\n--------------------------------------------------\n" + ex;
+                    File.WriteAllText($"Log\\ErrorLog\\Main {DateTime.Now:yyyy/MM/dd}.txt", ErrorText);
+                }
+                catch
+                {
+                    File.WriteAllText($"Log\\ErrorLog\\Main {DateTime.Now:yyyyMMdd}.txt", $"{ex}");
+                }
+                Process.Start("notepad.exe", $"Log\\ErrorLog\\Main {DateTime.Now:yyyyMMdd}.txt");
             }
         }
         public Dictionary<int, string> HypoName = new Dictionary<int, string>
@@ -1255,50 +1291,35 @@ namespace WorldQuakeViewer
         public string LatestId = "";
         public string LatestURL = "";
         public int NetWorkErrorPoint = 0;
-
-
         private void RCsetting_Click(object sender, EventArgs e)
         {
             SettingsForm Form2 = new SettingsForm();
             Form2.Show();
         }
-
         private void RCusgsmap_Click(object sender, EventArgs e)
         {
             Process.Start("https://earthquake.usgs.gov/earthquakes/map/");
         }
-
         private void RCusgsthis_Click(object sender, EventArgs e)
         {
             Process.Start(LatestURL);
         }
-
-
         private void RCreboot_Click(object sender, EventArgs e)
         {
             Application.Restart();
         }
-
         private void RCexit_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
-
         private void RCgithub_Click(object sender, EventArgs e)
         {
             Process.Start("https://github.com/Project-S-31415");
         }
-
         private void RCtwitter_Click(object sender, EventArgs e)
         {
             Process.Start("https://twitter.com/ProjectS31415_1");
         }
-
-        private void RCameba_Click(object sender, EventArgs e)
-        {
-            Process.Start("https://projects31415softs.amebaownd.com/");
-        }
-
         private void RCopenreadme_Click(object sender, EventArgs e)
         {
             try

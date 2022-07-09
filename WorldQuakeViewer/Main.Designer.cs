@@ -81,7 +81,7 @@
             // 
             this.USGS1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(60)))));
             this.USGS1.Font = new System.Drawing.Font("Koruri Regular", 11F);
-            this.USGS1.Location = new System.Drawing.Point(3, 17);
+            this.USGS1.Location = new System.Drawing.Point(2, 17);
             this.USGS1.Margin = new System.Windows.Forms.Padding(0);
             this.USGS1.Name = "USGS1";
             this.USGS1.Size = new System.Drawing.Size(396, 81);
@@ -104,14 +104,14 @@
             this.USGS6.Font = new System.Drawing.Font("Koruri Regular", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.USGS6.Location = new System.Drawing.Point(259, 449);
             this.USGS6.Name = "USGS6";
-            this.USGS6.Size = new System.Drawing.Size(178, 63);
+            this.USGS6.Size = new System.Drawing.Size(141, 51);
             this.USGS6.TabIndex = 8;
             this.USGS6.Text = "\r\n\r\nWorldQuakeViewer v2.4";
             // 
             // USGS4
             // 
             this.USGS4.Font = new System.Drawing.Font("Koruri Regular", 11F);
-            this.USGS4.Location = new System.Drawing.Point(229, 58);
+            this.USGS4.Location = new System.Drawing.Point(215, 58);
             this.USGS4.Name = "USGS4";
             this.USGS4.Size = new System.Drawing.Size(104, 38);
             this.USGS4.TabIndex = 10;
@@ -131,21 +131,21 @@
             this.RCrebootexit});
             this.RightClick.Name = "RightClick";
             this.RightClick.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.RightClick.Size = new System.Drawing.Size(192, 148);
+            this.RightClick.Size = new System.Drawing.Size(164, 138);
             this.RightClick.TabStop = true;
             this.RightClick.Text = "メニュー";
             // 
             // RCsetting
             // 
             this.RCsetting.Name = "RCsetting";
-            this.RCsetting.Size = new System.Drawing.Size(191, 24);
+            this.RCsetting.Size = new System.Drawing.Size(163, 22);
             this.RCsetting.Text = "設定";
             this.RCsetting.Click += new System.EventHandler(this.RCsetting_Click);
             // 
             // RCbar2
             // 
             this.RCbar2.Name = "RCbar2";
-            this.RCbar2.Size = new System.Drawing.Size(188, 6);
+            this.RCbar2.Size = new System.Drawing.Size(160, 6);
             // 
             // RCusgs
             // 
@@ -154,27 +154,27 @@
             this.RCusgsmap,
             this.RCusgsthis});
             this.RCusgs.Name = "RCusgs";
-            this.RCusgs.Size = new System.Drawing.Size(191, 24);
+            this.RCusgs.Size = new System.Drawing.Size(163, 22);
             this.RCusgs.Text = "USGSサイト";
             // 
             // RCusgsmap
             // 
             this.RCusgsmap.Name = "RCusgsmap";
-            this.RCusgsmap.Size = new System.Drawing.Size(186, 26);
+            this.RCusgsmap.Size = new System.Drawing.Size(150, 22);
             this.RCusgsmap.Text = "マップ";
             this.RCusgsmap.Click += new System.EventHandler(this.RCusgsmap_Click);
             // 
             // RCusgsthis
             // 
             this.RCusgsthis.Name = "RCusgsthis";
-            this.RCusgsthis.Size = new System.Drawing.Size(186, 26);
+            this.RCusgsthis.Size = new System.Drawing.Size(150, 22);
             this.RCusgsthis.Text = "この地震の詳細";
             this.RCusgsthis.Click += new System.EventHandler(this.RCusgsthis_Click);
             // 
             // RCbar4
             // 
             this.RCbar4.Name = "RCbar4";
-            this.RCbar4.Size = new System.Drawing.Size(188, 6);
+            this.RCbar4.Size = new System.Drawing.Size(160, 6);
             // 
             // RCprojects
             // 
@@ -184,46 +184,46 @@
             this.RCtwitter,
             this.RCameba});
             this.RCprojects.Name = "RCprojects";
-            this.RCprojects.Size = new System.Drawing.Size(191, 24);
+            this.RCprojects.Size = new System.Drawing.Size(163, 22);
             this.RCprojects.Text = "制作者ページ";
             // 
             // RCgithub
             // 
             this.RCgithub.Name = "RCgithub";
-            this.RCgithub.Size = new System.Drawing.Size(183, 26);
+            this.RCgithub.Size = new System.Drawing.Size(180, 22);
             this.RCgithub.Text = "GitHub ";
             this.RCgithub.Click += new System.EventHandler(this.RCgithub_Click);
             // 
             // RCtwitter
             // 
             this.RCtwitter.Name = "RCtwitter";
-            this.RCtwitter.Size = new System.Drawing.Size(183, 26);
+            this.RCtwitter.Size = new System.Drawing.Size(180, 22);
             this.RCtwitter.Text = "Twitter";
             this.RCtwitter.Click += new System.EventHandler(this.RCtwitter_Click);
             // 
             // RCameba
             // 
+            this.RCameba.Enabled = false;
             this.RCameba.Name = "RCameba";
-            this.RCameba.Size = new System.Drawing.Size(183, 26);
+            this.RCameba.Size = new System.Drawing.Size(180, 22);
             this.RCameba.Text = "Ameba Ownd";
-            this.RCameba.Click += new System.EventHandler(this.RCameba_Click);
             // 
             // RCbar5
             // 
             this.RCbar5.Name = "RCbar5";
-            this.RCbar5.Size = new System.Drawing.Size(188, 6);
+            this.RCbar5.Size = new System.Drawing.Size(160, 6);
             // 
             // RCopenreadme
             // 
             this.RCopenreadme.Name = "RCopenreadme";
-            this.RCopenreadme.Size = new System.Drawing.Size(191, 24);
+            this.RCopenreadme.Size = new System.Drawing.Size(163, 22);
             this.RCopenreadme.Text = "readme.mdを見る";
             this.RCopenreadme.Click += new System.EventHandler(this.RCopenreadme_Click);
             // 
             // RCbar6
             // 
             this.RCbar6.Name = "RCbar6";
-            this.RCbar6.Size = new System.Drawing.Size(188, 6);
+            this.RCbar6.Size = new System.Drawing.Size(160, 6);
             // 
             // RCrebootexit
             // 
@@ -232,27 +232,27 @@
             this.RCreboot,
             this.RCexit});
             this.RCrebootexit.Name = "RCrebootexit";
-            this.RCrebootexit.Size = new System.Drawing.Size(191, 24);
+            this.RCrebootexit.Size = new System.Drawing.Size(163, 22);
             this.RCrebootexit.Text = "再起動/終了";
             // 
             // RCreboot
             // 
             this.RCreboot.Name = "RCreboot";
-            this.RCreboot.Size = new System.Drawing.Size(137, 26);
+            this.RCreboot.Size = new System.Drawing.Size(110, 22);
             this.RCreboot.Text = "再起動";
             this.RCreboot.Click += new System.EventHandler(this.RCreboot_Click);
             // 
             // RCexit
             // 
             this.RCexit.Name = "RCexit";
-            this.RCexit.Size = new System.Drawing.Size(137, 26);
+            this.RCexit.Size = new System.Drawing.Size(110, 22);
             this.RCexit.Text = "終了";
             this.RCexit.Click += new System.EventHandler(this.RCexit_Click);
             // 
             // USGS2
             // 
             this.USGS2.Font = new System.Drawing.Font("Koruri Regular", 11F);
-            this.USGS2.Location = new System.Drawing.Point(118, 75);
+            this.USGS2.Location = new System.Drawing.Point(103, 75);
             this.USGS2.Name = "USGS2";
             this.USGS2.Size = new System.Drawing.Size(56, 20);
             this.USGS2.TabIndex = 12;
@@ -261,7 +261,7 @@
             // USGS3
             // 
             this.USGS3.Font = new System.Drawing.Font("Koruri Regular", 20F);
-            this.USGS3.Location = new System.Drawing.Point(167, 60);
+            this.USGS3.Location = new System.Drawing.Point(155, 60);
             this.USGS3.Name = "USGS3";
             this.USGS3.Size = new System.Drawing.Size(70, 38);
             this.USGS3.TabIndex = 13;
@@ -270,7 +270,7 @@
             // USGS5
             // 
             this.USGS5.Font = new System.Drawing.Font("Koruri Regular", 20F);
-            this.USGS5.Location = new System.Drawing.Point(325, 59);
+            this.USGS5.Location = new System.Drawing.Point(314, 59);
             this.USGS5.Name = "USGS5";
             this.USGS5.Size = new System.Drawing.Size(84, 38);
             this.USGS5.TabIndex = 14;
@@ -283,7 +283,7 @@
             this.ErrorText.ForeColor = System.Drawing.Color.Yellow;
             this.ErrorText.Location = new System.Drawing.Point(0, 100);
             this.ErrorText.Name = "ErrorText";
-            this.ErrorText.Size = new System.Drawing.Size(0, 28);
+            this.ErrorText.Size = new System.Drawing.Size(0, 22);
             this.ErrorText.TabIndex = 15;
             // 
             // MainForm
