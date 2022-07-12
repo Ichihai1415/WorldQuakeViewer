@@ -86,7 +86,6 @@
             this.USGS1.Name = "USGS1";
             this.USGS1.Size = new System.Drawing.Size(396, 81);
             this.USGS1.TabIndex = 2;
-            this.USGS1.Text = "情報取得中...\r\n";
             // 
             // MainImg
             // 
@@ -102,11 +101,11 @@
             // 
             this.USGS6.AutoSize = true;
             this.USGS6.Font = new System.Drawing.Font("Koruri Regular", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.USGS6.Location = new System.Drawing.Point(259, 449);
+            this.USGS6.Location = new System.Drawing.Point(259, 432);
             this.USGS6.Name = "USGS6";
-            this.USGS6.Size = new System.Drawing.Size(141, 51);
+            this.USGS6.Size = new System.Drawing.Size(141, 68);
             this.USGS6.TabIndex = 8;
-            this.USGS6.Text = "\r\n\r\nWorldQuakeViewer v2.4";
+            this.USGS6.Text = "\r\n\r\n\r\nWorldQuakeViewer v2.4";
             // 
             // USGS4
             // 
@@ -190,14 +189,14 @@
             // RCgithub
             // 
             this.RCgithub.Name = "RCgithub";
-            this.RCgithub.Size = new System.Drawing.Size(180, 22);
+            this.RCgithub.Size = new System.Drawing.Size(146, 22);
             this.RCgithub.Text = "GitHub ";
             this.RCgithub.Click += new System.EventHandler(this.RCgithub_Click);
             // 
             // RCtwitter
             // 
             this.RCtwitter.Name = "RCtwitter";
-            this.RCtwitter.Size = new System.Drawing.Size(180, 22);
+            this.RCtwitter.Size = new System.Drawing.Size(146, 22);
             this.RCtwitter.Text = "Twitter";
             this.RCtwitter.Click += new System.EventHandler(this.RCtwitter_Click);
             // 
@@ -205,7 +204,7 @@
             // 
             this.RCameba.Enabled = false;
             this.RCameba.Name = "RCameba";
-            this.RCameba.Size = new System.Drawing.Size(180, 22);
+            this.RCameba.Size = new System.Drawing.Size(146, 22);
             this.RCameba.Text = "Ameba Ownd";
             // 
             // RCbar5
@@ -252,18 +251,18 @@
             // USGS2
             // 
             this.USGS2.Font = new System.Drawing.Font("Koruri Regular", 11F);
-            this.USGS2.Location = new System.Drawing.Point(103, 75);
+            this.USGS2.Location = new System.Drawing.Point(110, 78);
             this.USGS2.Name = "USGS2";
-            this.USGS2.Size = new System.Drawing.Size(56, 20);
+            this.USGS2.Size = new System.Drawing.Size(50, 20);
             this.USGS2.TabIndex = 12;
             this.USGS2.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
             // USGS3
             // 
             this.USGS3.Font = new System.Drawing.Font("Koruri Regular", 20F);
-            this.USGS3.Location = new System.Drawing.Point(155, 60);
+            this.USGS3.Location = new System.Drawing.Point(153, 60);
             this.USGS3.Name = "USGS3";
-            this.USGS3.Size = new System.Drawing.Size(70, 38);
+            this.USGS3.Size = new System.Drawing.Size(69, 38);
             this.USGS3.TabIndex = 13;
             this.USGS3.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 

@@ -26,13 +26,13 @@ namespace WorldQuakeViewer
                 DLStart.Size = new Size(0, 0);
                 WebClient WC = new WebClient();
                 Main.Text = $"ダウンロードバージョン:v{Settings.Default.NewVersion}\nダウンロード中…";
-                try
+                if (File.Exists($"Update\\_temp.zip"))
                 {
                     File.Delete($"Update\\_temp.zip");
                 }
-                catch
+                if (System.IO.Directory.Exists($"Update\\v{Settings.Default.NewVersion}"))
                 {
-
+                    System.IO.Directory.Delete($"Update\\v{Settings.Default.NewVersion}");
                 }
                 WC.DownloadFile($"https://github.com/Project-S-31415/WorldQuakeViewer/releases/download/WorldQuakeViewer{Settings.Default.NewVersion}/WorldQuakeViewer.v{Settings.Default.NewVersion}.zip", $"Update\\_temp.zip");
                 Main.Text += "\nダウンロード終了\n展開中…:";
@@ -44,21 +44,6 @@ namespace WorldQuakeViewer
                 Process.Start("explorer.exe", Directory);
                 Process.Start("explorer.exe", $"{Directory}\\Update\\v{Settings.Default.NewVersion}");
             }
-            catch (IOException ex)
-            {
-                Main.Text = $"既にファイルがあります。\nUpdate/v{Settings.Default.NewVersion}フォルダを削除してください。";
-                Process.Start("explorer.exe", $"Update");
-                try
-                {
-                    string ErrorText = File.ReadAllText($"Log\\ErrorLog\\UpdaterFile {DateTime.Now:yyyyMMdd}.txt") + "\n--------------------------------------------------\n" + ex;
-                    File.WriteAllText($"Log\\ErrorLog\\UpdaterFile {DateTime.Now:yyyy/MM/dd}.txt", ErrorText);
-                }
-                catch
-                {
-                    File.WriteAllText($"Log\\ErrorLog\\UpdaterFile {DateTime.Now:yyyyMMdd}.txt", $"{ex}");
-                }
-                Process.Start("notepad.exe", $"Log\\ErrorLog\\UpdaterFile {DateTime.Now:yyyyMMdd}.txt");
-            }
             catch (WebException)
             {
                 Main.Text = $"ネットワークに接続できません。";
@@ -67,14 +52,14 @@ namespace WorldQuakeViewer
             {
                 try
                 {
-                    string ErrorText = File.ReadAllText($"Log\\ErrorLog\\UpdaterMain {DateTime.Now:yyyyMMdd}.txt") + "\n--------------------------------------------------\n" + ex;
-                    File.WriteAllText($"Log\\ErrorLog\\UpdaterMain {DateTime.Now:yyyy/MM/dd}.txt", ErrorText);
+                    string ErrorText = File.ReadAllText($"Log\\ErrorLog\\Updater {DateTime.Now:yyyyMMdd}.txt") + "\n--------------------------------------------------\n" + ex;
+                    File.WriteAllText($"Log\\ErrorLog\\Updater {DateTime.Now:yyyy/MM/dd}.txt", ErrorText);
                 }
                 catch
                 {
-                    File.WriteAllText($"Log\\ErrorLog\\UpdaterMain {DateTime.Now:yyyyMMdd}.txt", $"{ex}");
+                    File.WriteAllText($"Log\\ErrorLog\\Updater {DateTime.Now:yyyyMMdd}.txt", $"{ex}");
                 }
-                Process.Start("notepad.exe", $"Log\\ErrorLog\\UpdaterMain {DateTime.Now:yyyyMMdd}.txt");
+                Process.Start("notepad.exe", $"Log\\ErrorLog\\Updater {DateTime.Now:yyyyMMdd}.txt");
             }
         }
     }
