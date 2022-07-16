@@ -37,18 +37,18 @@
             this.USGS4 = new System.Windows.Forms.Label();
             this.RightClick = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.RCsetting = new System.Windows.Forms.ToolStripMenuItem();
-            this.RCbar2 = new System.Windows.Forms.ToolStripSeparator();
+            this.RCbar1 = new System.Windows.Forms.ToolStripSeparator();
             this.RCusgs = new System.Windows.Forms.ToolStripMenuItem();
             this.RCusgsmap = new System.Windows.Forms.ToolStripMenuItem();
             this.RCusgsthis = new System.Windows.Forms.ToolStripMenuItem();
-            this.RCbar4 = new System.Windows.Forms.ToolStripSeparator();
+            this.RCbar2 = new System.Windows.Forms.ToolStripSeparator();
             this.RCprojects = new System.Windows.Forms.ToolStripMenuItem();
             this.RCgithub = new System.Windows.Forms.ToolStripMenuItem();
             this.RCtwitter = new System.Windows.Forms.ToolStripMenuItem();
             this.RCameba = new System.Windows.Forms.ToolStripMenuItem();
-            this.RCbar5 = new System.Windows.Forms.ToolStripSeparator();
+            this.RCbar3 = new System.Windows.Forms.ToolStripSeparator();
             this.RCopenreadme = new System.Windows.Forms.ToolStripMenuItem();
-            this.RCbar6 = new System.Windows.Forms.ToolStripSeparator();
+            this.RCbar5 = new System.Windows.Forms.ToolStripSeparator();
             this.RCrebootexit = new System.Windows.Forms.ToolStripMenuItem();
             this.RCreboot = new System.Windows.Forms.ToolStripMenuItem();
             this.RCexit = new System.Windows.Forms.ToolStripMenuItem();
@@ -56,6 +56,8 @@
             this.USGS3 = new System.Windows.Forms.Label();
             this.USGS5 = new System.Windows.Forms.Label();
             this.ErrorText = new System.Windows.Forms.Label();
+            this.RCbar6 = new System.Windows.Forms.ToolStripSeparator();
+            this.SelfUpdate = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.MainImg)).BeginInit();
             this.RightClick.SuspendLayout();
             this.SuspendLayout();
@@ -103,9 +105,8 @@
             this.USGS6.Font = new System.Drawing.Font("Koruri Regular", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.USGS6.Location = new System.Drawing.Point(259, 432);
             this.USGS6.Name = "USGS6";
-            this.USGS6.Size = new System.Drawing.Size(141, 68);
+            this.USGS6.Size = new System.Drawing.Size(0, 21);
             this.USGS6.TabIndex = 8;
-            this.USGS6.Text = "\r\n\r\n\r\nWorldQuakeViewer v2.4";
             // 
             // USGS4
             // 
@@ -120,31 +121,33 @@
             this.RightClick.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.RightClick.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.RCsetting,
-            this.RCbar2,
+            this.RCbar1,
             this.RCusgs,
-            this.RCbar4,
+            this.RCbar2,
             this.RCprojects,
-            this.RCbar5,
+            this.RCbar3,
             this.RCopenreadme,
+            this.RCbar5,
+            this.SelfUpdate,
             this.RCbar6,
             this.RCrebootexit});
             this.RightClick.Name = "RightClick";
             this.RightClick.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.RightClick.Size = new System.Drawing.Size(164, 138);
+            this.RightClick.Size = new System.Drawing.Size(192, 178);
             this.RightClick.TabStop = true;
             this.RightClick.Text = "メニュー";
             // 
             // RCsetting
             // 
             this.RCsetting.Name = "RCsetting";
-            this.RCsetting.Size = new System.Drawing.Size(163, 22);
+            this.RCsetting.Size = new System.Drawing.Size(210, 24);
             this.RCsetting.Text = "設定";
             this.RCsetting.Click += new System.EventHandler(this.RCsetting_Click);
             // 
-            // RCbar2
+            // RCbar1
             // 
-            this.RCbar2.Name = "RCbar2";
-            this.RCbar2.Size = new System.Drawing.Size(160, 6);
+            this.RCbar1.Name = "RCbar1";
+            this.RCbar1.Size = new System.Drawing.Size(207, 6);
             // 
             // RCusgs
             // 
@@ -153,27 +156,27 @@
             this.RCusgsmap,
             this.RCusgsthis});
             this.RCusgs.Name = "RCusgs";
-            this.RCusgs.Size = new System.Drawing.Size(163, 22);
+            this.RCusgs.Size = new System.Drawing.Size(210, 24);
             this.RCusgs.Text = "USGSサイト";
             // 
             // RCusgsmap
             // 
             this.RCusgsmap.Name = "RCusgsmap";
-            this.RCusgsmap.Size = new System.Drawing.Size(150, 22);
+            this.RCusgsmap.Size = new System.Drawing.Size(186, 26);
             this.RCusgsmap.Text = "マップ";
             this.RCusgsmap.Click += new System.EventHandler(this.RCusgsmap_Click);
             // 
             // RCusgsthis
             // 
             this.RCusgsthis.Name = "RCusgsthis";
-            this.RCusgsthis.Size = new System.Drawing.Size(150, 22);
+            this.RCusgsthis.Size = new System.Drawing.Size(186, 26);
             this.RCusgsthis.Text = "この地震の詳細";
             this.RCusgsthis.Click += new System.EventHandler(this.RCusgsthis_Click);
             // 
-            // RCbar4
+            // RCbar2
             // 
-            this.RCbar4.Name = "RCbar4";
-            this.RCbar4.Size = new System.Drawing.Size(160, 6);
+            this.RCbar2.Name = "RCbar2";
+            this.RCbar2.Size = new System.Drawing.Size(207, 6);
             // 
             // RCprojects
             // 
@@ -183,20 +186,20 @@
             this.RCtwitter,
             this.RCameba});
             this.RCprojects.Name = "RCprojects";
-            this.RCprojects.Size = new System.Drawing.Size(163, 22);
+            this.RCprojects.Size = new System.Drawing.Size(210, 24);
             this.RCprojects.Text = "制作者ページ";
             // 
             // RCgithub
             // 
             this.RCgithub.Name = "RCgithub";
-            this.RCgithub.Size = new System.Drawing.Size(146, 22);
+            this.RCgithub.Size = new System.Drawing.Size(224, 26);
             this.RCgithub.Text = "GitHub ";
             this.RCgithub.Click += new System.EventHandler(this.RCgithub_Click);
             // 
             // RCtwitter
             // 
             this.RCtwitter.Name = "RCtwitter";
-            this.RCtwitter.Size = new System.Drawing.Size(146, 22);
+            this.RCtwitter.Size = new System.Drawing.Size(224, 26);
             this.RCtwitter.Text = "Twitter";
             this.RCtwitter.Click += new System.EventHandler(this.RCtwitter_Click);
             // 
@@ -204,25 +207,25 @@
             // 
             this.RCameba.Enabled = false;
             this.RCameba.Name = "RCameba";
-            this.RCameba.Size = new System.Drawing.Size(146, 22);
+            this.RCameba.Size = new System.Drawing.Size(224, 26);
             this.RCameba.Text = "Ameba Ownd";
             // 
-            // RCbar5
+            // RCbar3
             // 
-            this.RCbar5.Name = "RCbar5";
-            this.RCbar5.Size = new System.Drawing.Size(160, 6);
+            this.RCbar3.Name = "RCbar3";
+            this.RCbar3.Size = new System.Drawing.Size(207, 6);
             // 
             // RCopenreadme
             // 
             this.RCopenreadme.Name = "RCopenreadme";
-            this.RCopenreadme.Size = new System.Drawing.Size(163, 22);
+            this.RCopenreadme.Size = new System.Drawing.Size(210, 24);
             this.RCopenreadme.Text = "readme.mdを見る";
             this.RCopenreadme.Click += new System.EventHandler(this.RCopenreadme_Click);
             // 
-            // RCbar6
+            // RCbar5
             // 
-            this.RCbar6.Name = "RCbar6";
-            this.RCbar6.Size = new System.Drawing.Size(160, 6);
+            this.RCbar5.Name = "RCbar5";
+            this.RCbar5.Size = new System.Drawing.Size(207, 6);
             // 
             // RCrebootexit
             // 
@@ -231,20 +234,20 @@
             this.RCreboot,
             this.RCexit});
             this.RCrebootexit.Name = "RCrebootexit";
-            this.RCrebootexit.Size = new System.Drawing.Size(163, 22);
+            this.RCrebootexit.Size = new System.Drawing.Size(210, 24);
             this.RCrebootexit.Text = "再起動/終了";
             // 
             // RCreboot
             // 
             this.RCreboot.Name = "RCreboot";
-            this.RCreboot.Size = new System.Drawing.Size(110, 22);
+            this.RCreboot.Size = new System.Drawing.Size(224, 26);
             this.RCreboot.Text = "再起動";
             this.RCreboot.Click += new System.EventHandler(this.RCreboot_Click);
             // 
             // RCexit
             // 
             this.RCexit.Name = "RCexit";
-            this.RCexit.Size = new System.Drawing.Size(110, 22);
+            this.RCexit.Size = new System.Drawing.Size(224, 26);
             this.RCexit.Text = "終了";
             this.RCexit.Click += new System.EventHandler(this.RCexit_Click);
             // 
@@ -282,8 +285,20 @@
             this.ErrorText.ForeColor = System.Drawing.Color.Yellow;
             this.ErrorText.Location = new System.Drawing.Point(0, 100);
             this.ErrorText.Name = "ErrorText";
-            this.ErrorText.Size = new System.Drawing.Size(0, 22);
+            this.ErrorText.Size = new System.Drawing.Size(0, 28);
             this.ErrorText.TabIndex = 15;
+            // 
+            // RCbar6
+            // 
+            this.RCbar6.Name = "RCbar6";
+            this.RCbar6.Size = new System.Drawing.Size(207, 6);
+            // 
+            // SelfUpdate
+            // 
+            this.SelfUpdate.Name = "SelfUpdate";
+            this.SelfUpdate.Size = new System.Drawing.Size(210, 24);
+            this.SelfUpdate.Text = "手動アップデート";
+            this.SelfUpdate.Click += new System.EventHandler(this.SelfUpdate_Click);
             // 
             // MainForm
             // 
@@ -327,23 +342,25 @@
         private System.Windows.Forms.Label USGS2;
         private System.Windows.Forms.Label USGS3;
         private System.Windows.Forms.Label USGS5;
-        private System.Windows.Forms.ToolStripSeparator RCbar2;
+        private System.Windows.Forms.ToolStripSeparator RCbar1;
         private System.Windows.Forms.ToolStripMenuItem RCusgs;
         private System.Windows.Forms.ToolStripMenuItem RCprojects;
-        private System.Windows.Forms.ToolStripSeparator RCbar5;
+        private System.Windows.Forms.ToolStripSeparator RCbar3;
         private System.Windows.Forms.ToolStripMenuItem RCrebootexit;
         private System.Windows.Forms.ToolStripMenuItem RCsetting;
-        private System.Windows.Forms.ToolStripSeparator RCbar4;
+        private System.Windows.Forms.ToolStripSeparator RCbar2;
         private System.Windows.Forms.ToolStripMenuItem RCusgsmap;
         private System.Windows.Forms.ToolStripMenuItem RCusgsthis;
         private System.Windows.Forms.Label ErrorText;
         private System.Windows.Forms.ToolStripMenuItem RCreboot;
         private System.Windows.Forms.ToolStripMenuItem RCexit;
-        private System.Windows.Forms.ToolStripSeparator RCbar6;
+        private System.Windows.Forms.ToolStripSeparator RCbar5;
         private System.Windows.Forms.ToolStripMenuItem RCopenreadme;
         private System.Windows.Forms.ToolStripMenuItem RCgithub;
         private System.Windows.Forms.ToolStripMenuItem RCtwitter;
         private System.Windows.Forms.ToolStripMenuItem RCameba;
+        private System.Windows.Forms.ToolStripSeparator RCbar6;
+        private System.Windows.Forms.ToolStripMenuItem SelfUpdate;
     }
 }
 

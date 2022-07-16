@@ -18,6 +18,12 @@ namespace WorldQuakeViewer
         private void Dialog_Load(object sender, EventArgs e)
         {
             Main.Text = $"新しいバージョンがリリースされています。\n現在バージョン:v{Settings.Default.NowVersion}　最新バージョン:v{Settings.Default.NewVersion}\n更新する場合、下のボタンを押してください。";
+            if(Convert.ToDouble(Settings.Default.NowVersion) > Convert.ToDouble(Settings.Default.NewVersion))
+            {
+                Main.Text = $"このバージョンはリリースされていません。\n現在バージョン:v{Settings.Default.NowVersion} 公開最新バージョン:v{Settings.Default.NewVersion}";
+                DLStart.Size = new Size(0, 0);
+                Text = "WorldQuakeViewer：アップデート通知(開発中画面)";
+            }
         }
         private void DLStart_Click(object sender, EventArgs e)
         {
@@ -26,6 +32,10 @@ namespace WorldQuakeViewer
                 DLStart.Size = new Size(0, 0);
                 WebClient WC = new WebClient();
                 Main.Text = $"ダウンロードバージョン:v{Settings.Default.NewVersion}\nダウンロード中…";
+                if (System.IO.Directory.Exists($"Update") == false)
+                {
+                    System.IO.Directory.CreateDirectory($"Update");
+                }
                 if (File.Exists($"Update\\_temp.zip"))
                 {
                     File.Delete($"Update\\_temp.zip");
@@ -50,6 +60,7 @@ namespace WorldQuakeViewer
             }
             catch (Exception ex)
             {
+                Main.Text = $"エラーが発生しました。\n手動ダウンロードをお試しください。\n\"Log/ErrorLog/Updater {DateTime.Now:yyyy/MM/dd}.txt\"の\n内容を製作者に報告してください。";
                 try
                 {
                     string ErrorText = File.ReadAllText($"Log\\ErrorLog\\Updater {DateTime.Now:yyyyMMdd}.txt") + "\n--------------------------------------------------\n" + ex;

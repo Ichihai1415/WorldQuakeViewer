@@ -67,7 +67,7 @@
             this.Finish.Text = "終了";
             this.Finish.UseVisualStyleBackColor = false;
             // 
-            // Dialog
+            // UpdateDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -77,12 +77,12 @@
             this.Controls.Add(this.Finish);
             this.Controls.Add(this.Main);
             this.ForeColor = System.Drawing.Color.White;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(416, 239);
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(416, 239);
-            this.Name = "Dialog";
-            this.ShowIcon = false;
+            this.Name = "UpdateDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "WorldQuakeViewer：アップデート通知";
             this.TopMost = true;

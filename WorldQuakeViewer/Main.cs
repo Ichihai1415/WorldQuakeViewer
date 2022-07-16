@@ -26,15 +26,26 @@ namespace WorldQuakeViewer
         {
             try
             {
-                ErrorText.Text = "取得中…";
                 Settings.Default.Reload();
                 WebClient WC = new WebClient
                 {
                     Encoding = Encoding.UTF8
                 };
-                Settings.Default.NowVersion = "2.5";
+                Settings.Default.NowVersion = "2.6";//ここでバージョン設定　AssemblyInfo.csも確認
                 Settings.Default.NewVersion = WC.DownloadString("https://raw.githubusercontent.com/Project-S-31415/WorldQuakeViewer/main/Version.txt").Replace("\n", "");
                 Settings.Default.Save();
+                string NewMessage = WC.DownloadString("https://raw.githubusercontent.com/Project-S-31415/WorldQuakeViewer/main/Message.txt");
+                if (Settings.Default.Message != NewMessage)
+                {
+                    Settings.Default.Message = NewMessage;
+                    Settings.Default.Save();
+                    Message MessageDialog = new Message();
+                    MessageDialog.ShowDialog();
+                    if (MessageDialog.DialogResult == DialogResult.OK)
+                    {
+                        Console.WriteLine("メッセージおｋ");
+                    }
+                }
                 if (Settings.Default.NowVersion != Settings.Default.NewVersion)
                 {
                     UpdateDialog dialog = new UpdateDialog();
@@ -209,14 +220,17 @@ namespace WorldQuakeViewer
                         }
                         try
                         {
-                            JPNameNotFoundLogText = $"{File.ReadAllText($"Log\\JPNameNotFound.txt")}\n--------------------------------------------------\n";
+                            JPNameNotFoundLogText = $"{File.ReadAllText($"Log\\JPNameNotFound.txt")}\n";
                         }
                         catch
                         {
 
                         }
-                        JPNameNotFoundLogText += $"Time={DateTime.Now:MM/dd HH:mm},Latitude={Lat},Longitude={Long},Number1={Num1},Number2={Num2},Name1={Shingen1.Replace("震源:", "").Replace(" - - - - - ", "null").Replace(Shingen1_, "null")},Name2={Shingen1_}";
-                        File.WriteAllText($"Log\\JPNameNotFound.txt", JPNameNotFoundLogText);
+                        if (JPNameNotFoundLogText.Contains($"Number1={Num1},Number2={Num2},Name1={Shingen1.Replace("震源:", "").Replace(" - - - - - ", "null").Replace(Shingen1_, "null")},Name2={Shingen1_}") == false)
+                        {
+                            JPNameNotFoundLogText += $"Time={DateTime.Now:MM/dd HH:mm},Latitude={Lat},Longitude={Long},Number1={Num1},Number2={Num2},Name1={Shingen1.Replace("震源:", "").Replace(" - - - - - ", "null").Replace(Shingen1_, "null")},Name2={Shingen1_}";
+                            File.WriteAllText($"Log\\JPNameNotFound.txt", JPNameNotFoundLogText);
+                        }
                     }
                     string Shingen2 = $"({USGSQuakeJson[0].Features[0].Properties.Place})";
                     int LocX;
@@ -260,7 +274,7 @@ namespace WorldQuakeViewer
                     USGS6.Text = $"{UpdateTime}発表\n{Latestchecktime}更新\n地図データ:NationalEarth\nWorldQuakeViewer v{Settings.Default.NowVersion}";
                     USGS6.Location = new Point(400 - USGS6.Width, USGS6.Location.Y);
                     string LogText_ = $"USGS地震情報【{MagType}{Mag}】{Time.Replace("※", "(")})\n{Shingen1}{Shingen2}\n{LatStLong},{LongStLong}　{Depth}\n改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}　{Arart.Replace("アラート:-", "")}\n{LatestURL}";
-                    string RemoteTalkText = $"USGS地震情報。マグニチュード{Mag}、震源、{Shingen1.Replace(" ", "、").Replace("/", "、").Replace("震源:", "")}、{LatStLongJP}、{LongStLongJP}、深さ{Depth.Replace("深さ:", "")}。{$"改正メルカリ震度階級{MMI.Replace("(", "").Replace(")", "")}".Replace("改正メルカリ震度階級-", "")}、{Arart.Replace("アラート:-", "")}";
+                    string RemoteTalkText = $"USGS地震情報。マグニチュード{Mag}、震源、{Shingen1.Replace(" ", "、").Replace("/", "、").Replace("震源:", "")}、{LatStLongJP}、{LongStLongJP}、深さ{Depth.Replace("深さ:", "")}。{$"改正メルカリ震度階級{MMI.Replace("(", "").Replace(")", "")}".Replace("改正メルカリ震度階級-", "")}。{Arart.Replace("アラート:-", "")}";
                     if (USGSQuakeJson[0].Features[0].Properties.Tsunami == 1)
                     {
                         LogText_ += "\n津波発生の可能性あり。最新情報を確認してください。https://www.tsunami.gov/";
@@ -326,6 +340,17 @@ namespace WorldQuakeViewer
                                 try
                                 {
                                     tokens_json = File.ReadAllText($"Tokens.json");
+                                    try
+                                    {
+                                        Tokens_JSON Tokens_jsondata = JsonConvert.DeserializeObject<Tokens_JSON>(tokens_json);
+                                        tokens = Tokens.Create(Tokens_jsondata.ConsumerKey, Tokens_jsondata.ConsumerSecret, Tokens_jsondata.AccessToken, Tokens_jsondata.AccessSecret);
+                                    }
+                                    catch
+                                    {
+                                        ErrorText.Text = $"Tokenが正しくありません。\n\"Tokens.json\"を確認してください。";
+                                        Process.Start("notepad.exe", "Tokens.json");
+                                        throw new Exception("Tokenが正しくありません。\"Tokens.json\"を確認してください。");
+                                    }
                                 }
                                 catch
                                 {
@@ -333,17 +358,6 @@ namespace WorldQuakeViewer
                                     ErrorText.Text = $"TwiterAPIのTokenを\"Tokens.json\"に\n入力してください。";
                                     Process.Start("notepad.exe", "Tokens.json");
                                     throw new Exception("TwiterAPIのTokenを\"Tokens.json\"に入力してください。");
-                                }
-                                try
-                                {
-                                    Tokens_JSON Tokens_jsondata = JsonConvert.DeserializeObject<Tokens_JSON>(tokens_json);
-                                    tokens = Tokens.Create(Tokens_jsondata.ConsumerKey, Tokens_jsondata.ConsumerSecret, Tokens_jsondata.AccessToken, Tokens_jsondata.AccessSecret);
-                                }
-                                catch
-                                {
-                                    ErrorText.Text = $"Tokenが正しくありません。\n\"Tokens.json\"を確認してください。";
-                                    Process.Start("notepad.exe", "Tokens.json");
-                                    throw new Exception("Tokenが正しくありません。\"Tokens.json\"を確認してください。");
                                 }
                                 //リプライ予定
                                 Status status = tokens.Statuses.Update(new { status = LogText_ });
@@ -1318,8 +1332,8 @@ namespace WorldQuakeViewer
         public int NetWorkErrorPoint = 0;
         private void RCsetting_Click(object sender, EventArgs e)
         {
-            SettingsForm Form2 = new SettingsForm();
-            Form2.Show();
+            SettingsForm Settings = new SettingsForm();
+            Settings.Show();
         }
         private void RCusgsmap_Click(object sender, EventArgs e)
         {
@@ -1367,6 +1381,11 @@ namespace WorldQuakeViewer
                     throw new Exception("README.mdが見つかりません。");
                 }
             }
+        }
+
+        private void SelfUpdate_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://github.com/Project-S-31415/WorldQuakeViewer/releases");
         }
     }
 }
