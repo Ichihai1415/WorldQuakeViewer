@@ -219,7 +219,7 @@ namespace WorldQuakeViewer
                     USGS5.Text = $"{MMI.Replace("(", "").Replace(")", "")}";
                     this.UpdateTime = UpdateTime;
                     string LogText_ = $"USGS地震情報【{MagType}{Mag}】{Time.Replace("※", "(")})\n{Shingen1}{Shingen2}\n{LatStLong},{LongStLong}　{Depth}\n改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}　{Arart.Replace("アラート:-", "")}\n{LatestURL}";
-                    string RemoteTalkText = $"USGS地震情報。マグニチュード{Mag}、震源、{Shingen1.Replace(" ", "、").Replace("/", "、").Replace("震源:", "")}、{LatStLongJP}、{LongStLongJP}、深さ{Depth.Replace("深さ:", "")}。{$"改正メルカリ震度階級{MMI.Replace("(", "").Replace(")", "")}".Replace("改正メルカリ震度階級-", "")}。{Arart.Replace("アラート:-", "")}";
+                    string BouyomiText = $"USGS地震情報。マグニチュード{Mag}、震源、{Shingen1.Replace(" ", "、").Replace("/", "、").Replace("震源:", "")}、{LatStLongJP}、{LongStLongJP}、深さ{Depth.Replace("深さ:", "")}。{$"改正メルカリ震度階級{MMI.Replace("(", "").Replace(")", "")}".Replace("改正メルカリ震度階級-", "")}。{Arart.Replace("アラート:-", "")}";
 
                     if (LatestText != LogText_)
                     {
@@ -227,7 +227,7 @@ namespace WorldQuakeViewer
                         if (TimeOld == TimeNew)
                         {
                             LogText_ = LogText_.Replace("USGS地震情報", "USGS地震情報(更新)");
-                            RemoteTalkText = RemoteTalkText.Replace("USGS地震情報", "USGS地震情報、更新");
+                            BouyomiText = BouyomiText.Replace("USGS地震情報", "USGS地震情報、更新");
                         }
                         try
                         {
@@ -392,7 +392,7 @@ namespace WorldQuakeViewer
                         Console.WriteLine(DateTime.Now.ToString("HH:mm:ss.fff") + "　RemoteTalk開始");
                         if (Settings.Default.IsRemoteTalk && IsDebug == false)
                         {
-                            string sMessage = LogText_;
+                            string sMessage = BouyomiText;
                             byte bCode = 0;
                             Int16 iVoice = 1;
                             Int16 iVolume = 100;
