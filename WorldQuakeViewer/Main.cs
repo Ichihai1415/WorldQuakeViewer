@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -13,8 +12,6 @@ using USGSFERegionsClass;
 using USGSFERegionsClass2;
 using USGSQuakeClass;
 using WorldQuakeViewer.Properties;
-using System.Linq;
-using System.Text.RegularExpressions;
 using System.Net.Sockets;
 
 namespace WorldQuakeViewer
@@ -30,10 +27,6 @@ namespace WorldQuakeViewer
             try
             {
                 //設定をjsonに
-
-
-
-
                 WebClient WC = new WebClient
                 {
                     Encoding = Encoding.UTF8
