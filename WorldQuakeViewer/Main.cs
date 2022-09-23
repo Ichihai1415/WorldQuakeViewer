@@ -190,10 +190,10 @@ namespace WorldQuakeViewer
                     }
                     string Shingen2 = $"({USGSQuakeJson[0].Features[0].Properties.Place})";
                     int LocX;//地図画像の位置　-1840,-900~0,0
-                    if (Long >= 0)//220は経度範囲外余白を含める
-                        LocX = (int)(Long + 180) * -5 + 220;
+                    if (Long >= 0)//180は経度範囲外余白を含める
+                        LocX = (int)(Long + 180) * -5 + 180;
                     else
-                        LocX = (int)(180 - Long * -1) * -5 + 220;
+                        LocX = (int)(180 - Long * -1) * -5 + 180;
                     int LocY;
                     if (Lat >= 0)
                         LocY = (int)(90 - Lat) * -5 + 300;
