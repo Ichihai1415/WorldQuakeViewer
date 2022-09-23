@@ -392,7 +392,7 @@ namespace WorldQuakeViewer
                         Console.WriteLine(DateTime.Now.ToString("HH:mm:ss.fff") + "　RemoteTalk開始");
                         if (Settings.Default.IsRemoteTalk && IsDebug == false)
                         {
-                            string sMessage = null;
+                            string sMessage = LogText_;
                             byte bCode = 0;
                             Int16 iVoice = 1;
                             Int16 iVolume = 100;
