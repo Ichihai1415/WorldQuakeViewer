@@ -10,7 +10,6 @@ namespace USGSQuakeClass
         public object Time { get; set; }
         public object Updated { get; set; }
         public string Url { get; set; }
-        public int Tsunami { get; set; }
         public string Alert { get; set; }
         public double? Mmi { get; set; }
         public string MagType { get; set; }

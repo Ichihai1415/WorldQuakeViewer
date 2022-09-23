@@ -29,34 +29,7 @@ namespace WorldQuakeViewer
         {
             try
             {
-                DLStart.Size = new Size(0, 0);
-                WebClient WC = new WebClient();
-                Main.Text = $"ダウンロードバージョン:v{Settings.Default.NewVersion}\nダウンロード中…";
-                if (System.IO.Directory.Exists($"Update") == false)
-                {
-                    System.IO.Directory.CreateDirectory($"Update");
-                }
-                if (File.Exists($"Update\\_temp.zip"))
-                {
-                    File.Delete($"Update\\_temp.zip");
-                }
-                if (System.IO.Directory.Exists($"Update\\v{Settings.Default.NewVersion}"))
-                {
-                    System.IO.Directory.Delete($"Update\\v{Settings.Default.NewVersion}");
-                }
-                WC.DownloadFile($"https://github.com/Project-S-31415/WorldQuakeViewer/releases/download/WorldQuakeViewer{Settings.Default.NewVersion}/WorldQuakeViewer.v{Settings.Default.NewVersion}.zip", $"Update\\_temp.zip");
-                Main.Text += "\nダウンロード終了\n展開中…:";
-                ZipFile.ExtractToDirectory("Update\\_temp.zip", $"Update\\v{Settings.Default.NewVersion}");
-                Main.Text += "\n展開終了";
-                File.Delete("Update\\_temp.zip");
-                Main.Text = $"DL・解凍が完了しました。\n\"v{Settings.Default.NewVersion}\"の中を現在の実行フォルダに\n上書きしてください。\n「終了」を押すと終了します。\n元ファイルの削除も忘れずに行ってください。";
-                string Directory = Path.GetFullPath("WorldQuakeViewerUpdater.exe").Replace("\\WorldQuakeViewerUpdater.exe", "");
-                Process.Start("explorer.exe", Directory);
-                Process.Start("explorer.exe", $"{Directory}\\Update\\v{Settings.Default.NewVersion}");
-            }
-            catch (WebException)
-            {
-                Main.Text = $"ネットワークに接続できません。";
+
             }
             catch (Exception ex)
             {
