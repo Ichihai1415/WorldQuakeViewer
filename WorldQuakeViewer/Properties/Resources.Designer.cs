@@ -73,9 +73,9 @@ namespace WorldQuakeViewer.Properties {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
-        internal static System.Drawing.Bitmap Worldmap {
+        internal static System.Drawing.Bitmap WorldMap {
             get {
-                object obj = ResourceManager.GetObject("Worldmap", resourceCulture);
+                object obj = ResourceManager.GetObject("WorldMap", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -35,16 +35,20 @@
             this.USGS6 = new System.Windows.Forms.Label();
             this.USGS4 = new System.Windows.Forms.Label();
             this.RightClick = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.RCsetting = new System.Windows.Forms.ToolStripMenuItem();
-            this.RCbar1 = new System.Windows.Forms.ToolStripSeparator();
-            this.RCusgs = new System.Windows.Forms.ToolStripMenuItem();
-            this.RCusgsmap = new System.Windows.Forms.ToolStripMenuItem();
-            this.RCusgsthis = new System.Windows.Forms.ToolStripMenuItem();
-            this.RCbar2 = new System.Windows.Forms.ToolStripSeparator();
-            this.RCprojects = new System.Windows.Forms.ToolStripMenuItem();
-            this.RCgithub = new System.Windows.Forms.ToolStripMenuItem();
-            this.RCtwitter = new System.Windows.Forms.ToolStripMenuItem();
-            this.RCrebootexit = new System.Windows.Forms.ToolStripMenuItem();
+            this.RC1Setting = new System.Windows.Forms.ToolStripMenuItem();
+            this.RC1Bar1 = new System.Windows.Forms.ToolStripSeparator();
+            this.RC1Sites = new System.Windows.Forms.ToolStripMenuItem();
+            this.RCMapUSGS = new System.Windows.Forms.ToolStripMenuItem();
+            this.RCMapEWSC = new System.Windows.Forms.ToolStripMenuItem();
+            this.RCThisInfo = new System.Windows.Forms.ToolStripMenuItem();
+            this.RCTsunamiGov = new System.Windows.Forms.ToolStripMenuItem();
+            this.RC1Bar2 = new System.Windows.Forms.ToolStripSeparator();
+            this.RC1PSInfo = new System.Windows.Forms.ToolStripMenuItem();
+            this.RCTwitter = new System.Windows.Forms.ToolStripMenuItem();
+            this.RCGitHub = new System.Windows.Forms.ToolStripMenuItem();
+            this.RCiInfoPage = new System.Windows.Forms.ToolStripMenuItem();
+            this.RC1Bar3 = new System.Windows.Forms.ToolStripSeparator();
+            this.RC1RebootExit = new System.Windows.Forms.ToolStripMenuItem();
             this.RCreboot = new System.Windows.Forms.ToolStripMenuItem();
             this.RCexit = new System.Windows.Forms.ToolStripMenuItem();
             this.USGS2 = new System.Windows.Forms.Label();
@@ -59,12 +63,9 @@
             this.History4 = new System.Windows.Forms.Label();
             this.History5 = new System.Windows.Forms.Label();
             this.History6 = new System.Windows.Forms.Label();
-            this.RCinfopage = new System.Windows.Forms.ToolStripMenuItem();
-            this.RCtsunami = new System.Windows.Forms.ToolStripMenuItem();
             this.RCbar3 = new System.Windows.Forms.ToolStripSeparator();
             this.RCbar5 = new System.Windows.Forms.ToolStripSeparator();
             this.RCopenreadme = new System.Windows.Forms.ToolStripMenuItem();
-            this.RCbar4 = new System.Windows.Forms.ToolStripSeparator();
             this.RightClick.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MainImg)).BeginInit();
             this.SuspendLayout();
@@ -103,7 +104,7 @@
             this.USGS6.Font = new System.Drawing.Font("Koruri Regular", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.USGS6.Location = new System.Drawing.Point(259, 432);
             this.USGS6.Name = "USGS6";
-            this.USGS6.Size = new System.Drawing.Size(0, 17);
+            this.USGS6.Size = new System.Drawing.Size(0, 21);
             this.USGS6.TabIndex = 8;
             // 
             // USGS4
@@ -118,107 +119,134 @@
             // 
             this.RightClick.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.RightClick.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.RCsetting,
-            this.RCbar1,
-            this.RCusgs,
-            this.RCbar2,
-            this.RCprojects,
-            this.RCbar4,
-            this.RCrebootexit});
+            this.RC1Setting,
+            this.RC1Bar1,
+            this.RC1Sites,
+            this.RC1Bar2,
+            this.RC1PSInfo,
+            this.RC1Bar3,
+            this.RC1RebootExit});
             this.RightClick.Name = "RightClick";
             this.RightClick.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.RightClick.Size = new System.Drawing.Size(208, 110);
+            this.RightClick.Size = new System.Drawing.Size(243, 118);
             this.RightClick.TabStop = true;
             this.RightClick.Text = "メニュー";
             // 
-            // RCsetting
+            // RC1Setting
             // 
-            this.RCsetting.Name = "RCsetting";
-            this.RCsetting.Size = new System.Drawing.Size(207, 22);
-            this.RCsetting.Text = "設定";
-            this.RCsetting.Click += new System.EventHandler(this.RCsetting_Click);
+            this.RC1Setting.Name = "RC1Setting";
+            this.RC1Setting.Size = new System.Drawing.Size(242, 24);
+            this.RC1Setting.Text = "設定";
+            this.RC1Setting.Click += new System.EventHandler(this.RCsetting_Click);
             // 
-            // RCbar1
+            // RC1Bar1
             // 
-            this.RCbar1.Name = "RCbar1";
-            this.RCbar1.Size = new System.Drawing.Size(204, 6);
+            this.RC1Bar1.Name = "RC1Bar1";
+            this.RC1Bar1.Size = new System.Drawing.Size(239, 6);
             // 
-            // RCusgs
+            // RC1Sites
             // 
-            this.RCusgs.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.RCusgs.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.RCusgsmap,
-            this.RCusgsthis,
-            this.RCtsunami});
-            this.RCusgs.Name = "RCusgs";
-            this.RCusgs.Size = new System.Drawing.Size(207, 22);
-            this.RCusgs.Text = "USGSサイト/世界津波情報";
+            this.RC1Sites.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.RC1Sites.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.RCMapUSGS,
+            this.RCMapEWSC,
+            this.RCThisInfo,
+            this.RCTsunamiGov});
+            this.RC1Sites.Name = "RC1Sites";
+            this.RC1Sites.Size = new System.Drawing.Size(242, 24);
+            this.RC1Sites.Text = "各種サイト";
             // 
-            // RCusgsmap
+            // RCMapUSGS
             // 
-            this.RCusgsmap.Name = "RCusgsmap";
-            this.RCusgsmap.Size = new System.Drawing.Size(180, 22);
-            this.RCusgsmap.Text = "マップ";
-            this.RCusgsmap.Click += new System.EventHandler(this.RCusgsmap_Click);
+            this.RCMapUSGS.Name = "RCMapUSGS";
+            this.RCMapUSGS.Size = new System.Drawing.Size(272, 26);
+            this.RCMapUSGS.Text = "マップ(USGS)";
+            this.RCMapUSGS.Click += new System.EventHandler(this.RCusgsmap_Click);
             // 
-            // RCusgsthis
+            // RCMapEWSC
             // 
-            this.RCusgsthis.Name = "RCusgsthis";
-            this.RCusgsthis.Size = new System.Drawing.Size(180, 22);
-            this.RCusgsthis.Text = "最新の地震の詳細";
-            this.RCusgsthis.Click += new System.EventHandler(this.RCusgsthis_Click);
+            this.RCMapEWSC.Name = "RCMapEWSC";
+            this.RCMapEWSC.Size = new System.Drawing.Size(272, 26);
+            this.RCMapEWSC.Text = "マップ(EMSC)";
+            this.RCMapEWSC.Click += new System.EventHandler(this.RCMapEWSC_Click);
             // 
-            // RCbar2
+            // RCThisInfo
             // 
-            this.RCbar2.Name = "RCbar2";
-            this.RCbar2.Size = new System.Drawing.Size(204, 6);
+            this.RCThisInfo.Name = "RCThisInfo";
+            this.RCThisInfo.Size = new System.Drawing.Size(272, 26);
+            this.RCThisInfo.Text = "最新の地震の詳細(USGS)";
+            this.RCThisInfo.Click += new System.EventHandler(this.RCusgsthis_Click);
             // 
-            // RCprojects
+            // RCTsunamiGov
             // 
-            this.RCprojects.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.RCprojects.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.RCtwitter,
-            this.RCgithub,
-            this.RCinfopage});
-            this.RCprojects.Name = "RCprojects";
-            this.RCprojects.Size = new System.Drawing.Size(207, 22);
-            this.RCprojects.Text = "制作者ページ/解説ページ等";
+            this.RCTsunamiGov.Name = "RCTsunamiGov";
+            this.RCTsunamiGov.Size = new System.Drawing.Size(272, 26);
+            this.RCTsunamiGov.Text = "世界津波情報(tsunami.gov)";
+            this.RCTsunamiGov.Click += new System.EventHandler(this.RCtsunami_Click);
             // 
-            // RCgithub
+            // RC1Bar2
             // 
-            this.RCgithub.Name = "RCgithub";
-            this.RCgithub.Size = new System.Drawing.Size(180, 22);
-            this.RCgithub.Text = "GitHub(リポジトリ)";
-            this.RCgithub.Click += new System.EventHandler(this.RCgithub_Click);
+            this.RC1Bar2.Name = "RC1Bar2";
+            this.RC1Bar2.Size = new System.Drawing.Size(239, 6);
             // 
-            // RCtwitter
+            // RC1PSInfo
             // 
-            this.RCtwitter.Name = "RCtwitter";
-            this.RCtwitter.Size = new System.Drawing.Size(180, 22);
-            this.RCtwitter.Text = "Twitter";
-            this.RCtwitter.Click += new System.EventHandler(this.RCtwitter_Click);
+            this.RC1PSInfo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.RC1PSInfo.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.RCTwitter,
+            this.RCGitHub,
+            this.RCiInfoPage});
+            this.RC1PSInfo.Name = "RC1PSInfo";
+            this.RC1PSInfo.Size = new System.Drawing.Size(242, 24);
+            this.RC1PSInfo.Text = "制作者ページ/解説ページ等";
             // 
-            // RCrebootexit
+            // RCTwitter
             // 
-            this.RCrebootexit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.RCrebootexit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.RCTwitter.Name = "RCTwitter";
+            this.RCTwitter.Size = new System.Drawing.Size(206, 26);
+            this.RCTwitter.Text = "Twitter";
+            this.RCTwitter.Click += new System.EventHandler(this.RCtwitter_Click);
+            // 
+            // RCGitHub
+            // 
+            this.RCGitHub.Name = "RCGitHub";
+            this.RCGitHub.Size = new System.Drawing.Size(206, 26);
+            this.RCGitHub.Text = "GitHub(リポジトリ)";
+            this.RCGitHub.Click += new System.EventHandler(this.RCgithub_Click);
+            // 
+            // RCiInfoPage
+            // 
+            this.RCiInfoPage.Name = "RCiInfoPage";
+            this.RCiInfoPage.Size = new System.Drawing.Size(206, 26);
+            this.RCiInfoPage.Text = "解説ページ";
+            this.RCiInfoPage.Click += new System.EventHandler(this.RCinfopage_Click);
+            // 
+            // RC1Bar3
+            // 
+            this.RC1Bar3.Name = "RC1Bar3";
+            this.RC1Bar3.Size = new System.Drawing.Size(239, 6);
+            // 
+            // RC1RebootExit
+            // 
+            this.RC1RebootExit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.RC1RebootExit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.RCreboot,
             this.RCexit});
-            this.RCrebootexit.Name = "RCrebootexit";
-            this.RCrebootexit.Size = new System.Drawing.Size(207, 22);
-            this.RCrebootexit.Text = "再起動/終了";
+            this.RC1RebootExit.Name = "RC1RebootExit";
+            this.RC1RebootExit.Size = new System.Drawing.Size(242, 24);
+            this.RC1RebootExit.Text = "再起動/終了";
             // 
             // RCreboot
             // 
             this.RCreboot.Name = "RCreboot";
-            this.RCreboot.Size = new System.Drawing.Size(180, 22);
+            this.RCreboot.Size = new System.Drawing.Size(137, 26);
             this.RCreboot.Text = "再起動";
             this.RCreboot.Click += new System.EventHandler(this.RCreboot_Click);
             // 
             // RCexit
             // 
             this.RCexit.Name = "RCexit";
-            this.RCexit.Size = new System.Drawing.Size(180, 22);
+            this.RCexit.Size = new System.Drawing.Size(137, 26);
             this.RCexit.Text = "終了";
             this.RCexit.Click += new System.EventHandler(this.RCexit_Click);
             // 
@@ -256,7 +284,7 @@
             this.ErrorText.ForeColor = System.Drawing.Color.Yellow;
             this.ErrorText.Location = new System.Drawing.Point(0, 100);
             this.ErrorText.Name = "ErrorText";
-            this.ErrorText.Size = new System.Drawing.Size(0, 22);
+            this.ErrorText.Size = new System.Drawing.Size(0, 28);
             this.ErrorText.TabIndex = 15;
             // 
             // MainImg
@@ -282,7 +310,7 @@
             // History1
             // 
             this.History1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
-            this.History1.Font = new System.Drawing.Font("Koruri Regular", 10F);
+            this.History1.Font = new System.Drawing.Font("Koruri Regular", 10.5F);
             this.History1.Location = new System.Drawing.Point(403, 20);
             this.History1.Name = "History1";
             this.History1.Size = new System.Drawing.Size(394, 77);
@@ -291,7 +319,7 @@
             // History2
             // 
             this.History2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
-            this.History2.Font = new System.Drawing.Font("Koruri Regular", 10F);
+            this.History2.Font = new System.Drawing.Font("Koruri Regular", 10.5F);
             this.History2.Location = new System.Drawing.Point(403, 100);
             this.History2.Name = "History2";
             this.History2.Size = new System.Drawing.Size(394, 77);
@@ -300,7 +328,7 @@
             // History3
             // 
             this.History3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
-            this.History3.Font = new System.Drawing.Font("Koruri Regular", 10F);
+            this.History3.Font = new System.Drawing.Font("Koruri Regular", 10.5F);
             this.History3.Location = new System.Drawing.Point(403, 180);
             this.History3.Name = "History3";
             this.History3.Size = new System.Drawing.Size(394, 77);
@@ -309,7 +337,7 @@
             // History4
             // 
             this.History4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
-            this.History4.Font = new System.Drawing.Font("Koruri Regular", 10F);
+            this.History4.Font = new System.Drawing.Font("Koruri Regular", 10.5F);
             this.History4.Location = new System.Drawing.Point(403, 260);
             this.History4.Name = "History4";
             this.History4.Size = new System.Drawing.Size(394, 77);
@@ -318,7 +346,7 @@
             // History5
             // 
             this.History5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
-            this.History5.Font = new System.Drawing.Font("Koruri Regular", 10F);
+            this.History5.Font = new System.Drawing.Font("Koruri Regular", 10.5F);
             this.History5.Location = new System.Drawing.Point(403, 340);
             this.History5.Name = "History5";
             this.History5.Size = new System.Drawing.Size(394, 77);
@@ -327,25 +355,11 @@
             // History6
             // 
             this.History6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
-            this.History6.Font = new System.Drawing.Font("Koruri Regular", 10F);
+            this.History6.Font = new System.Drawing.Font("Koruri Regular", 10.5F);
             this.History6.Location = new System.Drawing.Point(403, 420);
             this.History6.Name = "History6";
             this.History6.Size = new System.Drawing.Size(394, 77);
             this.History6.TabIndex = 22;
-            // 
-            // RCinfopage
-            // 
-            this.RCinfopage.Name = "RCinfopage";
-            this.RCinfopage.Size = new System.Drawing.Size(180, 22);
-            this.RCinfopage.Text = "解説ページ";
-            this.RCinfopage.Click += new System.EventHandler(this.RCinfopage_Click);
-            // 
-            // RCtsunami
-            // 
-            this.RCtsunami.Name = "RCtsunami";
-            this.RCtsunami.Size = new System.Drawing.Size(180, 22);
-            this.RCtsunami.Text = "世界津波情報";
-            this.RCtsunami.Click += new System.EventHandler(this.RCtsunami_Click);
             // 
             // RCbar3
             // 
@@ -363,11 +377,6 @@
             this.RCopenreadme.Size = new System.Drawing.Size(207, 22);
             this.RCopenreadme.Text = "readmeを見る(GitHub)";
             this.RCopenreadme.Click += new System.EventHandler(this.RCopenreadme_Click);
-            // 
-            // RCbar4
-            // 
-            this.RCbar4.Name = "RCbar4";
-            this.RCbar4.Size = new System.Drawing.Size(204, 6);
             // 
             // MainForm
             // 
@@ -419,19 +428,19 @@
         private System.Windows.Forms.Label USGS2;
         private System.Windows.Forms.Label USGS3;
         private System.Windows.Forms.Label USGS5;
-        private System.Windows.Forms.ToolStripSeparator RCbar1;
-        private System.Windows.Forms.ToolStripMenuItem RCusgs;
-        private System.Windows.Forms.ToolStripMenuItem RCprojects;
-        private System.Windows.Forms.ToolStripMenuItem RCrebootexit;
-        private System.Windows.Forms.ToolStripMenuItem RCsetting;
-        private System.Windows.Forms.ToolStripSeparator RCbar2;
-        private System.Windows.Forms.ToolStripMenuItem RCusgsmap;
-        private System.Windows.Forms.ToolStripMenuItem RCusgsthis;
+        private System.Windows.Forms.ToolStripSeparator RC1Bar1;
+        private System.Windows.Forms.ToolStripMenuItem RC1Sites;
+        private System.Windows.Forms.ToolStripMenuItem RC1PSInfo;
+        private System.Windows.Forms.ToolStripMenuItem RC1RebootExit;
+        private System.Windows.Forms.ToolStripMenuItem RC1Setting;
+        private System.Windows.Forms.ToolStripSeparator RC1Bar2;
+        private System.Windows.Forms.ToolStripMenuItem RCMapUSGS;
+        private System.Windows.Forms.ToolStripMenuItem RCThisInfo;
         private System.Windows.Forms.Label ErrorText;
         private System.Windows.Forms.ToolStripMenuItem RCreboot;
         private System.Windows.Forms.ToolStripMenuItem RCexit;
-        private System.Windows.Forms.ToolStripMenuItem RCgithub;
-        private System.Windows.Forms.ToolStripMenuItem RCtwitter;
+        private System.Windows.Forms.ToolStripMenuItem RCGitHub;
+        private System.Windows.Forms.ToolStripMenuItem RCTwitter;
         private System.Windows.Forms.Label HistoryBack;
         private System.Windows.Forms.Label History1;
         private System.Windows.Forms.Label History2;
@@ -439,12 +448,13 @@
         private System.Windows.Forms.Label History4;
         private System.Windows.Forms.Label History5;
         private System.Windows.Forms.Label History6;
-        private System.Windows.Forms.ToolStripMenuItem RCtsunami;
-        private System.Windows.Forms.ToolStripMenuItem RCinfopage;
-        private System.Windows.Forms.ToolStripSeparator RCbar4;
+        private System.Windows.Forms.ToolStripMenuItem RCTsunamiGov;
+        private System.Windows.Forms.ToolStripMenuItem RCiInfoPage;
+        private System.Windows.Forms.ToolStripSeparator RC1Bar3;
         private System.Windows.Forms.ToolStripSeparator RCbar3;
         private System.Windows.Forms.ToolStripSeparator RCbar5;
         private System.Windows.Forms.ToolStripMenuItem RCopenreadme;
+        private System.Windows.Forms.ToolStripMenuItem RCMapEWSC;
     }
 }
 
