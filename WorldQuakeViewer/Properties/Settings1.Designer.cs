@@ -12,7 +12,7 @@ namespace WorldQuakeViewer.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.2.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.4.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -26,60 +26,204 @@ namespace WorldQuakeViewer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool IsTweet {
+        public bool Bouyomichan_Valid {
             get {
-                return ((bool)(this["IsTweet"]));
+                return ((bool)(this["Bouyomichan_Valid"]));
             }
             set {
-                this["IsTweet"] = value;
+                this["Bouyomichan_Valid"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("127.0.0.1")]
+        public string Bouyomichan_Host {
+            get {
+                return ((string)(this["Bouyomichan_Host"]));
+            }
+            set {
+                this["Bouyomichan_Host"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50001")]
+        public int Bouyomichan_Port {
+            get {
+                return ((int)(this["Bouyomichan_Port"]));
+            }
+            set {
+                this["Bouyomichan_Port"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Bouyomichan_Voice {
+            get {
+                return ((int)(this["Bouyomichan_Voice"]));
+            }
+            set {
+                this["Bouyomichan_Voice"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Bouyomichan_Speed {
+            get {
+                return ((int)(this["Bouyomichan_Speed"]));
+            }
+            set {
+                this["Bouyomichan_Speed"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Bouyomichan_Tone {
+            get {
+                return ((int)(this["Bouyomichan_Tone"]));
+            }
+            set {
+                this["Bouyomichan_Tone"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Bouyomichan_Volume {
+            get {
+                return ((int)(this["Bouyomichan_Volume"]));
+            }
+            set {
+                this["Bouyomichan_Volume"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool IsRemoteTalk {
+        public bool Tweet_Valid {
             get {
-                return ((bool)(this["IsRemoteTalk"]));
+                return ((bool)(this["Tweet_Valid"]));
             }
             set {
-                this["IsRemoteTalk"] = value;
+                this["Tweet_Valid"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string NowVersion {
+        public string Tweet_ConsumerKey {
             get {
-                return ((string)(this["NowVersion"]));
+                return ((string)(this["Tweet_ConsumerKey"]));
             }
             set {
-                this["NowVersion"] = value;
+                this["Tweet_ConsumerKey"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string NewVersion {
+        public string Tweet_ConsumerSecret {
             get {
-                return ((string)(this["NewVersion"]));
+                return ((string)(this["Tweet_ConsumerSecret"]));
             }
             set {
-                this["NewVersion"] = value;
+                this["Tweet_ConsumerSecret"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Message {
+        public string Tweet_AccessToken {
             get {
-                return ((string)(this["Message"]));
+                return ((string)(this["Tweet_AccessToken"]));
             }
             set {
-                this["Message"] = value;
+                this["Tweet_AccessToken"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Tweet_AccessSecret {
+            get {
+                return ((string)(this["Tweet_AccessSecret"]));
+            }
+            set {
+                this["Tweet_AccessSecret"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("6")]
+        public double Tweet_LowerMagnitudeLimit {
+            get {
+                return ((double)(this["Tweet_LowerMagnitudeLimit"]));
+            }
+            set {
+                this["Tweet_LowerMagnitudeLimit"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Sound_Valid {
+            get {
+                return ((bool)(this["Sound_Valid"]));
+            }
+            set {
+                this["Sound_Valid"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Display_HideHistory {
+            get {
+                return ((bool)(this["Display_HideHistory"]));
+            }
+            set {
+                this["Display_HideHistory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Display_HideHistoryMap {
+            get {
+                return ((bool)(this["Display_HideHistoryMap"]));
+            }
+            set {
+                this["Display_HideHistoryMap"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Display_LatLonDecimal {
+            get {
+                return ((bool)(this["Display_LatLonDecimal"]));
+            }
+            set {
+                this["Display_LatLonDecimal"] = value;
             }
         }
     }

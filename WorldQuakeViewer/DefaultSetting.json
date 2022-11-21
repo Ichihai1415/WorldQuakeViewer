@@ -23,9 +23,5 @@
     "HideHistory": false, //履歴を隠す
     "HideHistoryMap": false, //履歴と地図を隠す
     "LatLon-Decimal": false //10進法表記(1.2345°N)
-  },
-  "": "",
-  "": "",
-  "": "",
-  "": ""
+  }
 }

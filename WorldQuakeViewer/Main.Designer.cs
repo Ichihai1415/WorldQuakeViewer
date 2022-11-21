@@ -408,7 +408,6 @@
             this.Name = "MainForm";
             this.Text = "WorldQuakeViewer";
             this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.MainForm_HelpButtonClicked);
-            this.Load += new System.EventHandler(this.MainForm_Load);
             this.RightClick.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.MainImg)).EndInit();
             this.ResumeLayout(false);

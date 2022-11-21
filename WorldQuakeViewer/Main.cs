@@ -21,46 +21,9 @@ namespace WorldQuakeViewer
         public MainForm()
         {
             InitializeComponent();
-        }
-        private void MainForm_Load(object sender, EventArgs e)
-        {
             NowVersion = "1.0.0";
         }
-        public void UpdateCheck()
-        {
-            try
-            {//https://github.com/Project-S-31415/WorldQuakeViewer/releases/latest/WorldQuakeViewer.1.0.0.zip
-                //設定をjsonに
-                WebClient WC = new WebClient
-                {
-                    Encoding = Encoding.UTF8
-                };
-                Settings.Default.NowVersion = "1.0.0";//ここでバージョン設定　AssemblyInfo.csも確認
-                Settings.Default.NewVersion = WC.DownloadString("https://project-s-31415.github.io/programs/released/world_quake_viewer/Version.txt");
-                Settings.Default.Save();
-                string NewMessage = WC.DownloadString("https://project-s-31415.github.io/programs/released/world_quake_viewer/Message.txt");
-                if (Settings.Default.Message != NewMessage)
-                {
-                    Settings.Default.Message = NewMessage;
-                    Settings.Default.Save();
-                    Message MessageDialog = new Message();
-                    MessageDialog.ShowDialog();
-                    if (MessageDialog.DialogResult == DialogResult.OK)
-                        Console.WriteLine("メッセージおｋ");
-                }
-                if (Settings.Default.NowVersion != Settings.Default.NewVersion)
-                {
-                    UpdateDialog dialog = new UpdateDialog();
-                    dialog.ShowDialog();
-                    if (dialog.DialogResult == DialogResult.OK)
-                        Application.Exit();
-                }
-            }
-            catch (WebException)
-            {
-                //throw new WebException("ネットワークに接続できません。");
-            }
-        }
+   
         private void JsonTimer_Tick(object sender, EventArgs e)
         {
             bool IsDebug = false;
@@ -242,7 +205,7 @@ namespace WorldQuakeViewer
                             USGS3.ForeColor = Color.Yellow;
                             USGS4.ForeColor = Color.Yellow;
                             USGS5.ForeColor = Color.Yellow;
-                            if (Settings.Default.IsTweet && IsDebug == false)
+                            if (Settings.Default.Tweet_Valid && IsDebug == false)
                             {
                                 try
                                 {
@@ -273,7 +236,14 @@ namespace WorldQuakeViewer
                                     }
                                     Status status = new Status();
                                     if (LogText_.Contains("更新"))
-                                        status = tokens.Statuses.Update(new { status = LogText_, in_reply_to_status_id = LatestTweetID });
+                                        try
+                                        {
+                                            status = tokens.Statuses.Update(new { status = LogText_, in_reply_to_status_id = LatestTweetID });
+                                        }
+                                        catch
+                                        {
+                                            status = tokens.Statuses.Update(new { status = LogText_ });
+                                        }
                                     else
                                         status = tokens.Statuses.Update(new { status = LogText_ });
                                     LatestTweetID = status.Id;
@@ -306,6 +276,61 @@ namespace WorldQuakeViewer
                             USGS3.ForeColor = Color.White;
                             USGS4.ForeColor = Color.White;
                             USGS5.ForeColor = Color.White;
+                            //M6未満でも
+                            if (USGSQuakeJson[0].Features[0].Properties.Mmi >= 4.5)
+                            {
+                                if (Settings.Default.Tweet_Valid && IsDebug == false)
+                                {
+                                    try
+                                    {
+                                        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+                                        string tokens_json = "";
+                                        Tokens tokens;
+                                        try
+                                        {
+                                            tokens_json = File.ReadAllText($"Tokens.json");
+                                            try
+                                            {
+                                                Tokens_JSON Tokens_jsondata = JsonConvert.DeserializeObject<Tokens_JSON>(tokens_json);
+                                                tokens = Tokens.Create(Tokens_jsondata.ConsumerKey, Tokens_jsondata.ConsumerSecret, Tokens_jsondata.AccessToken, Tokens_jsondata.AccessSecret);
+                                            }
+                                            catch
+                                            {
+                                                ErrorText.Text = $"Tokenが正しくありません。\n\"Tokens.json\"を確認してください。";
+                                                Process.Start("notepad.exe", "Tokens.json");
+                                                throw new Exception("Tokenが正しくありません。\"Tokens.json\"を確認してください。");
+                                            }
+                                        }
+                                        catch
+                                        {
+                                            File.WriteAllText("Tokens.json", "{\n  \"ConsumerKey\": \"\",\n  \"ConsumerSecret\": \"\",\n  \"AccessToken\": \"\",\n  \"AccessSecret\": \"\"\n}");
+                                            ErrorText.Text = $"TwiterAPIのTokenを\"Tokens.json\"に\n入力してください。";
+                                            Process.Start("notepad.exe", "Tokens.json");
+                                            throw new Exception("TwiterAPIのTokenを\"Tokens.json\"に入力してください。");
+                                        }
+                                        Status status = new Status();
+                                        if (LogText_.Contains("更新"))
+                                            try
+                                            {
+                                                status = tokens.Statuses.Update(new { status = LogText_, in_reply_to_status_id = LatestTweetID });
+                                            }
+                                            catch
+                                            {
+                                                status = tokens.Statuses.Update(new { status = LogText_ });
+                                            }
+                                        else
+                                            status = tokens.Statuses.Update(new { status = LogText_ });
+                                        LatestTweetID = status.Id;
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        ErrorText.Text = $"ツイートに失敗しました。\nわからない場合エラーログの内容を報告してください。\n内容:" + ex.Message;
+                                        LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main Version:{NowVersion}\n{ex}");
+
+                                    }
+                                }
+
+                            }
                         }
                         Console.WriteLine(DateTime.Now.ToString("HH:mm:ss.fff") + "　ログ出力終了");
                         if (USGSQuakeJson[0].Features[0].Properties.Alert == null)
@@ -338,7 +363,7 @@ namespace WorldQuakeViewer
                             USGS0.BackColor = Color.Black;
                             USGS0.ForeColor = Color.White;
                         }
-                        if (Settings.Default.IsRemoteTalk && IsDebug == false)
+                        if (Settings.Default.Bouyomichan_Valid && IsDebug == false)
                         {
                             try
                             {
