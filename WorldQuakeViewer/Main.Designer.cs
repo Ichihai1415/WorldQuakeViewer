@@ -85,6 +85,7 @@
             this.History43 = new System.Windows.Forms.Label();
             this.History53 = new System.Windows.Forms.Label();
             this.History63 = new System.Windows.Forms.Label();
+            this.RC1SettingReload = new System.Windows.Forms.ToolStripMenuItem();
             this.RightClick.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MainImg)).BeginInit();
             this.SuspendLayout();
@@ -139,6 +140,7 @@
             this.RightClick.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.RightClick.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.RC1Setting,
+            this.RC1SettingReload,
             this.RC1Bar1,
             this.RC1Sites,
             this.RC1Bar2,
@@ -147,7 +149,7 @@
             this.RC1RebootExit});
             this.RightClick.Name = "RightClick";
             this.RightClick.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.RightClick.Size = new System.Drawing.Size(208, 110);
+            this.RightClick.Size = new System.Drawing.Size(208, 154);
             this.RightClick.TabStop = true;
             this.RightClick.Text = "メニュー";
             // 
@@ -416,13 +418,11 @@
             this.History11.Name = "History11";
             this.History11.Size = new System.Drawing.Size(388, 73);
             this.History11.TabIndex = 23;
-            this.History11.Text = "2022/12/05 4:24:15 (UTC +09:00)発生\r\n震源:カザフスタン/シンチアンウイグル自治区(中国)国境\r\n15ﾟ23\'53\"S,172ﾟ5" +
-    "8\'4\"W　深さ:35.999km\r\n推定最大改正メルカリ震度階級:VIII(4.872)";
             // 
             // History21
             // 
             this.History21.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
-            this.History21.Font = new System.Drawing.Font("Koruri Regular", 10.5F);
+            this.History21.Font = new System.Drawing.Font("Koruri Regular", 9.5F);
             this.History21.Location = new System.Drawing.Point(406, 102);
             this.History21.Name = "History21";
             this.History21.Size = new System.Drawing.Size(388, 73);
@@ -431,7 +431,7 @@
             // History31
             // 
             this.History31.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
-            this.History31.Font = new System.Drawing.Font("Koruri Regular", 10.5F);
+            this.History31.Font = new System.Drawing.Font("Koruri Regular", 9.5F);
             this.History31.Location = new System.Drawing.Point(406, 182);
             this.History31.Name = "History31";
             this.History31.Size = new System.Drawing.Size(388, 73);
@@ -440,7 +440,7 @@
             // History41
             // 
             this.History41.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
-            this.History41.Font = new System.Drawing.Font("Koruri Regular", 10.5F);
+            this.History41.Font = new System.Drawing.Font("Koruri Regular", 9.5F);
             this.History41.Location = new System.Drawing.Point(406, 262);
             this.History41.Name = "History41";
             this.History41.Size = new System.Drawing.Size(388, 73);
@@ -449,7 +449,7 @@
             // History51
             // 
             this.History51.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
-            this.History51.Font = new System.Drawing.Font("Koruri Regular", 10.5F);
+            this.History51.Font = new System.Drawing.Font("Koruri Regular", 9.5F);
             this.History51.Location = new System.Drawing.Point(406, 342);
             this.History51.Name = "History51";
             this.History51.Size = new System.Drawing.Size(388, 73);
@@ -458,7 +458,7 @@
             // History61
             // 
             this.History61.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
-            this.History61.Font = new System.Drawing.Font("Koruri Regular", 10.5F);
+            this.History61.Font = new System.Drawing.Font("Koruri Regular", 9.5F);
             this.History61.Location = new System.Drawing.Point(406, 422);
             this.History61.Name = "History61";
             this.History61.Size = new System.Drawing.Size(388, 73);
@@ -468,7 +468,7 @@
             // 
             this.History12.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
             this.History12.Font = new System.Drawing.Font("Koruri Regular", 10F);
-            this.History12.Location = new System.Drawing.Point(673, 75);
+            this.History12.Location = new System.Drawing.Point(672, 75);
             this.History12.Name = "History12";
             this.History12.Size = new System.Drawing.Size(50, 20);
             this.History12.TabIndex = 29;
@@ -478,7 +478,7 @@
             // 
             this.History13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
             this.History13.Font = new System.Drawing.Font("Koruri Regular", 22F);
-            this.History13.Location = new System.Drawing.Point(718, 57);
+            this.History13.Location = new System.Drawing.Point(717, 57);
             this.History13.Name = "History13";
             this.History13.Size = new System.Drawing.Size(77, 38);
             this.History13.TabIndex = 30;
@@ -488,7 +488,7 @@
             // 
             this.History22.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
             this.History22.Font = new System.Drawing.Font("Koruri Regular", 10F);
-            this.History22.Location = new System.Drawing.Point(673, 155);
+            this.History22.Location = new System.Drawing.Point(672, 155);
             this.History22.Name = "History22";
             this.History22.Size = new System.Drawing.Size(50, 20);
             this.History22.TabIndex = 31;
@@ -498,7 +498,7 @@
             // 
             this.History32.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
             this.History32.Font = new System.Drawing.Font("Koruri Regular", 10F);
-            this.History32.Location = new System.Drawing.Point(673, 235);
+            this.History32.Location = new System.Drawing.Point(672, 235);
             this.History32.Name = "History32";
             this.History32.Size = new System.Drawing.Size(50, 20);
             this.History32.TabIndex = 32;
@@ -508,7 +508,7 @@
             // 
             this.History42.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
             this.History42.Font = new System.Drawing.Font("Koruri Regular", 10F);
-            this.History42.Location = new System.Drawing.Point(673, 315);
+            this.History42.Location = new System.Drawing.Point(672, 315);
             this.History42.Name = "History42";
             this.History42.Size = new System.Drawing.Size(50, 20);
             this.History42.TabIndex = 33;
@@ -518,7 +518,7 @@
             // 
             this.History52.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
             this.History52.Font = new System.Drawing.Font("Koruri Regular", 10F);
-            this.History52.Location = new System.Drawing.Point(673, 395);
+            this.History52.Location = new System.Drawing.Point(672, 395);
             this.History52.Name = "History52";
             this.History52.Size = new System.Drawing.Size(50, 20);
             this.History52.TabIndex = 34;
@@ -528,7 +528,7 @@
             // 
             this.History62.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
             this.History62.Font = new System.Drawing.Font("Koruri Regular", 10F);
-            this.History62.Location = new System.Drawing.Point(673, 475);
+            this.History62.Location = new System.Drawing.Point(672, 475);
             this.History62.Name = "History62";
             this.History62.Size = new System.Drawing.Size(50, 20);
             this.History62.TabIndex = 35;
@@ -538,7 +538,7 @@
             // 
             this.History23.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
             this.History23.Font = new System.Drawing.Font("Koruri Regular", 22F);
-            this.History23.Location = new System.Drawing.Point(718, 137);
+            this.History23.Location = new System.Drawing.Point(717, 137);
             this.History23.Name = "History23";
             this.History23.Size = new System.Drawing.Size(77, 38);
             this.History23.TabIndex = 36;
@@ -548,7 +548,7 @@
             // 
             this.History33.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
             this.History33.Font = new System.Drawing.Font("Koruri Regular", 22F);
-            this.History33.Location = new System.Drawing.Point(718, 217);
+            this.History33.Location = new System.Drawing.Point(717, 217);
             this.History33.Name = "History33";
             this.History33.Size = new System.Drawing.Size(77, 38);
             this.History33.TabIndex = 37;
@@ -558,7 +558,7 @@
             // 
             this.History43.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
             this.History43.Font = new System.Drawing.Font("Koruri Regular", 22F);
-            this.History43.Location = new System.Drawing.Point(718, 297);
+            this.History43.Location = new System.Drawing.Point(717, 297);
             this.History43.Name = "History43";
             this.History43.Size = new System.Drawing.Size(77, 38);
             this.History43.TabIndex = 38;
@@ -568,7 +568,7 @@
             // 
             this.History53.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
             this.History53.Font = new System.Drawing.Font("Koruri Regular", 22F);
-            this.History53.Location = new System.Drawing.Point(718, 377);
+            this.History53.Location = new System.Drawing.Point(717, 377);
             this.History53.Name = "History53";
             this.History53.Size = new System.Drawing.Size(77, 38);
             this.History53.TabIndex = 39;
@@ -578,11 +578,18 @@
             // 
             this.History63.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
             this.History63.Font = new System.Drawing.Font("Koruri Regular", 22F);
-            this.History63.Location = new System.Drawing.Point(718, 457);
+            this.History63.Location = new System.Drawing.Point(717, 457);
             this.History63.Name = "History63";
             this.History63.Size = new System.Drawing.Size(77, 38);
             this.History63.TabIndex = 40;
             this.History63.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // RC1SettingReload
+            // 
+            this.RC1SettingReload.Name = "RC1SettingReload";
+            this.RC1SettingReload.Size = new System.Drawing.Size(207, 22);
+            this.RC1SettingReload.Text = "設定再読み込み";
+            this.RC1SettingReload.Click += new System.EventHandler(this.RC1SettingReload_Click);
             // 
             // MainForm
             // 
@@ -629,6 +636,8 @@
             this.HelpButton = true;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(816, 539);
+            this.MinimumSize = new System.Drawing.Size(416, 139);
             this.Name = "MainForm";
             this.Text = "WorldQuakeViewer";
             this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.MainForm_HelpButtonClicked);
@@ -698,6 +707,7 @@
         private System.Windows.Forms.Label History43;
         private System.Windows.Forms.Label History53;
         private System.Windows.Forms.Label History63;
+        private System.Windows.Forms.ToolStripMenuItem RC1SettingReload;
     }
 }
 

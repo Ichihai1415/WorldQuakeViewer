@@ -178,22 +178,7 @@ namespace WorldQuakeViewer.Properties {
                 this["Tweet_LowerMagnitudeLimit"] = value;
             }
         }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("4.5")]
-        public double Tweet_LowerMMILimit
-        {
-            get
-            {
-                return ((double)(this["Tweet_LowerMMILimit"]));
-            }
-            set
-            {
-                this["Tweet_LowerMMILimit"] = value;
-            }
-        }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
@@ -233,12 +218,72 @@ namespace WorldQuakeViewer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool Display_LatLonDecimal {
+        public bool Text_LatLonDecimal {
             get {
-                return ((bool)(this["Display_LatLonDecimal"]));
+                return ((bool)(this["Text_LatLonDecimal"]));
             }
             set {
-                this["Display_LatLonDecimal"] = value;
+                this["Text_LatLonDecimal"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4.5")]
+        public double Tweet_LowerMMILimit {
+            get {
+                return ((double)(this["Tweet_LowerMMILimit"]));
+            }
+            set {
+                this["Tweet_LowerMMILimit"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double Bouyomichan_LowerMagnitudeLimit {
+            get {
+                return ((double)(this["Bouyomichan_LowerMagnitudeLimit"]));
+            }
+            set {
+                this["Bouyomichan_LowerMagnitudeLimit"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double Bouyomichan_LowerMMILimit {
+            get {
+                return ((double)(this["Bouyomichan_LowerMMILimit"]));
+            }
+            set {
+                this["Bouyomichan_LowerMMILimit"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Socket_Host {
+            get {
+                return ((string)(this["Socket_Host"]));
+            }
+            set {
+                this["Socket_Host"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Socket_Port {
+            get {
+                return ((string)(this["Socket_Port"]));
+            }
+            set {
+                this["Socket_Port"] = value;
             }
         }
     }
