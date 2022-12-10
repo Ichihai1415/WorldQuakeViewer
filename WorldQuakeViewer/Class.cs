@@ -91,6 +91,7 @@ namespace WorldQuakeViewer
     public class History
     {
         public string Text { get; set; }
+        public string UpdateTime { get; set; }
         public long TweetID { get; set; }
 
 

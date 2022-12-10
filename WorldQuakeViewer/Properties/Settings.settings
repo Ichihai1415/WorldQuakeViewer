@@ -50,11 +50,23 @@
     <Setting Name="Display_HideHistoryMap" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="Display_LatLonDecimal" Type="System.Boolean" Scope="User">
+    <Setting Name="Text_LatLonDecimal" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="Tweet_LowerMMILimit" Type="System.Double" Scope="User">
       <Value Profile="(Default)">4.5</Value>
+    </Setting>
+    <Setting Name="Bouyomichan_LowerMagnitudeLimit" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Bouyomichan_LowerMMILimit" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Socket_Host" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Socket_Port" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

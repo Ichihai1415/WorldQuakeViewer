@@ -123,7 +123,7 @@
             this.USGS6.Font = new System.Drawing.Font("Koruri Regular", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.USGS6.Location = new System.Drawing.Point(259, 432);
             this.USGS6.Name = "USGS6";
-            this.USGS6.Size = new System.Drawing.Size(0, 17);
+            this.USGS6.Size = new System.Drawing.Size(0, 21);
             this.USGS6.TabIndex = 8;
             // 
             // USGS4
@@ -147,21 +147,21 @@
             this.RC1RebootExit});
             this.RightClick.Name = "RightClick";
             this.RightClick.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.RightClick.Size = new System.Drawing.Size(208, 110);
+            this.RightClick.Size = new System.Drawing.Size(243, 118);
             this.RightClick.TabStop = true;
             this.RightClick.Text = "メニュー";
             // 
             // RC1Setting
             // 
             this.RC1Setting.Name = "RC1Setting";
-            this.RC1Setting.Size = new System.Drawing.Size(207, 22);
+            this.RC1Setting.Size = new System.Drawing.Size(242, 24);
             this.RC1Setting.Text = "設定";
             this.RC1Setting.Click += new System.EventHandler(this.RCsetting_Click);
             // 
             // RC1Bar1
             // 
             this.RC1Bar1.Name = "RC1Bar1";
-            this.RC1Bar1.Size = new System.Drawing.Size(204, 6);
+            this.RC1Bar1.Size = new System.Drawing.Size(239, 6);
             // 
             // RC1Sites
             // 
@@ -173,41 +173,41 @@
             this.RCMapEWSC,
             this.RCTsunamiGov});
             this.RC1Sites.Name = "RC1Sites";
-            this.RC1Sites.Size = new System.Drawing.Size(207, 22);
+            this.RC1Sites.Size = new System.Drawing.Size(242, 24);
             this.RC1Sites.Text = "各種サイト";
             // 
             // RCThisInfo
             // 
             this.RCThisInfo.Name = "RCThisInfo";
-            this.RCThisInfo.Size = new System.Drawing.Size(202, 22);
+            this.RCThisInfo.Size = new System.Drawing.Size(252, 26);
             this.RCThisInfo.Text = "最新の地震の詳細(USGS)";
             this.RCThisInfo.Click += new System.EventHandler(this.RCusgsthis_Click);
             // 
             // RCEarlyEst
             // 
             this.RCEarlyEst.Name = "RCEarlyEst";
-            this.RCEarlyEst.Size = new System.Drawing.Size(202, 22);
+            this.RCEarlyEst.Size = new System.Drawing.Size(252, 26);
             this.RCEarlyEst.Text = "Early-est";
             this.RCEarlyEst.Click += new System.EventHandler(this.RCEarlyEst_Click);
             // 
             // RCMapUSGS
             // 
             this.RCMapUSGS.Name = "RCMapUSGS";
-            this.RCMapUSGS.Size = new System.Drawing.Size(202, 22);
+            this.RCMapUSGS.Size = new System.Drawing.Size(252, 26);
             this.RCMapUSGS.Text = "USGS";
             this.RCMapUSGS.Click += new System.EventHandler(this.RCusgsmap_Click);
             // 
             // RCMapEWSC
             // 
             this.RCMapEWSC.Name = "RCMapEWSC";
-            this.RCMapEWSC.Size = new System.Drawing.Size(202, 22);
+            this.RCMapEWSC.Size = new System.Drawing.Size(252, 26);
             this.RCMapEWSC.Text = "EMSC";
             this.RCMapEWSC.Click += new System.EventHandler(this.RCMapEWSC_Click);
             // 
             // RCTsunamiGov
             // 
             this.RCTsunamiGov.Name = "RCTsunamiGov";
-            this.RCTsunamiGov.Size = new System.Drawing.Size(202, 22);
+            this.RCTsunamiGov.Size = new System.Drawing.Size(252, 26);
             this.RCTsunamiGov.Text = "PTWC(tsunami.gov)";
             this.RCTsunamiGov.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.RCTsunamiGov.Click += new System.EventHandler(this.RCtsunami_Click);
@@ -215,7 +215,7 @@
             // RC1Bar2
             // 
             this.RC1Bar2.Name = "RC1Bar2";
-            this.RC1Bar2.Size = new System.Drawing.Size(204, 6);
+            this.RC1Bar2.Size = new System.Drawing.Size(239, 6);
             // 
             // RC1PSInfo
             // 
@@ -225,34 +225,34 @@
             this.RCGitHub,
             this.RCiInfoPage});
             this.RC1PSInfo.Name = "RC1PSInfo";
-            this.RC1PSInfo.Size = new System.Drawing.Size(207, 22);
+            this.RC1PSInfo.Size = new System.Drawing.Size(242, 24);
             this.RC1PSInfo.Text = "制作者ページ/解説ページ等";
             // 
             // RCTwitter
             // 
             this.RCTwitter.Name = "RCTwitter";
-            this.RCTwitter.Size = new System.Drawing.Size(164, 22);
+            this.RCTwitter.Size = new System.Drawing.Size(206, 26);
             this.RCTwitter.Text = "Twitter";
             this.RCTwitter.Click += new System.EventHandler(this.RCtwitter_Click);
             // 
             // RCGitHub
             // 
             this.RCGitHub.Name = "RCGitHub";
-            this.RCGitHub.Size = new System.Drawing.Size(164, 22);
+            this.RCGitHub.Size = new System.Drawing.Size(206, 26);
             this.RCGitHub.Text = "GitHub(リポジトリ)";
             this.RCGitHub.Click += new System.EventHandler(this.RCgithub_Click);
             // 
             // RCiInfoPage
             // 
             this.RCiInfoPage.Name = "RCiInfoPage";
-            this.RCiInfoPage.Size = new System.Drawing.Size(164, 22);
+            this.RCiInfoPage.Size = new System.Drawing.Size(206, 26);
             this.RCiInfoPage.Text = "解説ページ";
             this.RCiInfoPage.Click += new System.EventHandler(this.RCinfopage_Click);
             // 
             // RC1Bar3
             // 
             this.RC1Bar3.Name = "RC1Bar3";
-            this.RC1Bar3.Size = new System.Drawing.Size(204, 6);
+            this.RC1Bar3.Size = new System.Drawing.Size(239, 6);
             // 
             // RC1RebootExit
             // 
@@ -261,20 +261,20 @@
             this.RCreboot,
             this.RCexit});
             this.RC1RebootExit.Name = "RC1RebootExit";
-            this.RC1RebootExit.Size = new System.Drawing.Size(207, 22);
+            this.RC1RebootExit.Size = new System.Drawing.Size(242, 24);
             this.RC1RebootExit.Text = "再起動/終了";
             // 
             // RCreboot
             // 
             this.RCreboot.Name = "RCreboot";
-            this.RCreboot.Size = new System.Drawing.Size(110, 22);
+            this.RCreboot.Size = new System.Drawing.Size(137, 26);
             this.RCreboot.Text = "再起動";
             this.RCreboot.Click += new System.EventHandler(this.RCreboot_Click);
             // 
             // RCexit
             // 
             this.RCexit.Name = "RCexit";
-            this.RCexit.Size = new System.Drawing.Size(110, 22);
+            this.RCexit.Size = new System.Drawing.Size(137, 26);
             this.RCexit.Text = "終了";
             this.RCexit.Click += new System.EventHandler(this.RCexit_Click);
             // 
@@ -312,7 +312,7 @@
             this.ErrorText.ForeColor = System.Drawing.Color.Yellow;
             this.ErrorText.Location = new System.Drawing.Point(0, 100);
             this.ErrorText.Name = "ErrorText";
-            this.ErrorText.Size = new System.Drawing.Size(0, 22);
+            this.ErrorText.Size = new System.Drawing.Size(0, 28);
             this.ErrorText.TabIndex = 15;
             // 
             // HistoryBack
@@ -416,13 +416,11 @@
             this.History11.Name = "History11";
             this.History11.Size = new System.Drawing.Size(388, 73);
             this.History11.TabIndex = 23;
-            this.History11.Text = "2022/12/05 4:24:15 (UTC +09:00)発生\r\n震源:カザフスタン/シンチアンウイグル自治区(中国)国境\r\n15ﾟ23\'53\"S,172ﾟ5" +
-    "8\'4\"W　深さ:35.999km\r\n推定最大改正メルカリ震度階級:VIII(4.872)";
             // 
             // History21
             // 
             this.History21.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
-            this.History21.Font = new System.Drawing.Font("Koruri Regular", 10.5F);
+            this.History21.Font = new System.Drawing.Font("Koruri Regular", 9.5F);
             this.History21.Location = new System.Drawing.Point(406, 102);
             this.History21.Name = "History21";
             this.History21.Size = new System.Drawing.Size(388, 73);
@@ -431,7 +429,7 @@
             // History31
             // 
             this.History31.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
-            this.History31.Font = new System.Drawing.Font("Koruri Regular", 10.5F);
+            this.History31.Font = new System.Drawing.Font("Koruri Regular", 9.5F);
             this.History31.Location = new System.Drawing.Point(406, 182);
             this.History31.Name = "History31";
             this.History31.Size = new System.Drawing.Size(388, 73);
@@ -440,7 +438,7 @@
             // History41
             // 
             this.History41.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
-            this.History41.Font = new System.Drawing.Font("Koruri Regular", 10.5F);
+            this.History41.Font = new System.Drawing.Font("Koruri Regular", 9.5F);
             this.History41.Location = new System.Drawing.Point(406, 262);
             this.History41.Name = "History41";
             this.History41.Size = new System.Drawing.Size(388, 73);
@@ -449,7 +447,7 @@
             // History51
             // 
             this.History51.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
-            this.History51.Font = new System.Drawing.Font("Koruri Regular", 10.5F);
+            this.History51.Font = new System.Drawing.Font("Koruri Regular", 9.5F);
             this.History51.Location = new System.Drawing.Point(406, 342);
             this.History51.Name = "History51";
             this.History51.Size = new System.Drawing.Size(388, 73);
@@ -458,7 +456,7 @@
             // History61
             // 
             this.History61.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
-            this.History61.Font = new System.Drawing.Font("Koruri Regular", 10.5F);
+            this.History61.Font = new System.Drawing.Font("Koruri Regular", 9.5F);
             this.History61.Location = new System.Drawing.Point(406, 422);
             this.History61.Name = "History61";
             this.History61.Size = new System.Drawing.Size(388, 73);
@@ -468,7 +466,7 @@
             // 
             this.History12.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
             this.History12.Font = new System.Drawing.Font("Koruri Regular", 10F);
-            this.History12.Location = new System.Drawing.Point(673, 75);
+            this.History12.Location = new System.Drawing.Point(672, 75);
             this.History12.Name = "History12";
             this.History12.Size = new System.Drawing.Size(50, 20);
             this.History12.TabIndex = 29;
@@ -478,7 +476,7 @@
             // 
             this.History13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
             this.History13.Font = new System.Drawing.Font("Koruri Regular", 22F);
-            this.History13.Location = new System.Drawing.Point(718, 57);
+            this.History13.Location = new System.Drawing.Point(717, 57);
             this.History13.Name = "History13";
             this.History13.Size = new System.Drawing.Size(77, 38);
             this.History13.TabIndex = 30;
@@ -488,7 +486,7 @@
             // 
             this.History22.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
             this.History22.Font = new System.Drawing.Font("Koruri Regular", 10F);
-            this.History22.Location = new System.Drawing.Point(673, 155);
+            this.History22.Location = new System.Drawing.Point(672, 155);
             this.History22.Name = "History22";
             this.History22.Size = new System.Drawing.Size(50, 20);
             this.History22.TabIndex = 31;
@@ -498,7 +496,7 @@
             // 
             this.History32.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
             this.History32.Font = new System.Drawing.Font("Koruri Regular", 10F);
-            this.History32.Location = new System.Drawing.Point(673, 235);
+            this.History32.Location = new System.Drawing.Point(672, 235);
             this.History32.Name = "History32";
             this.History32.Size = new System.Drawing.Size(50, 20);
             this.History32.TabIndex = 32;
@@ -508,7 +506,7 @@
             // 
             this.History42.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
             this.History42.Font = new System.Drawing.Font("Koruri Regular", 10F);
-            this.History42.Location = new System.Drawing.Point(673, 315);
+            this.History42.Location = new System.Drawing.Point(672, 315);
             this.History42.Name = "History42";
             this.History42.Size = new System.Drawing.Size(50, 20);
             this.History42.TabIndex = 33;
@@ -518,7 +516,7 @@
             // 
             this.History52.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
             this.History52.Font = new System.Drawing.Font("Koruri Regular", 10F);
-            this.History52.Location = new System.Drawing.Point(673, 395);
+            this.History52.Location = new System.Drawing.Point(672, 395);
             this.History52.Name = "History52";
             this.History52.Size = new System.Drawing.Size(50, 20);
             this.History52.TabIndex = 34;
@@ -528,7 +526,7 @@
             // 
             this.History62.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
             this.History62.Font = new System.Drawing.Font("Koruri Regular", 10F);
-            this.History62.Location = new System.Drawing.Point(673, 475);
+            this.History62.Location = new System.Drawing.Point(672, 475);
             this.History62.Name = "History62";
             this.History62.Size = new System.Drawing.Size(50, 20);
             this.History62.TabIndex = 35;
@@ -538,7 +536,7 @@
             // 
             this.History23.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
             this.History23.Font = new System.Drawing.Font("Koruri Regular", 22F);
-            this.History23.Location = new System.Drawing.Point(718, 137);
+            this.History23.Location = new System.Drawing.Point(717, 137);
             this.History23.Name = "History23";
             this.History23.Size = new System.Drawing.Size(77, 38);
             this.History23.TabIndex = 36;
@@ -548,7 +546,7 @@
             // 
             this.History33.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
             this.History33.Font = new System.Drawing.Font("Koruri Regular", 22F);
-            this.History33.Location = new System.Drawing.Point(718, 217);
+            this.History33.Location = new System.Drawing.Point(717, 217);
             this.History33.Name = "History33";
             this.History33.Size = new System.Drawing.Size(77, 38);
             this.History33.TabIndex = 37;
@@ -558,7 +556,7 @@
             // 
             this.History43.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
             this.History43.Font = new System.Drawing.Font("Koruri Regular", 22F);
-            this.History43.Location = new System.Drawing.Point(718, 297);
+            this.History43.Location = new System.Drawing.Point(717, 297);
             this.History43.Name = "History43";
             this.History43.Size = new System.Drawing.Size(77, 38);
             this.History43.TabIndex = 38;
@@ -568,7 +566,7 @@
             // 
             this.History53.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
             this.History53.Font = new System.Drawing.Font("Koruri Regular", 22F);
-            this.History53.Location = new System.Drawing.Point(718, 377);
+            this.History53.Location = new System.Drawing.Point(717, 377);
             this.History53.Name = "History53";
             this.History53.Size = new System.Drawing.Size(77, 38);
             this.History53.TabIndex = 39;
@@ -578,7 +576,7 @@
             // 
             this.History63.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(90)))));
             this.History63.Font = new System.Drawing.Font("Koruri Regular", 22F);
-            this.History63.Location = new System.Drawing.Point(718, 457);
+            this.History63.Location = new System.Drawing.Point(717, 457);
             this.History63.Name = "History63";
             this.History63.Size = new System.Drawing.Size(77, 38);
             this.History63.TabIndex = 40;
