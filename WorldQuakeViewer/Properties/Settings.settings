@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="Bouyomichan_Valid" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="Bouyomichan_Host" Type="System.String" Scope="User">
       <Value Profile="(Default)">127.0.0.1</Value>
@@ -12,19 +12,19 @@
       <Value Profile="(Default)">50001</Value>
     </Setting>
     <Setting Name="Bouyomichan_Voice" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">-1</Value>
     </Setting>
     <Setting Name="Bouyomichan_Speed" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">100</Value>
     </Setting>
     <Setting Name="Bouyomichan_Tone" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">100</Value>
     </Setting>
     <Setting Name="Bouyomichan_Volume" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">100</Value>
     </Setting>
     <Setting Name="Tweet_Valid" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="Tweet_ConsumerKey" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
@@ -52,6 +52,9 @@
     </Setting>
     <Setting Name="Display_LatLonDecimal" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Tweet_LowerMMILimit" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">4.5</Value>
     </Setting>
   </Settings>
 </SettingsFile>

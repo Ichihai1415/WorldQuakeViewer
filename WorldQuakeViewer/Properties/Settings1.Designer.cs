@@ -25,7 +25,7 @@ namespace WorldQuakeViewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool Bouyomichan_Valid {
             get {
                 return ((bool)(this["Bouyomichan_Valid"]));
@@ -61,7 +61,7 @@ namespace WorldQuakeViewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
         public int Bouyomichan_Voice {
             get {
                 return ((int)(this["Bouyomichan_Voice"]));
@@ -73,7 +73,7 @@ namespace WorldQuakeViewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
         public int Bouyomichan_Speed {
             get {
                 return ((int)(this["Bouyomichan_Speed"]));
@@ -85,7 +85,7 @@ namespace WorldQuakeViewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
         public int Bouyomichan_Tone {
             get {
                 return ((int)(this["Bouyomichan_Tone"]));
@@ -97,7 +97,7 @@ namespace WorldQuakeViewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
         public int Bouyomichan_Volume {
             get {
                 return ((int)(this["Bouyomichan_Volume"]));
@@ -109,7 +109,7 @@ namespace WorldQuakeViewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool Tweet_Valid {
             get {
                 return ((bool)(this["Tweet_Valid"]));
@@ -178,7 +178,22 @@ namespace WorldQuakeViewer.Properties {
                 this["Tweet_LowerMagnitudeLimit"] = value;
             }
         }
-        
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4.5")]
+        public double Tweet_LowerMMILimit
+        {
+            get
+            {
+                return ((double)(this["Tweet_LowerMMILimit"]));
+            }
+            set
+            {
+                this["Tweet_LowerMMILimit"] = value;
+            }
+        }
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]

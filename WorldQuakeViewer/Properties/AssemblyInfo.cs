@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("WorldQuakeViewer")]
 [assembly: AssemblyDescription("世界の地震情報を表示します。")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Project-S")]
+[assembly: AssemblyCompany("Ichihai1415")]
 [assembly: AssemblyProduct("WorldQuakeViewer")]
-[assembly: AssemblyCopyright("Copyright © 2022 Project-S@31415")]
+[assembly: AssemblyCopyright("Copyright © 2022 Ichihai1415")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

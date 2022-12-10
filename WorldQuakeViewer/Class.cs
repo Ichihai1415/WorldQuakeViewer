@@ -31,7 +31,6 @@ namespace USGSQuakeClass
 }
 namespace USGSFERegionsClass
 {
-    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
     public class Metadata
     {
         public string Request { get; set; }
@@ -89,11 +88,11 @@ namespace USGSFERegionsClass2
 }
 namespace WorldQuakeViewer
 {
-    public class Tokens_JSON
+    public class History
     {
-        public string ConsumerKey { get; set; }
-        public string ConsumerSecret { get; set; }
-        public string AccessToken { get; set; }
-        public string AccessSecret { get; set; }
+        public string Text { get; set; }
+        public long TweetID { get; set; }
+
+
     }
 }
