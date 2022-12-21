@@ -22,7 +22,7 @@ namespace WorldQuakeViewer
         public MainForm()
         {
             InitializeComponent();
-            NowVersion = "1.0.0";
+            Settings.Default.Version = "1.0.0";
         }
         private void MainForm_Load(object sender, EventArgs e)//設定読み込み
         {
@@ -220,7 +220,7 @@ namespace WorldQuakeViewer
                                 }
 
                             }
-                            LogSave("Log\\M4.5+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{NowVersion}\n{LogText_}", ID);
+                            LogSave("Log\\M4.5+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                             if (i == 0)
                             {
                                 //x:+200が中心 左余白-250 y:+300が中心
@@ -246,7 +246,7 @@ namespace WorldQuakeViewer
                                     USGS3.ForeColor = Color.Yellow;
                                     USGS4.ForeColor = Color.Yellow;
                                     USGS5.ForeColor = Color.Yellow;
-                                    LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{NowVersion}\n{LogText_}", ID);
+                                    LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
 
                                     if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
                                     {
@@ -256,7 +256,7 @@ namespace WorldQuakeViewer
                                         USGS3.ForeColor = Color.Red;
                                         USGS4.ForeColor = Color.Red;
                                         USGS5.ForeColor = Color.Red;
-                                        LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{NowVersion}\n{LogText_}", ID);
+                                        LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                                     }
                                 }
                                 else
@@ -311,13 +311,13 @@ namespace WorldQuakeViewer
                                     History11.ForeColor = Color.Yellow;
                                     History12.ForeColor = Color.Yellow;
                                     History13.ForeColor = Color.Yellow;
-                                    LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{NowVersion}\n{LogText_}", ID);
+                                    LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                                     if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
                                     {
                                         History11.ForeColor = Color.Red;
                                         History12.ForeColor = Color.Red;
                                         History13.ForeColor = Color.Red;
-                                        LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{NowVersion}\n{LogText_}", ID);
+                                        LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                                     }
                                 }
                                 else
@@ -349,13 +349,13 @@ namespace WorldQuakeViewer
                                     History21.ForeColor = Color.Yellow;
                                     History22.ForeColor = Color.Yellow;
                                     History23.ForeColor = Color.Yellow;
-                                    LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{NowVersion}\n{LogText_}", ID);
+                                    LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                                     if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
                                     {
                                         History21.ForeColor = Color.Red;
                                         History22.ForeColor = Color.Red;
                                         History23.ForeColor = Color.Red;
-                                        LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{NowVersion}\n{LogText_}", ID);
+                                        LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                                     }
                                 }
                                 else
@@ -387,13 +387,13 @@ namespace WorldQuakeViewer
                                     History31.ForeColor = Color.Yellow;
                                     History32.ForeColor = Color.Yellow;
                                     History33.ForeColor = Color.Yellow;
-                                    LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{NowVersion}\n{LogText_}", ID);
+                                    LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                                     if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
                                     {
                                         History31.ForeColor = Color.Red;
                                         History32.ForeColor = Color.Red;
                                         History33.ForeColor = Color.Red;
-                                        LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{NowVersion}\n{LogText_}", ID);
+                                        LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                                     }
                                 }
                                 else
@@ -425,13 +425,13 @@ namespace WorldQuakeViewer
                                     History41.ForeColor = Color.Yellow;
                                     History42.ForeColor = Color.Yellow;
                                     History43.ForeColor = Color.Yellow;
-                                    LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{NowVersion}\n{LogText_}", ID);
+                                    LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                                     if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
                                     {
                                         History41.ForeColor = Color.Red;
                                         History42.ForeColor = Color.Red;
                                         History43.ForeColor = Color.Red;
-                                        LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{NowVersion}\n{LogText_}", ID);
+                                        LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                                     }
                                 }
                                 else
@@ -463,13 +463,13 @@ namespace WorldQuakeViewer
                                     History51.ForeColor = Color.Yellow;
                                     History52.ForeColor = Color.Yellow;
                                     History53.ForeColor = Color.Yellow;
-                                    LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{NowVersion}\n{LogText_}", ID);
+                                    LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                                     if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
                                     {
                                         History51.ForeColor = Color.Red;
                                         History52.ForeColor = Color.Red;
                                         History53.ForeColor = Color.Red;
-                                        LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{NowVersion}\n{LogText_}", ID);
+                                        LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                                     }
                                 }
                                 else
@@ -501,13 +501,13 @@ namespace WorldQuakeViewer
                                     History61.ForeColor = Color.Yellow;
                                     History62.ForeColor = Color.Yellow;
                                     History63.ForeColor = Color.Yellow;
-                                    LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{NowVersion}\n{LogText_}", ID);
+                                    LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                                     if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
                                     {
                                         History61.ForeColor = Color.Red;
                                         History62.ForeColor = Color.Red;
                                         History63.ForeColor = Color.Red;
-                                        LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{NowVersion}\n{LogText_}", ID);
+                                        LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                                     }
                                 }
                                 else
@@ -530,7 +530,7 @@ namespace WorldQuakeViewer
                                     History60.BackColor = Color.DimGray;
                             }
                             if (USGSQuakeJson[0].Features[i].Properties.Mag >= Settings.Default.Bouyomichan_LowerMagnitudeLimit || USGSQuakeJson[0].Features[i].Properties.Mmi >= Settings.Default.Bouyomichan_LowerMMILimit)
-                                if (Settings.Default.Bouyomichan_Valid && IsDebug == false)//読み上げ
+                                if (Settings.Default.Bouyomichan_Enable && IsDebug == false)//読み上げ
                                     try
                                     {
                                         byte[] Message = Encoding.UTF8.GetBytes(BouyomiText);
@@ -554,7 +554,7 @@ namespace WorldQuakeViewer
                                         throw new Exception("読み上げ送信に失敗しました。内容:" + ex.Message);
                                     }
                             if (USGSQuakeJson[0].Features[i].Properties.Mag >= Settings.Default.Tweet_LowerMagnitudeLimit || USGSQuakeJson[0].Features[i].Properties.Mmi >= Settings.Default.Tweet_LowerMMILimit)
-                                if (Settings.Default.Tweet_Valid && IsDebug == false)
+                                if (Settings.Default.Tweet_Enable && IsDebug == false)
                                     Tweet(LogText_, ID);
                         }
                         else
@@ -571,13 +571,12 @@ namespace WorldQuakeViewer
             catch (Exception ex)
             {
                 ErrorText.Text = $"エラーが発生しました。\nエラーログの内容を報告してください。\n内容:" + ex.Message;
-                LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main Version:{NowVersion}\n{ex}");
+                LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main Version:{Settings.Default.Version}\n{ex}");
             }
             ErrorText.Text = ErrorText.Text.Replace("取得中…", "");
             NoFirst = true;
             Console.WriteLine("処理終了");
         }
-        public string NowVersion = "";
         public string LatestURL = "";
         public bool NoFirst = false;//最初はツイートしない
         public Dictionary<string, History> Histories = new Dictionary<string, History>();//ID,Data
@@ -666,7 +665,7 @@ namespace WorldQuakeViewer
                 catch (Exception ex)
                 {
                     ErrorText.Text = $"ツイートに失敗しました。\nわからない場合エラーログの内容を報告してください。\n内容:" + ex.Message;
-                    LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Tweet Version:{NowVersion}\n{ex}");
+                    LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Tweet Version:{Settings.Default.Version}\n{ex}");
                 }
         }
         /// <summary>
@@ -675,7 +674,12 @@ namespace WorldQuakeViewer
         /// <remarks>即時サイズ変更を行います。</remarks>
         public void SettingReload()
         {
+            string Version = Settings.Default.Version;
             Settings.Default.Reload();
+            Settings.Default.Version = Version;
+            Settings.Default.Save();
+            Configuration Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
+            File.Copy(Config.FilePath, "setting.xml", true);
             if (Settings.Default.Display_HideHistory)
                 if (Settings.Default.Display_HideHistoryMap)
                     Size = new Size(416, 139);//400,100
@@ -692,7 +696,7 @@ namespace WorldQuakeViewer
         private void RC1SettingReload_Click(object sender, EventArgs e)
         {
             SettingReload();
-            MessageBox.Show("設定を再読み込みしました。一部の設定は情報受信または再起動が必要です。","WQV_Setting",MessageBoxButtons.OK,MessageBoxIcon.Information);
+            MessageBox.Show("設定を再読み込みしました。一部の設定は情報受信または再起動が必要です。", "WQV_Setting", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         private void RCusgsmap_Click(object sender, EventArgs e)
         {

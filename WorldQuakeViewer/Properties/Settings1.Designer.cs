@@ -26,12 +26,12 @@ namespace WorldQuakeViewer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool Bouyomichan_Valid {
+        public bool Bouyomichan_Enable {
             get {
-                return ((bool)(this["Bouyomichan_Valid"]));
+                return ((bool)(this["Bouyomichan_Enable"]));
             }
             set {
-                this["Bouyomichan_Valid"] = value;
+                this["Bouyomichan_Enable"] = value;
             }
         }
         
@@ -73,7 +73,7 @@ namespace WorldQuakeViewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
         public int Bouyomichan_Speed {
             get {
                 return ((int)(this["Bouyomichan_Speed"]));
@@ -85,7 +85,7 @@ namespace WorldQuakeViewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
         public int Bouyomichan_Tone {
             get {
                 return ((int)(this["Bouyomichan_Tone"]));
@@ -97,7 +97,7 @@ namespace WorldQuakeViewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
         public int Bouyomichan_Volume {
             get {
                 return ((int)(this["Bouyomichan_Volume"]));
@@ -110,12 +110,12 @@ namespace WorldQuakeViewer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool Tweet_Valid {
+        public bool Tweet_Enable {
             get {
-                return ((bool)(this["Tweet_Valid"]));
+                return ((bool)(this["Tweet_Enable"]));
             }
             set {
-                this["Tweet_Valid"] = value;
+                this["Tweet_Enable"] = value;
             }
         }
         
@@ -182,18 +182,6 @@ namespace WorldQuakeViewer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool Sound_Valid {
-            get {
-                return ((bool)(this["Sound_Valid"]));
-            }
-            set {
-                this["Sound_Valid"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool Display_HideHistory {
             get {
                 return ((bool)(this["Display_HideHistory"]));
@@ -229,7 +217,7 @@ namespace WorldQuakeViewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("4.5")]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
         public double Tweet_LowerMMILimit {
             get {
                 return ((double)(this["Tweet_LowerMMILimit"]));
@@ -277,13 +265,145 @@ namespace WorldQuakeViewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Socket_Port {
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Socket_Port {
             get {
-                return ((string)(this["Socket_Port"]));
+                return ((int)(this["Socket_Port"]));
             }
             set {
                 this["Socket_Port"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Version {
+            get {
+                return ((string)(this["Version"]));
+            }
+            set {
+                this["Version"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double Socket_LowerMagnitudeLimit {
+            get {
+                return ((double)(this["Socket_LowerMagnitudeLimit"]));
+            }
+            set {
+                this["Socket_LowerMagnitudeLimit"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double Socket_LowerMMILimit {
+            get {
+                return ((double)(this["Socket_LowerMMILimit"]));
+            }
+            set {
+                this["Socket_LowerMMILimit"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Sound_45_Enable {
+            get {
+                return ((bool)(this["Sound_45_Enable"]));
+            }
+            set {
+                this["Sound_45_Enable"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Sound_60_Enable {
+            get {
+                return ((bool)(this["Sound_60_Enable"]));
+            }
+            set {
+                this["Sound_60_Enable"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Sound_80_Enable {
+            get {
+                return ((bool)(this["Sound_80_Enable"]));
+            }
+            set {
+                this["Sound_80_Enable"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Sound_Updt_Enable {
+            get {
+                return ((bool)(this["Sound_Updt_Enable"]));
+            }
+            set {
+                this["Sound_Updt_Enable"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Socket_Enable {
+            get {
+                return ((bool)(this["Socket_Enable"]));
+            }
+            set {
+                this["Socket_Enable"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("{Text}")]
+        public string Socket_Text {
+            get {
+                return ((string)(this["Socket_Text"]));
+            }
+            set {
+                this["Socket_Text"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Bouyomichan_Lower_And {
+            get {
+                return ((bool)(this["Bouyomichan_Lower_And"]));
+            }
+            set {
+                this["Bouyomichan_Lower_And"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Tweet_Lower_And {
+            get {
+                return ((string)(this["Tweet_Lower_And"]));
+            }
+            set {
+                this["Tweet_Lower_And"] = value;
             }
         }
     }

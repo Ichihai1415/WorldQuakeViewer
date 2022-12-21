@@ -117,4 +117,30 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Tab_Infos.Text" xml:space="preserve">
+    <value>情報:USGS M4.5+ Earthquakes Feed
+
+震源コード(FE領域識別番号)取得:USGS Geoserve Regions Endpoint
+
+震源日本語名取得:気象庁防災情報XMLフォーマット 個別コード表(20221118)
+(地震火山関連コード表-シート43 AreaEpicenterDetailコード表(種別:"詳細震央地名"))
+
+地図:Natural Earth(1:50m Physical Vectors, Graticules30°(version 5.1.0))
+
+フォント:Koruri Regular(20210720)      既定効果音:OtoLogic(ニュース アラート02~04)
+</value>
+  </data>
+  <data name="label1.Text" xml:space="preserve">
+    <value>
+
+ホスト,ポート:                                              規定は127.0.0.1 50001
+
+M              以上                     メルカリ震度              以上
+
+声質:
+
+速度:                音程:                音量:                -1で画面上の設定
+
+</value>
+  </data>
 </root>
