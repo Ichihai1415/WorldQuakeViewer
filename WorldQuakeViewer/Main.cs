@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -22,13 +23,22 @@ namespace WorldQuakeViewer
         public MainForm()
         {
             InitializeComponent();
-            Settings.Default.Version = "1.0.0";
+            Version = "1.0.0";
         }
         private void MainForm_Load(object sender, EventArgs e)//設定読み込み
         {
+            PrivateFontCollection pfc = new PrivateFontCollection();
+            pfc.AddFontFile("Font\\Koruri-Regular.ttf");
+            foreach (FontFamily ff in pfc.Families)
+            {
+                Console.WriteLine(ff.Name);
+            }
+            Font f = new Font(pfc.Families[0], 12);
+            pfc.Dispose();
+
             Configuration Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
-            if (File.Exists("setting.xml"))
-                File.Copy("setting.xml", Config.FilePath, true);
+            if (File.Exists("UserSetting.xml"))
+                File.Copy("UserSetting.xml", Config.FilePath, true);
             SettingReload();
         }
         private void JsonTimer_Tick(object sender, EventArgs e)//整理しろ
@@ -577,6 +587,7 @@ namespace WorldQuakeViewer
             NoFirst = true;
             Console.WriteLine("処理終了");
         }
+        public string Version = "";
         public string LatestURL = "";
         public bool NoFirst = false;//最初はツイートしない
         public Dictionary<string, History> Histories = new Dictionary<string, History>();//ID,Data
@@ -674,12 +685,11 @@ namespace WorldQuakeViewer
         /// <remarks>即時サイズ変更を行います。</remarks>
         public void SettingReload()
         {
-            string Version = Settings.Default.Version;
             Settings.Default.Reload();
             Settings.Default.Version = Version;
             Settings.Default.Save();
             Configuration Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
-            File.Copy(Config.FilePath, "setting.xml", true);
+            File.Copy(Config.FilePath, "UserSetting.xml", true);
             if (Settings.Default.Display_HideHistory)
                 if (Settings.Default.Display_HideHistoryMap)
                     Size = new Size(416, 139);//400,100
@@ -691,9 +701,10 @@ namespace WorldQuakeViewer
         private void RCsetting_Click(object sender, EventArgs e)
         {
             SettingsForm Settings = new SettingsForm();
+            Settings.FormClosed += Setting_FormClosing;//閉じたとき呼び出し
             Settings.Show();
         }
-        private void RC1SettingReload_Click(object sender, EventArgs e)
+        private void Setting_FormClosing(object sender, FormClosedEventArgs e)
         {
             SettingReload();
             MessageBox.Show("設定を再読み込みしました。一部の設定は情報受信または再起動が必要です。", "WQV_Setting", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -722,21 +733,24 @@ namespace WorldQuakeViewer
         {
             Process.Start("https://twitter.com/ProjectS31415_1");
         }
-        private void RCopenreadme_Click(object sender, EventArgs e)
-        {
-            Process.Start("https://github.com/ichihai1415/WorldQuakeViewer/blob/main/README.md");
-        }
         private void RCtsunami_Click(object sender, EventArgs e)
         {
             Process.Start("https://www.tsunami.gov/");
         }
         private void RCinfopage_Click(object sender, EventArgs e)
         {
-            Process.Start("https://Ichihai1415.github.io/programs/released/world_quake_viewer");
+            Process.Start("https://Ichihai1415.github.io/programs/released/WQV");
         }
         private void MainForm_HelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            Process.Start("https://Ichihai1415.github.io/programs/released/world_quake_viewer/#help");
+            try
+            {
+                Process.Start("notepad.exe", "README.md");
+            }
+            catch
+            {
+
+            }
         }
         private void RCMapEWSC_Click(object sender, EventArgs e)
         {

@@ -39,71 +39,77 @@
             this.LinkJMA = new System.Windows.Forms.LinkLabel();
             this.LinkFE = new System.Windows.Forms.LinkLabel();
             this.LinkUSGS = new System.Windows.Forms.LinkLabel();
-            this.Tab_Infos = new System.Windows.Forms.Label();
+            this.Tab_Info_Text = new System.Windows.Forms.Label();
             this.Version = new System.Windows.Forms.Label();
-            this.Tab_Yomi = new System.Windows.Forms.TabPage();
-            this.numericUpDown6 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown5 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.numericUpDown4 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.checkBox4 = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.Tab_View = new System.Windows.Forms.TabPage();
-            this.label5 = new System.Windows.Forms.Label();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.Tab_SE = new System.Windows.Forms.TabPage();
-            this.label2 = new System.Windows.Forms.Label();
-            this.checkBox8 = new System.Windows.Forms.CheckBox();
-            this.checkBox7 = new System.Windows.Forms.CheckBox();
-            this.checkBox6 = new System.Windows.Forms.CheckBox();
-            this.checkBox5 = new System.Windows.Forms.CheckBox();
-            this.Tab_Socket = new System.Windows.Forms.TabPage();
+            this.Tab_View_Text = new System.Windows.Forms.Label();
+            this.Tab_View_LatLonDecimal = new System.Windows.Forms.CheckBox();
+            this.Tab_View_HideMap = new System.Windows.Forms.CheckBox();
+            this.Tab_View_HideHist = new System.Windows.Forms.CheckBox();
+            this.Tab_Sound = new System.Windows.Forms.TabPage();
+            this.Tab_Sound_Text = new System.Windows.Forms.Label();
+            this.Tab_Sound_Updt = new System.Windows.Forms.CheckBox();
+            this.M80 = new System.Windows.Forms.CheckBox();
+            this.Tab_Sound_M60 = new System.Windows.Forms.CheckBox();
+            this.Tab_Sound_M45 = new System.Windows.Forms.CheckBox();
+            this.Tab_Yomi = new System.Windows.Forms.TabPage();
+            this.Tab_Yomi_Text2 = new System.Windows.Forms.Label();
+            this.Tab_Yomi_Voice = new System.Windows.Forms.NumericUpDown();
+            this.Tab_Yomi_LowerAnd = new System.Windows.Forms.RadioButton();
+            this.Tab_Yomi_LowerOf = new System.Windows.Forms.RadioButton();
+            this.Tab_Yomi_LowerMMI = new System.Windows.Forms.NumericUpDown();
+            this.Tab_Yomi_LowerMag = new System.Windows.Forms.NumericUpDown();
+            this.Tab_Yomi_Port = new System.Windows.Forms.NumericUpDown();
+            this.Tab_Yomi_Host = new System.Windows.Forms.TextBox();
+            this.Tab_Yomi_Test = new System.Windows.Forms.Button();
+            this.Tab_Yomi_Volume = new System.Windows.Forms.NumericUpDown();
+            this.Tab_Yomi_Tone = new System.Windows.Forms.NumericUpDown();
+            this.Tab_Yomi_Speed = new System.Windows.Forms.NumericUpDown();
+            this.Tab_Yomi_Enable = new System.Windows.Forms.CheckBox();
+            this.Tab_Yomi_Text = new System.Windows.Forms.Label();
             this.Tab_Tweet = new System.Windows.Forms.TabPage();
-            this.label7 = new System.Windows.Forms.Label();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.checkBox9 = new System.Windows.Forms.CheckBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.radioButton3 = new System.Windows.Forms.RadioButton();
-            this.radioButton4 = new System.Windows.Forms.RadioButton();
-            this.numericUpDown7 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown8 = new System.Windows.Forms.NumericUpDown();
-            this.checkBox10 = new System.Windows.Forms.CheckBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.numericUpDown9 = new System.Windows.Forms.NumericUpDown();
-            this.label4 = new System.Windows.Forms.Label();
-            this.numericUpDown10 = new System.Windows.Forms.NumericUpDown();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
-            this.textBox7 = new System.Windows.Forms.TextBox();
+            this.Tab_Tweet_Test = new System.Windows.Forms.Button();
+            this.Tab_Tweet_Text2 = new System.Windows.Forms.Label();
+            this.Tab_Tweet_ViewToken = new System.Windows.Forms.CheckBox();
+            this.Tab_Tweet_LowerMMI = new System.Windows.Forms.NumericUpDown();
+            this.Tab_Tweet_LowerMag = new System.Windows.Forms.NumericUpDown();
+            this.Tab_Tweet_LowerAnd = new System.Windows.Forms.RadioButton();
+            this.Tab_Tweet_LowerOr = new System.Windows.Forms.RadioButton();
+            this.Tab_Tweet_Text3 = new System.Windows.Forms.Label();
+            this.Tab_Tweet_AccSec = new System.Windows.Forms.TextBox();
+            this.Tab_Tweet_AccToc = new System.Windows.Forms.TextBox();
+            this.Tab_Tweet_ConSec = new System.Windows.Forms.TextBox();
+            this.Tab_Tweet_ConKey = new System.Windows.Forms.TextBox();
+            this.Tab_Tweet_Enable = new System.Windows.Forms.CheckBox();
+            this.Tab_Tweet_Text = new System.Windows.Forms.Label();
+            this.Tab_Socket = new System.Windows.Forms.TabPage();
+            this.Tab_Socket_SendText = new System.Windows.Forms.TextBox();
+            this.Tab_Socket_Port = new System.Windows.Forms.NumericUpDown();
+            this.Tab_Socket_Host = new System.Windows.Forms.TextBox();
+            this.Tab_Socket_Text = new System.Windows.Forms.Label();
+            this.Tab_Sound_Test_M45 = new System.Windows.Forms.Button();
+            this.Tab_Sound_Test_M60 = new System.Windows.Forms.Button();
+            this.Tab_Sound_Test_M80 = new System.Windows.Forms.Button();
+            this.Tab_Sound_Test_M45u = new System.Windows.Forms.Button();
+            this.Tab_Sound_Test_M60u = new System.Windows.Forms.Button();
+            this.Tab_Sound_Test_M80u = new System.Windows.Forms.Button();
             this.Tabs.SuspendLayout();
             this.Tab_Info.SuspendLayout();
-            this.Tab_Yomi.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.Tab_View.SuspendLayout();
-            this.Tab_SE.SuspendLayout();
-            this.Tab_Socket.SuspendLayout();
+            this.Tab_Sound.SuspendLayout();
+            this.Tab_Yomi.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Tab_Yomi_Voice)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Tab_Yomi_LowerMMI)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Tab_Yomi_LowerMag)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Tab_Yomi_Port)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Tab_Yomi_Volume)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Tab_Yomi_Tone)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Tab_Yomi_Speed)).BeginInit();
             this.Tab_Tweet.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown8)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown9)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown10)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Tab_Tweet_LowerMMI)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Tab_Tweet_LowerMag)).BeginInit();
+            this.Tab_Socket.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Tab_Socket_Port)).BeginInit();
             this.SuspendLayout();
             // 
             // SettingSave
@@ -132,7 +138,7 @@
             // 
             this.Tabs.Controls.Add(this.Tab_Info);
             this.Tabs.Controls.Add(this.Tab_View);
-            this.Tabs.Controls.Add(this.Tab_SE);
+            this.Tabs.Controls.Add(this.Tab_Sound);
             this.Tabs.Controls.Add(this.Tab_Yomi);
             this.Tabs.Controls.Add(this.Tab_Tweet);
             this.Tabs.Controls.Add(this.Tab_Socket);
@@ -151,7 +157,7 @@
             this.Tab_Info.Controls.Add(this.LinkJMA);
             this.Tab_Info.Controls.Add(this.LinkFE);
             this.Tab_Info.Controls.Add(this.LinkUSGS);
-            this.Tab_Info.Controls.Add(this.Tab_Infos);
+            this.Tab_Info.Controls.Add(this.Tab_Info_Text);
             this.Tab_Info.Controls.Add(this.Version);
             this.Tab_Info.Location = new System.Drawing.Point(4, 31);
             this.Tab_Info.Name = "Tab_Info";
@@ -220,14 +226,14 @@
             this.LinkUSGS.TabStop = true;
             this.LinkUSGS.Text = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php";
             // 
-            // Tab_Infos
+            // Tab_Info_Text
             // 
-            this.Tab_Infos.AutoSize = true;
-            this.Tab_Infos.Location = new System.Drawing.Point(3, 30);
-            this.Tab_Infos.Name = "Tab_Infos";
-            this.Tab_Infos.Size = new System.Drawing.Size(632, 220);
-            this.Tab_Infos.TabIndex = 1;
-            this.Tab_Infos.Text = resources.GetString("Tab_Infos.Text");
+            this.Tab_Info_Text.AutoSize = true;
+            this.Tab_Info_Text.Location = new System.Drawing.Point(3, 30);
+            this.Tab_Info_Text.Name = "Tab_Info_Text";
+            this.Tab_Info_Text.Size = new System.Drawing.Size(632, 220);
+            this.Tab_Info_Text.TabIndex = 1;
+            this.Tab_Info_Text.Text = resources.GetString("Tab_Info_Text.Text");
             // 
             // Version
             // 
@@ -239,186 +245,12 @@
             this.Version.TabIndex = 0;
             this.Version.Text = "WorldQuakeViewer v1.0.0";
             // 
-            // Tab_Yomi
-            // 
-            this.Tab_Yomi.Controls.Add(this.label4);
-            this.Tab_Yomi.Controls.Add(this.numericUpDown9);
-            this.Tab_Yomi.Controls.Add(this.radioButton2);
-            this.Tab_Yomi.Controls.Add(this.radioButton1);
-            this.Tab_Yomi.Controls.Add(this.numericUpDown6);
-            this.Tab_Yomi.Controls.Add(this.numericUpDown5);
-            this.Tab_Yomi.Controls.Add(this.numericUpDown2);
-            this.Tab_Yomi.Controls.Add(this.textBox1);
-            this.Tab_Yomi.Controls.Add(this.button1);
-            this.Tab_Yomi.Controls.Add(this.numericUpDown4);
-            this.Tab_Yomi.Controls.Add(this.numericUpDown3);
-            this.Tab_Yomi.Controls.Add(this.numericUpDown1);
-            this.Tab_Yomi.Controls.Add(this.checkBox4);
-            this.Tab_Yomi.Controls.Add(this.label1);
-            this.Tab_Yomi.Location = new System.Drawing.Point(4, 31);
-            this.Tab_Yomi.Name = "Tab_Yomi";
-            this.Tab_Yomi.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_Yomi.Size = new System.Drawing.Size(632, 275);
-            this.Tab_Yomi.TabIndex = 1;
-            this.Tab_Yomi.Text = "読み上げ";
-            this.Tab_Yomi.UseVisualStyleBackColor = true;
-            // 
-            // numericUpDown6
-            // 
-            this.numericUpDown6.DecimalPlaces = 1;
-            this.numericUpDown6.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.numericUpDown6.Location = new System.Drawing.Point(292, 88);
-            this.numericUpDown6.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.numericUpDown6.Name = "numericUpDown6";
-            this.numericUpDown6.Size = new System.Drawing.Size(51, 31);
-            this.numericUpDown6.TabIndex = 23;
-            // 
-            // numericUpDown5
-            // 
-            this.numericUpDown5.DecimalPlaces = 2;
-            this.numericUpDown5.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.numericUpDown5.Location = new System.Drawing.Point(26, 88);
-            this.numericUpDown5.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.numericUpDown5.Name = "numericUpDown5";
-            this.numericUpDown5.Size = new System.Drawing.Size(51, 31);
-            this.numericUpDown5.TabIndex = 22;
-            // 
-            // numericUpDown2
-            // 
-            this.numericUpDown2.Location = new System.Drawing.Point(230, 45);
-            this.numericUpDown2.Maximum = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            0});
-            this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(64, 31);
-            this.numericUpDown2.TabIndex = 18;
-            this.numericUpDown2.Value = new decimal(new int[] {
-            50001,
-            0,
-            0,
-            0});
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(117, 45);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(106, 31);
-            this.textBox1.TabIndex = 17;
-            this.textBox1.Text = "127.0.0.1";
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(10, 226);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(98, 32);
-            this.button1.TabIndex = 21;
-            this.button1.Text = "送信テスト";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // numericUpDown4
-            // 
-            this.numericUpDown4.Location = new System.Drawing.Point(249, 177);
-            this.numericUpDown4.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDown4.Name = "numericUpDown4";
-            this.numericUpDown4.Size = new System.Drawing.Size(49, 31);
-            this.numericUpDown4.TabIndex = 20;
-            this.numericUpDown4.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
-            // 
-            // numericUpDown3
-            // 
-            this.numericUpDown3.Location = new System.Drawing.Point(149, 177);
-            this.numericUpDown3.Maximum = new decimal(new int[] {
-            200,
-            0,
-            0,
-            0});
-            this.numericUpDown3.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDown3.Name = "numericUpDown3";
-            this.numericUpDown3.Size = new System.Drawing.Size(49, 31);
-            this.numericUpDown3.TabIndex = 19;
-            this.numericUpDown3.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
-            // 
-            // numericUpDown1
-            // 
-            this.numericUpDown1.Location = new System.Drawing.Point(50, 177);
-            this.numericUpDown1.Maximum = new decimal(new int[] {
-            200,
-            0,
-            0,
-            0});
-            this.numericUpDown1.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(49, 31);
-            this.numericUpDown1.TabIndex = 15;
-            this.numericUpDown1.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
-            // 
-            // checkBox4
-            // 
-            this.checkBox4.AutoSize = true;
-            this.checkBox4.Location = new System.Drawing.Point(8, 6);
-            this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(393, 26);
-            this.checkBox4.TabIndex = 14;
-            this.checkBox4.Text = "読み上げを有効にする(棒読みちゃんへSocket通信)";
-            this.checkBox4.UseVisualStyleBackColor = true;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 4);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(461, 220);
-            this.label1.TabIndex = 13;
-            this.label1.Text = resources.GetString("label1.Text");
-            // 
             // Tab_View
             // 
-            this.Tab_View.Controls.Add(this.label5);
-            this.Tab_View.Controls.Add(this.checkBox3);
-            this.Tab_View.Controls.Add(this.checkBox2);
-            this.Tab_View.Controls.Add(this.checkBox1);
+            this.Tab_View.Controls.Add(this.Tab_View_Text);
+            this.Tab_View.Controls.Add(this.Tab_View_LatLonDecimal);
+            this.Tab_View.Controls.Add(this.Tab_View_HideMap);
+            this.Tab_View.Controls.Add(this.Tab_View_HideHist);
             this.Tab_View.Location = new System.Drawing.Point(4, 31);
             this.Tab_View.Name = "Tab_View";
             this.Tab_View.Padding = new System.Windows.Forms.Padding(3);
@@ -427,139 +259,350 @@
             this.Tab_View.Text = "表示";
             this.Tab_View.UseVisualStyleBackColor = true;
             // 
-            // label5
+            // Tab_View_Text
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(19, 99);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(180, 22);
-            this.label5.TabIndex = 7;
-            this.label5.Text = "(12°34\'56\'\' -> 12.5822°)";
+            this.Tab_View_Text.AutoSize = true;
+            this.Tab_View_Text.Location = new System.Drawing.Point(19, 99);
+            this.Tab_View_Text.Name = "Tab_View_Text";
+            this.Tab_View_Text.Size = new System.Drawing.Size(180, 22);
+            this.Tab_View_Text.TabIndex = 7;
+            this.Tab_View_Text.Text = "(12°34\'56\'\' -> 12.5822°)";
             // 
-            // checkBox3
+            // Tab_View_LatLonDecimal
             // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(6, 70);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(237, 26);
-            this.checkBox3.TabIndex = 6;
-            this.checkBox3.Text = "緯度経度を度のみで表示する";
-            this.checkBox3.UseVisualStyleBackColor = true;
+            this.Tab_View_LatLonDecimal.AutoSize = true;
+            this.Tab_View_LatLonDecimal.Location = new System.Drawing.Point(6, 70);
+            this.Tab_View_LatLonDecimal.Name = "Tab_View_LatLonDecimal";
+            this.Tab_View_LatLonDecimal.Size = new System.Drawing.Size(237, 26);
+            this.Tab_View_LatLonDecimal.TabIndex = 6;
+            this.Tab_View_LatLonDecimal.Text = "緯度経度を度のみで表示する";
+            this.Tab_View_LatLonDecimal.UseVisualStyleBackColor = true;
             // 
-            // checkBox2
+            // Tab_View_HideMap
             // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(23, 38);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(173, 26);
-            this.checkBox2.TabIndex = 5;
-            this.checkBox2.Text = "地図も非表示にする";
-            this.checkBox2.UseVisualStyleBackColor = true;
+            this.Tab_View_HideMap.AutoSize = true;
+            this.Tab_View_HideMap.Location = new System.Drawing.Point(23, 38);
+            this.Tab_View_HideMap.Name = "Tab_View_HideMap";
+            this.Tab_View_HideMap.Size = new System.Drawing.Size(173, 26);
+            this.Tab_View_HideMap.TabIndex = 5;
+            this.Tab_View_HideMap.Text = "地図も非表示にする";
+            this.Tab_View_HideMap.UseVisualStyleBackColor = true;
             // 
-            // checkBox1
+            // Tab_View_HideHist
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(8, 6);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(279, 26);
-            this.checkBox1.TabIndex = 4;
-            this.checkBox1.Text = "履歴を非表示にする(取得はします)";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.Tab_View_HideHist.AutoSize = true;
+            this.Tab_View_HideHist.Location = new System.Drawing.Point(8, 6);
+            this.Tab_View_HideHist.Name = "Tab_View_HideHist";
+            this.Tab_View_HideHist.Size = new System.Drawing.Size(279, 26);
+            this.Tab_View_HideHist.TabIndex = 4;
+            this.Tab_View_HideHist.Text = "履歴を非表示にする(取得はします)";
+            this.Tab_View_HideHist.UseVisualStyleBackColor = true;
             // 
-            // Tab_SE
+            // Tab_Sound
             // 
-            this.Tab_SE.Controls.Add(this.label2);
-            this.Tab_SE.Controls.Add(this.checkBox8);
-            this.Tab_SE.Controls.Add(this.checkBox7);
-            this.Tab_SE.Controls.Add(this.checkBox6);
-            this.Tab_SE.Controls.Add(this.checkBox5);
-            this.Tab_SE.Location = new System.Drawing.Point(4, 31);
-            this.Tab_SE.Name = "Tab_SE";
-            this.Tab_SE.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_SE.Size = new System.Drawing.Size(632, 275);
-            this.Tab_SE.TabIndex = 5;
-            this.Tab_SE.Text = "音声";
-            this.Tab_SE.UseVisualStyleBackColor = true;
+            this.Tab_Sound.Controls.Add(this.Tab_Sound_Test_M80u);
+            this.Tab_Sound.Controls.Add(this.Tab_Sound_Test_M60u);
+            this.Tab_Sound.Controls.Add(this.Tab_Sound_Test_M45u);
+            this.Tab_Sound.Controls.Add(this.Tab_Sound_Test_M80);
+            this.Tab_Sound.Controls.Add(this.Tab_Sound_Test_M60);
+            this.Tab_Sound.Controls.Add(this.Tab_Sound_Test_M45);
+            this.Tab_Sound.Controls.Add(this.Tab_Sound_Text);
+            this.Tab_Sound.Controls.Add(this.Tab_Sound_Updt);
+            this.Tab_Sound.Controls.Add(this.M80);
+            this.Tab_Sound.Controls.Add(this.Tab_Sound_M60);
+            this.Tab_Sound.Controls.Add(this.Tab_Sound_M45);
+            this.Tab_Sound.Location = new System.Drawing.Point(4, 31);
+            this.Tab_Sound.Name = "Tab_Sound";
+            this.Tab_Sound.Padding = new System.Windows.Forms.Padding(3);
+            this.Tab_Sound.Size = new System.Drawing.Size(632, 275);
+            this.Tab_Sound.TabIndex = 5;
+            this.Tab_Sound.Text = "音声";
+            this.Tab_Sound.UseVisualStyleBackColor = true;
             // 
-            // label2
+            // Tab_Sound_Text
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(8, 3);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(94, 22);
-            this.label2.TabIndex = 9;
-            this.label2.Text = "鳴らす条件:\r\n";
+            this.Tab_Sound_Text.AutoSize = true;
+            this.Tab_Sound_Text.Location = new System.Drawing.Point(8, 3);
+            this.Tab_Sound_Text.Name = "Tab_Sound_Text";
+            this.Tab_Sound_Text.Size = new System.Drawing.Size(618, 22);
+            this.Tab_Sound_Text.TabIndex = 9;
+            this.Tab_Sound_Text.Text = "鳴らす条件:                                                                           " +
+    "                                    再生テスト";
             // 
-            // checkBox8
+            // Tab_Sound_Updt
             // 
-            this.checkBox8.AutoSize = true;
-            this.checkBox8.Location = new System.Drawing.Point(12, 134);
-            this.checkBox8.Name = "checkBox8";
-            this.checkBox8.Size = new System.Drawing.Size(77, 26);
-            this.checkBox8.TabIndex = 8;
-            this.checkBox8.Text = "更新時";
-            this.checkBox8.UseVisualStyleBackColor = true;
+            this.Tab_Sound_Updt.AutoSize = true;
+            this.Tab_Sound_Updt.Location = new System.Drawing.Point(12, 134);
+            this.Tab_Sound_Updt.Name = "Tab_Sound_Updt";
+            this.Tab_Sound_Updt.Size = new System.Drawing.Size(318, 26);
+            this.Tab_Sound_Updt.TabIndex = 8;
+            this.Tab_Sound_Updt.Text = "更新時(M45u.wav,M60u.wav,M80u.wav)";
+            this.Tab_Sound_Updt.UseVisualStyleBackColor = true;
             // 
-            // checkBox7
+            // M80
             // 
-            this.checkBox7.AutoSize = true;
-            this.checkBox7.Location = new System.Drawing.Point(12, 92);
-            this.checkBox7.Name = "checkBox7";
-            this.checkBox7.Size = new System.Drawing.Size(172, 26);
-            this.checkBox7.TabIndex = 7;
-            this.checkBox7.Text = "M8.0以上(M80.wav)";
-            this.checkBox7.UseVisualStyleBackColor = true;
+            this.M80.AutoSize = true;
+            this.M80.Location = new System.Drawing.Point(12, 92);
+            this.M80.Name = "M80";
+            this.M80.Size = new System.Drawing.Size(172, 26);
+            this.M80.TabIndex = 7;
+            this.M80.Text = "M8.0以上(M80.wav)";
+            this.M80.UseVisualStyleBackColor = true;
             // 
-            // checkBox6
+            // Tab_Sound_M60
             // 
-            this.checkBox6.AutoSize = true;
-            this.checkBox6.Location = new System.Drawing.Point(12, 60);
-            this.checkBox6.Name = "checkBox6";
-            this.checkBox6.Size = new System.Drawing.Size(240, 26);
-            this.checkBox6.TabIndex = 6;
-            this.checkBox6.Text = "M6.0以上M8.0未満(M60.wav)";
-            this.checkBox6.UseVisualStyleBackColor = true;
+            this.Tab_Sound_M60.AutoSize = true;
+            this.Tab_Sound_M60.Location = new System.Drawing.Point(12, 60);
+            this.Tab_Sound_M60.Name = "Tab_Sound_M60";
+            this.Tab_Sound_M60.Size = new System.Drawing.Size(240, 26);
+            this.Tab_Sound_M60.TabIndex = 6;
+            this.Tab_Sound_M60.Text = "M6.0以上M8.0未満(M60.wav)";
+            this.Tab_Sound_M60.UseVisualStyleBackColor = true;
             // 
-            // checkBox5
+            // Tab_Sound_M45
             // 
-            this.checkBox5.AutoSize = true;
-            this.checkBox5.Location = new System.Drawing.Point(12, 28);
-            this.checkBox5.Name = "checkBox5";
-            this.checkBox5.Size = new System.Drawing.Size(172, 26);
-            this.checkBox5.TabIndex = 5;
-            this.checkBox5.Text = "M6.0未満(M45.wav)";
-            this.checkBox5.UseVisualStyleBackColor = true;
+            this.Tab_Sound_M45.AutoSize = true;
+            this.Tab_Sound_M45.Location = new System.Drawing.Point(12, 28);
+            this.Tab_Sound_M45.Name = "Tab_Sound_M45";
+            this.Tab_Sound_M45.Size = new System.Drawing.Size(172, 26);
+            this.Tab_Sound_M45.TabIndex = 5;
+            this.Tab_Sound_M45.Text = "M6.0未満(M45.wav)";
+            this.Tab_Sound_M45.UseVisualStyleBackColor = true;
             // 
-            // Tab_Socket
+            // Tab_Yomi
             // 
-            this.Tab_Socket.Controls.Add(this.textBox7);
-            this.Tab_Socket.Controls.Add(this.numericUpDown10);
-            this.Tab_Socket.Controls.Add(this.textBox6);
-            this.Tab_Socket.Controls.Add(this.label8);
-            this.Tab_Socket.Location = new System.Drawing.Point(4, 31);
-            this.Tab_Socket.Name = "Tab_Socket";
-            this.Tab_Socket.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_Socket.Size = new System.Drawing.Size(632, 275);
-            this.Tab_Socket.TabIndex = 6;
-            this.Tab_Socket.Text = "Socket通信";
-            this.Tab_Socket.UseVisualStyleBackColor = true;
+            this.Tab_Yomi.Controls.Add(this.Tab_Yomi_Text2);
+            this.Tab_Yomi.Controls.Add(this.Tab_Yomi_Voice);
+            this.Tab_Yomi.Controls.Add(this.Tab_Yomi_LowerAnd);
+            this.Tab_Yomi.Controls.Add(this.Tab_Yomi_LowerOf);
+            this.Tab_Yomi.Controls.Add(this.Tab_Yomi_LowerMMI);
+            this.Tab_Yomi.Controls.Add(this.Tab_Yomi_LowerMag);
+            this.Tab_Yomi.Controls.Add(this.Tab_Yomi_Port);
+            this.Tab_Yomi.Controls.Add(this.Tab_Yomi_Host);
+            this.Tab_Yomi.Controls.Add(this.Tab_Yomi_Test);
+            this.Tab_Yomi.Controls.Add(this.Tab_Yomi_Volume);
+            this.Tab_Yomi.Controls.Add(this.Tab_Yomi_Tone);
+            this.Tab_Yomi.Controls.Add(this.Tab_Yomi_Speed);
+            this.Tab_Yomi.Controls.Add(this.Tab_Yomi_Enable);
+            this.Tab_Yomi.Controls.Add(this.Tab_Yomi_Text);
+            this.Tab_Yomi.Location = new System.Drawing.Point(4, 31);
+            this.Tab_Yomi.Name = "Tab_Yomi";
+            this.Tab_Yomi.Padding = new System.Windows.Forms.Padding(3);
+            this.Tab_Yomi.Size = new System.Drawing.Size(632, 275);
+            this.Tab_Yomi.TabIndex = 1;
+            this.Tab_Yomi.Text = "読み上げ";
+            this.Tab_Yomi.UseVisualStyleBackColor = true;
+            // 
+            // Tab_Yomi_Text2
+            // 
+            this.Tab_Yomi_Text2.AutoSize = true;
+            this.Tab_Yomi_Text2.Location = new System.Drawing.Point(116, 128);
+            this.Tab_Yomi_Text2.Name = "Tab_Yomi_Text2";
+            this.Tab_Yomi_Text2.Size = new System.Drawing.Size(379, 44);
+            this.Tab_Yomi_Text2.TabIndex = 27;
+            this.Tab_Yomi_Text2.Text = "0:画面上の設定  1:女性1  2:女性2  3:男性1  4:男性2\r\n5:中性  6:ロボット  7:機械1  8:機械2  10001～:SAPI5";
+            // 
+            // Tab_Yomi_Voice
+            // 
+            this.Tab_Yomi_Voice.Location = new System.Drawing.Point(49, 133);
+            this.Tab_Yomi_Voice.Maximum = new decimal(new int[] {
+            99999,
+            0,
+            0,
+            0});
+            this.Tab_Yomi_Voice.Name = "Tab_Yomi_Voice";
+            this.Tab_Yomi_Voice.Size = new System.Drawing.Size(66, 31);
+            this.Tab_Yomi_Voice.TabIndex = 26;
+            // 
+            // Tab_Yomi_LowerAnd
+            // 
+            this.Tab_Yomi_LowerAnd.AutoSize = true;
+            this.Tab_Yomi_LowerAnd.Location = new System.Drawing.Point(120, 102);
+            this.Tab_Yomi_LowerAnd.Name = "Tab_Yomi_LowerAnd";
+            this.Tab_Yomi_LowerAnd.Size = new System.Drawing.Size(60, 26);
+            this.Tab_Yomi_LowerAnd.TabIndex = 25;
+            this.Tab_Yomi_LowerAnd.Text = "かつ";
+            this.Tab_Yomi_LowerAnd.UseVisualStyleBackColor = true;
+            // 
+            // Tab_Yomi_LowerOf
+            // 
+            this.Tab_Yomi_LowerOf.AutoSize = true;
+            this.Tab_Yomi_LowerOf.Checked = true;
+            this.Tab_Yomi_LowerOf.Location = new System.Drawing.Point(120, 82);
+            this.Tab_Yomi_LowerOf.Name = "Tab_Yomi_LowerOf";
+            this.Tab_Yomi_LowerOf.Size = new System.Drawing.Size(76, 26);
+            this.Tab_Yomi_LowerOf.TabIndex = 24;
+            this.Tab_Yomi_LowerOf.TabStop = true;
+            this.Tab_Yomi_LowerOf.Text = "または";
+            this.Tab_Yomi_LowerOf.UseVisualStyleBackColor = true;
+            // 
+            // Tab_Yomi_LowerMMI
+            // 
+            this.Tab_Yomi_LowerMMI.DecimalPlaces = 1;
+            this.Tab_Yomi_LowerMMI.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.Tab_Yomi_LowerMMI.Location = new System.Drawing.Point(292, 88);
+            this.Tab_Yomi_LowerMMI.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.Tab_Yomi_LowerMMI.Name = "Tab_Yomi_LowerMMI";
+            this.Tab_Yomi_LowerMMI.Size = new System.Drawing.Size(51, 31);
+            this.Tab_Yomi_LowerMMI.TabIndex = 23;
+            // 
+            // Tab_Yomi_LowerMag
+            // 
+            this.Tab_Yomi_LowerMag.DecimalPlaces = 2;
+            this.Tab_Yomi_LowerMag.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.Tab_Yomi_LowerMag.Location = new System.Drawing.Point(26, 88);
+            this.Tab_Yomi_LowerMag.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.Tab_Yomi_LowerMag.Name = "Tab_Yomi_LowerMag";
+            this.Tab_Yomi_LowerMag.Size = new System.Drawing.Size(51, 31);
+            this.Tab_Yomi_LowerMag.TabIndex = 22;
+            // 
+            // Tab_Yomi_Port
+            // 
+            this.Tab_Yomi_Port.Location = new System.Drawing.Point(230, 45);
+            this.Tab_Yomi_Port.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.Tab_Yomi_Port.Name = "Tab_Yomi_Port";
+            this.Tab_Yomi_Port.Size = new System.Drawing.Size(64, 31);
+            this.Tab_Yomi_Port.TabIndex = 18;
+            this.Tab_Yomi_Port.Value = new decimal(new int[] {
+            50001,
+            0,
+            0,
+            0});
+            // 
+            // Tab_Yomi_Host
+            // 
+            this.Tab_Yomi_Host.Location = new System.Drawing.Point(117, 45);
+            this.Tab_Yomi_Host.Name = "Tab_Yomi_Host";
+            this.Tab_Yomi_Host.Size = new System.Drawing.Size(106, 31);
+            this.Tab_Yomi_Host.TabIndex = 17;
+            this.Tab_Yomi_Host.Text = "127.0.0.1";
+            // 
+            // Tab_Yomi_Test
+            // 
+            this.Tab_Yomi_Test.Location = new System.Drawing.Point(10, 226);
+            this.Tab_Yomi_Test.Name = "Tab_Yomi_Test";
+            this.Tab_Yomi_Test.Size = new System.Drawing.Size(98, 32);
+            this.Tab_Yomi_Test.TabIndex = 21;
+            this.Tab_Yomi_Test.Text = "送信テスト";
+            this.Tab_Yomi_Test.UseVisualStyleBackColor = true;
+            this.Tab_Yomi_Test.Click += new System.EventHandler(this.Tab_Yomi_Test_Click);
+            // 
+            // Tab_Yomi_Volume
+            // 
+            this.Tab_Yomi_Volume.Location = new System.Drawing.Point(249, 177);
+            this.Tab_Yomi_Volume.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.Tab_Yomi_Volume.Name = "Tab_Yomi_Volume";
+            this.Tab_Yomi_Volume.Size = new System.Drawing.Size(49, 31);
+            this.Tab_Yomi_Volume.TabIndex = 20;
+            this.Tab_Yomi_Volume.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            // 
+            // Tab_Yomi_Tone
+            // 
+            this.Tab_Yomi_Tone.Location = new System.Drawing.Point(149, 177);
+            this.Tab_Yomi_Tone.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            this.Tab_Yomi_Tone.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.Tab_Yomi_Tone.Name = "Tab_Yomi_Tone";
+            this.Tab_Yomi_Tone.Size = new System.Drawing.Size(49, 31);
+            this.Tab_Yomi_Tone.TabIndex = 19;
+            this.Tab_Yomi_Tone.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            // 
+            // Tab_Yomi_Speed
+            // 
+            this.Tab_Yomi_Speed.Location = new System.Drawing.Point(50, 177);
+            this.Tab_Yomi_Speed.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            this.Tab_Yomi_Speed.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.Tab_Yomi_Speed.Name = "Tab_Yomi_Speed";
+            this.Tab_Yomi_Speed.Size = new System.Drawing.Size(49, 31);
+            this.Tab_Yomi_Speed.TabIndex = 15;
+            this.Tab_Yomi_Speed.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            // 
+            // Tab_Yomi_Enable
+            // 
+            this.Tab_Yomi_Enable.AutoSize = true;
+            this.Tab_Yomi_Enable.Location = new System.Drawing.Point(8, 6);
+            this.Tab_Yomi_Enable.Name = "Tab_Yomi_Enable";
+            this.Tab_Yomi_Enable.Size = new System.Drawing.Size(393, 26);
+            this.Tab_Yomi_Enable.TabIndex = 14;
+            this.Tab_Yomi_Enable.Text = "読み上げを有効にする(棒読みちゃんへSocket通信)";
+            this.Tab_Yomi_Enable.UseVisualStyleBackColor = true;
+            // 
+            // Tab_Yomi_Text
+            // 
+            this.Tab_Yomi_Text.AutoSize = true;
+            this.Tab_Yomi_Text.Location = new System.Drawing.Point(4, 4);
+            this.Tab_Yomi_Text.Name = "Tab_Yomi_Text";
+            this.Tab_Yomi_Text.Size = new System.Drawing.Size(461, 220);
+            this.Tab_Yomi_Text.TabIndex = 13;
+            this.Tab_Yomi_Text.Text = resources.GetString("Tab_Yomi_Text.Text");
             // 
             // Tab_Tweet
             // 
-            this.Tab_Tweet.Controls.Add(this.button2);
-            this.Tab_Tweet.Controls.Add(this.label3);
-            this.Tab_Tweet.Controls.Add(this.checkBox10);
-            this.Tab_Tweet.Controls.Add(this.numericUpDown8);
-            this.Tab_Tweet.Controls.Add(this.numericUpDown7);
-            this.Tab_Tweet.Controls.Add(this.radioButton4);
-            this.Tab_Tweet.Controls.Add(this.radioButton3);
-            this.Tab_Tweet.Controls.Add(this.label7);
-            this.Tab_Tweet.Controls.Add(this.textBox5);
-            this.Tab_Tweet.Controls.Add(this.textBox4);
-            this.Tab_Tweet.Controls.Add(this.textBox3);
-            this.Tab_Tweet.Controls.Add(this.textBox2);
-            this.Tab_Tweet.Controls.Add(this.checkBox9);
-            this.Tab_Tweet.Controls.Add(this.label6);
+            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_Test);
+            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_Text2);
+            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_ViewToken);
+            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_LowerMMI);
+            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_LowerMag);
+            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_LowerAnd);
+            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_LowerOr);
+            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_Text3);
+            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_AccSec);
+            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_AccToc);
+            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_ConSec);
+            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_ConKey);
+            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_Enable);
+            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_Text);
             this.Tab_Tweet.Location = new System.Drawing.Point(4, 31);
             this.Tab_Tweet.Name = "Tab_Tweet";
             this.Tab_Tweet.Padding = new System.Windows.Forms.Padding(3);
@@ -568,246 +611,277 @@
             this.Tab_Tweet.Text = "自動ツイート";
             this.Tab_Tweet.UseVisualStyleBackColor = true;
             // 
-            // label7
+            // Tab_Tweet_Test
             // 
-            this.label7.AutoSize = true;
-            this.label7.ForeColor = System.Drawing.Color.Red;
-            this.label7.Location = new System.Drawing.Point(141, 223);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(484, 44);
-            this.label7.TabIndex = 13;
-            this.label7.Text = "!注意 tokenはそのまま保存されます。\r\n          心配な場合Socketで他ソフトに送信して処理してください。";
+            this.Tab_Tweet_Test.Location = new System.Drawing.Point(518, 218);
+            this.Tab_Tweet_Test.Name = "Tab_Tweet_Test";
+            this.Tab_Tweet_Test.Size = new System.Drawing.Size(98, 32);
+            this.Tab_Tweet_Test.TabIndex = 31;
+            this.Tab_Tweet_Test.Text = "送信テスト";
+            this.Tab_Tweet_Test.UseVisualStyleBackColor = true;
             // 
-            // textBox5
+            // Tab_Tweet_Text2
             // 
-            this.textBox5.Location = new System.Drawing.Point(151, 183);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.PasswordChar = '*';
-            this.textBox5.Size = new System.Drawing.Size(465, 31);
-            this.textBox5.TabIndex = 12;
+            this.Tab_Tweet_Text2.AutoSize = true;
+            this.Tab_Tweet_Text2.Font = new System.Drawing.Font("Koruri Regular", 8F);
+            this.Tab_Tweet_Text2.Location = new System.Drawing.Point(25, 33);
+            this.Tab_Tweet_Text2.Name = "Tab_Tweet_Text2";
+            this.Tab_Tweet_Text2.Size = new System.Drawing.Size(151, 16);
+            this.Tab_Tweet_Text2.TabIndex = 30;
+            this.Tab_Tweet_Text2.Text = "※Twitter API申請が必要です";
             // 
-            // textBox4
+            // Tab_Tweet_ViewToken
             // 
-            this.textBox4.Location = new System.Drawing.Point(151, 139);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.PasswordChar = '*';
-            this.textBox4.Size = new System.Drawing.Size(465, 31);
-            this.textBox4.TabIndex = 11;
+            this.Tab_Tweet_ViewToken.AutoSize = true;
+            this.Tab_Tweet_ViewToken.Location = new System.Drawing.Point(16, 219);
+            this.Tab_Tweet_ViewToken.Name = "Tab_Tweet_ViewToken";
+            this.Tab_Tweet_ViewToken.Size = new System.Drawing.Size(93, 48);
+            this.Tab_Tweet_ViewToken.TabIndex = 29;
+            this.Tab_Tweet_ViewToken.Text = "tokenを\r\n表示する";
+            this.Tab_Tweet_ViewToken.UseVisualStyleBackColor = true;
             // 
-            // textBox3
+            // Tab_Tweet_LowerMMI
             // 
-            this.textBox3.Location = new System.Drawing.Point(151, 95);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.PasswordChar = '*';
-            this.textBox3.Size = new System.Drawing.Size(465, 31);
-            this.textBox3.TabIndex = 10;
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(151, 51);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.PasswordChar = '*';
-            this.textBox2.Size = new System.Drawing.Size(465, 31);
-            this.textBox2.TabIndex = 9;
-            // 
-            // checkBox9
-            // 
-            this.checkBox9.AutoSize = true;
-            this.checkBox9.Location = new System.Drawing.Point(8, 10);
-            this.checkBox9.Name = "checkBox9";
-            this.checkBox9.Size = new System.Drawing.Size(221, 26);
-            this.checkBox9.TabIndex = 7;
-            this.checkBox9.Text = "自動ツイートを有効にする";
-            this.checkBox9.UseVisualStyleBackColor = true;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(12, 10);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(620, 198);
-            this.label6.TabIndex = 8;
-            this.label6.Text = "                                                             M              以上   " +
-    "                 メルカリ震度              以上\r\n\r\nConsumerKey:\r\n\r\nConsumerSecret:\r\n\r\nAc" +
-    "cessToken:\r\n\r\nAccessSecret:";
-            // 
-            // radioButton1
-            // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Checked = true;
-            this.radioButton1.Location = new System.Drawing.Point(120, 82);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(76, 26);
-            this.radioButton1.TabIndex = 24;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "または";
-            this.radioButton1.UseVisualStyleBackColor = true;
-            // 
-            // radioButton2
-            // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(120, 102);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(60, 26);
-            this.radioButton2.TabIndex = 25;
-            this.radioButton2.Text = "かつ";
-            this.radioButton2.UseVisualStyleBackColor = true;
-            // 
-            // radioButton3
-            // 
-            this.radioButton3.AutoSize = true;
-            this.radioButton3.Checked = true;
-            this.radioButton3.Location = new System.Drawing.Point(365, 0);
-            this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(76, 26);
-            this.radioButton3.TabIndex = 25;
-            this.radioButton3.TabStop = true;
-            this.radioButton3.Text = "または";
-            this.radioButton3.UseVisualStyleBackColor = true;
-            // 
-            // radioButton4
-            // 
-            this.radioButton4.AutoSize = true;
-            this.radioButton4.Location = new System.Drawing.Point(365, 20);
-            this.radioButton4.Name = "radioButton4";
-            this.radioButton4.Size = new System.Drawing.Size(60, 26);
-            this.radioButton4.TabIndex = 26;
-            this.radioButton4.Text = "かつ";
-            this.radioButton4.UseVisualStyleBackColor = true;
-            // 
-            // numericUpDown7
-            // 
-            this.numericUpDown7.DecimalPlaces = 2;
-            this.numericUpDown7.Increment = new decimal(new int[] {
+            this.Tab_Tweet_LowerMMI.DecimalPlaces = 1;
+            this.Tab_Tweet_LowerMMI.Increment = new decimal(new int[] {
             1,
             0,
             0,
             65536});
-            this.numericUpDown7.Location = new System.Drawing.Point(277, 7);
-            this.numericUpDown7.Maximum = new decimal(new int[] {
+            this.Tab_Tweet_LowerMMI.Location = new System.Drawing.Point(541, 6);
+            this.Tab_Tweet_LowerMMI.Maximum = new decimal(new int[] {
             10,
             0,
             0,
             0});
-            this.numericUpDown7.Name = "numericUpDown7";
-            this.numericUpDown7.Size = new System.Drawing.Size(51, 31);
-            this.numericUpDown7.TabIndex = 27;
-            this.numericUpDown7.Value = new decimal(new int[] {
-            6,
-            0,
-            0,
-            0});
-            // 
-            // numericUpDown8
-            // 
-            this.numericUpDown8.DecimalPlaces = 1;
-            this.numericUpDown8.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.numericUpDown8.Location = new System.Drawing.Point(541, 6);
-            this.numericUpDown8.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.numericUpDown8.Name = "numericUpDown8";
-            this.numericUpDown8.Size = new System.Drawing.Size(51, 31);
-            this.numericUpDown8.TabIndex = 28;
-            this.numericUpDown8.Value = new decimal(new int[] {
+            this.Tab_Tweet_LowerMMI.Name = "Tab_Tweet_LowerMMI";
+            this.Tab_Tweet_LowerMMI.Size = new System.Drawing.Size(51, 31);
+            this.Tab_Tweet_LowerMMI.TabIndex = 28;
+            this.Tab_Tweet_LowerMMI.Value = new decimal(new int[] {
             5,
             0,
             0,
             0});
             // 
-            // checkBox10
+            // Tab_Tweet_LowerMag
             // 
-            this.checkBox10.AutoSize = true;
-            this.checkBox10.Location = new System.Drawing.Point(16, 219);
-            this.checkBox10.Name = "checkBox10";
-            this.checkBox10.Size = new System.Drawing.Size(93, 48);
-            this.checkBox10.TabIndex = 29;
-            this.checkBox10.Text = "tokenを\r\n表示する";
-            this.checkBox10.UseVisualStyleBackColor = true;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Koruri Regular", 8F);
-            this.label3.Location = new System.Drawing.Point(25, 33);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(151, 16);
-            this.label3.TabIndex = 30;
-            this.label3.Text = "※Twitter API申請が必要です";
-            // 
-            // numericUpDown9
-            // 
-            this.numericUpDown9.Location = new System.Drawing.Point(49, 133);
-            this.numericUpDown9.Maximum = new decimal(new int[] {
-            99999,
+            this.Tab_Tweet_LowerMag.DecimalPlaces = 2;
+            this.Tab_Tweet_LowerMag.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.Tab_Tweet_LowerMag.Location = new System.Drawing.Point(277, 7);
+            this.Tab_Tweet_LowerMag.Maximum = new decimal(new int[] {
+            10,
             0,
             0,
             0});
-            this.numericUpDown9.Name = "numericUpDown9";
-            this.numericUpDown9.Size = new System.Drawing.Size(66, 31);
-            this.numericUpDown9.TabIndex = 26;
+            this.Tab_Tweet_LowerMag.Name = "Tab_Tweet_LowerMag";
+            this.Tab_Tweet_LowerMag.Size = new System.Drawing.Size(51, 31);
+            this.Tab_Tweet_LowerMag.TabIndex = 27;
+            this.Tab_Tweet_LowerMag.Value = new decimal(new int[] {
+            6,
+            0,
+            0,
+            0});
             // 
-            // label4
+            // Tab_Tweet_LowerAnd
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(116, 128);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(379, 44);
-            this.label4.TabIndex = 27;
-            this.label4.Text = "0:画面上の設定  1:女性1  2:女性2  3:男性1  4:男性2\r\n5:中性  6:ロボット  7:機械1  8:機械2  10001～:SAPI5";
+            this.Tab_Tweet_LowerAnd.AutoSize = true;
+            this.Tab_Tweet_LowerAnd.Location = new System.Drawing.Point(365, 20);
+            this.Tab_Tweet_LowerAnd.Name = "Tab_Tweet_LowerAnd";
+            this.Tab_Tweet_LowerAnd.Size = new System.Drawing.Size(60, 26);
+            this.Tab_Tweet_LowerAnd.TabIndex = 26;
+            this.Tab_Tweet_LowerAnd.Text = "かつ";
+            this.Tab_Tweet_LowerAnd.UseVisualStyleBackColor = true;
             // 
-            // numericUpDown10
+            // Tab_Tweet_LowerOr
             // 
-            this.numericUpDown10.Location = new System.Drawing.Point(233, 7);
-            this.numericUpDown10.Maximum = new decimal(new int[] {
+            this.Tab_Tweet_LowerOr.AutoSize = true;
+            this.Tab_Tweet_LowerOr.Checked = true;
+            this.Tab_Tweet_LowerOr.Location = new System.Drawing.Point(365, 0);
+            this.Tab_Tweet_LowerOr.Name = "Tab_Tweet_LowerOr";
+            this.Tab_Tweet_LowerOr.Size = new System.Drawing.Size(76, 26);
+            this.Tab_Tweet_LowerOr.TabIndex = 25;
+            this.Tab_Tweet_LowerOr.TabStop = true;
+            this.Tab_Tweet_LowerOr.Text = "または";
+            this.Tab_Tweet_LowerOr.UseVisualStyleBackColor = true;
+            // 
+            // Tab_Tweet_Text3
+            // 
+            this.Tab_Tweet_Text3.AutoSize = true;
+            this.Tab_Tweet_Text3.ForeColor = System.Drawing.Color.Red;
+            this.Tab_Tweet_Text3.Location = new System.Drawing.Point(141, 223);
+            this.Tab_Tweet_Text3.Name = "Tab_Tweet_Text3";
+            this.Tab_Tweet_Text3.Size = new System.Drawing.Size(484, 44);
+            this.Tab_Tweet_Text3.TabIndex = 13;
+            this.Tab_Tweet_Text3.Text = "!注意 tokenはそのまま保存されます。\r\n          心配な場合Socketで他ソフトに送信して処理してください。";
+            // 
+            // Tab_Tweet_AccSec
+            // 
+            this.Tab_Tweet_AccSec.Location = new System.Drawing.Point(151, 183);
+            this.Tab_Tweet_AccSec.Name = "Tab_Tweet_AccSec";
+            this.Tab_Tweet_AccSec.PasswordChar = '*';
+            this.Tab_Tweet_AccSec.Size = new System.Drawing.Size(465, 31);
+            this.Tab_Tweet_AccSec.TabIndex = 12;
+            // 
+            // Tab_Tweet_AccToc
+            // 
+            this.Tab_Tweet_AccToc.Location = new System.Drawing.Point(151, 139);
+            this.Tab_Tweet_AccToc.Name = "Tab_Tweet_AccToc";
+            this.Tab_Tweet_AccToc.PasswordChar = '*';
+            this.Tab_Tweet_AccToc.Size = new System.Drawing.Size(465, 31);
+            this.Tab_Tweet_AccToc.TabIndex = 11;
+            // 
+            // Tab_Tweet_ConSec
+            // 
+            this.Tab_Tweet_ConSec.Location = new System.Drawing.Point(151, 95);
+            this.Tab_Tweet_ConSec.Name = "Tab_Tweet_ConSec";
+            this.Tab_Tweet_ConSec.PasswordChar = '*';
+            this.Tab_Tweet_ConSec.Size = new System.Drawing.Size(465, 31);
+            this.Tab_Tweet_ConSec.TabIndex = 10;
+            // 
+            // Tab_Tweet_ConKey
+            // 
+            this.Tab_Tweet_ConKey.Location = new System.Drawing.Point(151, 51);
+            this.Tab_Tweet_ConKey.Name = "Tab_Tweet_ConKey";
+            this.Tab_Tweet_ConKey.PasswordChar = '*';
+            this.Tab_Tweet_ConKey.Size = new System.Drawing.Size(465, 31);
+            this.Tab_Tweet_ConKey.TabIndex = 9;
+            // 
+            // Tab_Tweet_Enable
+            // 
+            this.Tab_Tweet_Enable.AutoSize = true;
+            this.Tab_Tweet_Enable.Location = new System.Drawing.Point(8, 10);
+            this.Tab_Tweet_Enable.Name = "Tab_Tweet_Enable";
+            this.Tab_Tweet_Enable.Size = new System.Drawing.Size(221, 26);
+            this.Tab_Tweet_Enable.TabIndex = 7;
+            this.Tab_Tweet_Enable.Text = "自動ツイートを有効にする";
+            this.Tab_Tweet_Enable.UseVisualStyleBackColor = true;
+            // 
+            // Tab_Tweet_Text
+            // 
+            this.Tab_Tweet_Text.AutoSize = true;
+            this.Tab_Tweet_Text.Location = new System.Drawing.Point(12, 10);
+            this.Tab_Tweet_Text.Name = "Tab_Tweet_Text";
+            this.Tab_Tweet_Text.Size = new System.Drawing.Size(620, 198);
+            this.Tab_Tweet_Text.TabIndex = 8;
+            this.Tab_Tweet_Text.Text = "                                                             M              以上   " +
+    "                 メルカリ震度              以上\r\n\r\nConsumerKey:\r\n\r\nConsumerSecret:\r\n\r\nAc" +
+    "cessToken:\r\n\r\nAccessSecret:";
+            // 
+            // Tab_Socket
+            // 
+            this.Tab_Socket.Controls.Add(this.Tab_Socket_SendText);
+            this.Tab_Socket.Controls.Add(this.Tab_Socket_Port);
+            this.Tab_Socket.Controls.Add(this.Tab_Socket_Host);
+            this.Tab_Socket.Controls.Add(this.Tab_Socket_Text);
+            this.Tab_Socket.Location = new System.Drawing.Point(4, 31);
+            this.Tab_Socket.Name = "Tab_Socket";
+            this.Tab_Socket.Padding = new System.Windows.Forms.Padding(3);
+            this.Tab_Socket.Size = new System.Drawing.Size(632, 275);
+            this.Tab_Socket.TabIndex = 6;
+            this.Tab_Socket.Text = "Socket通信";
+            this.Tab_Socket.UseVisualStyleBackColor = true;
+            // 
+            // Tab_Socket_SendText
+            // 
+            this.Tab_Socket_SendText.Location = new System.Drawing.Point(6, 79);
+            this.Tab_Socket_SendText.Multiline = true;
+            this.Tab_Socket_SendText.Name = "Tab_Socket_SendText";
+            this.Tab_Socket_SendText.Size = new System.Drawing.Size(620, 190);
+            this.Tab_Socket_SendText.TabIndex = 22;
+            this.Tab_Socket_SendText.Text = "{Text}";
+            // 
+            // Tab_Socket_Port
+            // 
+            this.Tab_Socket_Port.Location = new System.Drawing.Point(233, 7);
+            this.Tab_Socket_Port.Maximum = new decimal(new int[] {
             65535,
             0,
             0,
             0});
-            this.numericUpDown10.Name = "numericUpDown10";
-            this.numericUpDown10.Size = new System.Drawing.Size(64, 31);
-            this.numericUpDown10.TabIndex = 21;
+            this.Tab_Socket_Port.Name = "Tab_Socket_Port";
+            this.Tab_Socket_Port.Size = new System.Drawing.Size(64, 31);
+            this.Tab_Socket_Port.TabIndex = 21;
             // 
-            // textBox6
+            // Tab_Socket_Host
             // 
-            this.textBox6.Location = new System.Drawing.Point(121, 6);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(106, 31);
-            this.textBox6.TabIndex = 20;
-            this.textBox6.Text = "127.0.0.1";
+            this.Tab_Socket_Host.Location = new System.Drawing.Point(121, 6);
+            this.Tab_Socket_Host.Name = "Tab_Socket_Host";
+            this.Tab_Socket_Host.Size = new System.Drawing.Size(106, 31);
+            this.Tab_Socket_Host.TabIndex = 20;
+            this.Tab_Socket_Host.Text = "127.0.0.1";
             // 
-            // label8
+            // Tab_Socket_Text
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(8, 9);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(311, 66);
-            this.label8.TabIndex = 19;
-            this.label8.Text = "ホスト,ポート:\r\n\r\nテキスト:  　置換: {Text}:本文(ログと同じ)";
+            this.Tab_Socket_Text.AutoSize = true;
+            this.Tab_Socket_Text.Location = new System.Drawing.Point(8, 9);
+            this.Tab_Socket_Text.Name = "Tab_Socket_Text";
+            this.Tab_Socket_Text.Size = new System.Drawing.Size(311, 66);
+            this.Tab_Socket_Text.TabIndex = 19;
+            this.Tab_Socket_Text.Text = "ホスト,ポート:\r\n\r\nテキスト:  　置換: {Text}:本文(ログと同じ)";
             // 
-            // button2
+            // Tab_Sound_Test_M45
             // 
-            this.button2.Location = new System.Drawing.Point(518, 218);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(98, 32);
-            this.button2.TabIndex = 31;
-            this.button2.Text = "送信テスト";
-            this.button2.UseVisualStyleBackColor = true;
+            this.Tab_Sound_Test_M45.Location = new System.Drawing.Point(532, 28);
+            this.Tab_Sound_Test_M45.Name = "Tab_Sound_Test_M45";
+            this.Tab_Sound_Test_M45.Size = new System.Drawing.Size(94, 30);
+            this.Tab_Sound_Test_M45.TabIndex = 10;
+            this.Tab_Sound_Test_M45.Text = "M45.wav";
+            this.Tab_Sound_Test_M45.UseVisualStyleBackColor = true;
+            this.Tab_Sound_Test_M45.Click += new System.EventHandler(this.Tab_Sound_Test_M45_Click);
             // 
-            // textBox7
+            // Tab_Sound_Test_M60
             // 
-            this.textBox7.Location = new System.Drawing.Point(6, 79);
-            this.textBox7.Multiline = true;
-            this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(620, 190);
-            this.textBox7.TabIndex = 22;
-            this.textBox7.Text = "{Text}";
+            this.Tab_Sound_Test_M60.Location = new System.Drawing.Point(532, 64);
+            this.Tab_Sound_Test_M60.Name = "Tab_Sound_Test_M60";
+            this.Tab_Sound_Test_M60.Size = new System.Drawing.Size(94, 30);
+            this.Tab_Sound_Test_M60.TabIndex = 11;
+            this.Tab_Sound_Test_M60.Text = "M60.wav";
+            this.Tab_Sound_Test_M60.UseVisualStyleBackColor = true;
+            this.Tab_Sound_Test_M60.Click += new System.EventHandler(this.Tab_Sound_Test_M60_Click);
+            // 
+            // Tab_Sound_Test_M80
+            // 
+            this.Tab_Sound_Test_M80.Location = new System.Drawing.Point(530, 100);
+            this.Tab_Sound_Test_M80.Name = "Tab_Sound_Test_M80";
+            this.Tab_Sound_Test_M80.Size = new System.Drawing.Size(94, 30);
+            this.Tab_Sound_Test_M80.TabIndex = 12;
+            this.Tab_Sound_Test_M80.Text = "M80.wav";
+            this.Tab_Sound_Test_M80.UseVisualStyleBackColor = true;
+            this.Tab_Sound_Test_M80.Click += new System.EventHandler(this.Tab_Sound_Test_M80_Click);
+            // 
+            // Tab_Sound_Test_M45u
+            // 
+            this.Tab_Sound_Test_M45u.Location = new System.Drawing.Point(530, 136);
+            this.Tab_Sound_Test_M45u.Name = "Tab_Sound_Test_M45u";
+            this.Tab_Sound_Test_M45u.Size = new System.Drawing.Size(94, 30);
+            this.Tab_Sound_Test_M45u.TabIndex = 13;
+            this.Tab_Sound_Test_M45u.Text = "M45u.wav";
+            this.Tab_Sound_Test_M45u.UseVisualStyleBackColor = true;
+            this.Tab_Sound_Test_M45u.Click += new System.EventHandler(this.Tab_Sound_Test_M45u_Click);
+            // 
+            // Tab_Sound_Test_M60u
+            // 
+            this.Tab_Sound_Test_M60u.Location = new System.Drawing.Point(530, 172);
+            this.Tab_Sound_Test_M60u.Name = "Tab_Sound_Test_M60u";
+            this.Tab_Sound_Test_M60u.Size = new System.Drawing.Size(94, 30);
+            this.Tab_Sound_Test_M60u.TabIndex = 14;
+            this.Tab_Sound_Test_M60u.Text = "M60u.wav";
+            this.Tab_Sound_Test_M60u.UseVisualStyleBackColor = true;
+            this.Tab_Sound_Test_M60u.Click += new System.EventHandler(this.Tab_Sound_Test_M60u_Click);
+            // 
+            // Tab_Sound_Test_M80u
+            // 
+            this.Tab_Sound_Test_M80u.Location = new System.Drawing.Point(530, 208);
+            this.Tab_Sound_Test_M80u.Name = "Tab_Sound_Test_M80u";
+            this.Tab_Sound_Test_M80u.Size = new System.Drawing.Size(94, 30);
+            this.Tab_Sound_Test_M80u.TabIndex = 15;
+            this.Tab_Sound_Test_M80u.Text = "M80u.wav";
+            this.Tab_Sound_Test_M80u.UseVisualStyleBackColor = true;
+            this.Tab_Sound_Test_M80u.Click += new System.EventHandler(this.Tab_Sound_Test_M80u_Click);
             // 
             // SettingsForm
             // 
@@ -829,26 +903,26 @@
             this.Tabs.ResumeLayout(false);
             this.Tab_Info.ResumeLayout(false);
             this.Tab_Info.PerformLayout();
-            this.Tab_Yomi.ResumeLayout(false);
-            this.Tab_Yomi.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.Tab_View.ResumeLayout(false);
             this.Tab_View.PerformLayout();
-            this.Tab_SE.ResumeLayout(false);
-            this.Tab_SE.PerformLayout();
-            this.Tab_Socket.ResumeLayout(false);
-            this.Tab_Socket.PerformLayout();
+            this.Tab_Sound.ResumeLayout(false);
+            this.Tab_Sound.PerformLayout();
+            this.Tab_Yomi.ResumeLayout(false);
+            this.Tab_Yomi.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Tab_Yomi_Voice)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Tab_Yomi_LowerMMI)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Tab_Yomi_LowerMag)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Tab_Yomi_Port)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Tab_Yomi_Volume)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Tab_Yomi_Tone)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Tab_Yomi_Speed)).EndInit();
             this.Tab_Tweet.ResumeLayout(false);
             this.Tab_Tweet.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown8)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown9)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown10)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Tab_Tweet_LowerMMI)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Tab_Tweet_LowerMag)).EndInit();
+            this.Tab_Socket.ResumeLayout(false);
+            this.Tab_Socket.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Tab_Socket_Port)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -862,7 +936,7 @@
         private System.Windows.Forms.TabPage Tab_Yomi;
         private System.Windows.Forms.Label Version;
         private System.Windows.Forms.LinkLabel LinkUSGS;
-        private System.Windows.Forms.Label Tab_Infos;
+        private System.Windows.Forms.Label Tab_Info_Text;
         private System.Windows.Forms.LinkLabel LinkJMA;
         private System.Windows.Forms.LinkLabel LinkFE;
         private System.Windows.Forms.LinkLabel LinkOtoLigic;
@@ -870,48 +944,54 @@
         private System.Windows.Forms.LinkLabel LinkMap;
         private System.Windows.Forms.TabPage Tab_Tweet;
         private System.Windows.Forms.TabPage Tab_View;
-        private System.Windows.Forms.TabPage Tab_SE;
+        private System.Windows.Forms.TabPage Tab_Sound;
         private System.Windows.Forms.TabPage Tab_Socket;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.CheckBox checkBox3;
-        private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.CheckBox checkBox8;
-        private System.Windows.Forms.CheckBox checkBox7;
-        private System.Windows.Forms.CheckBox checkBox6;
-        private System.Windows.Forms.CheckBox checkBox5;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.CheckBox checkBox9;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.NumericUpDown numericUpDown6;
-        private System.Windows.Forms.NumericUpDown numericUpDown5;
-        private System.Windows.Forms.NumericUpDown numericUpDown2;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.NumericUpDown numericUpDown4;
-        private System.Windows.Forms.NumericUpDown numericUpDown3;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
-        private System.Windows.Forms.CheckBox checkBox4;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.RadioButton radioButton1;
-        private System.Windows.Forms.RadioButton radioButton3;
-        private System.Windows.Forms.RadioButton radioButton4;
-        private System.Windows.Forms.NumericUpDown numericUpDown7;
-        private System.Windows.Forms.NumericUpDown numericUpDown8;
-        private System.Windows.Forms.CheckBox checkBox10;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.NumericUpDown numericUpDown9;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.NumericUpDown numericUpDown10;
-        private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.TextBox textBox7;
+        private System.Windows.Forms.Label Tab_View_Text;
+        private System.Windows.Forms.CheckBox Tab_View_LatLonDecimal;
+        private System.Windows.Forms.CheckBox Tab_View_HideMap;
+        private System.Windows.Forms.CheckBox Tab_View_HideHist;
+        private System.Windows.Forms.Label Tab_Sound_Text;
+        private System.Windows.Forms.CheckBox Tab_Sound_Updt;
+        private System.Windows.Forms.CheckBox M80;
+        private System.Windows.Forms.CheckBox Tab_Sound_M60;
+        private System.Windows.Forms.CheckBox Tab_Sound_M45;
+        private System.Windows.Forms.Label Tab_Tweet_Text3;
+        private System.Windows.Forms.TextBox Tab_Tweet_AccSec;
+        private System.Windows.Forms.TextBox Tab_Tweet_AccToc;
+        private System.Windows.Forms.TextBox Tab_Tweet_ConSec;
+        private System.Windows.Forms.TextBox Tab_Tweet_ConKey;
+        private System.Windows.Forms.CheckBox Tab_Tweet_Enable;
+        private System.Windows.Forms.Label Tab_Tweet_Text;
+        private System.Windows.Forms.NumericUpDown Tab_Yomi_LowerMMI;
+        private System.Windows.Forms.NumericUpDown Tab_Yomi_LowerMag;
+        private System.Windows.Forms.NumericUpDown Tab_Yomi_Port;
+        private System.Windows.Forms.TextBox Tab_Yomi_Host;
+        private System.Windows.Forms.Button Tab_Yomi_Test;
+        private System.Windows.Forms.NumericUpDown Tab_Yomi_Volume;
+        private System.Windows.Forms.NumericUpDown Tab_Yomi_Tone;
+        private System.Windows.Forms.NumericUpDown Tab_Yomi_Speed;
+        private System.Windows.Forms.CheckBox Tab_Yomi_Enable;
+        private System.Windows.Forms.Label Tab_Yomi_Text;
+        private System.Windows.Forms.RadioButton Tab_Yomi_LowerAnd;
+        private System.Windows.Forms.RadioButton Tab_Yomi_LowerOf;
+        private System.Windows.Forms.RadioButton Tab_Tweet_LowerOr;
+        private System.Windows.Forms.RadioButton Tab_Tweet_LowerAnd;
+        private System.Windows.Forms.NumericUpDown Tab_Tweet_LowerMag;
+        private System.Windows.Forms.NumericUpDown Tab_Tweet_LowerMMI;
+        private System.Windows.Forms.CheckBox Tab_Tweet_ViewToken;
+        private System.Windows.Forms.Label Tab_Tweet_Text2;
+        private System.Windows.Forms.NumericUpDown Tab_Yomi_Voice;
+        private System.Windows.Forms.Label Tab_Yomi_Text2;
+        private System.Windows.Forms.NumericUpDown Tab_Socket_Port;
+        private System.Windows.Forms.TextBox Tab_Socket_Host;
+        private System.Windows.Forms.Label Tab_Socket_Text;
+        private System.Windows.Forms.Button Tab_Tweet_Test;
+        private System.Windows.Forms.TextBox Tab_Socket_SendText;
+        private System.Windows.Forms.Button Tab_Sound_Test_M45;
+        private System.Windows.Forms.Button Tab_Sound_Test_M80u;
+        private System.Windows.Forms.Button Tab_Sound_Test_M60u;
+        private System.Windows.Forms.Button Tab_Sound_Test_M45u;
+        private System.Windows.Forms.Button Tab_Sound_Test_M80;
+        private System.Windows.Forms.Button Tab_Sound_Test_M60;
     }
 }

@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Tab_Infos.Text" xml:space="preserve">
+  <data name="Tab_Info_Text.Text" xml:space="preserve">
     <value>情報:USGS M4.5+ Earthquakes Feed
 
 震源コード(FE領域識別番号)取得:USGS Geoserve Regions Endpoint
@@ -130,7 +130,7 @@
 フォント:Koruri Regular(20210720)      既定効果音:OtoLogic(ニュース アラート02~04)
 </value>
   </data>
-  <data name="label1.Text" xml:space="preserve">
+  <data name="Tab_Yomi_Text.Text" xml:space="preserve">
     <value>
 
 ホスト,ポート:                                              規定は127.0.0.1 50001

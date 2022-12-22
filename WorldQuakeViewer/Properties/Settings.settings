@@ -68,12 +68,6 @@
     <Setting Name="Version" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="Socket_LowerMagnitudeLimit" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="Socket_LowerMMILimit" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
     <Setting Name="Sound_45_Enable" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
@@ -95,8 +89,8 @@
     <Setting Name="Bouyomichan_Lower_And" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="Tweet_Lower_And" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+    <Setting Name="Tweet_Lower_And" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -289,30 +289,6 @@ namespace WorldQuakeViewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double Socket_LowerMagnitudeLimit {
-            get {
-                return ((double)(this["Socket_LowerMagnitudeLimit"]));
-            }
-            set {
-                this["Socket_LowerMagnitudeLimit"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double Socket_LowerMMILimit {
-            get {
-                return ((double)(this["Socket_LowerMMILimit"]));
-            }
-            set {
-                this["Socket_LowerMMILimit"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool Sound_45_Enable {
             get {
@@ -397,10 +373,10 @@ namespace WorldQuakeViewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Tweet_Lower_And {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Tweet_Lower_And {
             get {
-                return ((string)(this["Tweet_Lower_And"]));
+                return ((bool)(this["Tweet_Lower_And"]));
             }
             set {
                 this["Tweet_Lower_And"] = value;
