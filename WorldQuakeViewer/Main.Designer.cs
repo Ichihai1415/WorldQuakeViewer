@@ -146,7 +146,7 @@
             this.RC1RebootExit});
             this.RightClick.Name = "RightClick";
             this.RightClick.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.RightClick.Size = new System.Drawing.Size(208, 132);
+            this.RightClick.Size = new System.Drawing.Size(208, 110);
             this.RightClick.TabStop = true;
             this.RightClick.Text = "メニュー";
             // 
@@ -230,21 +230,21 @@
             // RCTwitter
             // 
             this.RCTwitter.Name = "RCTwitter";
-            this.RCTwitter.Size = new System.Drawing.Size(180, 22);
+            this.RCTwitter.Size = new System.Drawing.Size(164, 22);
             this.RCTwitter.Text = "Twitter";
             this.RCTwitter.Click += new System.EventHandler(this.RCtwitter_Click);
             // 
             // RCGitHub
             // 
             this.RCGitHub.Name = "RCGitHub";
-            this.RCGitHub.Size = new System.Drawing.Size(180, 22);
+            this.RCGitHub.Size = new System.Drawing.Size(164, 22);
             this.RCGitHub.Text = "GitHub(リポジトリ)";
             this.RCGitHub.Click += new System.EventHandler(this.RCgithub_Click);
             // 
             // RCiInfoPage
             // 
             this.RCiInfoPage.Name = "RCiInfoPage";
-            this.RCiInfoPage.Size = new System.Drawing.Size(180, 22);
+            this.RCiInfoPage.Size = new System.Drawing.Size(164, 22);
             this.RCiInfoPage.Text = "解説ページ";
             this.RCiInfoPage.Click += new System.EventHandler(this.RCinfopage_Click);
             // 
@@ -266,14 +266,14 @@
             // RCreboot
             // 
             this.RCreboot.Name = "RCreboot";
-            this.RCreboot.Size = new System.Drawing.Size(180, 22);
+            this.RCreboot.Size = new System.Drawing.Size(110, 22);
             this.RCreboot.Text = "再起動";
             this.RCreboot.Click += new System.EventHandler(this.RCreboot_Click);
             // 
             // RCexit
             // 
             this.RCexit.Name = "RCexit";
-            this.RCexit.Size = new System.Drawing.Size(180, 22);
+            this.RCexit.Size = new System.Drawing.Size(110, 22);
             this.RCexit.Text = "終了";
             this.RCexit.Click += new System.EventHandler(this.RCexit_Click);
             // 
@@ -310,6 +310,7 @@
             this.ErrorText.Font = new System.Drawing.Font("Koruri Regular", 12F);
             this.ErrorText.ForeColor = System.Drawing.Color.Yellow;
             this.ErrorText.Location = new System.Drawing.Point(0, 100);
+            this.ErrorText.MaximumSize = new System.Drawing.Size(400, 400);
             this.ErrorText.Name = "ErrorText";
             this.ErrorText.Size = new System.Drawing.Size(0, 22);
             this.ErrorText.TabIndex = 15;

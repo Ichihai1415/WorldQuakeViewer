@@ -47,16 +47,22 @@
             this.Tab_View_HideMap = new System.Windows.Forms.CheckBox();
             this.Tab_View_HideHist = new System.Windows.Forms.CheckBox();
             this.Tab_Sound = new System.Windows.Forms.TabPage();
+            this.Tab_Sound_Test_M80u = new System.Windows.Forms.Button();
+            this.Tab_Sound_Test_M60u = new System.Windows.Forms.Button();
+            this.Tab_Sound_Test_M45u = new System.Windows.Forms.Button();
+            this.Tab_Sound_Test_M80 = new System.Windows.Forms.Button();
+            this.Tab_Sound_Test_M60 = new System.Windows.Forms.Button();
+            this.Tab_Sound_Test_M45 = new System.Windows.Forms.Button();
             this.Tab_Sound_Text = new System.Windows.Forms.Label();
             this.Tab_Sound_Updt = new System.Windows.Forms.CheckBox();
-            this.M80 = new System.Windows.Forms.CheckBox();
+            this.Tab_Sound_M80 = new System.Windows.Forms.CheckBox();
             this.Tab_Sound_M60 = new System.Windows.Forms.CheckBox();
             this.Tab_Sound_M45 = new System.Windows.Forms.CheckBox();
             this.Tab_Yomi = new System.Windows.Forms.TabPage();
             this.Tab_Yomi_Text2 = new System.Windows.Forms.Label();
             this.Tab_Yomi_Voice = new System.Windows.Forms.NumericUpDown();
             this.Tab_Yomi_LowerAnd = new System.Windows.Forms.RadioButton();
-            this.Tab_Yomi_LowerOf = new System.Windows.Forms.RadioButton();
+            this.Tab_Yomi_LowerOr = new System.Windows.Forms.RadioButton();
             this.Tab_Yomi_LowerMMI = new System.Windows.Forms.NumericUpDown();
             this.Tab_Yomi_LowerMag = new System.Windows.Forms.NumericUpDown();
             this.Tab_Yomi_Port = new System.Windows.Forms.NumericUpDown();
@@ -77,22 +83,18 @@
             this.Tab_Tweet_LowerOr = new System.Windows.Forms.RadioButton();
             this.Tab_Tweet_Text3 = new System.Windows.Forms.Label();
             this.Tab_Tweet_AccSec = new System.Windows.Forms.TextBox();
-            this.Tab_Tweet_AccToc = new System.Windows.Forms.TextBox();
+            this.Tab_Tweet_AccTok = new System.Windows.Forms.TextBox();
             this.Tab_Tweet_ConSec = new System.Windows.Forms.TextBox();
             this.Tab_Tweet_ConKey = new System.Windows.Forms.TextBox();
             this.Tab_Tweet_Enable = new System.Windows.Forms.CheckBox();
             this.Tab_Tweet_Text = new System.Windows.Forms.Label();
             this.Tab_Socket = new System.Windows.Forms.TabPage();
-            this.Tab_Socket_SendText = new System.Windows.Forms.TextBox();
+            this.Tab_Socket_Test = new System.Windows.Forms.Button();
+            this.Tab_Socket_Enable = new System.Windows.Forms.CheckBox();
+            this.Tab_Socket_TextFormat = new System.Windows.Forms.TextBox();
             this.Tab_Socket_Port = new System.Windows.Forms.NumericUpDown();
             this.Tab_Socket_Host = new System.Windows.Forms.TextBox();
             this.Tab_Socket_Text = new System.Windows.Forms.Label();
-            this.Tab_Sound_Test_M45 = new System.Windows.Forms.Button();
-            this.Tab_Sound_Test_M60 = new System.Windows.Forms.Button();
-            this.Tab_Sound_Test_M80 = new System.Windows.Forms.Button();
-            this.Tab_Sound_Test_M45u = new System.Windows.Forms.Button();
-            this.Tab_Sound_Test_M60u = new System.Windows.Forms.Button();
-            this.Tab_Sound_Test_M80u = new System.Windows.Forms.Button();
             this.Tabs.SuspendLayout();
             this.Tab_Info.SuspendLayout();
             this.Tab_View.SuspendLayout();
@@ -306,11 +308,11 @@
             this.Tab_Sound.Controls.Add(this.Tab_Sound_Test_M80);
             this.Tab_Sound.Controls.Add(this.Tab_Sound_Test_M60);
             this.Tab_Sound.Controls.Add(this.Tab_Sound_Test_M45);
-            this.Tab_Sound.Controls.Add(this.Tab_Sound_Text);
             this.Tab_Sound.Controls.Add(this.Tab_Sound_Updt);
-            this.Tab_Sound.Controls.Add(this.M80);
+            this.Tab_Sound.Controls.Add(this.Tab_Sound_M80);
             this.Tab_Sound.Controls.Add(this.Tab_Sound_M60);
             this.Tab_Sound.Controls.Add(this.Tab_Sound_M45);
+            this.Tab_Sound.Controls.Add(this.Tab_Sound_Text);
             this.Tab_Sound.Location = new System.Drawing.Point(4, 31);
             this.Tab_Sound.Name = "Tab_Sound";
             this.Tab_Sound.Padding = new System.Windows.Forms.Padding(3);
@@ -319,15 +321,74 @@
             this.Tab_Sound.Text = "音声";
             this.Tab_Sound.UseVisualStyleBackColor = true;
             // 
+            // Tab_Sound_Test_M80u
+            // 
+            this.Tab_Sound_Test_M80u.Location = new System.Drawing.Point(530, 208);
+            this.Tab_Sound_Test_M80u.Name = "Tab_Sound_Test_M80u";
+            this.Tab_Sound_Test_M80u.Size = new System.Drawing.Size(94, 30);
+            this.Tab_Sound_Test_M80u.TabIndex = 15;
+            this.Tab_Sound_Test_M80u.Text = "M80u.wav";
+            this.Tab_Sound_Test_M80u.UseVisualStyleBackColor = true;
+            this.Tab_Sound_Test_M80u.Click += new System.EventHandler(this.Tab_Sound_Test_M80u_Click);
+            // 
+            // Tab_Sound_Test_M60u
+            // 
+            this.Tab_Sound_Test_M60u.Location = new System.Drawing.Point(530, 172);
+            this.Tab_Sound_Test_M60u.Name = "Tab_Sound_Test_M60u";
+            this.Tab_Sound_Test_M60u.Size = new System.Drawing.Size(94, 30);
+            this.Tab_Sound_Test_M60u.TabIndex = 14;
+            this.Tab_Sound_Test_M60u.Text = "M60u.wav";
+            this.Tab_Sound_Test_M60u.UseVisualStyleBackColor = true;
+            this.Tab_Sound_Test_M60u.Click += new System.EventHandler(this.Tab_Sound_Test_M60u_Click);
+            // 
+            // Tab_Sound_Test_M45u
+            // 
+            this.Tab_Sound_Test_M45u.Location = new System.Drawing.Point(530, 136);
+            this.Tab_Sound_Test_M45u.Name = "Tab_Sound_Test_M45u";
+            this.Tab_Sound_Test_M45u.Size = new System.Drawing.Size(94, 30);
+            this.Tab_Sound_Test_M45u.TabIndex = 13;
+            this.Tab_Sound_Test_M45u.Text = "M45u.wav";
+            this.Tab_Sound_Test_M45u.UseVisualStyleBackColor = true;
+            this.Tab_Sound_Test_M45u.Click += new System.EventHandler(this.Tab_Sound_Test_M45u_Click);
+            // 
+            // Tab_Sound_Test_M80
+            // 
+            this.Tab_Sound_Test_M80.Location = new System.Drawing.Point(530, 100);
+            this.Tab_Sound_Test_M80.Name = "Tab_Sound_Test_M80";
+            this.Tab_Sound_Test_M80.Size = new System.Drawing.Size(94, 30);
+            this.Tab_Sound_Test_M80.TabIndex = 12;
+            this.Tab_Sound_Test_M80.Text = "M80.wav";
+            this.Tab_Sound_Test_M80.UseVisualStyleBackColor = true;
+            this.Tab_Sound_Test_M80.Click += new System.EventHandler(this.Tab_Sound_Test_M80_Click);
+            // 
+            // Tab_Sound_Test_M60
+            // 
+            this.Tab_Sound_Test_M60.Location = new System.Drawing.Point(532, 64);
+            this.Tab_Sound_Test_M60.Name = "Tab_Sound_Test_M60";
+            this.Tab_Sound_Test_M60.Size = new System.Drawing.Size(94, 30);
+            this.Tab_Sound_Test_M60.TabIndex = 11;
+            this.Tab_Sound_Test_M60.Text = "M60.wav";
+            this.Tab_Sound_Test_M60.UseVisualStyleBackColor = true;
+            this.Tab_Sound_Test_M60.Click += new System.EventHandler(this.Tab_Sound_Test_M60_Click);
+            // 
+            // Tab_Sound_Test_M45
+            // 
+            this.Tab_Sound_Test_M45.Location = new System.Drawing.Point(532, 28);
+            this.Tab_Sound_Test_M45.Name = "Tab_Sound_Test_M45";
+            this.Tab_Sound_Test_M45.Size = new System.Drawing.Size(94, 30);
+            this.Tab_Sound_Test_M45.TabIndex = 10;
+            this.Tab_Sound_Test_M45.Text = "M45.wav";
+            this.Tab_Sound_Test_M45.UseVisualStyleBackColor = true;
+            this.Tab_Sound_Test_M45.Click += new System.EventHandler(this.Tab_Sound_Test_M45_Click);
+            // 
             // Tab_Sound_Text
             // 
             this.Tab_Sound_Text.AutoSize = true;
             this.Tab_Sound_Text.Location = new System.Drawing.Point(8, 3);
             this.Tab_Sound_Text.Name = "Tab_Sound_Text";
-            this.Tab_Sound_Text.Size = new System.Drawing.Size(618, 22);
+            this.Tab_Sound_Text.Size = new System.Drawing.Size(618, 220);
             this.Tab_Sound_Text.TabIndex = 9;
-            this.Tab_Sound_Text.Text = "鳴らす条件:                                                                           " +
-    "                                    再生テスト";
+            this.Tab_Sound_Text.Text = resources.GetString("Tab_Sound_Text.Text");
             // 
             // Tab_Sound_Updt
             // 
@@ -339,15 +400,15 @@
             this.Tab_Sound_Updt.Text = "更新時(M45u.wav,M60u.wav,M80u.wav)";
             this.Tab_Sound_Updt.UseVisualStyleBackColor = true;
             // 
-            // M80
+            // Tab_Sound_M80
             // 
-            this.M80.AutoSize = true;
-            this.M80.Location = new System.Drawing.Point(12, 92);
-            this.M80.Name = "M80";
-            this.M80.Size = new System.Drawing.Size(172, 26);
-            this.M80.TabIndex = 7;
-            this.M80.Text = "M8.0以上(M80.wav)";
-            this.M80.UseVisualStyleBackColor = true;
+            this.Tab_Sound_M80.AutoSize = true;
+            this.Tab_Sound_M80.Location = new System.Drawing.Point(12, 92);
+            this.Tab_Sound_M80.Name = "Tab_Sound_M80";
+            this.Tab_Sound_M80.Size = new System.Drawing.Size(172, 26);
+            this.Tab_Sound_M80.TabIndex = 7;
+            this.Tab_Sound_M80.Text = "M8.0以上(M80.wav)";
+            this.Tab_Sound_M80.UseVisualStyleBackColor = true;
             // 
             // Tab_Sound_M60
             // 
@@ -374,7 +435,7 @@
             this.Tab_Yomi.Controls.Add(this.Tab_Yomi_Text2);
             this.Tab_Yomi.Controls.Add(this.Tab_Yomi_Voice);
             this.Tab_Yomi.Controls.Add(this.Tab_Yomi_LowerAnd);
-            this.Tab_Yomi.Controls.Add(this.Tab_Yomi_LowerOf);
+            this.Tab_Yomi.Controls.Add(this.Tab_Yomi_LowerOr);
             this.Tab_Yomi.Controls.Add(this.Tab_Yomi_LowerMMI);
             this.Tab_Yomi.Controls.Add(this.Tab_Yomi_LowerMag);
             this.Tab_Yomi.Controls.Add(this.Tab_Yomi_Port);
@@ -424,17 +485,17 @@
             this.Tab_Yomi_LowerAnd.Text = "かつ";
             this.Tab_Yomi_LowerAnd.UseVisualStyleBackColor = true;
             // 
-            // Tab_Yomi_LowerOf
+            // Tab_Yomi_LowerOr
             // 
-            this.Tab_Yomi_LowerOf.AutoSize = true;
-            this.Tab_Yomi_LowerOf.Checked = true;
-            this.Tab_Yomi_LowerOf.Location = new System.Drawing.Point(120, 82);
-            this.Tab_Yomi_LowerOf.Name = "Tab_Yomi_LowerOf";
-            this.Tab_Yomi_LowerOf.Size = new System.Drawing.Size(76, 26);
-            this.Tab_Yomi_LowerOf.TabIndex = 24;
-            this.Tab_Yomi_LowerOf.TabStop = true;
-            this.Tab_Yomi_LowerOf.Text = "または";
-            this.Tab_Yomi_LowerOf.UseVisualStyleBackColor = true;
+            this.Tab_Yomi_LowerOr.AutoSize = true;
+            this.Tab_Yomi_LowerOr.Checked = true;
+            this.Tab_Yomi_LowerOr.Location = new System.Drawing.Point(120, 82);
+            this.Tab_Yomi_LowerOr.Name = "Tab_Yomi_LowerOr";
+            this.Tab_Yomi_LowerOr.Size = new System.Drawing.Size(76, 26);
+            this.Tab_Yomi_LowerOr.TabIndex = 24;
+            this.Tab_Yomi_LowerOr.TabStop = true;
+            this.Tab_Yomi_LowerOr.Text = "または";
+            this.Tab_Yomi_LowerOr.UseVisualStyleBackColor = true;
             // 
             // Tab_Yomi_LowerMMI
             // 
@@ -598,7 +659,7 @@
             this.Tab_Tweet.Controls.Add(this.Tab_Tweet_LowerOr);
             this.Tab_Tweet.Controls.Add(this.Tab_Tweet_Text3);
             this.Tab_Tweet.Controls.Add(this.Tab_Tweet_AccSec);
-            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_AccToc);
+            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_AccTok);
             this.Tab_Tweet.Controls.Add(this.Tab_Tweet_ConSec);
             this.Tab_Tweet.Controls.Add(this.Tab_Tweet_ConKey);
             this.Tab_Tweet.Controls.Add(this.Tab_Tweet_Enable);
@@ -619,6 +680,7 @@
             this.Tab_Tweet_Test.TabIndex = 31;
             this.Tab_Tweet_Test.Text = "送信テスト";
             this.Tab_Tweet_Test.UseVisualStyleBackColor = true;
+            this.Tab_Tweet_Test.Click += new System.EventHandler(this.Tab_Tweet_Test_Click);
             // 
             // Tab_Tweet_Text2
             // 
@@ -726,13 +788,13 @@
             this.Tab_Tweet_AccSec.Size = new System.Drawing.Size(465, 31);
             this.Tab_Tweet_AccSec.TabIndex = 12;
             // 
-            // Tab_Tweet_AccToc
+            // Tab_Tweet_AccTok
             // 
-            this.Tab_Tweet_AccToc.Location = new System.Drawing.Point(151, 139);
-            this.Tab_Tweet_AccToc.Name = "Tab_Tweet_AccToc";
-            this.Tab_Tweet_AccToc.PasswordChar = '*';
-            this.Tab_Tweet_AccToc.Size = new System.Drawing.Size(465, 31);
-            this.Tab_Tweet_AccToc.TabIndex = 11;
+            this.Tab_Tweet_AccTok.Location = new System.Drawing.Point(151, 139);
+            this.Tab_Tweet_AccTok.Name = "Tab_Tweet_AccTok";
+            this.Tab_Tweet_AccTok.PasswordChar = '*';
+            this.Tab_Tweet_AccTok.Size = new System.Drawing.Size(465, 31);
+            this.Tab_Tweet_AccTok.TabIndex = 11;
             // 
             // Tab_Tweet_ConSec
             // 
@@ -773,7 +835,9 @@
             // 
             // Tab_Socket
             // 
-            this.Tab_Socket.Controls.Add(this.Tab_Socket_SendText);
+            this.Tab_Socket.Controls.Add(this.Tab_Socket_Test);
+            this.Tab_Socket.Controls.Add(this.Tab_Socket_Enable);
+            this.Tab_Socket.Controls.Add(this.Tab_Socket_TextFormat);
             this.Tab_Socket.Controls.Add(this.Tab_Socket_Port);
             this.Tab_Socket.Controls.Add(this.Tab_Socket_Host);
             this.Tab_Socket.Controls.Add(this.Tab_Socket_Text);
@@ -785,18 +849,38 @@
             this.Tab_Socket.Text = "Socket通信";
             this.Tab_Socket.UseVisualStyleBackColor = true;
             // 
-            // Tab_Socket_SendText
+            // Tab_Socket_Test
             // 
-            this.Tab_Socket_SendText.Location = new System.Drawing.Point(6, 79);
-            this.Tab_Socket_SendText.Multiline = true;
-            this.Tab_Socket_SendText.Name = "Tab_Socket_SendText";
-            this.Tab_Socket_SendText.Size = new System.Drawing.Size(620, 190);
-            this.Tab_Socket_SendText.TabIndex = 22;
-            this.Tab_Socket_SendText.Text = "{Text}";
+            this.Tab_Socket_Test.Location = new System.Drawing.Point(526, 78);
+            this.Tab_Socket_Test.Name = "Tab_Socket_Test";
+            this.Tab_Socket_Test.Size = new System.Drawing.Size(98, 32);
+            this.Tab_Socket_Test.TabIndex = 32;
+            this.Tab_Socket_Test.Text = "送信テスト";
+            this.Tab_Socket_Test.UseVisualStyleBackColor = true;
+            this.Tab_Socket_Test.Click += new System.EventHandler(this.Tab_Socket_Test_Click);
+            // 
+            // Tab_Socket_Enable
+            // 
+            this.Tab_Socket_Enable.AutoSize = true;
+            this.Tab_Socket_Enable.Location = new System.Drawing.Point(8, 6);
+            this.Tab_Socket_Enable.Name = "Tab_Socket_Enable";
+            this.Tab_Socket_Enable.Size = new System.Drawing.Size(157, 26);
+            this.Tab_Socket_Enable.TabIndex = 23;
+            this.Tab_Socket_Enable.Text = "送信を有効にする";
+            this.Tab_Socket_Enable.UseVisualStyleBackColor = true;
+            // 
+            // Tab_Socket_TextFormat
+            // 
+            this.Tab_Socket_TextFormat.Location = new System.Drawing.Point(6, 116);
+            this.Tab_Socket_TextFormat.Multiline = true;
+            this.Tab_Socket_TextFormat.Name = "Tab_Socket_TextFormat";
+            this.Tab_Socket_TextFormat.Size = new System.Drawing.Size(620, 153);
+            this.Tab_Socket_TextFormat.TabIndex = 22;
+            this.Tab_Socket_TextFormat.Text = "{Text}";
             // 
             // Tab_Socket_Port
             // 
-            this.Tab_Socket_Port.Location = new System.Drawing.Point(233, 7);
+            this.Tab_Socket_Port.Location = new System.Drawing.Point(227, 45);
             this.Tab_Socket_Port.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -808,80 +892,19 @@
             // 
             // Tab_Socket_Host
             // 
-            this.Tab_Socket_Host.Location = new System.Drawing.Point(121, 6);
+            this.Tab_Socket_Host.Location = new System.Drawing.Point(115, 44);
             this.Tab_Socket_Host.Name = "Tab_Socket_Host";
             this.Tab_Socket_Host.Size = new System.Drawing.Size(106, 31);
             this.Tab_Socket_Host.TabIndex = 20;
-            this.Tab_Socket_Host.Text = "127.0.0.1";
             // 
             // Tab_Socket_Text
             // 
             this.Tab_Socket_Text.AutoSize = true;
-            this.Tab_Socket_Text.Location = new System.Drawing.Point(8, 9);
+            this.Tab_Socket_Text.Location = new System.Drawing.Point(3, 3);
             this.Tab_Socket_Text.Name = "Tab_Socket_Text";
-            this.Tab_Socket_Text.Size = new System.Drawing.Size(311, 66);
+            this.Tab_Socket_Text.Size = new System.Drawing.Size(311, 110);
             this.Tab_Socket_Text.TabIndex = 19;
-            this.Tab_Socket_Text.Text = "ホスト,ポート:\r\n\r\nテキスト:  　置換: {Text}:本文(ログと同じ)";
-            // 
-            // Tab_Sound_Test_M45
-            // 
-            this.Tab_Sound_Test_M45.Location = new System.Drawing.Point(532, 28);
-            this.Tab_Sound_Test_M45.Name = "Tab_Sound_Test_M45";
-            this.Tab_Sound_Test_M45.Size = new System.Drawing.Size(94, 30);
-            this.Tab_Sound_Test_M45.TabIndex = 10;
-            this.Tab_Sound_Test_M45.Text = "M45.wav";
-            this.Tab_Sound_Test_M45.UseVisualStyleBackColor = true;
-            this.Tab_Sound_Test_M45.Click += new System.EventHandler(this.Tab_Sound_Test_M45_Click);
-            // 
-            // Tab_Sound_Test_M60
-            // 
-            this.Tab_Sound_Test_M60.Location = new System.Drawing.Point(532, 64);
-            this.Tab_Sound_Test_M60.Name = "Tab_Sound_Test_M60";
-            this.Tab_Sound_Test_M60.Size = new System.Drawing.Size(94, 30);
-            this.Tab_Sound_Test_M60.TabIndex = 11;
-            this.Tab_Sound_Test_M60.Text = "M60.wav";
-            this.Tab_Sound_Test_M60.UseVisualStyleBackColor = true;
-            this.Tab_Sound_Test_M60.Click += new System.EventHandler(this.Tab_Sound_Test_M60_Click);
-            // 
-            // Tab_Sound_Test_M80
-            // 
-            this.Tab_Sound_Test_M80.Location = new System.Drawing.Point(530, 100);
-            this.Tab_Sound_Test_M80.Name = "Tab_Sound_Test_M80";
-            this.Tab_Sound_Test_M80.Size = new System.Drawing.Size(94, 30);
-            this.Tab_Sound_Test_M80.TabIndex = 12;
-            this.Tab_Sound_Test_M80.Text = "M80.wav";
-            this.Tab_Sound_Test_M80.UseVisualStyleBackColor = true;
-            this.Tab_Sound_Test_M80.Click += new System.EventHandler(this.Tab_Sound_Test_M80_Click);
-            // 
-            // Tab_Sound_Test_M45u
-            // 
-            this.Tab_Sound_Test_M45u.Location = new System.Drawing.Point(530, 136);
-            this.Tab_Sound_Test_M45u.Name = "Tab_Sound_Test_M45u";
-            this.Tab_Sound_Test_M45u.Size = new System.Drawing.Size(94, 30);
-            this.Tab_Sound_Test_M45u.TabIndex = 13;
-            this.Tab_Sound_Test_M45u.Text = "M45u.wav";
-            this.Tab_Sound_Test_M45u.UseVisualStyleBackColor = true;
-            this.Tab_Sound_Test_M45u.Click += new System.EventHandler(this.Tab_Sound_Test_M45u_Click);
-            // 
-            // Tab_Sound_Test_M60u
-            // 
-            this.Tab_Sound_Test_M60u.Location = new System.Drawing.Point(530, 172);
-            this.Tab_Sound_Test_M60u.Name = "Tab_Sound_Test_M60u";
-            this.Tab_Sound_Test_M60u.Size = new System.Drawing.Size(94, 30);
-            this.Tab_Sound_Test_M60u.TabIndex = 14;
-            this.Tab_Sound_Test_M60u.Text = "M60u.wav";
-            this.Tab_Sound_Test_M60u.UseVisualStyleBackColor = true;
-            this.Tab_Sound_Test_M60u.Click += new System.EventHandler(this.Tab_Sound_Test_M60u_Click);
-            // 
-            // Tab_Sound_Test_M80u
-            // 
-            this.Tab_Sound_Test_M80u.Location = new System.Drawing.Point(530, 208);
-            this.Tab_Sound_Test_M80u.Name = "Tab_Sound_Test_M80u";
-            this.Tab_Sound_Test_M80u.Size = new System.Drawing.Size(94, 30);
-            this.Tab_Sound_Test_M80u.TabIndex = 15;
-            this.Tab_Sound_Test_M80u.Text = "M80u.wav";
-            this.Tab_Sound_Test_M80u.UseVisualStyleBackColor = true;
-            this.Tab_Sound_Test_M80u.Click += new System.EventHandler(this.Tab_Sound_Test_M80u_Click);
+            this.Tab_Socket_Text.Text = "\r\n\r\nホスト,ポート:\r\n\r\nテキスト:  　置換: {Text}:本文(ログと同じ)";
             // 
             // SettingsForm
             // 
@@ -952,12 +975,12 @@
         private System.Windows.Forms.CheckBox Tab_View_HideHist;
         private System.Windows.Forms.Label Tab_Sound_Text;
         private System.Windows.Forms.CheckBox Tab_Sound_Updt;
-        private System.Windows.Forms.CheckBox M80;
+        private System.Windows.Forms.CheckBox Tab_Sound_M80;
         private System.Windows.Forms.CheckBox Tab_Sound_M60;
         private System.Windows.Forms.CheckBox Tab_Sound_M45;
         private System.Windows.Forms.Label Tab_Tweet_Text3;
         private System.Windows.Forms.TextBox Tab_Tweet_AccSec;
-        private System.Windows.Forms.TextBox Tab_Tweet_AccToc;
+        private System.Windows.Forms.TextBox Tab_Tweet_AccTok;
         private System.Windows.Forms.TextBox Tab_Tweet_ConSec;
         private System.Windows.Forms.TextBox Tab_Tweet_ConKey;
         private System.Windows.Forms.CheckBox Tab_Tweet_Enable;
@@ -973,7 +996,7 @@
         private System.Windows.Forms.CheckBox Tab_Yomi_Enable;
         private System.Windows.Forms.Label Tab_Yomi_Text;
         private System.Windows.Forms.RadioButton Tab_Yomi_LowerAnd;
-        private System.Windows.Forms.RadioButton Tab_Yomi_LowerOf;
+        private System.Windows.Forms.RadioButton Tab_Yomi_LowerOr;
         private System.Windows.Forms.RadioButton Tab_Tweet_LowerOr;
         private System.Windows.Forms.RadioButton Tab_Tweet_LowerAnd;
         private System.Windows.Forms.NumericUpDown Tab_Tweet_LowerMag;
@@ -986,12 +1009,14 @@
         private System.Windows.Forms.TextBox Tab_Socket_Host;
         private System.Windows.Forms.Label Tab_Socket_Text;
         private System.Windows.Forms.Button Tab_Tweet_Test;
-        private System.Windows.Forms.TextBox Tab_Socket_SendText;
+        private System.Windows.Forms.TextBox Tab_Socket_TextFormat;
         private System.Windows.Forms.Button Tab_Sound_Test_M45;
         private System.Windows.Forms.Button Tab_Sound_Test_M80u;
         private System.Windows.Forms.Button Tab_Sound_Test_M60u;
         private System.Windows.Forms.Button Tab_Sound_Test_M45u;
         private System.Windows.Forms.Button Tab_Sound_Test_M80;
         private System.Windows.Forms.Button Tab_Sound_Test_M60;
+        private System.Windows.Forms.CheckBox Tab_Socket_Enable;
+        private System.Windows.Forms.Button Tab_Socket_Test;
     }
 }

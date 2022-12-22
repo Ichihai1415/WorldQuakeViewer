@@ -12,7 +12,7 @@
       <Value Profile="(Default)">50001</Value>
     </Setting>
     <Setting Name="Bouyomichan_Voice" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">-1</Value>
+      <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="Bouyomichan_Speed" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">-1</Value>
@@ -66,7 +66,7 @@
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="Version" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)"> - . - . - </Value>
     </Setting>
     <Setting Name="Sound_45_Enable" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>

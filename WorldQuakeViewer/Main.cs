@@ -9,9 +9,11 @@ using System.Drawing;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
+using System.Media;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using USGSQuakeClass;
 using WorldQuakeViewer.Properties;
@@ -25,16 +27,12 @@ namespace WorldQuakeViewer
             InitializeComponent();
             Version = "1.0.0";
         }
-        private void MainForm_Load(object sender, EventArgs e)//設定読み込み
+        private void MainForm_Load(object sender, EventArgs e)
         {
-            PrivateFontCollection pfc = new PrivateFontCollection();
+            PrivateFontCollection pfc = new PrivateFontCollection();//フォント読み込み？
             pfc.AddFontFile("Font\\Koruri-Regular.ttf");
-            foreach (FontFamily ff in pfc.Families)
-            {
-                Console.WriteLine(ff.Name);
-            }
-            Font f = new Font(pfc.Families[0], 12);
-            pfc.Dispose();
+            //Font f = new Font(pfc.Families[0], 12);
+            //pfc.Dispose();
 
             Configuration Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
             if (File.Exists("UserSetting.xml"))
@@ -60,8 +58,10 @@ namespace WorldQuakeViewer
                 double StartTime = Convert.ToDouble(DateTime.Now.ToString("yyyyMMddHHmmss.ffff"));
                 List<USGSQuake> USGSQuakeJson = JsonConvert.DeserializeObject<List<USGSQuake>>(USGSQuakeJson_);
                 Console.WriteLine("各履歴処理開始");
+                int SoundLevel = 0;//音声判別用 M大きいほど、初報ほど高い
                 for (int i = 6; i >= 0; i--)//古い順に(消していくから)
                 {
+                    bool New = false;//音声判別用
                     string ID = USGSQuakeJson[0].Features[i].Id;
                     DateTimeOffset Update = DateTimeOffset.FromUnixTimeMilliseconds((long)USGSQuakeJson[0].Features[i].Properties.Updated).ToLocalTime();
                     string UpdateTime = $"{Update:yyyy/MM/dd HH:mm:ss}";
@@ -222,15 +222,40 @@ namespace WorldQuakeViewer
                                 Histories[ID] = history;
                             else//new
                             {
+                                New = true;
                                 Histories.Add(ID, history);
                                 if (Histories.Count > 7)
                                 {
                                     Console.WriteLine($"{Histories.First().Key}を削除しました。");
                                     Histories.Remove(Histories.First().Key);
                                 }
-
                             }
                             LogSave("Log\\M4.5+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
+                            if (Settings.Default.Socket_Enable)
+                                SendSocket(LogText_);
+                            if (SoundLevel < 1 && Settings.Default.Sound_45_Enable)//SoundLevel上昇+M4.5以上有効
+                                if (New)//初報
+                                    SoundLevel = 2;
+                                else if (Settings.Default.Sound_Updt_Enable)//更新+更新有効
+                                    SoundLevel = 1;
+                            if (USGSQuakeJson[0].Features[i].Properties.Mag >= 6.0)
+                            {
+                                LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
+                                if (SoundLevel < 3 && Settings.Default.Sound_60_Enable)
+                                    if (New)
+                                        SoundLevel = 4;
+                                    else if (Settings.Default.Sound_Updt_Enable)
+                                        SoundLevel = 3;
+                                if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
+                                {
+                                    LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
+                                    if (SoundLevel < 5 && Settings.Default.Sound_80_Enable)
+                                        if (New)
+                                            SoundLevel = 6;
+                                        else if (Settings.Default.Sound_Updt_Enable)
+                                            SoundLevel = 5;
+                                }
+                            }
                             if (i == 0)
                             {
                                 //x:+200が中心 左余白-250 y:+300が中心
@@ -242,7 +267,7 @@ namespace WorldQuakeViewer
                                 graphics.DrawImage(Resources.Point, new Rectangle(LocX * -1 + 185, LocY * -1 + 285, 30, 30));
                                 MainImg.Image = MainBitmap;
                                 graphics.Dispose();
-                                USGS0.Text = $"USGS地震情報　　　　　{Time}";
+                                USGS0.Text = $"USGS地震情報                                     {Time}";
                                 USGS1.Text = $"{Shingen}\n{Shingen2}\n{LatView},{LongView}\n{Depth}";
                                 USGS2.Text = $"{MagType}";
                                 USGS3.Text = $"{Mag}";
@@ -256,7 +281,6 @@ namespace WorldQuakeViewer
                                     USGS3.ForeColor = Color.Yellow;
                                     USGS4.ForeColor = Color.Yellow;
                                     USGS5.ForeColor = Color.Yellow;
-                                    LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
 
                                     if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
                                     {
@@ -266,7 +290,6 @@ namespace WorldQuakeViewer
                                         USGS3.ForeColor = Color.Red;
                                         USGS4.ForeColor = Color.Red;
                                         USGS5.ForeColor = Color.Red;
-                                        LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                                     }
                                 }
                                 else
@@ -313,7 +336,7 @@ namespace WorldQuakeViewer
                             }
                             else if (i == 1)//履歴
                             {
-                                History11.Text = $"{Time}発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}";
+                                History11.Text = $"{Time} 発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}";
                                 History12.Text = $"{MagType}";
                                 History13.Text = $"{Mag}";
                                 if (USGSQuakeJson[0].Features[i].Properties.Mag >= 6.0)
@@ -321,13 +344,11 @@ namespace WorldQuakeViewer
                                     History11.ForeColor = Color.Yellow;
                                     History12.ForeColor = Color.Yellow;
                                     History13.ForeColor = Color.Yellow;
-                                    LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                                     if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
                                     {
                                         History11.ForeColor = Color.Red;
                                         History12.ForeColor = Color.Red;
                                         History13.ForeColor = Color.Red;
-                                        LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                                     }
                                 }
                                 else
@@ -351,7 +372,7 @@ namespace WorldQuakeViewer
                             }
                             else if (i == 2)
                             {
-                                History21.Text = $"{Time}発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}";
+                                History21.Text = $"{Time} 発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}";
                                 History22.Text = $"{MagType}";
                                 History23.Text = $"{Mag}";
                                 if (USGSQuakeJson[0].Features[i].Properties.Mag >= 6.0)
@@ -359,13 +380,11 @@ namespace WorldQuakeViewer
                                     History21.ForeColor = Color.Yellow;
                                     History22.ForeColor = Color.Yellow;
                                     History23.ForeColor = Color.Yellow;
-                                    LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                                     if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
                                     {
                                         History21.ForeColor = Color.Red;
                                         History22.ForeColor = Color.Red;
                                         History23.ForeColor = Color.Red;
-                                        LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                                     }
                                 }
                                 else
@@ -389,7 +408,7 @@ namespace WorldQuakeViewer
                             }
                             else if (i == 3)
                             {
-                                History31.Text = $"{Time}発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}";
+                                History31.Text = $"{Time} 発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}";
                                 History32.Text = $"{MagType}";
                                 History33.Text = $"{Mag}";
                                 if (USGSQuakeJson[0].Features[i].Properties.Mag >= 6.0)
@@ -397,13 +416,11 @@ namespace WorldQuakeViewer
                                     History31.ForeColor = Color.Yellow;
                                     History32.ForeColor = Color.Yellow;
                                     History33.ForeColor = Color.Yellow;
-                                    LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                                     if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
                                     {
                                         History31.ForeColor = Color.Red;
                                         History32.ForeColor = Color.Red;
                                         History33.ForeColor = Color.Red;
-                                        LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                                     }
                                 }
                                 else
@@ -427,7 +444,7 @@ namespace WorldQuakeViewer
                             }
                             else if (i == 4)
                             {
-                                History41.Text = $"{Time}発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}";
+                                History41.Text = $"{Time} 発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}";
                                 History42.Text = $"{MagType}";
                                 History43.Text = $"{Mag}";
                                 if (USGSQuakeJson[0].Features[i].Properties.Mag >= 6.0)
@@ -435,13 +452,11 @@ namespace WorldQuakeViewer
                                     History41.ForeColor = Color.Yellow;
                                     History42.ForeColor = Color.Yellow;
                                     History43.ForeColor = Color.Yellow;
-                                    LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                                     if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
                                     {
                                         History41.ForeColor = Color.Red;
                                         History42.ForeColor = Color.Red;
                                         History43.ForeColor = Color.Red;
-                                        LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                                     }
                                 }
                                 else
@@ -465,7 +480,7 @@ namespace WorldQuakeViewer
                             }
                             else if (i == 5)
                             {
-                                History51.Text = $"{Time}発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}";
+                                History51.Text = $"{Time} 発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}";
                                 History52.Text = $"{MagType}";
                                 History53.Text = $"{Mag}";
                                 if (USGSQuakeJson[0].Features[i].Properties.Mag >= 6.0)
@@ -473,13 +488,11 @@ namespace WorldQuakeViewer
                                     History51.ForeColor = Color.Yellow;
                                     History52.ForeColor = Color.Yellow;
                                     History53.ForeColor = Color.Yellow;
-                                    LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                                     if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
                                     {
                                         History51.ForeColor = Color.Red;
                                         History52.ForeColor = Color.Red;
                                         History53.ForeColor = Color.Red;
-                                        LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                                     }
                                 }
                                 else
@@ -503,7 +516,7 @@ namespace WorldQuakeViewer
                             }
                             else if (i == 6)
                             {
-                                History61.Text = $"{Time}発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}";
+                                History61.Text = $"{Time} 発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}";
                                 History62.Text = $"{MagType}";
                                 History63.Text = $"{Mag}";
                                 if (USGSQuakeJson[0].Features[i].Properties.Mag >= 6.0)
@@ -511,13 +524,11 @@ namespace WorldQuakeViewer
                                     History61.ForeColor = Color.Yellow;
                                     History62.ForeColor = Color.Yellow;
                                     History63.ForeColor = Color.Yellow;
-                                    LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                                     if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
                                     {
                                         History61.ForeColor = Color.Red;
                                         History62.ForeColor = Color.Red;
                                         History63.ForeColor = Color.Red;
-                                        LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                                     }
                                 }
                                 else
@@ -540,38 +551,29 @@ namespace WorldQuakeViewer
                                     History60.BackColor = Color.DimGray;
                             }
                             if (USGSQuakeJson[0].Features[i].Properties.Mag >= Settings.Default.Bouyomichan_LowerMagnitudeLimit || USGSQuakeJson[0].Features[i].Properties.Mmi >= Settings.Default.Bouyomichan_LowerMMILimit)
-                                if (Settings.Default.Bouyomichan_Enable && IsDebug == false)//読み上げ
-                                    try
-                                    {
-                                        byte[] Message = Encoding.UTF8.GetBytes(BouyomiText);
-                                        int Length = Message.Length;
-                                        using (TcpClient TcpClient = new TcpClient(Settings.Default.Bouyomichan_Host, Settings.Default.Bouyomichan_Port))
-                                        using (NetworkStream NetworkStream = TcpClient.GetStream())
-                                        using (BinaryWriter BinaryWriter = new BinaryWriter(NetworkStream))
-                                        {
-                                            BinaryWriter.Write(0);
-                                            BinaryWriter.Write(Settings.Default.Bouyomichan_Speed);
-                                            BinaryWriter.Write(Settings.Default.Bouyomichan_Tone);
-                                            BinaryWriter.Write(Settings.Default.Bouyomichan_Volume);
-                                            BinaryWriter.Write(Settings.Default.Bouyomichan_Voice);
-                                            BinaryWriter.Write(0);
-                                            BinaryWriter.Write(Message.Length);
-                                            BinaryWriter.Write(Message);
-                                        }
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        throw new Exception("読み上げ送信に失敗しました。内容:" + ex.Message);
-                                    }
+                                if (Settings.Default.Bouyomichan_Enable)
+                                    Bouyomichan(LogText_);
                             if (USGSQuakeJson[0].Features[i].Properties.Mag >= Settings.Default.Tweet_LowerMagnitudeLimit || USGSQuakeJson[0].Features[i].Properties.Mmi >= Settings.Default.Tweet_LowerMMILimit)
                                 if (Settings.Default.Tweet_Enable && IsDebug == false)
-                                    Tweet(LogText_, ID);
+                                    Task.Run(() => Tweet(LogText_, ID));
                         }
                         else
                             Console.WriteLine($"[{i}] 内容更新なし");
                     }
                     else
                         Console.WriteLine($"[{i}] 更新なし");
+                    if (SoundLevel == 1)
+                        Sound("M45u.wav");
+                    else if (SoundLevel == 2)
+                        Sound("M45.wav");
+                    else if (SoundLevel == 3)
+                        Sound("M60u.wav");
+                    else if (SoundLevel == 4)
+                        Sound("M60.wav");
+                    else if (SoundLevel == 5)
+                        Sound("M80u.wav");
+                    else if (SoundLevel == 6)
+                        Sound("M80.wav");
                 }
             }
             catch (WebException ex)
@@ -599,7 +601,7 @@ namespace WorldQuakeViewer
         /// <param name="SaveDirectory">保存するディレクトリ。Log\\[M4.5+,M6.0+,M8.0+,ErrorLog...]</param>
         /// <param name="SaveText">保存するテキスト。</param>
         /// <param name="ID">地震ログ保存時用地震ID。</param>
-        public void LogSave(string SaveDirectory, string SaveText, string ID = null)
+        public static void LogSave(string SaveDirectory, string SaveText, string ID = null)
         {
             DateTime NowTime = DateTime.Now;
             if (Directory.Exists("Log") == false)
@@ -662,14 +664,14 @@ namespace WorldQuakeViewer
                     if (Histories[ID].TweetID != 0)
                         try
                         {
-                            status = tokens.Statuses.Update(new { status = Text, in_reply_to_status_id = Histories[ID].TweetID });
+                            status = tokens.Statuses.UpdateAsync(new { status = Text, in_reply_to_status_id = Histories[ID].TweetID }).Result;
                         }
                         catch
                         {
-                            status = tokens.Statuses.Update(new { status = Text });
+                            status = tokens.Statuses.UpdateAsync(new { status = Text }).Result;
                         }
                     else
-                        status = tokens.Statuses.Update(new { status = Text });
+                        status = tokens.Statuses.UpdateAsync(new { status = Text }).Result;
 
                     Histories[ID].TweetID = status.Id;
                 }
@@ -677,6 +679,64 @@ namespace WorldQuakeViewer
                 {
                     ErrorText.Text = $"ツイートに失敗しました。\nわからない場合エラーログの内容を報告してください。\n内容:" + ex.Message;
                     LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Tweet Version:{Settings.Default.Version}\n{ex}");
+                }
+        }
+        /// <summary>
+        /// Socket通信で送信します。
+        /// </summary>
+        /// <param name="Text">送信する文。</param>
+        public void SendSocket(string Text)
+        {
+            if (NoFirst)
+                try
+                {
+                    IPEndPoint IPEndPoint = new IPEndPoint(IPAddress.Parse(Settings.Default.Socket_Host), Settings.Default.Socket_Port);
+                    using (TcpClient TcpClient = new TcpClient())
+                    {
+                        TcpClient.Connect(IPEndPoint);
+                        using (NetworkStream NetworkStream = TcpClient.GetStream())
+                        {
+                            byte[] Bytes = new byte[4096];
+                            Bytes = Encoding.UTF8.GetBytes(Text);
+                            NetworkStream.Write(Bytes, 0, Bytes.Length);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ErrorText.Text = $"Socket送信に失敗しました。\nわからない場合エラーログの内容を報告してください。\n内容:" + ex.Message;
+                    LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Socket Version:{Settings.Default.Version}\n{ex}");
+                }
+        }
+        /// <summary>
+        /// 棒読みちゃんに読み上げ指令を送ります。
+        /// </summary>
+        /// <param name="Text">読み上げさせる文。</param>
+        public void Bouyomichan(string Text)
+        {
+            if (NoFirst)
+                try
+                {
+                    byte[] Message = Encoding.UTF8.GetBytes(Text);
+                    int Length = Message.Length;
+                    using (TcpClient TcpClient = new TcpClient(Settings.Default.Bouyomichan_Host, Settings.Default.Bouyomichan_Port))
+                    using (NetworkStream NetworkStream = TcpClient.GetStream())
+                    using (BinaryWriter BinaryWriter = new BinaryWriter(NetworkStream))
+                    {
+                        BinaryWriter.Write(0);
+                        BinaryWriter.Write(Settings.Default.Bouyomichan_Speed);
+                        BinaryWriter.Write(Settings.Default.Bouyomichan_Tone);
+                        BinaryWriter.Write(Settings.Default.Bouyomichan_Volume);
+                        BinaryWriter.Write(Settings.Default.Bouyomichan_Voice);
+                        BinaryWriter.Write(0);
+                        BinaryWriter.Write(Message.Length);
+                        BinaryWriter.Write(Message);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ErrorText.Text = $"棒読みちゃんへの送信に失敗しました。\nわからない場合エラーログの内容を報告してください。\n内容:" + ex.Message;
+                    LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Bouyomichan Version:{Settings.Default.Version}\n{ex}");
                 }
         }
         /// <summary>
@@ -698,6 +758,22 @@ namespace WorldQuakeViewer
             else
                 Size = new Size(816, 539);//800,500
         }
+        public static SoundPlayer Player = null;
+        /// <summary>
+        /// 音声を再生します。
+        /// </summary>
+        /// <param name="SoundFile">再生するSoundフォルダの中の音声ファイル。</param>
+        public static void Sound(string SoundFile)
+        {
+            if (Player != null)
+            {
+                Player.Stop();
+                Player.Dispose();
+                Player = null;
+            }
+            Player = new SoundPlayer(SoundFile);
+            Player.Play();
+        }
         private void RCsetting_Click(object sender, EventArgs e)
         {
             SettingsForm Settings = new SettingsForm();
@@ -707,7 +783,7 @@ namespace WorldQuakeViewer
         private void Setting_FormClosing(object sender, FormClosedEventArgs e)
         {
             SettingReload();
-            MessageBox.Show("設定を再読み込みしました。一部の設定は情報受信または再起動が必要です。", "WQV_Setting", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            ErrorText.Text = "設定を再読み込みしました。\n一部の設定は情報受信または再起動が必要です。";
         }
         private void RCusgsmap_Click(object sender, EventArgs e)
         {
@@ -747,9 +823,13 @@ namespace WorldQuakeViewer
             {
                 Process.Start("notepad.exe", "README.md");
             }
-            catch
+            catch (Exception ex)
             {
-
+                DialogResult Result = MessageBox.Show($"README.mdを開けませんでした。({ex.Message})\nブラウザで表示しますか?", "WQV_help", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+                if (Result == DialogResult.Yes)
+                {
+                    Process.Start("https://github.com/Ichihai1415/WorldQuakeViewer/blob/main/README.md");
+                }
             }
         }
         private void RCMapEWSC_Click(object sender, EventArgs e)

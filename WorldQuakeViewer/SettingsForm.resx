@@ -130,6 +130,18 @@
 フォント:Koruri Regular(20210720)      既定効果音:OtoLogic(ニュース アラート02~04)
 </value>
   </data>
+  <data name="Tab_Sound_Text.Text" xml:space="preserve">
+    <value>鳴らす条件:                                                                                                               再生テスト
+
+
+
+
+
+
+
+優先度:M80.wav &gt; M80u.wav &gt; M60.wav
+          &gt; M60u.wav &gt; M45.wav &gt; M45u.wav</value>
+  </data>
   <data name="Tab_Yomi_Text.Text" xml:space="preserve">
     <value>
 
