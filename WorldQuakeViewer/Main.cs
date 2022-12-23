@@ -24,23 +24,48 @@ namespace WorldQuakeViewer
     {
         public MainForm()
         {
-            InitializeComponent();
             Version = "1.0.0";
+            InitializeComponent();
         }
         private void MainForm_Load(object sender, EventArgs e)
         {
-            PrivateFontCollection pfc = new PrivateFontCollection();//フォント読み込み？
-            pfc.AddFontFile("Font\\Koruri-Regular.ttf");
-            //Font f = new Font(pfc.Families[0], 12);
-            //pfc.Dispose();
+            ErrorText.Text = "フォント読み込み中…";/*
+            try
+            {
+                PrivateFontCollection pfc = new PrivateFontCollection();
+                pfc.AddFontFile("Font\\Koruri-Regular.ttf");
+                F9 = new Font(pfc.Families[0], 9F);
+                F9_5 = new Font(pfc.Families[0], 9.5F);
+                F10 = new Font(pfc.Families[0], 10F);
+                F11 = new Font(pfc.Families[0], 11F);
+                F12 = new Font(pfc.Families[0], 12F);
+                F20 = new Font(pfc.Families[0], 20F);
+                F22 = new Font(pfc.Families[0], 22F);
+                pfc.Dispose();
+                Console.WriteLine(F12);
+            }
+            catch
+            {
 
+            }*/
+            ErrorText.Text = "設定読み込み中…";
             Configuration Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
             if (File.Exists("UserSetting.xml"))
+            {
+                if (!Directory.Exists(Config.FilePath.Replace("\\user.config", "")))
+                    Directory.CreateDirectory(Config.FilePath.Replace("\\user.config", ""));
                 File.Copy("UserSetting.xml", Config.FilePath, true);
+            }
+            else
+                Settings.Default.Save();
             SettingReload();
+            ErrorText.Text = "設定の読み込みが完了しました。";
+            JsonTimer.Enabled = true;
+
         }
         private void JsonTimer_Tick(object sender, EventArgs e)//整理しろ
         {
+
             Console.WriteLine("///////////開始//////////");
             bool IsDebug = false;
             Settings.Default.Reload();
@@ -110,8 +135,8 @@ namespace WorldQuakeViewer
                         string Arart = "アラート:-";
                         if (USGSQuakeJson[0].Features[i].Properties.Alert != null)
                             Arart = Arart.Replace("-", USGSQuakeJson[0].Features[i].Properties.Alert.Replace("green", "緑").Replace("yellow", "黄").Replace("orange", "オレンジ").Replace("red", "赤").Replace("pending", "保留中"));
-                        string LatStDecimal = $"N{Lat}".Replace("N-", "S");
-                        string LongStDecimal = $"E{Long}".Replace("E-", "W");
+                        string LatStDecimal = $"N{Math.Round(Lat, 2, MidpointRounding.AwayFromZero)}".Replace("N-", "S");
+                        string LongStDecimal = $"E{Math.Round(Long, 2, MidpointRounding.AwayFromZero)}".Replace("E-", "W");
                         TimeSpan LatTime = TimeSpan.FromHours(Lat);
                         TimeSpan LongTime = TimeSpan.FromHours(Long);
                         string LatStShort = $"{(int)Lat}ﾟ{LatTime.Minutes}'N";
@@ -206,12 +231,13 @@ namespace WorldQuakeViewer
                         Console.WriteLine(LogText_);
                         if (NewUpdt)//更新、初回検知
                         {
-                            Console.WriteLine("//////////更新または初回検知//////////");
                             if (Histories.ContainsKey(ID))
                             {
                                 LogText_ = LogText_.Replace("USGS地震情報", "USGS地震情報(更新)");
                                 BouyomiText = BouyomiText.Replace("USGS地震情報", "USGS地震情報、更新");
+                                Console.WriteLine("//////////更新検知//////////");
                             }
+                            Console.WriteLine("//////////初回検知//////////");
                             History history = new History
                             {
                                 Text = LogText_,
@@ -226,8 +252,8 @@ namespace WorldQuakeViewer
                                 Histories.Add(ID, history);
                                 if (Histories.Count > 7)
                                 {
-                                    Console.WriteLine($"{Histories.First().Key}を削除しました。");
                                     Histories.Remove(Histories.First().Key);
+                                    Console.WriteLine($"{Histories.First().Key}を削除しました。");
                                 }
                             }
                             LogSave("Log\\M4.5+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
@@ -588,12 +614,74 @@ namespace WorldQuakeViewer
             ErrorText.Text = ErrorText.Text.Replace("取得中…", "");
             NoFirst = true;
             Console.WriteLine("処理終了");
+
+            if (ErrorText.Font != F12)
+            {
+                if(F12==null)
+                    try
+                    {
+                        Console.WriteLine("Font=null");
+                        PrivateFontCollection pfc = new PrivateFontCollection();
+                        pfc.AddFontFile("Font\\Koruri-Regular.ttf");
+                        F9 = new Font(pfc.Families[0], 9F);
+                        F9_5 = new Font(pfc.Families[0], 9.5F);
+                        F10 = new Font(pfc.Families[0], 10F);
+                        F11 = new Font(pfc.Families[0], 11F);
+                        F12 = new Font(pfc.Families[0], 12F);
+                        F20 = new Font(pfc.Families[0], 20F);
+                        F22 = new Font(pfc.Families[0], 22F);
+                        pfc.Dispose();
+                }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                    }
+                Console.WriteLine(ErrorText.Font);
+                Console.WriteLine(F12);
+                Console.WriteLine(F9);
+                Font = F10;
+                USGS0.Font = F9;
+                USGS1.Font = F11;
+                USGS2.Font = F11;
+                USGS3.Font = F20;
+                USGS4.Font = F11;
+                USGS5.Font = F20;
+                USGS6.Font = F9;
+                ErrorText.Font = F12;
+                HistoryBack.Font = F10;
+                History11.Font = F9_5;
+                History12.Font = F10;
+                History13.Font = F22;
+                History21.Font = F9_5;
+                History22.Font = F10;
+                History23.Font = F22;
+                History31.Font = F9_5;
+                History32.Font = F10;
+                History33.Font = F22;
+                History41.Font = F9_5;
+                History42.Font = F10;
+                History43.Font = F22;
+                History51.Font = F9_5;
+                History52.Font = F10;
+                History53.Font = F22;
+                History61.Font = F9_5;
+                History62.Font = F10;
+                History63.Font = F22;
+                Console.WriteLine(ErrorText.Font);
+            }
         }
-        public string Version = "";
+        public static string Version = "";
         public string LatestURL = "";
         public bool NoFirst = false;//最初はツイートしない
         public Dictionary<string, History> Histories = new Dictionary<string, History>();//ID,Data
         public Dictionary<Point, int> HypoIDs = new Dictionary<Point, int>();//Location,ID
+        public Font F9=null;
+        public Font F9_5 = null;
+        public Font F10=null;
+        public Font F11=null;
+        public Font F12=null;
+        public Font F20=null;
+        public Font F22 = null;
 
         /// <summary>
         /// ログを保存します。
@@ -771,7 +859,7 @@ namespace WorldQuakeViewer
                 Player.Dispose();
                 Player = null;
             }
-            Player = new SoundPlayer(SoundFile);
+            Player = new SoundPlayer($"Sound\\{SoundFile}");
             Player.Play();
         }
         private void RCsetting_Click(object sender, EventArgs e)
@@ -839,6 +927,38 @@ namespace WorldQuakeViewer
         private void RCEarlyEst_Click(object sender, EventArgs e)
         {
             Process.Start("http://early-est.rm.ingv.it/warning.html");
+        }
+
+        private void ふぉんｔToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Font = F10;
+            USGS0.Font = F9;
+            USGS1.Font = F11;
+            USGS2.Font = F11;
+            USGS3.Font = F20;
+            USGS4.Font = F11;
+            USGS5.Font = F20;
+            USGS6.Font = F9;
+            ErrorText.Font = F12;
+            HistoryBack.Font = F10;
+            History11.Font = F9_5;
+            History12.Font = F10;
+            History13.Font = F22;
+            History21.Font = F9_5;
+            History22.Font = F10;
+            History23.Font = F22;
+            History31.Font = F9_5;
+            History32.Font = F10;
+            History33.Font = F22;
+            History41.Font = F9_5;
+            History42.Font = F10;
+            History43.Font = F22;
+            History51.Font = F9_5;
+            History52.Font = F10;
+            History53.Font = F22;
+            History61.Font = F9_5;
+            History62.Font = F10;
+            History63.Font = F22;
         }
     }
 }

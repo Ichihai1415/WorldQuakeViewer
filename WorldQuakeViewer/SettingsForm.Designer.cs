@@ -266,9 +266,9 @@
             this.Tab_View_Text.AutoSize = true;
             this.Tab_View_Text.Location = new System.Drawing.Point(19, 99);
             this.Tab_View_Text.Name = "Tab_View_Text";
-            this.Tab_View_Text.Size = new System.Drawing.Size(180, 22);
+            this.Tab_View_Text.Size = new System.Drawing.Size(365, 22);
             this.Tab_View_Text.TabIndex = 7;
-            this.Tab_View_Text.Text = "(12°34\'56\'\' -> 12.5822°)";
+            this.Tab_View_Text.Text = "(表示:12°34\' -> 12.58,ログ:12°34\'56\'\' -> 12.5822°)";
             // 
             // Tab_View_LatLonDecimal
             // 
@@ -919,6 +919,9 @@
             this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.HelpButton = true;
             this.Margin = new System.Windows.Forms.Padding(5);
+            this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(656, 399);
+            this.MinimumSize = new System.Drawing.Size(656, 399);
             this.Name = "SettingsForm";
             this.Text = "WQV - 設定画面";
             this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.SettingsForm_HelpButtonClicked);

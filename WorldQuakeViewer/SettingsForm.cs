@@ -3,6 +3,8 @@ using System;
 using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Text;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -16,11 +18,27 @@ namespace WorldQuakeViewer
     {
         public SettingsForm()
         {
-            InitializeComponent();
+            try
+            {
+                PrivateFontCollection pfc = new PrivateFontCollection();
+                pfc.AddFontFile("Font\\Koruri-Regular.ttf");
+                Font F9 = new Font(pfc.Families[0], 9F);
+                Font F9_5 = new Font(pfc.Families[0], 9.5F);
+                Font F12 = new Font(pfc.Families[0], 12F);
+                InitializeComponent();
+                Font = F12;
+
+
+
+            }
+            catch
+            {
+
+            }
         }
         private void SettingsForm_Load(object sender, EventArgs e)
         {
-            Version.Text = "WorldQuakeViewer v" + Settings.Default.Version;
+            Version.Text = "WorldQuakeViewer v" + MainForm.Version;
             Tab_View_HideHist.Checked = Settings.Default.Display_HideHistory;
             Tab_View_HideMap.Checked = Settings.Default.Display_HideHistoryMap;
             Tab_View_LatLonDecimal.Checked = Settings.Default.Text_LatLonDecimal;
@@ -156,21 +174,28 @@ namespace WorldQuakeViewer
             Tab_Yomi_Test.Enabled = false;
             try
             {
-                byte[] Message = Encoding.UTF8.GetBytes("WorldQuakeViewer 棒読みちゃん送信テスト");
+                byte Code = 0;
+                byte[] Message = Encoding.UTF8.GetBytes("WorldQuakeViewer、棒読みちゃん送信テスト");
                 int Length = Message.Length;
-                using (TcpClient TcpClient = new TcpClient(Settings.Default.Bouyomichan_Host, Settings.Default.Bouyomichan_Port))
+                TcpClient TcpClient = new TcpClient(Tab_Yomi_Host.Text, (int)Tab_Yomi_Port.Value);
                 using (NetworkStream NetworkStream = TcpClient.GetStream())
                 using (BinaryWriter BinaryWriter = new BinaryWriter(NetworkStream))
                 {
-                    BinaryWriter.Write(0);
-                    BinaryWriter.Write(Settings.Default.Bouyomichan_Speed);
-                    BinaryWriter.Write(Settings.Default.Bouyomichan_Tone);
-                    BinaryWriter.Write(Settings.Default.Bouyomichan_Volume);
-                    BinaryWriter.Write(Settings.Default.Bouyomichan_Voice);
-                    BinaryWriter.Write(0);
+                    BinaryWriter.Write(0x0001);
+                    BinaryWriter.Write((short)Tab_Yomi_Speed.Value);
+                    BinaryWriter.Write((short)Tab_Yomi_Tone.Value);
+                    BinaryWriter.Write((short)Tab_Yomi_Volume.Value);
+                    BinaryWriter.Write((short)Tab_Yomi_Voice.Value);//なんかずれてる？？
+                    BinaryWriter.Write(Code);
                     BinaryWriter.Write(Message.Length);
                     BinaryWriter.Write(Message);
+
+                    //Tab_Yomi_Speed.Value);
+                    //Tab_Yomi_Tone.Value);
+                    //Tab_Yomi_Volume.Value);
+                    //Tab_Yomi_Voice.Value);
                 }
+                TcpClient.Close();
             }
             catch (Exception ex)
             {
@@ -201,7 +226,7 @@ namespace WorldQuakeViewer
             Tab_Socket_Test.Enabled = false;
             try
             {
-                IPEndPoint IPEndPoint = new IPEndPoint(IPAddress.Parse(Settings.Default.Socket_Host), Settings.Default.Socket_Port);
+                IPEndPoint IPEndPoint = new IPEndPoint(IPAddress.Parse(Tab_Socket_Host.Text), (int)Tab_Socket_Port.Value);
                 using (TcpClient TcpClient = new TcpClient())
                 {
                     TcpClient.Connect(IPEndPoint);
