@@ -23,7 +23,7 @@ namespace WorldQuakeViewer
 {
     public partial class MainForm : Form
     {
-        public static readonly string Version = "1.0.1";
+        public static readonly string Version = "1.0.1";//こことアセンブリを変える
         public static DateTime StartTime = new DateTime();
         public static int AccessedUSGS = 0;
         public static int AccessedFE = 0;
@@ -45,6 +45,7 @@ namespace WorldQuakeViewer
         private void MainForm_Load(object sender, EventArgs e)
         {
             StartTime = DateTime.Now;
+            HistoryBack.Text = $"履歴                                                                    Version:{Version}";
             ErrorText.Text = "フォント読み込み中…";
             try
             {
@@ -353,7 +354,7 @@ namespace WorldQuakeViewer
                                     TweetID = 0
                                 });
                             }
-                            LogSave("Log\\M4.5+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
+                            LogSave("Log\\M4.5+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText_}", ID);
                             if (Settings.Default.Socket_Enable)
                                 SendSocket(LogText_);
                             if (SoundLevel < 1 && Settings.Default.Sound_45_Enable)//SoundLevel上昇+M4.5以上有効
@@ -363,7 +364,7 @@ namespace WorldQuakeViewer
                                     SoundLevel = 1;
                             if (USGSQuakeJson[0].Features[i].Properties.Mag >= 6.0)
                             {
-                                LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
+                                LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText_}", ID);
                                 if (SoundLevel < 3 && Settings.Default.Sound_60_Enable)
                                     if (New)
                                         SoundLevel = 4;
@@ -371,7 +372,7 @@ namespace WorldQuakeViewer
                                         SoundLevel = 3;
                                 if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
                                 {
-                                    LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
+                                    LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText_}", ID);
                                     if (SoundLevel < 5 && Settings.Default.Sound_80_Enable)
                                         if (New)
                                             SoundLevel = 6;
@@ -730,7 +731,7 @@ namespace WorldQuakeViewer
             catch (Exception ex)
             {
                 ErrorText.Text = $"エラーが発生しました。\nエラーログの内容を報告してください。\n内容:" + ex.Message;
-                LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main Version:{Settings.Default.Version}\n{ex}");
+                LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main Version:{Version}\n{ex}");
             }
             ErrorText.Text = ErrorText.Text.Replace("取得中…", "");
             NoFirst = true;
@@ -875,7 +876,7 @@ namespace WorldQuakeViewer
                 catch (Exception ex)
                 {
                     ErrorText.Text = $"ツイートに失敗しました。\nわからない場合エラーログの内容を報告してください。\n内容:" + ex.Message;
-                    LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Tweet Version:{Settings.Default.Version}\n{ex}");
+                    LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Tweet Version:{Version}\n{ex}");
                 }
         }
         /// <summary>
@@ -902,7 +903,7 @@ namespace WorldQuakeViewer
                 catch (Exception ex)
                 {
                     ErrorText.Text = $"Socket送信に失敗しました。\nわからない場合エラーログの内容を報告してください。\n内容:" + ex.Message;
-                    LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Socket Version:{Settings.Default.Version}\n{ex}");
+                    LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Socket Version:{Version}\n{ex}");
                 }
         }
         /// <summary>
@@ -939,7 +940,7 @@ namespace WorldQuakeViewer
                 catch (Exception ex)
                 {
                     ErrorText.Text = $"棒読みちゃんへの送信に失敗しました。\nわからない場合エラーログの内容を報告してください。\n内容:" + ex.Message;
-                    LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Bouyomichan Version:{Settings.Default.Version}\n{ex}");
+                    LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Bouyomichan Version:{Version}\n{ex}");
                 }
         }
         /// <summary>
@@ -949,8 +950,6 @@ namespace WorldQuakeViewer
         public void SettingReload()
         {
             Settings.Default.Reload();
-            Settings.Default.Version = Version;
-            Settings.Default.Save();
             Configuration Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
             File.Copy(Config.FilePath, "UserSetting.xml", true);
             if (Settings.Default.Display_HideHistory)
