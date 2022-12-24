@@ -1,3 +1,9 @@
+![GitHub](https://img.shields.io/github/license/Ichihai1415/WorldQuakeViewer)
+![GitHub Release Date](https://img.shields.io/github/release-date/Ichihai1415/WorldQuakeViewer)
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/Ichihai1415/WorldQuakeViewer)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Ichihai1415/WorldQuakeViewer)
+![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/Ichihai1415/WorldQuakeViewer/latest)
+![サンプル画像](https://github.com/Ichihai1415/WorldQuakeViewer/blob/main/image/WQV_20221224_v1.0.0.png)
 世界の地震情報を表示します。
 
 [MITライセンス](https://opensource.org/licenses/mit-license.php)で公開しています。確認してください。
