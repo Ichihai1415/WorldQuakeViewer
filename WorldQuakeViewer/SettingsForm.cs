@@ -3,8 +3,6 @@ using System;
 using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Text;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -28,9 +26,6 @@ namespace WorldQuakeViewer
                 Font F9_5 = new Font(pfc.Families[0], 9.5F);
                 Font F12 = new Font(pfc.Families[0], 12F);
                 Font = F12;
-
-
-
             }
             catch
             {
@@ -251,11 +246,59 @@ namespace WorldQuakeViewer
             try
             {
                 TimeSpan ProTime = DateTime.Now - MainForm.StartTime;
-                Tab_ProInfo_Text.Text = $"起動時間:{ProTime.TotalDays}d{ProTime.Hours}:{ProTime.Minutes}:{ProTime.Seconds}\nUSGS Feed アクセス回数:{MainForm.AccessedUSGS}回\nUSGS FE アクセス回数:{MainForm.AccessedFE}回";
+                Tab_ProInfo_Text.Text = $"起動時間:{(int)ProTime.TotalDays}d{ProTime:hh}:{ProTime:mm}:{ProTime:ss}\nUSGS Feed アクセス回数:{MainForm.AccessedUSGS}回\nUSGS FE アクセス回数:{MainForm.AccessedFE}回";
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Tab_ProInfo_Text.Text = $"取得に失敗しました。\n{ex.Message}";
+            }
+        }
+
+        private void LinkUSGS_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php");
+        }
+
+        private void LinkFE_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://earthquake.usgs.gov/ws/geoserve/regions.php");
+        }
+
+        private void LinkJMA_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("http://xml.kishou.go.jp/tec_material.html");
+        }
+
+        private void LinkMap_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://www.naturalearthdata.com/");
+        }
+
+        private void LinkKoruri_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://koruri.github.io/");
+        }
+
+        private void LinkOtoLigic_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://otologic.jp");
+        }
+
+        private void Tab_Tweet_ViewToken_CheckedChanged(object sender, EventArgs e)
+        {
+            if(Tab_Tweet_ViewToken.Checked)
+            {
+                Tab_Tweet_ConKey.PasswordChar = (char)0;
+                Tab_Tweet_ConSec.PasswordChar = (char)0;
+                Tab_Tweet_AccTok.PasswordChar = (char)0;
+                Tab_Tweet_AccSec.PasswordChar = (char)0;
+            }
+            else
+            {
+                Tab_Tweet_ConKey.PasswordChar = '*';
+                Tab_Tweet_ConSec.PasswordChar = '*';
+                Tab_Tweet_AccTok.PasswordChar = '*';
+                Tab_Tweet_AccSec.PasswordChar = '*';
             }
         }
     }
