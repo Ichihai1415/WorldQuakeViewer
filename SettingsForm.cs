@@ -195,7 +195,7 @@ namespace WorldQuakeViewer
             catch (Exception ex)
             {
                 MessageBox.Show($"読み上げ指令の送信に失敗しました。({ex.Message})", "WQV_setting", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                MainForm.LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Setting,Bouyomichan Version:{Settings.Default.Version}\n{ex}");
+                MainForm.LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Setting,Bouyomichan Version:{MainForm.Version}\n{ex}");
             }
             Tab_Yomi_Test.Enabled = true;
         }
@@ -212,7 +212,7 @@ namespace WorldQuakeViewer
             catch (Exception ex)
             {
                 MessageBox.Show($"ツイートの送信に失敗しました。({ex.Message})", "WQV_setting", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                MainForm.LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Setting,Tweet Version:{Settings.Default.Version}\n{ex}");
+                MainForm.LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Setting,Tweet Version:{MainForm.Version}\n{ex}");
             }
             Tab_Tweet_Test.Enabled = true;
         }
@@ -236,7 +236,7 @@ namespace WorldQuakeViewer
             catch (Exception ex)
             {
                 MessageBox.Show($"Socket送信に失敗しました。({ex.Message})", "WQV_setting", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                MainForm.LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Setting,Socket Version:{Settings.Default.Version}\n{ex}");
+                MainForm.LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Setting,Socket Version:{MainForm.Version}\n{ex}");
             }
             Tab_Socket_Test.Enabled = true;
         }

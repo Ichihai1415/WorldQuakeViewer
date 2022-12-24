@@ -324,8 +324,7 @@
             this.HistoryBack.Name = "HistoryBack";
             this.HistoryBack.Size = new System.Drawing.Size(400, 500);
             this.HistoryBack.TabIndex = 16;
-            this.HistoryBack.Text = "履歴                                                                    Version:1.0" +
-    ".0";
+            this.HistoryBack.Text = "履歴";
             // 
             // History10
             // 
