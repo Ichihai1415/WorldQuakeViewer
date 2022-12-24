@@ -949,11 +949,9 @@ namespace WorldQuakeViewer
         /// <remarks>即時サイズ変更を行います。</remarks>
         public void SettingReload()
         {
+            Settings.Default.Reload();
             Configuration Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
-            if (File.Exists(Config.FilePath))
-                Settings.Default.Reload();
-            else
-                Settings.Default.Save();
+            if(File.Exists(Config.FilePath))
             File.Copy(Config.FilePath, "UserSetting.xml", true);
             if (Settings.Default.Display_HideHistory)
                 if (Settings.Default.Display_HideHistoryMap)
