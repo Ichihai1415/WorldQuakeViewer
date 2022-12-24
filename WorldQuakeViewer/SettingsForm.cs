@@ -246,5 +246,17 @@ namespace WorldQuakeViewer
             Tab_Socket_Test.Enabled = true;
         }
 
+        private void ProInfoChange_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                TimeSpan ProTime = DateTime.Now - MainForm.StartTime;
+                Tab_ProInfo_Text.Text = $"起動時間:{ProTime.TotalDays}d{ProTime.Hours}:{ProTime.Minutes}:{ProTime.Seconds}\nUSGS Feed アクセス回数:{MainForm.AccessedUSGS}回\nUSGS FE アクセス回数:{MainForm.AccessedFE}回";
+            }
+            catch(Exception ex)
+            {
+                Tab_ProInfo_Text.Text = $"取得に失敗しました。\n{ex.Message}";
+            }
+        }
     }
 }

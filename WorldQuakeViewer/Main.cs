@@ -22,6 +22,21 @@ namespace WorldQuakeViewer
 {
     public partial class MainForm : Form
     {
+        public static string Version = "";
+        public static DateTime StartTime = new DateTime();
+        public static int AccessedUSGS = 0;
+        public static int AccessedFE= 0;
+        public string LatestURL = "";
+        public bool NoFirst = false;//最初はツイートとかしない
+        public Dictionary<string, History> Histories = new Dictionary<string, History>();//ID,Data
+        public Dictionary<Point, int> HypoIDs = new Dictionary<Point, int>();//Location,ID
+        public Font F9 = null;
+        public Font F9_5 = null;
+        public Font F10 = null;
+        public Font F11 = null;
+        public Font F12 = null;
+        public Font F20 = null;
+        public Font F22 = null;
         public MainForm()
         {
             Version = "1.0.0";
@@ -29,6 +44,7 @@ namespace WorldQuakeViewer
         }
         private void MainForm_Load(object sender, EventArgs e)
         {
+            StartTime = DateTime.Now;
             ErrorText.Text = "フォント読み込み中…";
             try
             {
@@ -153,6 +169,7 @@ namespace WorldQuakeViewer
                     Encoding = Encoding.UTF8
                 };//↓？　暫定対処したやつかも
                 string USGSQuakeJson_ = "[" + WC.DownloadString("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson") + "]";
+                AccessedUSGS++;
                 Console.WriteLine("取得:https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson");
                 string Latestchecktime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
                 double StartTime = Convert.ToDouble(DateTime.Now.ToString("yyyyMMddHHmmss.ffff"));
@@ -273,6 +290,7 @@ namespace WorldQuakeViewer
                             try
                             {
                                 string USGSFERegion_ = WC.DownloadString($"https://earthquake.usgs.gov/ws/geoserve/regions.json?latitude={LatShort}&longitude={LongShort}&type=fe");
+                                AccessedFE++;
                                 Console.WriteLine($"取得:$\"https://earthquake.usgs.gov/ws/geoserve/regions.json?latitude={LatShort}&longitude={LongShort}&type=fe\"");
                                 JObject USGSFERegion = JObject.Parse(USGSFERegion_);
                                 for (int j = 0; j < (int)USGSFERegion.SelectToken("fe.count"); j++)
@@ -669,19 +687,19 @@ namespace WorldQuakeViewer
                     }
                     else
                         Console.WriteLine($"[{i}] 更新なし(更新:{Updated})");
-                    if (SoundLevel == 1)
-                        Sound("M45u.wav");
-                    else if (SoundLevel == 2)
-                        Sound("M45.wav");
-                    else if (SoundLevel == 3)
-                        Sound("M60u.wav");
-                    else if (SoundLevel == 4)
-                        Sound("M60.wav");
-                    else if (SoundLevel == 5)
-                        Sound("M80u.wav");
-                    else if (SoundLevel == 6)
-                        Sound("M80.wav");
                 }
+                if (SoundLevel == 1)
+                    Sound("M45u.wav");
+                else if (SoundLevel == 2)
+                    Sound("M45.wav");
+                else if (SoundLevel == 3)
+                    Sound("M60u.wav");
+                else if (SoundLevel == 4)
+                    Sound("M60.wav");
+                else if (SoundLevel == 5)
+                    Sound("M80u.wav");
+                else if (SoundLevel == 6)
+                    Sound("M80.wav");
             }
             catch (WebException ex)
             {
@@ -751,18 +769,6 @@ namespace WorldQuakeViewer
                 Console.WriteLine(ErrorText.Font);
             }*/
         }
-        public static string Version = "";
-        public string LatestURL = "";
-        public bool NoFirst = false;//最初はツイートとかしない
-        public Dictionary<string, History> Histories = new Dictionary<string, History>();//ID,Data
-        public Dictionary<Point, int> HypoIDs = new Dictionary<Point, int>();//Location,ID
-        public Font F9 = null;
-        public Font F9_5 = null;
-        public Font F10 = null;
-        public Font F11 = null;
-        public Font F12 = null;
-        public Font F20 = null;
-        public Font F22 = null;
 
         /// <summary>
         /// ログを保存します。
