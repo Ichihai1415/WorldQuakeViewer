@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.JsonTimer = new System.Windows.Forms.Timer(this.components);
             this.USGS0 = new System.Windows.Forms.Label();
             this.USGS1 = new System.Windows.Forms.Label();
@@ -617,6 +618,7 @@
             this.Font = new System.Drawing.Font("Koruri Regular", 10F);
             this.ForeColor = System.Drawing.Color.White;
             this.HelpButton = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(816, 539);

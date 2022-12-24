@@ -958,6 +958,7 @@
             this.Font = new System.Drawing.Font("Koruri Regular", 12F);
             this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.HelpButton = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(5);
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(656, 399);
