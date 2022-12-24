@@ -90,7 +90,7 @@
             // 
             // JsonTimer
             // 
-            this.JsonTimer.Interval = 3000;
+            this.JsonTimer.Interval = 1000;
             this.JsonTimer.Tick += new System.EventHandler(this.JsonTimer_Tick);
             // 
             // USGS0
@@ -145,7 +145,7 @@
             this.RC1RebootExit});
             this.RightClick.Name = "RightClick";
             this.RightClick.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.RightClick.Size = new System.Drawing.Size(243, 146);
+            this.RightClick.Size = new System.Drawing.Size(243, 118);
             this.RightClick.TabStop = true;
             this.RightClick.Text = "メニュー";
             // 

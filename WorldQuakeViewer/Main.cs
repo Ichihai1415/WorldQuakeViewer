@@ -170,7 +170,7 @@ namespace WorldQuakeViewer
                         Updated = Histories[ID].UpdateTime;
                     if ($"{USGSQuakeJson[0].Features[i].Properties.Updated}" != Updated)
                     {
-                        Console.WriteLine($"[{i}] 更新時刻変化検知({Updated}->{USGSQuakeJson[0].Features[i].Properties.Updated})");
+                        Console.WriteLine($"[{i}] 更新時刻変化検知(s->{USGSQuakeJson[0].Features[i].Properties.Updated})");
                         string MaxInt = "-";
                         if (USGSQuakeJson[0].Features[i].Properties.Mmi < 1.5)
                             MaxInt = "I";
@@ -265,11 +265,11 @@ namespace WorldQuakeViewer
                         if (HypoIDs.ContainsKey(HypoPoint))
                         {
                             Shingen = "震源:" + HypoName[HypoIDs[HypoPoint]];
-                            Console.WriteLine($"震源キャッシュが存在します({HypoPoint.X}{HypoPoint.Y}->{HypoIDs[HypoPoint]})");
+                            Console.WriteLine($"震源キャッシュが存在します({HypoPoint.X},{HypoPoint.Y}->{HypoIDs[HypoPoint]})");
                         }
                         else
                         {
-                            Console.WriteLine($"震源キャッシュが存在しません。({HypoPoint.X}{HypoPoint.Y})ダウンロードします。");
+                            Console.WriteLine($"震源キャッシュが存在しません。({HypoPoint.X},{HypoPoint.Y})ダウンロードします。");
                             try
                             {
                                 string USGSFERegion_ = WC.DownloadString($"https://earthquake.usgs.gov/ws/geoserve/regions.json?latitude={LatShort}&longitude={LongShort}&type=fe");
@@ -308,24 +308,25 @@ namespace WorldQuakeViewer
                             {
                                 LogText_ = LogText_.Replace("USGS地震情報", "USGS地震情報(更新)");
                                 BouyomiText = BouyomiText.Replace("USGS地震情報", "USGS地震情報、更新");
-                                Console.WriteLine($"//////////{ID}更新検知//////////\n{Histories[ID].Text.Replace("\n", "")}->\n{LogText_}");
+                                Console.WriteLine($"//////////{ID}更新検知//////////\n{Histories[ID].Text.Replace("\n", "")}->\n{LogText_.Replace("\n", "")}");
                                 Histories[ID] = new History
                                 {
                                     Text = LogText_,
-                                    UpdateTime = Updated,
-                                    TweetID = 0
+                                    UpdateTime = Convert.ToString(USGSQuakeJson[0].Features[i].Properties.Updated),
+                                    TweetID = Histories[ID].TweetID
                                 };
                             }
                             else//new
                             {
-                                Console.WriteLine($"//////////{ID}初回検知//////////\n{LogText_}");
+                                Console.WriteLine($"//////////{ID}初回検知//////////\n{LogText_.Replace("\n", "")}");
                                 New = true;
                                 Histories.Add(ID, new History
                                 {
                                     Text = LogText_,
-                                    UpdateTime = Updated,
-                                    TweetID = Histories[ID].TweetID
+                                    UpdateTime = Convert.ToString(USGSQuakeJson[0].Features[i].Properties.Updated),
+                                    TweetID = 0
                                 });
+                                Console.WriteLine($"ログ保持数:{Histories.Count}");
                                 if (Histories.Count > 7)
                                 {
                                     Histories.Remove(Histories.First().Key);
@@ -358,7 +359,7 @@ namespace WorldQuakeViewer
                                             SoundLevel = 5;
                                 }
                             }
-                            if (i == 0)
+                            if (i == 0)//最新
                             {
                                 //x:+200が中心 左余白-250 y:+300が中心
                                 int LocX = (int)(Long + 180) * -5 - 50;//(-180,0,180) + 180 -> (0,180,360)
@@ -667,7 +668,7 @@ namespace WorldQuakeViewer
                             Console.WriteLine($"[{i}] 内容更新なし");
                     }
                     else
-                        Console.WriteLine($"[{i}] 更新なし");
+                        Console.WriteLine($"[{i}] 更新なし(更新:{Updated})");
                     if (SoundLevel == 1)
                         Sound("M45u.wav");
                     else if (SoundLevel == 2)
