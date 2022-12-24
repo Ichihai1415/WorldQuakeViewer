@@ -23,7 +23,7 @@ namespace WorldQuakeViewer
 {
     public partial class MainForm : Form
     {
-        public static readonly string Version = "1.0.1";//こことアセンブリを変える
+        public static readonly string Version = "1.0.2";//こことアセンブリを変える
         public static DateTime StartTime = new DateTime();
         public static int AccessedUSGS = 0;
         public static int AccessedFE = 0;
@@ -149,9 +149,9 @@ namespace WorldQuakeViewer
             }
             ErrorText.Text = "設定読み込み中…";
             Configuration Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
-            if (File.Exists("UserSetting.xml"))
+            if (File.Exists("UserSetting.xml"))//AppDataに保存
             {
-                if (!Directory.Exists(Config.FilePath.Replace("\\user.config", "")))
+                if (!Directory.Exists(Config.FilePath.Replace("\\user.config", "")))//実質更新時
                     Directory.CreateDirectory(Config.FilePath.Replace("\\user.config", ""));
                 File.Copy("UserSetting.xml", Config.FilePath, true);
             }
@@ -949,8 +949,11 @@ namespace WorldQuakeViewer
         /// <remarks>即時サイズ変更を行います。</remarks>
         public void SettingReload()
         {
-            Settings.Default.Reload();
             Configuration Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
+            if (File.Exists(Config.FilePath))
+                Settings.Default.Reload();
+            else
+                Settings.Default.Save();
             File.Copy(Config.FilePath, "UserSetting.xml", true);
             if (Settings.Default.Display_HideHistory)
                 if (Settings.Default.Display_HideHistoryMap)
