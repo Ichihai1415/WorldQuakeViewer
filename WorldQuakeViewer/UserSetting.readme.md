@@ -31,6 +31,10 @@ Socket通信で送信します。置き換えは対応を増やす予定です�
 ---
 
 # その他
+
+## 稼働状況
+起動時間・アクセス回数を表示します。
+
 - 設定は**UserSetting.xml**,**AppData\Local\Ichihai1415\WorldQuakeViewer.exe_Url_{ハッシュ値}\{バージョン}\user.config**に保存されます。
 
 - 設定はUserSetting.xmlからAppDataにコピーされソフトに読み込まれるという流れです。保存は逆にAppDataに保存され、UserSetting.xmlにコピーされます。(バージョンが変わっても読み込みできるようにしています)

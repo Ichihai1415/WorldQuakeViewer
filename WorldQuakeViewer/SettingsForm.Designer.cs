@@ -183,6 +183,8 @@
             this.LinkMap.TabIndex = 7;
             this.LinkMap.TabStop = true;
             this.LinkMap.Text = "https://www.naturalearthdata.com/";
+            this.LinkMap.UseMnemonic = false;
+            this.LinkMap.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkMap_LinkClicked);
             // 
             // LinkOtoLigic
             // 
@@ -193,6 +195,7 @@
             this.LinkOtoLigic.TabIndex = 6;
             this.LinkOtoLigic.TabStop = true;
             this.LinkOtoLigic.Text = "https://otologic.jp";
+            this.LinkOtoLigic.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkOtoLigic_LinkClicked);
             // 
             // LinkKoruri
             // 
@@ -203,6 +206,7 @@
             this.LinkKoruri.TabIndex = 5;
             this.LinkKoruri.TabStop = true;
             this.LinkKoruri.Text = "https://koruri.github.io/";
+            this.LinkKoruri.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkKoruri_LinkClicked);
             // 
             // LinkJMA
             // 
@@ -213,6 +217,7 @@
             this.LinkJMA.TabIndex = 4;
             this.LinkJMA.TabStop = true;
             this.LinkJMA.Text = "http://xml.kishou.go.jp/tec_material.html";
+            this.LinkJMA.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkJMA_LinkClicked);
             // 
             // LinkFE
             // 
@@ -223,6 +228,7 @@
             this.LinkFE.TabIndex = 3;
             this.LinkFE.TabStop = true;
             this.LinkFE.Text = "https://earthquake.usgs.gov/ws/geoserve/regions.php";
+            this.LinkFE.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkFE_LinkClicked);
             // 
             // LinkUSGS
             // 
@@ -233,6 +239,7 @@
             this.LinkUSGS.TabIndex = 2;
             this.LinkUSGS.TabStop = true;
             this.LinkUSGS.Text = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php";
+            this.LinkUSGS.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkUSGS_LinkClicked);
             // 
             // Tab_Info_Text
             // 
@@ -707,6 +714,7 @@
             this.Tab_Tweet_ViewToken.TabIndex = 29;
             this.Tab_Tweet_ViewToken.Text = "tokenを\r\n表示する";
             this.Tab_Tweet_ViewToken.UseVisualStyleBackColor = true;
+            this.Tab_Tweet_ViewToken.CheckedChanged += new System.EventHandler(this.Tab_Tweet_ViewToken_CheckedChanged);
             // 
             // Tab_Tweet_LowerMMI
             // 

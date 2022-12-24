@@ -13,6 +13,7 @@ using System.Media;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using USGSQuakeClass;
@@ -25,7 +26,7 @@ namespace WorldQuakeViewer
         public static string Version = "";
         public static DateTime StartTime = new DateTime();
         public static int AccessedUSGS = 0;
-        public static int AccessedFE= 0;
+        public static int AccessedFE = 0;
         public string LatestURL = "";
         public bool NoFirst = false;//最初はツイートとかしない
         public Dictionary<string, History> Histories = new Dictionary<string, History>();//ID,Data
@@ -52,11 +53,15 @@ namespace WorldQuakeViewer
                 {
                     if (!Directory.Exists("Font"))
                         Directory.CreateDirectory("Font");
+                    Process.Start("https://koruri.github.io/");
                     Process.Start("explorer.exe", "Font");
-
-                    DialogResult Result = MessageBox.Show($"フォントが見つかりません。ダウンロードサイトとFontフォルダを開きます。\"Koruri-Regular.ttf\"をFontフォルダにコピーしてください。", "WQV_FontCheck", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
-                    if (Result != DialogResult.OK)
+                    DialogResult Result = MessageBox.Show($"フォントが見つかりません。ダウンロードサイトとFontフォルダを開きます。\"Koruri-Regular.ttf\"をFontフォルダにコピーしてください。", "WQV_FontCheck", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation);
+                    if (Result != DialogResult.Retry)
+                    {
                         Application.Exit();
+                        break;//これないとプロセス無限起動される
+                    }
+                    Thread.Sleep(1000);
                 }
                 PrivateFontCollection pfc = new PrivateFontCollection();
                 pfc.AddFontFile("Font\\Koruri-Regular.ttf");
@@ -115,17 +120,21 @@ namespace WorldQuakeViewer
                         InstalledFontCollection ifc = new InstalledFontCollection();
                         foreach (FontFamily f in ifc.Families)
                             if (f.Name == pfc.Families[0].Name)
+                            {
                                 FontOK = true;
+                                break;
+                            }
                         Console.WriteLine(pfc.Families[0]);
                         if (FontOK == false)
                         {
                             Process.Start("fontview.exe", "Font\\Koruri-Regular.ttf");
                             DialogResult Result = MessageBox.Show($"フォントがインストールされていません。Font\\Koruri-Regular.ttfをインストールしてください。", "WQV_FontCheck", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation);
-                            if (Result != DialogResult.OK)
+                            if (Result != DialogResult.Retry)
                             {
                                 Application.Exit();
-                                break;
+                                break;//これないとプロセス無限起動される
                             }
+                            Thread.Sleep(1000);
                         }
                         else
                             FontOK = true;
@@ -146,20 +155,13 @@ namespace WorldQuakeViewer
                     Directory.CreateDirectory(Config.FilePath.Replace("\\user.config", ""));
                 File.Copy("UserSetting.xml", Config.FilePath, true);
             }
-            else
-                Settings.Default.Save();
             SettingReload();
             ErrorText.Text = "設定の読み込みが完了しました。";
-
-
             JsonTimer.Enabled = true;
-
         }
         private void JsonTimer_Tick(object sender, EventArgs e)//整理しろ
         {
-
             Console.WriteLine("///////////開始//////////");
-            Settings.Default.Reload();
             JsonTimer.Interval = 30000;
             try
             {
@@ -821,40 +823,40 @@ namespace WorldQuakeViewer
         /// <param name="ID">リプライ判別用ID。</param>
         public void Tweet(string Text, string ID)
         {
-            //if (NoFirst)
-            try
-            {
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-                Tokens tokens;
+            if (NoFirst)
                 try
                 {
-                    tokens = Tokens.Create(Settings.Default.Tweet_ConsumerKey, Settings.Default.Tweet_ConsumerSecret, Settings.Default.Tweet_AccessToken, Settings.Default.Tweet_AccessSecret);
-                }
-                catch
-                {
-                    ErrorText.Text = $"Tokenが正しくありません。";
-                    throw new Exception("Tokenが正しくありません。");
-                }
-                Status status = new Status();
-                if (Histories[ID].TweetID != 0)
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+                    Tokens tokens;
                     try
                     {
-                        status = tokens.Statuses.UpdateAsync(new { status = Text, in_reply_to_status_id = Histories[ID].TweetID }).Result;
+                        tokens = Tokens.Create(Settings.Default.Tweet_ConsumerKey, Settings.Default.Tweet_ConsumerSecret, Settings.Default.Tweet_AccessToken, Settings.Default.Tweet_AccessSecret);
                     }
                     catch
                     {
-                        status = tokens.Statuses.UpdateAsync(new { status = Text }).Result;
+                        ErrorText.Text = $"Tokenが正しくありません。";
+                        throw new Exception("Tokenが正しくありません。");
                     }
-                else
-                    status = tokens.Statuses.UpdateAsync(new { status = Text }).Result;
+                    Status status = new Status();
+                    if (Histories[ID].TweetID != 0)
+                        try
+                        {
+                            status = tokens.Statuses.UpdateAsync(new { status = Text, in_reply_to_status_id = Histories[ID].TweetID }).Result;
+                        }
+                        catch
+                        {
+                            status = tokens.Statuses.UpdateAsync(new { status = Text }).Result;
+                        }
+                    else
+                        status = tokens.Statuses.UpdateAsync(new { status = Text }).Result;
 
-                Histories[ID].TweetID = status.Id;
-            }
-            catch (Exception ex)
-            {
-                ErrorText.Text = $"ツイートに失敗しました。\nわからない場合エラーログの内容を報告してください。\n内容:" + ex.Message;
-                LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Tweet Version:{Settings.Default.Version}\n{ex}");
-            }
+                    Histories[ID].TweetID = status.Id;
+                }
+                catch (Exception ex)
+                {
+                    ErrorText.Text = $"ツイートに失敗しました。\nわからない場合エラーログの内容を報告してください。\n内容:" + ex.Message;
+                    LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Tweet Version:{Settings.Default.Version}\n{ex}");
+                }
         }
         /// <summary>
         /// Socket通信で送信します。

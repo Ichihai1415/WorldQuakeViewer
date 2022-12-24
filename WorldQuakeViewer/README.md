@@ -2,21 +2,24 @@
 
 [MITライセンス](https://opensource.org/licenses/mit-license.php)で公開しています。確認してください。
 
-詳細(現在制作中):https://Ichihai1415.github.io/programs/released/WQV/
+バグ、予定等は[Issue](https://github.com/Ichihai1415/WorldQuakeViewer/issues)を参照してください。
 
+[詳細(現在制作中)](https://Ichihai1415.github.io/programs/released/WQV/)
 
 ---
 ---
 # 更新履歴
 
 ## v1.0.0
-2022/12/22
+2022/12/24
 
 履歴表示機能等追加
 
 設定画面追加
 
 更新処理を履歴すべて(7件)で行います。
+
+などなど
 
 ---
 #### 以下は[ここ](https://github.com/Ichihai1415/WorldQuakeViewer_Beta)にあります。
