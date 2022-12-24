@@ -28,9 +28,9 @@ namespace WorldQuakeViewer
         public static int AccessedUSGS = 0;
         public static int AccessedFE = 0;
         public string LatestURL = "";
-        public bool NoFirst = false;//最初はツイートとかしない
-        public Dictionary<string, History> Histories = new Dictionary<string, History>();//ID,Data
-        public Dictionary<Point, int> HypoIDs = new Dictionary<Point, int>();//Location,ID
+        public static bool NoFirst = false;//最初はツイートとかしない
+        public Dictionary<string, History> Histories = new Dictionary<string, History>();//EQID,Data
+        public Dictionary<Point, int> HypoIDs = new Dictionary<Point, int>();//Location,HypoID
         public Font F9 = null;
         public Font F9_5 = null;
         public Font F10 = null;
@@ -61,7 +61,7 @@ namespace WorldQuakeViewer
                         Application.Exit();
                         break;//これないとプロセス無限起動される
                     }
-                    Thread.Sleep(1000);
+                    Thread.Sleep(1000);//念のため
                 }
                 PrivateFontCollection pfc = new PrivateFontCollection();
                 pfc.AddFontFile("Font\\Koruri-Regular.ttf");
@@ -134,7 +134,7 @@ namespace WorldQuakeViewer
                                 Application.Exit();
                                 break;//これないとプロセス無限起動される
                             }
-                            Thread.Sleep(1000);
+                            Thread.Sleep(1000);//念のため
                         }
                         else
                             FontOK = true;
@@ -177,8 +177,13 @@ namespace WorldQuakeViewer
                 double StartTime = Convert.ToDouble(DateTime.Now.ToString("yyyyMMddHHmmss.ffff"));
                 List<USGSQuake> USGSQuakeJson = JsonConvert.DeserializeObject<List<USGSQuake>>(USGSQuakeJson_);
                 Console.WriteLine("各履歴処理開始");
+                DateTimeOffset Update_ = DateTimeOffset.FromUnixTimeMilliseconds(USGSQuakeJson[0].Metadata.Generated).ToLocalTime();
+                string UpdateTime_ = $"{Update_:yyyy/MM/dd HH:mm:ss}";
                 int SoundLevel = 0;//音声判別用 初報ほど、M大きいほど高い
-                for (int i = 6; i >= 0; i--)//古い順に(消していくから)
+                List<long> EQTimeList = new List<long>();
+                for (int i = 0; i < 7; i++)//古いやつ削除用
+                    EQTimeList.Add((long)USGSQuakeJson[0].Features[i].Properties.Time);
+                for (int i = 6; i >= 0; i--)//古い順に
                 {
                     bool New = false;//音声判別用
                     string ID = USGSQuakeJson[0].Features[i].Id;
@@ -315,8 +320,8 @@ namespace WorldQuakeViewer
                             }
                         }
                         string Shingen2 = $"({USGSQuakeJson[0].Features[i].Properties.Place})";
-                        string LogText_ = $"USGS地震情報【{MagType}{Mag}】{Time.Replace("※", "(")})\n{Shingen}{Shingen2}\n{LatView},{LongView}　{Depth}\n改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}　{Arart.Replace("アラート:-", "")}\n{USGSQuakeJson[0].Features[i].Properties.Url}";
-                        string BouyomiText = $"USGS地震情報。マグニチュード{Mag}、震源、{Shingen.Replace(" ", "、").Replace("/", "、").Replace("震源:", "")}、{LatStLongJP}、{LongStLongJP}、深さ{DepthLong.Replace("深さ:", "")}。{$"推定最大改正メルカリ震度階級{MMI.Replace("(", "").Replace(")", "")}".Replace("改正メルカリ震度階級-", "")}。{Arart.Replace("アラート:-", "")}";
+                        string LogText_ = $"USGS地震情報【{MagType}{Mag}】{Time.Replace("※", "(")})\n{Shingen}{Shingen2}\n{LatView},{LongView}　{Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}　{Arart.Replace("アラート:-", "")}\n{USGSQuakeJson[0].Features[i].Properties.Url}";
+                        string BouyomiText = $"USGS地震情報。マグニチュード{Mag}、震源、{Shingen.Replace(" ", "、").Replace("/", "、").Replace("震源:", "")}、{LatStLongJP}、{LongStLongJP}、深さ{DepthLong.Replace("深さ:", "")}。{$"推定最大改正メルカリ震度階級{MMI.Replace("(", "").Replace(")", "")}".Replace("推定最大改正メルカリ震度階級-", "")}。{Arart.Replace("アラート:-", "")}";
                         bool NewUpdt = false;
                         if (!Histories.ContainsKey(ID))//Keyないと探したときエラーになるから別化
                             NewUpdt = true;
@@ -333,6 +338,7 @@ namespace WorldQuakeViewer
                                 {
                                     Text = LogText_,
                                     UpdateTime = Convert.ToString(USGSQuakeJson[0].Features[i].Properties.Updated),
+                                    EQTime = (long)USGSQuakeJson[0].Features[i].Properties.Time,
                                     TweetID = Histories[ID].TweetID
                                 };
                             }
@@ -344,14 +350,9 @@ namespace WorldQuakeViewer
                                 {
                                     Text = LogText_,
                                     UpdateTime = Convert.ToString(USGSQuakeJson[0].Features[i].Properties.Updated),
+                                    EQTime = (long)USGSQuakeJson[0].Features[i].Properties.Time,
                                     TweetID = 0
                                 });
-                                Console.WriteLine($"ログ保持数:{Histories.Count}");
-                                if (Histories.Count > 7)
-                                {
-                                    Histories.Remove(Histories.First().Key);
-                                    Console.WriteLine($"{Histories.First().Key}を削除しました。");
-                                }
                             }
                             LogSave("Log\\M4.5+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Settings.Default.Version}\n{LogText_}", ID);
                             if (Settings.Default.Socket_Enable)
@@ -458,8 +459,6 @@ namespace WorldQuakeViewer
                                     USGS0.BackColor = Color.DimGray;
                                     USGS0.ForeColor = Color.White;
                                 }
-                                USGS6.Text = $"{UpdateTime}発表\n{Latestchecktime}取得\n地図データ:NationalEarth";
-                                USGS6.Location = new Point(400 - USGS6.Width, 500 - USGS6.Height);
                             }
                             else if (i == 1)//履歴
                             {
@@ -690,6 +689,28 @@ namespace WorldQuakeViewer
                     else
                         Console.WriteLine($"[{i}] 更新なし(更新:{Updated})");
                 }
+
+                USGS6.Text = $"{UpdateTime_}更新\n{Latestchecktime}取得\n地図データ:NationalEarth";
+                USGS6.Location = new Point(400 - USGS6.Width, 500 - USGS6.Height);
+                /*//旧処理
+            if (Histories.Count > 7)//古いもの削除
+            {
+                Console.WriteLine($"{Histories.First().Key}を削除しました。");
+                Histories.Remove(Histories.First().Key);
+            }
+                */
+                //新処理
+                Console.WriteLine($"ログ保持数:{Histories.Count} - ");
+                for (int i = 0; i < Histories.Count; i++)
+                {
+                    Console.WriteLine(Histories.Values.ToArray()[i].Text.Replace("\n", ""));
+                    if (!EQTimeList.Contains(Histories.Values.ToArray()[i].EQTime))
+                    {
+                        Console.WriteLine($"{Histories.Keys.ToArray()[i]}を削除しました。");
+                        Histories.Remove(Histories.Keys.ToArray()[i]);
+                    }
+                }
+                Console.WriteLine($"ログ保持数:{Histories.Count}");
                 if (SoundLevel == 1)
                     Sound("M45u.wav");
                 else if (SoundLevel == 2)
@@ -948,14 +969,17 @@ namespace WorldQuakeViewer
         /// <param name="SoundFile">再生するSoundフォルダの中の音声ファイル。</param>
         public static void Sound(string SoundFile)
         {
-            if (Player != null)
+            if (NoFirst)
             {
-                Player.Stop();
-                Player.Dispose();
-                Player = null;
+                if (Player != null)
+                {
+                    Player.Stop();
+                    Player.Dispose();
+                    Player = null;
+                }
+                Player = new SoundPlayer($"Sound\\{SoundFile}");
+                Player.Play();
             }
-            Player = new SoundPlayer($"Sound\\{SoundFile}");
-            Player.Play();
         }
         private void RCsetting_Click(object sender, EventArgs e)
         {

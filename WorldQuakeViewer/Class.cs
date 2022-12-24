@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 namespace USGSQuakeClass
 {
+    public class Metadata
+    {
+        public long Generated { get; set; }
+    }
     public class Properties
     {
         public double Mag { get; set; }
@@ -26,65 +30,9 @@ namespace USGSQuakeClass
     }
     public class USGSQuake
     {
-        public List<Feature> Features { get; set; }
-    }
-}
-namespace USGSFERegionsClass
-{
-    public class Metadata
-    {
-        public string Request { get; set; }
-        public DateTime Submitted { get; set; }
-        public List<string> Types { get; set; }
-        public string Version { get; set; }
-    }
-
-    public class Properties
-    {
-        public int? Number { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class Feature
-    {
-        public string Type { get; set; }
-        public int Id { get; set; }
-        public object Geometry { get; set; }
-        public Properties Properties { get; set; }
-    }
-
-    public class Fe
-    {
-        public string Type { get; set; }
-        public int Count { get; set; }
-        public List<Feature> Features { get; set; }
-    }
-
-    public class USGSFERegions
-    {
         public Metadata Metadata { get; set; }
-        public Fe Fe { get; set; }
-    }
-}
-namespace USGSFERegionsClass2
-{
-    public class Properties
-    {
-        public string Name { get; set; }
-    }
-    public class Feature
-    {
-        public Properties Properties { get; set; }
-    }
-    public class Fe
-    {
         public List<Feature> Features { get; set; }
     }
-    public class USGSFERegions2
-    {
-        public Fe Fe { get; set; }
-    }
-
 }
 namespace WorldQuakeViewer
 {
@@ -92,8 +40,7 @@ namespace WorldQuakeViewer
     {
         public string Text { get; set; }
         public string UpdateTime { get; set; }
+        public long EQTime { get; set; }
         public long TweetID { get; set; }
-
-
     }
 }
