@@ -1,3 +1,4 @@
+![サンプル画像](https://github.com/Ichihai1415/WorldQuakeViewer/blob/main/image/WQV_20221224_v1.0.0.png)
 世界の地震情報を表示します。
 
 [MITライセンス](https://opensource.org/licenses/mit-license.php)で公開しています。確認してください。
