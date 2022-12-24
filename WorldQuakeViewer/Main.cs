@@ -29,11 +29,22 @@ namespace WorldQuakeViewer
         }
         private void MainForm_Load(object sender, EventArgs e)
         {
-            ErrorText.Text = "フォント読み込み中…";/*
+            ErrorText.Text = "フォント読み込み中…";
             try
             {
+                while (!File.Exists("Font\\Koruri-Regular.ttf"))
+                {
+                    if (!Directory.Exists("Font"))
+                        Directory.CreateDirectory("Font");
+                    Process.Start("explorer.exe", "Font");
+
+                    DialogResult Result = MessageBox.Show($"フォントが見つかりません。ダウンロードサイトとFontフォルダを開きます。\"Koruri-Regular.ttf\"をFontフォルダにコピーしてください。", "WQV_FontCheck", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
+                    if (Result != DialogResult.OK)
+                        Application.Exit();
+                }
                 PrivateFontCollection pfc = new PrivateFontCollection();
                 pfc.AddFontFile("Font\\Koruri-Regular.ttf");
+                /*//なぜかエラー出るからフォント必須に
                 F9 = new Font(pfc.Families[0], 9F);
                 F9_5 = new Font(pfc.Families[0], 9.5F);
                 F10 = new Font(pfc.Families[0], 10F);
@@ -41,13 +52,76 @@ namespace WorldQuakeViewer
                 F12 = new Font(pfc.Families[0], 12F);
                 F20 = new Font(pfc.Families[0], 20F);
                 F22 = new Font(pfc.Families[0], 22F);
+                Console.WriteLine("F9  :" + F9);
+                Console.WriteLine("F9_5:" + F9_5);
+                Console.WriteLine("F10 :" + F10);
+                Console.WriteLine("F11 :" + F11);
+                Console.WriteLine("F12 :" + F12);
+                Console.WriteLine("F20 :" + F20);
+                Console.WriteLine("F22 :" + F22);
+                if (F9 !=  F22)//おかしいときname="使用されたパラメーターが有効ではありません。"になるため　なぜかおかしくなくてもエラー出る
+                {
+                    Console.WriteLine("フォントの読み込みに成功");
+                    Font = F10;
+                    USGS0.Font = F9;
+                    USGS1.Font = F11;
+                    USGS2.Font = F11;
+                    USGS3.Font = F20;
+                    USGS4.Font = F11;
+                    USGS5.Font = F20;
+                    USGS6.Font = F9;
+                    ErrorText.Font = F12;
+                    HistoryBack.Font = F10;
+                    History11.Font = F9_5;
+                    History12.Font = F10;
+                    History13.Font = F22;
+                    History21.Font = F9_5;
+                    History22.Font = F10;
+                    History23.Font = F22;
+                    History31.Font = F9_5;
+                    History32.Font = F10;
+                    History33.Font = F22;
+                    History41.Font = F9_5;
+                    History42.Font = F10;
+                    History43.Font = F22;
+                    History51.Font = F9_5;
+                    History52.Font = F10;
+                    History53.Font = F22;
+                    History61.Font = F9_5;
+                    History62.Font = F10;
+                    History63.Font = F22;
+                }
+                else*/
+                {
+                    bool FontOK = false;
+                    while (FontOK == false)
+                    {
+                        InstalledFontCollection ifc = new InstalledFontCollection();
+                        foreach (FontFamily f in ifc.Families)
+                            if (f.Name == pfc.Families[0].Name)
+                                FontOK = true;
+                        Console.WriteLine(pfc.Families[0]);
+                        if (FontOK == false)
+                        {
+                            Process.Start("fontview.exe", "Font\\Koruri-Regular.ttf");
+                            DialogResult Result = MessageBox.Show($"フォントがインストールされていません。Font\\Koruri-Regular.ttfをインストールしてください。", "WQV_FontCheck", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation);
+                            if (Result != DialogResult.OK)
+                            {
+                                Application.Exit();
+                                break;
+                            }
+                        }
+                        else
+                            FontOK = true;
+                        ifc.Dispose();
+                    }
+                }
                 pfc.Dispose();
-                Console.WriteLine(F12);
             }
             catch
             {
 
-            }*/
+            }
             ErrorText.Text = "設定読み込み中…";
             Configuration Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
             if (File.Exists("UserSetting.xml"))
@@ -60,6 +134,8 @@ namespace WorldQuakeViewer
                 Settings.Default.Save();
             SettingReload();
             ErrorText.Text = "設定の読み込みが完了しました。";
+
+
             JsonTimer.Enabled = true;
 
         }
@@ -67,7 +143,6 @@ namespace WorldQuakeViewer
         {
 
             Console.WriteLine("///////////開始//////////");
-            bool IsDebug = false;
             Settings.Default.Reload();
             JsonTimer.Interval = 30000;
             try
@@ -83,19 +158,19 @@ namespace WorldQuakeViewer
                 double StartTime = Convert.ToDouble(DateTime.Now.ToString("yyyyMMddHHmmss.ffff"));
                 List<USGSQuake> USGSQuakeJson = JsonConvert.DeserializeObject<List<USGSQuake>>(USGSQuakeJson_);
                 Console.WriteLine("各履歴処理開始");
-                int SoundLevel = 0;//音声判別用 M大きいほど、初報ほど高い
+                int SoundLevel = 0;//音声判別用 初報ほど、M大きいほど高い
                 for (int i = 6; i >= 0; i--)//古い順に(消していくから)
                 {
                     bool New = false;//音声判別用
                     string ID = USGSQuakeJson[0].Features[i].Id;
                     DateTimeOffset Update = DateTimeOffset.FromUnixTimeMilliseconds((long)USGSQuakeJson[0].Features[i].Properties.Updated).ToLocalTime();
                     string UpdateTime = $"{Update:yyyy/MM/dd HH:mm:ss}";
-                    string Updated = "";
+                    string Updated = "null";
                     if (Histories.ContainsKey(ID))
                         Updated = Histories[ID].UpdateTime;
                     if ($"{USGSQuakeJson[0].Features[i].Properties.Updated}" != Updated)
                     {
-                        Console.WriteLine($"[{i}] 更新時刻変化検知");
+                        Console.WriteLine($"[{i}] 更新時刻変化検知({Updated}->{USGSQuakeJson[0].Features[i].Properties.Updated})");
                         string MaxInt = "-";
                         if (USGSQuakeJson[0].Features[i].Properties.Mmi < 1.5)
                             MaxInt = "I";
@@ -190,16 +265,15 @@ namespace WorldQuakeViewer
                         if (HypoIDs.ContainsKey(HypoPoint))
                         {
                             Shingen = "震源:" + HypoName[HypoIDs[HypoPoint]];
-                            Console.WriteLine("震源キャッシュが存在します");
+                            Console.WriteLine($"震源キャッシュが存在します({HypoPoint.X}{HypoPoint.Y}->{HypoIDs[HypoPoint]})");
                         }
                         else
                         {
-                            Console.WriteLine("震源キャッシュが存在しません。ダウンロードします。");
-                            string USGSFERegion_ = "";
+                            Console.WriteLine($"震源キャッシュが存在しません。({HypoPoint.X}{HypoPoint.Y})ダウンロードします。");
                             try
                             {
-                                USGSFERegion_ = WC.DownloadString($"https://earthquake.usgs.gov/ws/geoserve/regions.json?latitude={LatShort}&longitude={LongShort}&type=fe");
-                                Console.WriteLine($"取得:$\"https://earthquake.usgs.gov/ws/geoserve/regions.json?latitude={{LatShort}}&longitude={{LongShort}}&type=fe\"");
+                                string USGSFERegion_ = WC.DownloadString($"https://earthquake.usgs.gov/ws/geoserve/regions.json?latitude={LatShort}&longitude={LongShort}&type=fe");
+                                Console.WriteLine($"取得:$\"https://earthquake.usgs.gov/ws/geoserve/regions.json?latitude={LatShort}&longitude={LongShort}&type=fe\"");
                                 JObject USGSFERegion = JObject.Parse(USGSFERegion_);
                                 for (int j = 0; j < (int)USGSFERegion.SelectToken("fe.count"); j++)
                                 {
@@ -228,28 +302,30 @@ namespace WorldQuakeViewer
                             NewUpdt = true;
                         else if (Histories[ID].Text != LogText_)
                             NewUpdt = true;
-                        Console.WriteLine(LogText_);
                         if (NewUpdt)//更新、初回検知
                         {
-                            if (Histories.ContainsKey(ID))
+                            if (Histories.ContainsKey(ID))//更新
                             {
                                 LogText_ = LogText_.Replace("USGS地震情報", "USGS地震情報(更新)");
                                 BouyomiText = BouyomiText.Replace("USGS地震情報", "USGS地震情報、更新");
-                                Console.WriteLine("//////////更新検知//////////");
+                                Console.WriteLine($"//////////{ID}更新検知//////////\n{Histories[ID].Text.Replace("\n", "")}->\n{LogText_}");
+                                Histories[ID] = new History
+                                {
+                                    Text = LogText_,
+                                    UpdateTime = Updated,
+                                    TweetID = 0
+                                };
                             }
-                            Console.WriteLine("//////////初回検知//////////");
-                            History history = new History
-                            {
-                                Text = LogText_,
-                                UpdateTime = Updated,
-                                TweetID = 0
-                            };
-                            if (Histories.ContainsKey(ID))//更新
-                                Histories[ID] = history;
                             else//new
                             {
+                                Console.WriteLine($"//////////{ID}初回検知//////////\n{LogText_}");
                                 New = true;
-                                Histories.Add(ID, history);
+                                Histories.Add(ID, new History
+                                {
+                                    Text = LogText_,
+                                    UpdateTime = Updated,
+                                    TweetID = Histories[ID].TweetID
+                                });
                                 if (Histories.Count > 7)
                                 {
                                     Histories.Remove(Histories.First().Key);
@@ -287,6 +363,11 @@ namespace WorldQuakeViewer
                                 //x:+200が中心 左余白-250 y:+300が中心
                                 int LocX = (int)(Long + 180) * -5 - 50;//(-180,0,180) + 180 -> (0,180,360)
                                 int LocY = (int)(90 - Lat) * -5 + 300;//90 - (90,0,-90) -> (0,90,180)
+                                int LocY_ = LocY;
+                                if (LocY > 0)
+                                    LocY_ = 0;
+                                else if (LocY < -500)
+                                    LocY_ = -500;
                                 MainImg.Location = new Point(LocX, LocY);
                                 Bitmap MainBitmap = new Bitmap(Resources.WorldMap);
                                 Graphics graphics = Graphics.FromImage(MainBitmap);
@@ -307,7 +388,6 @@ namespace WorldQuakeViewer
                                     USGS3.ForeColor = Color.Yellow;
                                     USGS4.ForeColor = Color.Yellow;
                                     USGS5.ForeColor = Color.Yellow;
-
                                     if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
                                     {
                                         USGS0.ForeColor = Color.Red;
@@ -578,9 +658,9 @@ namespace WorldQuakeViewer
                             }
                             if (USGSQuakeJson[0].Features[i].Properties.Mag >= Settings.Default.Bouyomichan_LowerMagnitudeLimit || USGSQuakeJson[0].Features[i].Properties.Mmi >= Settings.Default.Bouyomichan_LowerMMILimit)
                                 if (Settings.Default.Bouyomichan_Enable)
-                                    Bouyomichan(LogText_);
+                                    Bouyomichan(BouyomiText);
                             if (USGSQuakeJson[0].Features[i].Properties.Mag >= Settings.Default.Tweet_LowerMagnitudeLimit || USGSQuakeJson[0].Features[i].Properties.Mmi >= Settings.Default.Tweet_LowerMMILimit)
-                                if (Settings.Default.Tweet_Enable && IsDebug == false)
+                                if (Settings.Default.Tweet_Enable)
                                     Task.Run(() => Tweet(LogText_, ID));
                         }
                         else
@@ -614,10 +694,10 @@ namespace WorldQuakeViewer
             ErrorText.Text = ErrorText.Text.Replace("取得中…", "");
             NoFirst = true;
             Console.WriteLine("処理終了");
-
+            /*//フォント変更がうまくいかない
             if (ErrorText.Font != F12)
             {
-                if(F12==null)
+                if (F12 == null)
                     try
                     {
                         Console.WriteLine("Font=null");
@@ -631,7 +711,7 @@ namespace WorldQuakeViewer
                         F20 = new Font(pfc.Families[0], 20F);
                         F22 = new Font(pfc.Families[0], 22F);
                         pfc.Dispose();
-                }
+                    }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex);
@@ -668,19 +748,19 @@ namespace WorldQuakeViewer
                 History62.Font = F10;
                 History63.Font = F22;
                 Console.WriteLine(ErrorText.Font);
-            }
+            }*/
         }
         public static string Version = "";
         public string LatestURL = "";
-        public bool NoFirst = false;//最初はツイートしない
+        public bool NoFirst = false;//最初はツイートとかしない
         public Dictionary<string, History> Histories = new Dictionary<string, History>();//ID,Data
         public Dictionary<Point, int> HypoIDs = new Dictionary<Point, int>();//Location,ID
-        public Font F9=null;
+        public Font F9 = null;
         public Font F9_5 = null;
-        public Font F10=null;
-        public Font F11=null;
-        public Font F12=null;
-        public Font F20=null;
+        public Font F10 = null;
+        public Font F11 = null;
+        public Font F12 = null;
+        public Font F20 = null;
         public Font F22 = null;
 
         /// <summary>
@@ -689,7 +769,7 @@ namespace WorldQuakeViewer
         /// <param name="SaveDirectory">保存するディレクトリ。Log\\[M4.5+,M6.0+,M8.0+,ErrorLog...]</param>
         /// <param name="SaveText">保存するテキスト。</param>
         /// <param name="ID">地震ログ保存時用地震ID。</param>
-        public static void LogSave(string SaveDirectory, string SaveText, string ID = null)
+        public static void LogSave(string SaveDirectory, string SaveText, string ID = "unknown")
         {
             DateTime NowTime = DateTime.Now;
             if (Directory.Exists("Log") == false)
@@ -734,40 +814,40 @@ namespace WorldQuakeViewer
         /// <param name="ID">リプライ判別用ID。</param>
         public void Tweet(string Text, string ID)
         {
-            if (NoFirst)
+            //if (NoFirst)
+            try
+            {
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+                Tokens tokens;
                 try
                 {
-                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-                    Tokens tokens;
+                    tokens = Tokens.Create(Settings.Default.Tweet_ConsumerKey, Settings.Default.Tweet_ConsumerSecret, Settings.Default.Tweet_AccessToken, Settings.Default.Tweet_AccessSecret);
+                }
+                catch
+                {
+                    ErrorText.Text = $"Tokenが正しくありません。";
+                    throw new Exception("Tokenが正しくありません。");
+                }
+                Status status = new Status();
+                if (Histories[ID].TweetID != 0)
                     try
                     {
-                        tokens = Tokens.Create(Settings.Default.Tweet_ConsumerKey, Settings.Default.Tweet_ConsumerSecret, Settings.Default.Tweet_AccessToken, Settings.Default.Tweet_AccessSecret);
+                        status = tokens.Statuses.UpdateAsync(new { status = Text, in_reply_to_status_id = Histories[ID].TweetID }).Result;
                     }
                     catch
                     {
-                        ErrorText.Text = $"Tokenが正しくありません。";
-                        throw new Exception("Tokenが正しくありません。");
-                    }
-                    Status status = new Status();
-                    if (Histories[ID].TweetID != 0)
-                        try
-                        {
-                            status = tokens.Statuses.UpdateAsync(new { status = Text, in_reply_to_status_id = Histories[ID].TweetID }).Result;
-                        }
-                        catch
-                        {
-                            status = tokens.Statuses.UpdateAsync(new { status = Text }).Result;
-                        }
-                    else
                         status = tokens.Statuses.UpdateAsync(new { status = Text }).Result;
+                    }
+                else
+                    status = tokens.Statuses.UpdateAsync(new { status = Text }).Result;
 
-                    Histories[ID].TweetID = status.Id;
-                }
-                catch (Exception ex)
-                {
-                    ErrorText.Text = $"ツイートに失敗しました。\nわからない場合エラーログの内容を報告してください。\n内容:" + ex.Message;
-                    LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Tweet Version:{Settings.Default.Version}\n{ex}");
-                }
+                Histories[ID].TweetID = status.Id;
+            }
+            catch (Exception ex)
+            {
+                ErrorText.Text = $"ツイートに失敗しました。\nわからない場合エラーログの内容を報告してください。\n内容:" + ex.Message;
+                LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Tweet Version:{Settings.Default.Version}\n{ex}");
+            }
         }
         /// <summary>
         /// Socket通信で送信します。
@@ -807,17 +887,23 @@ namespace WorldQuakeViewer
                 {
                     byte[] Message = Encoding.UTF8.GetBytes(Text);
                     int Length = Message.Length;
+                    byte Code = 0;
+                    short Command = 0x0001;
+                    short Speed = Settings.Default.Bouyomichan_Speed;
+                    short Tone = Settings.Default.Bouyomichan_Tone;
+                    short Volume = Settings.Default.Bouyomichan_Volume;
+                    short Voice = Settings.Default.Bouyomichan_Voice;
                     using (TcpClient TcpClient = new TcpClient(Settings.Default.Bouyomichan_Host, Settings.Default.Bouyomichan_Port))
                     using (NetworkStream NetworkStream = TcpClient.GetStream())
                     using (BinaryWriter BinaryWriter = new BinaryWriter(NetworkStream))
                     {
-                        BinaryWriter.Write(0);
-                        BinaryWriter.Write(Settings.Default.Bouyomichan_Speed);
-                        BinaryWriter.Write(Settings.Default.Bouyomichan_Tone);
-                        BinaryWriter.Write(Settings.Default.Bouyomichan_Volume);
-                        BinaryWriter.Write(Settings.Default.Bouyomichan_Voice);
-                        BinaryWriter.Write(0);
-                        BinaryWriter.Write(Message.Length);
+                        BinaryWriter.Write(Command);
+                        BinaryWriter.Write(Speed);
+                        BinaryWriter.Write(Tone);
+                        BinaryWriter.Write(Volume);
+                        BinaryWriter.Write(Voice);
+                        BinaryWriter.Write(Code);
+                        BinaryWriter.Write(Length);
                         BinaryWriter.Write(Message);
                     }
                 }
@@ -915,9 +1001,7 @@ namespace WorldQuakeViewer
             {
                 DialogResult Result = MessageBox.Show($"README.mdを開けませんでした。({ex.Message})\nブラウザで表示しますか?", "WQV_help", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
                 if (Result == DialogResult.Yes)
-                {
                     Process.Start("https://github.com/Ichihai1415/WorldQuakeViewer/blob/main/README.md");
-                }
             }
         }
         private void RCMapEWSC_Click(object sender, EventArgs e)
@@ -927,38 +1011,6 @@ namespace WorldQuakeViewer
         private void RCEarlyEst_Click(object sender, EventArgs e)
         {
             Process.Start("http://early-est.rm.ingv.it/warning.html");
-        }
-
-        private void ふぉんｔToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Font = F10;
-            USGS0.Font = F9;
-            USGS1.Font = F11;
-            USGS2.Font = F11;
-            USGS3.Font = F20;
-            USGS4.Font = F11;
-            USGS5.Font = F20;
-            USGS6.Font = F9;
-            ErrorText.Font = F12;
-            HistoryBack.Font = F10;
-            History11.Font = F9_5;
-            History12.Font = F10;
-            History13.Font = F22;
-            History21.Font = F9_5;
-            History22.Font = F10;
-            History23.Font = F22;
-            History31.Font = F9_5;
-            History32.Font = F10;
-            History33.Font = F22;
-            History41.Font = F9_5;
-            History42.Font = F10;
-            History43.Font = F22;
-            History51.Font = F9_5;
-            History52.Font = F10;
-            History53.Font = F22;
-            History61.Font = F9_5;
-            History62.Font = F10;
-            History63.Font = F22;
         }
     }
 }

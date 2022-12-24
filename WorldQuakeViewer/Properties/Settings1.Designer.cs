@@ -62,9 +62,9 @@ namespace WorldQuakeViewer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int Bouyomichan_Voice {
+        public short Bouyomichan_Voice {
             get {
-                return ((int)(this["Bouyomichan_Voice"]));
+                return ((short)(this["Bouyomichan_Voice"]));
             }
             set {
                 this["Bouyomichan_Voice"] = value;
@@ -74,9 +74,9 @@ namespace WorldQuakeViewer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("-1")]
-        public int Bouyomichan_Speed {
+        public short Bouyomichan_Speed {
             get {
-                return ((int)(this["Bouyomichan_Speed"]));
+                return ((short)(this["Bouyomichan_Speed"]));
             }
             set {
                 this["Bouyomichan_Speed"] = value;
@@ -86,9 +86,9 @@ namespace WorldQuakeViewer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("-1")]
-        public int Bouyomichan_Tone {
+        public short Bouyomichan_Tone {
             get {
-                return ((int)(this["Bouyomichan_Tone"]));
+                return ((short)(this["Bouyomichan_Tone"]));
             }
             set {
                 this["Bouyomichan_Tone"] = value;
@@ -98,9 +98,9 @@ namespace WorldQuakeViewer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("-1")]
-        public int Bouyomichan_Volume {
+        public short Bouyomichan_Volume {
             get {
-                return ((int)(this["Bouyomichan_Volume"]));
+                return ((short)(this["Bouyomichan_Volume"]));
             }
             set {
                 this["Bouyomichan_Volume"] = value;

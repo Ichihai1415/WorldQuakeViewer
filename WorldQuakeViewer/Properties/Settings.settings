@@ -11,16 +11,16 @@
     <Setting Name="Bouyomichan_Port" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">50001</Value>
     </Setting>
-    <Setting Name="Bouyomichan_Voice" Type="System.Int32" Scope="User">
+    <Setting Name="Bouyomichan_Voice" Type="System.Int16" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="Bouyomichan_Speed" Type="System.Int32" Scope="User">
+    <Setting Name="Bouyomichan_Speed" Type="System.Int16" Scope="User">
       <Value Profile="(Default)">-1</Value>
     </Setting>
-    <Setting Name="Bouyomichan_Tone" Type="System.Int32" Scope="User">
+    <Setting Name="Bouyomichan_Tone" Type="System.Int16" Scope="User">
       <Value Profile="(Default)">-1</Value>
     </Setting>
-    <Setting Name="Bouyomichan_Volume" Type="System.Int32" Scope="User">
+    <Setting Name="Bouyomichan_Volume" Type="System.Int16" Scope="User">
       <Value Profile="(Default)">-1</Value>
     </Setting>
     <Setting Name="Tweet_Enable" Type="System.Boolean" Scope="User">

@@ -84,7 +84,6 @@
             this.History43 = new System.Windows.Forms.Label();
             this.History53 = new System.Windows.Forms.Label();
             this.History63 = new System.Windows.Forms.Label();
-            this.ふぉんｔToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RightClick.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MainImg)).BeginInit();
             this.SuspendLayout();
@@ -143,11 +142,10 @@
             this.RC1Bar2,
             this.RC1PSInfo,
             this.RC1Bar3,
-            this.RC1RebootExit,
-            this.ふぉんｔToolStripMenuItem});
+            this.RC1RebootExit});
             this.RightClick.Name = "RightClick";
             this.RightClick.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.RightClick.Size = new System.Drawing.Size(243, 170);
+            this.RightClick.Size = new System.Drawing.Size(243, 146);
             this.RightClick.TabStop = true;
             this.RightClick.Text = "メニュー";
             // 
@@ -576,13 +574,6 @@
             this.History63.TabIndex = 40;
             this.History63.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // ふぉんｔToolStripMenuItem
-            // 
-            this.ふぉんｔToolStripMenuItem.Name = "ふぉんｔToolStripMenuItem";
-            this.ふぉんｔToolStripMenuItem.Size = new System.Drawing.Size(242, 24);
-            this.ふぉんｔToolStripMenuItem.Text = "ふぉんｔ";
-            this.ふぉんｔToolStripMenuItem.Click += new System.EventHandler(this.ふぉんｔToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -698,7 +689,6 @@
         private System.Windows.Forms.Label History43;
         private System.Windows.Forms.Label History53;
         private System.Windows.Forms.Label History63;
-        private System.Windows.Forms.ToolStripMenuItem ふぉんｔToolStripMenuItem;
     }
 }
 

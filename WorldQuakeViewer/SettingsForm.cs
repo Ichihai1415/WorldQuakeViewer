@@ -18,6 +18,8 @@ namespace WorldQuakeViewer
     {
         public SettingsForm()
         {
+            InitializeComponent();
+            /*フォントはパス
             try
             {
                 PrivateFontCollection pfc = new PrivateFontCollection();
@@ -25,7 +27,6 @@ namespace WorldQuakeViewer
                 Font F9 = new Font(pfc.Families[0], 9F);
                 Font F9_5 = new Font(pfc.Families[0], 9.5F);
                 Font F12 = new Font(pfc.Families[0], 12F);
-                InitializeComponent();
                 Font = F12;
 
 
@@ -34,7 +35,7 @@ namespace WorldQuakeViewer
             catch
             {
 
-            }
+            }*/
         }
         private void SettingsForm_Load(object sender, EventArgs e)
         {
@@ -84,10 +85,10 @@ namespace WorldQuakeViewer
             Settings.Default.Bouyomichan_LowerMagnitudeLimit = (double)Tab_Yomi_LowerMag.Value;
             Settings.Default.Bouyomichan_LowerMMILimit = (double)Tab_Yomi_LowerMMI.Value;
             Settings.Default.Bouyomichan_Lower_And = Tab_Yomi_LowerAnd.Checked;
-            Settings.Default.Bouyomichan_Voice = (int)Tab_Yomi_Voice.Value;
-            Settings.Default.Bouyomichan_Speed = (int)Tab_Yomi_Speed.Value;
-            Settings.Default.Bouyomichan_Tone = (int)Tab_Yomi_Tone.Value;
-            Settings.Default.Bouyomichan_Volume = (int)Tab_Yomi_Volume.Value;
+            Settings.Default.Bouyomichan_Voice = (short)Tab_Yomi_Voice.Value;
+            Settings.Default.Bouyomichan_Speed = (short)Tab_Yomi_Speed.Value;
+            Settings.Default.Bouyomichan_Tone = (short)Tab_Yomi_Tone.Value;
+            Settings.Default.Bouyomichan_Volume = (short)Tab_Yomi_Volume.Value;
             Settings.Default.Tweet_Enable = Tab_Tweet_Enable.Checked;
             Settings.Default.Tweet_LowerMagnitudeLimit = (double)Tab_Tweet_LowerMag.Value;
             Settings.Default.Tweet_LowerMMILimit = (double)Tab_Tweet_LowerMMI.Value;
@@ -174,28 +175,27 @@ namespace WorldQuakeViewer
             Tab_Yomi_Test.Enabled = false;
             try
             {
-                byte Code = 0;
                 byte[] Message = Encoding.UTF8.GetBytes("WorldQuakeViewer、棒読みちゃん送信テスト");
                 int Length = Message.Length;
-                TcpClient TcpClient = new TcpClient(Tab_Yomi_Host.Text, (int)Tab_Yomi_Port.Value);
+                byte Code = 0;
+                short Command = 0x0001;
+                short Speed = (short)Tab_Yomi_Speed.Value;
+                short Tone = (short)Tab_Yomi_Tone.Value;
+                short Volume = (short)Tab_Yomi_Volume.Value;
+                short Voice = (short)Tab_Yomi_Voice.Value;
+                using (TcpClient TcpClient = new TcpClient(Tab_Yomi_Host.Text, (int)Tab_Yomi_Port.Value))
                 using (NetworkStream NetworkStream = TcpClient.GetStream())
                 using (BinaryWriter BinaryWriter = new BinaryWriter(NetworkStream))
                 {
-                    BinaryWriter.Write(0x0001);
-                    BinaryWriter.Write((short)Tab_Yomi_Speed.Value);
-                    BinaryWriter.Write((short)Tab_Yomi_Tone.Value);
-                    BinaryWriter.Write((short)Tab_Yomi_Volume.Value);
-                    BinaryWriter.Write((short)Tab_Yomi_Voice.Value);//なんかずれてる？？
+                    BinaryWriter.Write(Command);
+                    BinaryWriter.Write(Speed);
+                    BinaryWriter.Write(Tone);
+                    BinaryWriter.Write(Volume);
+                    BinaryWriter.Write(Voice);
                     BinaryWriter.Write(Code);
-                    BinaryWriter.Write(Message.Length);
+                    BinaryWriter.Write(Length);
                     BinaryWriter.Write(Message);
-
-                    //Tab_Yomi_Speed.Value);
-                    //Tab_Yomi_Tone.Value);
-                    //Tab_Yomi_Volume.Value);
-                    //Tab_Yomi_Voice.Value);
                 }
-                TcpClient.Close();
             }
             catch (Exception ex)
             {
