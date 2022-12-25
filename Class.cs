@@ -42,5 +42,15 @@ namespace WorldQuakeViewer
         public string UpdateTime { get; set; }
         public long EQTime { get; set; }
         public long TweetID { get; set; }
+        public int Display1LocX { get; set; }
+        public int Display1LocY { get; set; }
+        public string Display10 { get; set; }
+        public string Display11 { get; set; }
+        public string Display12 { get; set; }
+        public string Display13 { get; set; }
+        public string Display15 { get; set; }
+        public string Display21 { get; set; }
+        public string Display22 { get; set; }
+        public string Display23 { get; set; }
     }
 }
