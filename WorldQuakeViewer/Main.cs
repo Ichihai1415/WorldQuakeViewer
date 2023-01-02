@@ -323,17 +323,21 @@ namespace WorldQuakeViewer
                         string LogText_ = $"USGS地震情報【{MagType}{Mag}】{Time.Replace("※", "(")})\n{Shingen}{Shingen2}\n{LatView},{LongView}　{Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}　{Arart.Replace("アラート:-", "")}\n{USGSQuakeJson[0].Features[i].Properties.Url}";
                         string BouyomiText = $"USGS地震情報。マグニチュード{Mag}、震源、{Shingen.Replace(" ", "、").Replace("/", "、").Replace("震源:", "")}、{LatStLongJP}、{LongStLongJP}、深さ{DepthLong.Replace("深さ:", "")}。{$"推定最大改正メルカリ震度階級{MMI.Replace("(", "").Replace(")", "")}".Replace("推定最大改正メルカリ震度階級-", "")}。{Arart.Replace("アラート:-", "")}";
                         bool NewUpdt = false;
+
                         if (!Histories.ContainsKey(ID))//Keyないと探したときエラーになるから別化
                             NewUpdt = true;
-                        else if (Histories[ID].Text != LogText_)
-                            NewUpdt = true;
+                        else
+                        {
+                            LogText_ = LogText_.Replace("USGS地震情報", "USGS地震情報(更新)");
+                            BouyomiText = BouyomiText.Replace("USGS地震情報", "USGS地震情報、更新");
+                            if (Histories[ID].Text != LogText_)
+                                NewUpdt = true;
+                        }
                         if (NewUpdt)//更新、初回検知
                         {
-
                             if (Histories.ContainsKey(ID))//更新
                             {
-                                LogText_ = LogText_.Replace("USGS地震情報", "USGS地震情報(更新)");
-                                BouyomiText = BouyomiText.Replace("USGS地震情報", "USGS地震情報、更新");
+
                                 Console.WriteLine($"//////////{ID}更新検知//////////\n{Histories[ID].Text.Replace("\n", "")}->\n{LogText_.Replace("\n", "")}");
                                 Histories[ID] = new History
                                 {
