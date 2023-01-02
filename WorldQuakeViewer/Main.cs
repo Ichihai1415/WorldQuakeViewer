@@ -23,7 +23,7 @@ namespace WorldQuakeViewer
 {
     public partial class MainForm : Form
     {
-        public static readonly string Version = "1.0.3";//こことアセンブリを変える
+        public static readonly string Version = "1.0.4";//こことアセンブリを変える
         public static DateTime StartTime = new DateTime();
         public static int AccessedUSGS = 0;
         public static int AccessedFE = 0;
@@ -420,6 +420,10 @@ namespace WorldQuakeViewer
                     }
                     else
                         Console.WriteLine($"[{i}] 更新なし(更新:{Updated})");
+                }
+                for (int i = 0; i < 7; i++)//古いやつ削除用
+                {
+                    string ID = USGSQuakeJson[0].Features[i].Id;
                     if (i == 0)//最新
                     {
                         USGS0.Text = Histories[ID].Display10;
@@ -716,7 +720,6 @@ namespace WorldQuakeViewer
                             History60.BackColor = Color.DimGray;
                     }
                 }
-
                 USGS6.Text = $"{UpdateTime_}更新\n{Latestchecktime}取得\n地図データ:NationalEarth";
                 USGS6.Location = new Point(400 - USGS6.Width, 500 - USGS6.Height);
                 /*//旧処理
