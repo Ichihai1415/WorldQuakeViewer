@@ -23,12 +23,13 @@ namespace WorldQuakeViewer
 {
     public partial class MainForm : Form
     {
-        public static readonly string Version = "1.0.4";//こことアセンブリを変える
+        public static readonly string Version = "1.0.5";//こことアセンブリを変える
         public static DateTime StartTime = new DateTime();
         public static int AccessedUSGS = 0;
         public static int AccessedFE = 0;
         public string LatestURL = "";
         public static bool NoFirst = false;//最初はツイートとかしない
+        public string URL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson";
         public Dictionary<string, History> Histories = new Dictionary<string, History>();//EQID,Data
         public Dictionary<Point, int> HypoIDs = new Dictionary<Point, int>();//Location,HypoID
         public Font F9 = null;
@@ -170,556 +171,625 @@ namespace WorldQuakeViewer
                 {
                     Encoding = Encoding.UTF8
                 };//↓？　暫定対処したやつかも
-                string USGSQuakeJson_ = "[" + WC.DownloadString("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson") + "]";
+                string USGSQuakeJson_ = "[" + WC.DownloadString(URL) + "]";
                 AccessedUSGS++;
-                Console.WriteLine("取得:https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson");
+                Console.WriteLine($"取得:{URL}");
                 string Latestchecktime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
                 double StartTime = Convert.ToDouble(DateTime.Now.ToString("yyyyMMddHHmmss.ffff"));
                 List<USGSQuake> USGSQuakeJson = JsonConvert.DeserializeObject<List<USGSQuake>>(USGSQuakeJson_);
+                if (USGSQuakeJson[0].Features.Count < 7)
+                {
+                    URL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson";
+                    USGSQuakeJson_ = "[" + WC.DownloadString(URL) + "]";
+                    AccessedUSGS++;
+                    Console.WriteLine($"取得:{URL}");
+                    Latestchecktime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+                    USGSQuakeJson = JsonConvert.DeserializeObject<List<USGSQuake>>(USGSQuakeJson_);
+                }
                 Console.WriteLine("各履歴処理開始");
                 DateTimeOffset Update_ = DateTimeOffset.FromUnixTimeMilliseconds(USGSQuakeJson[0].Metadata.Generated).ToLocalTime();
                 string UpdateTime_ = $"{Update_:yyyy/MM/dd HH:mm:ss}";
                 int SoundLevel = 0;//音声判別用 初報ほど、M大きいほど高い
                 List<long> EQTimeList = new List<long>();
-                for (int i = 0; i < 7; i++)//古いやつ削除用
-                    EQTimeList.Add((long)USGSQuakeJson[0].Features[i].Properties.Time);
-                for (int i = 6; i >= 0; i--)//古い順に
-                {
-                    bool New = false;//音声判別用
-                    string ID = USGSQuakeJson[0].Features[i].Id;
-                    DateTimeOffset Update = DateTimeOffset.FromUnixTimeMilliseconds((long)USGSQuakeJson[0].Features[i].Properties.Updated).ToLocalTime();
-                    string UpdateTime = $"{Update:yyyy/MM/dd HH:mm:ss}";
-                    string Updated = "null";
-                    if (Histories.ContainsKey(ID))
-                        Updated = Histories[ID].UpdateTime;
-                    if ($"{USGSQuakeJson[0].Features[i].Properties.Updated}" != Updated)
+                for (int i = 0; i < 10; i++)//念のため10
+                    if (USGSQuakeJson[0].Features.Count > i)
+                        EQTimeList.Add((long)USGSQuakeJson[0].Features[i].Properties.Time);//古いやつ削除用
+                    else
+                        continue;
+                for (int i = 9; i >= 0; i--)//古い順に
+                    if (USGSQuakeJson[0].Features.Count > i)
                     {
-                        Console.WriteLine($"[{i}] 更新時刻変化検知(s->{USGSQuakeJson[0].Features[i].Properties.Updated})");
-                        string MaxInt = "-";
-                        if (USGSQuakeJson[0].Features[i].Properties.Mmi < 1.5)
-                            MaxInt = "I";
-                        else if (USGSQuakeJson[0].Features[i].Properties.Mmi < 2.5)
-                            MaxInt = "II";
-                        else if (USGSQuakeJson[0].Features[i].Properties.Mmi < 3.5)
-                            MaxInt = "III";
-                        else if (USGSQuakeJson[0].Features[i].Properties.Mmi < 4.5)
-                            MaxInt = "IV";
-                        else if (USGSQuakeJson[0].Features[i].Properties.Mmi < 5.5)
-                            MaxInt = "V";
-                        else if (USGSQuakeJson[0].Features[i].Properties.Mmi < 6.5)
-                            MaxInt = "VI";
-                        else if (USGSQuakeJson[0].Features[i].Properties.Mmi < 7.5)
-                            MaxInt = "VII";
-                        else if (USGSQuakeJson[0].Features[i].Properties.Mmi < 8.5)
-                            MaxInt = "VIII";
-                        else if (USGSQuakeJson[0].Features[i].Properties.Mmi < 9.5)
-                            MaxInt = "IX";
-                        else if (USGSQuakeJson[0].Features[i].Properties.Mmi < 10.5)
-                            MaxInt = "X";
-                        else if (USGSQuakeJson[0].Features[i].Properties.Mmi < 11.5)
-                            MaxInt = "XI";
-                        else if (USGSQuakeJson[0].Features[i].Properties.Mmi >= 11.5)
-                            MaxInt = "XII";
-                        DateTimeOffset DataTimeOff = DateTimeOffset.FromUnixTimeMilliseconds((long)USGSQuakeJson[0].Features[i].Properties.Time).ToLocalTime();
-                        string Time = Convert.ToString(DataTimeOff).Replace("+0", "※UTC +0").Replace("+1", "※UTC +1").Replace("-0", "※UTC -0").Replace("+1", "※UTC -1");
-                        string Mag = $"{USGSQuakeJson[0].Features[i].Properties.Mag}";
-                        if (Mag.Length == 1)
-                            Mag += ".0";
-                        LatestURL = USGSQuakeJson[0].Features[0].Properties.Url;
-                        string MagType = USGSQuakeJson[0].Features[i].Properties.MagType;
-                        double Lat = USGSQuakeJson[0].Features[i].Geometry.Coordinates[1];
-                        double Long = USGSQuakeJson[0].Features[i].Geometry.Coordinates[0];
-                        double LatShort = Math.Round(USGSQuakeJson[0].Features[i].Geometry.Coordinates[1], 2, MidpointRounding.AwayFromZero);
-                        double LongShort = Math.Round(USGSQuakeJson[0].Features[i].Geometry.Coordinates[0], 2, MidpointRounding.AwayFromZero);
-                        string Arart = "アラート:-";
-                        if (USGSQuakeJson[0].Features[i].Properties.Alert != null)
-                            Arart = Arart.Replace("-", USGSQuakeJson[0].Features[i].Properties.Alert.Replace("green", "緑").Replace("yellow", "黄").Replace("orange", "オレンジ").Replace("red", "赤").Replace("pending", "保留中"));
-                        string LatStDecimal = $"N{Math.Round(Lat, 2, MidpointRounding.AwayFromZero)}".Replace("N-", "S");
-                        string LongStDecimal = $"E{Math.Round(Long, 2, MidpointRounding.AwayFromZero)}".Replace("E-", "W");
-                        TimeSpan LatTime = TimeSpan.FromHours(Lat);
-                        TimeSpan LongTime = TimeSpan.FromHours(Long);
-                        string LatStShort = $"{(int)Lat}ﾟ{LatTime.Minutes}'N";
-                        string LongStShort = $"{(int)Long}ﾟ{LongTime.Minutes}'E";
-                        if (Lat < 0)
-                            LatStShort = $"{(int)Lat * -1}ﾟ{LatTime.Minutes * -1}'S";
-                        if (Long < 0)
-                            LongStShort = $"{(int)Long * -1}ﾟ{LongTime.Minutes * -1}'W";
-                        string LatStLong = $"{(int)Lat}ﾟ{LatTime.Minutes}'{LatTime.Seconds}\"N";
-                        string LongStLong = $"{(int)Long}ﾟ{LongTime.Minutes}'{LongTime.Seconds}\"E";
-                        if (Lat < 0)
-                            LatStLong = $"{(int)Lat * -1}ﾟ{LatTime.Minutes * -1}'{LatTime.Seconds * -1}\"S";
-                        if (Long < 0)
-                            LongStLong = $"{(int)Long * -1}ﾟ{LongTime.Minutes * -1}'{LongTime.Seconds * -1}\"W";
-                        string LatStLongJP = $"北緯{(int)Lat}度{LatTime.Minutes}分{LatTime.Seconds}秒";
-                        string LongStLongJP = $"東経{(int)Long}度{LongTime.Minutes}分{LongTime.Seconds}秒";
-                        if (Lat < 0)
-                            LatStLongJP = $"南緯{(int)Lat * -1}度{LatTime.Minutes * -1}分{LatTime.Seconds * -1}秒";
-                        if (Long < 0)
-                            LongStLongJP = $"西経{(int)Long * -1}度{LongTime.Minutes * -1}分{LongTime.Seconds * -1}秒";
-                        if (Settings.Default.Text_LatLonDecimal)
+                        bool New = false;//音声判別用
+                        string ID = USGSQuakeJson[0].Features[i].Id;
+                        DateTimeOffset Update = DateTimeOffset.FromUnixTimeMilliseconds((long)USGSQuakeJson[0].Features[i].Properties.Updated).ToLocalTime();
+                        string UpdateTime = $"{Update:yyyy/MM/dd HH:mm:ss}";
+                        string Updated = "null";
+                        if (Histories.ContainsKey(ID))
+                            Updated = Histories[ID].UpdateTime;
+                        if ($"{USGSQuakeJson[0].Features[i].Properties.Updated}" != Updated)
                         {
-                            LatStLongJP = $"北緯{Lat}度";
-                            LongStLongJP = $"東経{Long}度";
+                            Console.WriteLine($"[{i}] 更新時刻変化検知(s->{USGSQuakeJson[0].Features[i].Properties.Updated})");
+                            string MaxInt = "-";
+                            if (USGSQuakeJson[0].Features[i].Properties.Mmi < 1.5)
+                                MaxInt = "I";
+                            else if (USGSQuakeJson[0].Features[i].Properties.Mmi < 2.5)
+                                MaxInt = "II";
+                            else if (USGSQuakeJson[0].Features[i].Properties.Mmi < 3.5)
+                                MaxInt = "III";
+                            else if (USGSQuakeJson[0].Features[i].Properties.Mmi < 4.5)
+                                MaxInt = "IV";
+                            else if (USGSQuakeJson[0].Features[i].Properties.Mmi < 5.5)
+                                MaxInt = "V";
+                            else if (USGSQuakeJson[0].Features[i].Properties.Mmi < 6.5)
+                                MaxInt = "VI";
+                            else if (USGSQuakeJson[0].Features[i].Properties.Mmi < 7.5)
+                                MaxInt = "VII";
+                            else if (USGSQuakeJson[0].Features[i].Properties.Mmi < 8.5)
+                                MaxInt = "VIII";
+                            else if (USGSQuakeJson[0].Features[i].Properties.Mmi < 9.5)
+                                MaxInt = "IX";
+                            else if (USGSQuakeJson[0].Features[i].Properties.Mmi < 10.5)
+                                MaxInt = "X";
+                            else if (USGSQuakeJson[0].Features[i].Properties.Mmi < 11.5)
+                                MaxInt = "XI";
+                            else if (USGSQuakeJson[0].Features[i].Properties.Mmi >= 11.5)
+                                MaxInt = "XII";
+                            DateTimeOffset DataTimeOff = DateTimeOffset.FromUnixTimeMilliseconds((long)USGSQuakeJson[0].Features[i].Properties.Time).ToLocalTime();
+                            string Time = Convert.ToString(DataTimeOff).Replace("+0", "※UTC +0").Replace("+1", "※UTC +1").Replace("-0", "※UTC -0").Replace("+1", "※UTC -1");
+                            string Mag = $"{USGSQuakeJson[0].Features[i].Properties.Mag}";
+                            if (Mag.Length == 1)
+                                Mag += ".0";
+                            LatestURL = USGSQuakeJson[0].Features[0].Properties.Url;
+                            string MagType = USGSQuakeJson[0].Features[i].Properties.MagType;
+                            double Lat = USGSQuakeJson[0].Features[i].Geometry.Coordinates[1];
+                            double Long = USGSQuakeJson[0].Features[i].Geometry.Coordinates[0];
+                            double LatShort = Math.Round(USGSQuakeJson[0].Features[i].Geometry.Coordinates[1], 2, MidpointRounding.AwayFromZero);
+                            double LongShort = Math.Round(USGSQuakeJson[0].Features[i].Geometry.Coordinates[0], 2, MidpointRounding.AwayFromZero);
+                            string Arart = "アラート:-";
+                            if (USGSQuakeJson[0].Features[i].Properties.Alert != null)
+                                Arart = Arart.Replace("-", USGSQuakeJson[0].Features[i].Properties.Alert.Replace("green", "緑").Replace("yellow", "黄").Replace("orange", "オレンジ").Replace("red", "赤").Replace("pending", "保留中"));
+                            string LatStDecimal = $"N{Math.Round(Lat, 2, MidpointRounding.AwayFromZero)}".Replace("N-", "S");
+                            string LongStDecimal = $"E{Math.Round(Long, 2, MidpointRounding.AwayFromZero)}".Replace("E-", "W");
+                            TimeSpan LatTime = TimeSpan.FromHours(Lat);
+                            TimeSpan LongTime = TimeSpan.FromHours(Long);
+                            string LatStShort = $"{(int)Lat}ﾟ{LatTime.Minutes}'N";
+                            string LongStShort = $"{(int)Long}ﾟ{LongTime.Minutes}'E";
                             if (Lat < 0)
-                                LatStLongJP = $"南緯{Lat * -1}度";
+                                LatStShort = $"{(int)Lat * -1}ﾟ{LatTime.Minutes * -1}'S";
                             if (Long < 0)
-                                LongStLongJP = $"西経{Long * -1}度";
-                        }
-                        string LatView = LatStShort;
-                        string LongView = LongStShort;
-                        if (Settings.Default.Text_LatLonDecimal)
-                        {
-                            LatView = LatStDecimal;
-                            LongView = LongStDecimal;
-                        }
-                        string Depth = $"深さ:約{(int)Math.Round(USGSQuakeJson[0].Features[i].Geometry.Coordinates[2], MidpointRounding.AwayFromZero)}km";
-                        if (USGSQuakeJson[0].Features[i].Geometry.Coordinates[2] == (int)USGSQuakeJson[0].Features[i].Geometry.Coordinates[2])
-                            Depth = $"(深さ:{USGSQuakeJson[0].Features[i].Geometry.Coordinates[2]}km?)";//整数
-                        string DepthLong = $"深さ:{USGSQuakeJson[0].Features[i].Geometry.Coordinates[2]}km";
-                        if (USGSQuakeJson[0].Features[i].Geometry.Coordinates[2] == (int)USGSQuakeJson[0].Features[i].Geometry.Coordinates[2])
-                            DepthLong = Depth;
-                        string MMI = "-";
-                        if (USGSQuakeJson[0].Features[i].Properties.Mmi != null)
-                            MMI = $"({Convert.ToString(USGSQuakeJson[0].Features[i].Properties.Mmi)})";
-                        string Shingen = "震源の取得に失敗しました。";
-                        string JPNameNotFoundLogText = "";
-                        if (File.Exists("Log\\JPNameNotFound.txt"))
-                            JPNameNotFoundLogText = $"{File.ReadAllText($"Log\\JPNameNotFound.txt")}";
-                        Point HypoPoint = new Point((int)(LatShort * 100), (int)(LongShort * 100));
-                        if (HypoIDs.ContainsKey(HypoPoint))
-                        {
-                            Shingen = "震源:" + HypoName[HypoIDs[HypoPoint]];
-                            Console.WriteLine($"震源キャッシュが存在します({HypoPoint.X},{HypoPoint.Y}->{HypoIDs[HypoPoint]})");
-                        }
-                        else
-                        {
-                            Console.WriteLine($"震源キャッシュが存在しません。({HypoPoint.X},{HypoPoint.Y})ダウンロードします。");
-                            try
+                                LongStShort = $"{(int)Long * -1}ﾟ{LongTime.Minutes * -1}'W";
+                            string LatStLong = $"{(int)Lat}ﾟ{LatTime.Minutes}'{LatTime.Seconds}\"N";
+                            string LongStLong = $"{(int)Long}ﾟ{LongTime.Minutes}'{LongTime.Seconds}\"E";
+                            if (Lat < 0)
+                                LatStLong = $"{(int)Lat * -1}ﾟ{LatTime.Minutes * -1}'{LatTime.Seconds * -1}\"S";
+                            if (Long < 0)
+                                LongStLong = $"{(int)Long * -1}ﾟ{LongTime.Minutes * -1}'{LongTime.Seconds * -1}\"W";
+                            string LatStLongJP = $"北緯{(int)Lat}度{LatTime.Minutes}分{LatTime.Seconds}秒";
+                            string LongStLongJP = $"東経{(int)Long}度{LongTime.Minutes}分{LongTime.Seconds}秒";
+                            if (Lat < 0)
+                                LatStLongJP = $"南緯{(int)Lat * -1}度{LatTime.Minutes * -1}分{LatTime.Seconds * -1}秒";
+                            if (Long < 0)
+                                LongStLongJP = $"西経{(int)Long * -1}度{LongTime.Minutes * -1}分{LongTime.Seconds * -1}秒";
+                            if (Settings.Default.Text_LatLonDecimal)
                             {
-                                string USGSFERegion_ = WC.DownloadString($"https://earthquake.usgs.gov/ws/geoserve/regions.json?latitude={LatShort}&longitude={LongShort}&type=fe");
-                                AccessedFE++;
-                                Console.WriteLine($"取得:$\"https://earthquake.usgs.gov/ws/geoserve/regions.json?latitude={LatShort}&longitude={LongShort}&type=fe\"");
-                                JObject USGSFERegion = JObject.Parse(USGSFERegion_);
-                                for (int j = 0; j < (int)USGSFERegion.SelectToken("fe.count"); j++)
+                                LatStLongJP = $"北緯{Lat}度";
+                                LongStLongJP = $"東経{Long}度";
+                                if (Lat < 0)
+                                    LatStLongJP = $"南緯{Lat * -1}度";
+                                if (Long < 0)
+                                    LongStLongJP = $"西経{Long * -1}度";
+                            }
+                            string LatView = LatStShort;
+                            string LongView = LongStShort;
+                            if (Settings.Default.Text_LatLonDecimal)
+                            {
+                                LatView = LatStDecimal;
+                                LongView = LongStDecimal;
+                            }
+                            string Depth = $"深さ:約{(int)Math.Round(USGSQuakeJson[0].Features[i].Geometry.Coordinates[2], MidpointRounding.AwayFromZero)}km";
+                            if (USGSQuakeJson[0].Features[i].Geometry.Coordinates[2] == (int)USGSQuakeJson[0].Features[i].Geometry.Coordinates[2])
+                                Depth = $"(深さ:{USGSQuakeJson[0].Features[i].Geometry.Coordinates[2]}km?)";//整数
+                            string DepthLong = $"深さ:{USGSQuakeJson[0].Features[i].Geometry.Coordinates[2]}km";
+                            if (USGSQuakeJson[0].Features[i].Geometry.Coordinates[2] == (int)USGSQuakeJson[0].Features[i].Geometry.Coordinates[2])
+                                DepthLong = Depth;
+                            string MMI = "-";
+                            if (USGSQuakeJson[0].Features[i].Properties.Mmi != null)
+                                MMI = $"({Convert.ToString(USGSQuakeJson[0].Features[i].Properties.Mmi)})";
+                            string Shingen = "震源の取得に失敗しました。";
+                            string JPNameNotFoundLogText = "";
+                            if (File.Exists("Log\\JPNameNotFound.txt"))
+                                JPNameNotFoundLogText = $"{File.ReadAllText($"Log\\JPNameNotFound.txt")}";
+                            Point HypoPoint = new Point((int)(LatShort * 100), (int)(LongShort * 100));
+                            if (HypoIDs.ContainsKey(HypoPoint))
+                            {
+                                Shingen = "震源:" + HypoName[HypoIDs[HypoPoint]];
+                                Console.WriteLine($"震源キャッシュが存在します({HypoPoint.X},{HypoPoint.Y}->{HypoIDs[HypoPoint]})");
+                            }
+                            else
+                            {
+                                Console.WriteLine($"震源キャッシュが存在しません。({HypoPoint.X},{HypoPoint.Y})ダウンロードします。");
+                                try
                                 {
-                                    if ((int?)USGSFERegion.SelectToken($"fe.features[{j}].properties.number") != null)
-                                        if (HypoName.ContainsKey((int)USGSFERegion.SelectToken($"fe.features[{j}].properties.number")))
-                                        {
-                                            Shingen = "震源:" + HypoName[(int)USGSFERegion.SelectToken($"fe.features[{j}].properties.number")];
-                                            HypoIDs.Add(HypoPoint, (int)USGSFERegion.SelectToken($"fe.features[{j}].properties.number"));
-                                            break;
-                                        }
-                                    if (JPNameNotFoundLogText.Contains($"lat={LatShort},lon={LongShort},num=null,name={USGSFERegion.SelectToken($"fe.features[{j}].properties.name")}"))
-                                        JPNameNotFoundLogText += $"\nlat={LatShort},lon={LongShort},num=null,name={USGSFERegion.SelectToken($"fe.features[{j}].properties.name")}";
+                                    string USGSFERegion_ = WC.DownloadString($"https://earthquake.usgs.gov/ws/geoserve/regions.json?latitude={LatShort}&longitude={LongShort}&type=fe");
+                                    AccessedFE++;
+                                    Console.WriteLine($"取得:$\"https://earthquake.usgs.gov/ws/geoserve/regions.json?latitude={LatShort}&longitude={LongShort}&type=fe\"");
+                                    JObject USGSFERegion = JObject.Parse(USGSFERegion_);
+                                    for (int j = 0; j < (int)USGSFERegion.SelectToken("fe.count"); j++)
+                                    {
+                                        if ((int?)USGSFERegion.SelectToken($"fe.features[{j}].properties.number") != null)
+                                            if (HypoName.ContainsKey((int)USGSFERegion.SelectToken($"fe.features[{j}].properties.number")))
+                                            {
+                                                Shingen = "震源:" + HypoName[(int)USGSFERegion.SelectToken($"fe.features[{j}].properties.number")];
+                                                HypoIDs.Add(HypoPoint, (int)USGSFERegion.SelectToken($"fe.features[{j}].properties.number"));
+                                                break;
+                                            }
+                                        if (JPNameNotFoundLogText.Contains($"lat={LatShort},lon={LongShort},num=null,name={USGSFERegion.SelectToken($"fe.features[{j}].properties.name")}"))
+                                            JPNameNotFoundLogText += $"\nlat={LatShort},lon={LongShort},num=null,name={USGSFERegion.SelectToken($"fe.features[{j}].properties.name")}";
+                                    }
+                                    File.WriteAllText($"Log\\JPNameNotFound.txt", JPNameNotFoundLogText);
                                 }
-                                File.WriteAllText($"Log\\JPNameNotFound.txt", JPNameNotFoundLogText);
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine("震源名取得に失敗しました。" + ex);
+                                }
                             }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine("震源名取得に失敗しました。" + ex);
-                            }
-                        }
-                        string Shingen2 = $"({USGSQuakeJson[0].Features[i].Properties.Place})";
-                        string LogText_ = $"USGS地震情報【{MagType}{Mag}】{Time.Replace("※", "(")})\n{Shingen}{Shingen2}\n{LatView},{LongView}　{Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}　{Arart.Replace("アラート:-", "")}\n{USGSQuakeJson[0].Features[i].Properties.Url}";
-                        string BouyomiText = $"USGS地震情報。マグニチュード{Mag}、震源、{Shingen.Replace(" ", "、").Replace("/", "、").Replace("震源:", "")}、{LatStLongJP}、{LongStLongJP}、深さ{DepthLong.Replace("深さ:", "")}。{$"推定最大改正メルカリ震度階級{MMI.Replace("(", "").Replace(")", "")}".Replace("推定最大改正メルカリ震度階級-", "")}。{Arart.Replace("アラート:-", "")}";
-                        bool NewUpdt = false;
+                            string Shingen2 = $"({USGSQuakeJson[0].Features[i].Properties.Place})";
+                            string LogText_ = $"USGS地震情報【{MagType}{Mag}】{Time.Replace("※", "(")})\n{Shingen}{Shingen2}\n{LatView},{LongView}　{Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}　{Arart.Replace("アラート:-", "")}\n{USGSQuakeJson[0].Features[i].Properties.Url}";
+                            string BouyomiText = $"USGS地震情報。マグニチュード{Mag}、震源、{Shingen.Replace(" ", "、").Replace("/", "、").Replace("震源:", "")}、{LatStLongJP}、{LongStLongJP}、深さ{DepthLong.Replace("深さ:", "")}。{$"推定最大改正メルカリ震度階級{MMI.Replace("(", "").Replace(")", "")}".Replace("推定最大改正メルカリ震度階級-", "")}。{Arart.Replace("アラート:-", "")}";
+                            bool NewUpdt = false;
 
-                        if (!Histories.ContainsKey(ID))//Keyないと探したときエラーになるから別化
-                            NewUpdt = true;
-                        else
-                        {
-                            LogText_ = LogText_.Replace("USGS地震情報", "USGS地震情報(更新)");
-                            BouyomiText = BouyomiText.Replace("USGS地震情報", "USGS地震情報、更新");
-                            if (Histories[ID].Text != LogText_)
+                            if (!Histories.ContainsKey(ID))//Keyないと探したときエラーになるから別化
                                 NewUpdt = true;
-                        }
-                        if (NewUpdt)//更新、初回検知
-                        {
-                            if (Histories.ContainsKey(ID))//更新
+                            else
                             {
+                                LogText_ = LogText_.Replace("USGS地震情報", "USGS地震情報(更新)");
+                                BouyomiText = BouyomiText.Replace("USGS地震情報", "USGS地震情報、更新");
+                                if (Histories[ID].Text != LogText_)
+                                    NewUpdt = true;
+                            }
+                            if (NewUpdt)//更新、初回検知
+                            {
+                                if (Histories.ContainsKey(ID))//更新
+                                {
 
-                                Console.WriteLine($"//////////{ID}更新検知//////////\n{Histories[ID].Text.Replace("\n", "")}->\n{LogText_.Replace("\n", "")}");
-                                Histories[ID] = new History
-                                {
-                                    Text = LogText_,
-                                    UpdateTime = Convert.ToString(USGSQuakeJson[0].Features[i].Properties.Updated),
-                                    EQTime = (long)USGSQuakeJson[0].Features[i].Properties.Time,
-                                    TweetID = Histories[ID].TweetID,
-                                    //地図画像位置　x:+200が中心※左余白-250 -> -50 y:+300が中心
-                                    Display1LocX = (int)(Long + 180) * -5 - 50,//(-180,0,180) + 180 -> (0,180,360)
-                                    Display1LocY = (int)(90 - Lat) * -5 + 300,//90 - (90,0,-90) -> (0,90,180)
-                                    //最新
-                                    Display10 = $"USGS地震情報                                     {Time}",
-                                    Display11 = $"{Shingen}\n{Shingen2}\n{LatView},{LongView}\n{Depth}",
-                                    Display12 = $"{MagType}",
-                                    Display13 = $"{Mag}",//14は変わらない
-                                    Display15 = $"{MMI.Replace("(", "").Replace(")", "")}",
-                                    //履歴
-                                    Display21 = $"{Time} 発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}",
-                                    Display22 = $"{MagType}",
-                                    Display23 = $"{Mag}"
-                                };
-                            }
-                            else//new
-                            {
-                                Console.WriteLine($"//////////{ID}初回検知//////////\n{LogText_.Replace("\n", "")}");
-                                New = true;
-                                Histories.Add(ID, new History
-                                {
-                                    Text = LogText_,
-                                    UpdateTime = Convert.ToString(USGSQuakeJson[0].Features[i].Properties.Updated),
-                                    EQTime = (long)USGSQuakeJson[0].Features[i].Properties.Time,
-                                    TweetID = 0,
-                                    Display1LocX = (int)(Long + 180) * -5 - 50,
-                                    Display1LocY = (int)(90 - Lat) * -5 + 300,
-                                    Display10 = $"USGS地震情報                                     {Time}",
-                                    Display11 = $"{Shingen}\n{Shingen2}\n{LatView},{LongView}\n{Depth}",
-                                    Display12 = $"{MagType}",
-                                    Display13 = $"{Mag}",
-                                    Display15 = $"{MMI.Replace("(", "").Replace(")", "")}",
-                                    Display21 = $"{Time} 発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}",
-                                    Display22 = $"{MagType}",
-                                    Display23 = $"{Mag}"
-                                });
-                            }
-                            LogSave("Log\\M4.5+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText_}", ID);
-                            if (Settings.Default.Socket_Enable)
-                                SendSocket(LogText_);
-                            if (SoundLevel < 1 && Settings.Default.Sound_45_Enable)//SoundLevel上昇+M4.5以上有効
-                                if (New)//初報
-                                    SoundLevel = 2;
-                                else if (Settings.Default.Sound_Updt_Enable)//更新+更新有効
-                                    SoundLevel = 1;
-                            if (USGSQuakeJson[0].Features[i].Properties.Mag >= 6.0)
-                            {
-                                LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText_}", ID);
-                                if (SoundLevel < 3 && Settings.Default.Sound_60_Enable)
-                                    if (New)
-                                        SoundLevel = 4;
-                                    else if (Settings.Default.Sound_Updt_Enable)
-                                        SoundLevel = 3;
-                                if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
-                                {
-                                    LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText_}", ID);
-                                    if (SoundLevel < 5 && Settings.Default.Sound_80_Enable)
-                                        if (New)
-                                            SoundLevel = 6;
-                                        else if (Settings.Default.Sound_Updt_Enable)
-                                            SoundLevel = 5;
+                                    Console.WriteLine($"//////////{ID}更新検知//////////\n{Histories[ID].Text.Replace("\n", "")}->\n{LogText_.Replace("\n", "")}");
+                                    Histories[ID] = new History
+                                    {
+                                        Text = LogText_,
+                                        UpdateTime = Convert.ToString(USGSQuakeJson[0].Features[i].Properties.Updated),
+                                        EQTime = (long)USGSQuakeJson[0].Features[i].Properties.Time,
+                                        TweetID = Histories[ID].TweetID,
+                                        //地図画像位置　x:+200が中心※左余白-250 -> -50 y:+300が中心
+                                        Display1LocX = (int)(Long + 180) * -5 - 50,//(-180,0,180) + 180 -> (0,180,360)
+                                        Display1LocY = (int)(90 - Lat) * -5 + 300,//90 - (90,0,-90) -> (0,90,180)
+                                                                                  //最新
+                                        Display10 = $"USGS地震情報                                     {Time}",
+                                        Display11 = $"{Shingen}\n{Shingen2}\n{LatView},{LongView}\n{Depth}",
+                                        Display12 = $"{MagType}",
+                                        Display13 = $"{Mag}",//14は変わらない
+                                        Display15 = $"{MMI.Replace("(", "").Replace(")", "")}",
+                                        //履歴
+                                        Display21 = $"{Time} 発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}",
+                                        Display22 = $"{MagType}",
+                                        Display23 = $"{Mag}"
+                                    };
                                 }
+                                else//new
+                                {
+                                    Console.WriteLine($"//////////{ID}初回検知//////////\n{LogText_.Replace("\n", "")}");
+                                    New = true;
+                                    Histories.Add(ID, new History
+                                    {
+                                        Text = LogText_,
+                                        UpdateTime = Convert.ToString(USGSQuakeJson[0].Features[i].Properties.Updated),
+                                        EQTime = (long)USGSQuakeJson[0].Features[i].Properties.Time,
+                                        TweetID = 0,
+                                        Display1LocX = (int)(Long + 180) * -5 - 50,
+                                        Display1LocY = (int)(90 - Lat) * -5 + 300,
+                                        Display10 = $"USGS地震情報                                     {Time}",
+                                        Display11 = $"{Shingen}\n{Shingen2}\n{LatView},{LongView}\n{Depth}",
+                                        Display12 = $"{MagType}",
+                                        Display13 = $"{Mag}",
+                                        Display15 = $"{MMI.Replace("(", "").Replace(")", "")}",
+                                        Display21 = $"{Time} 発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}",
+                                        Display22 = $"{MagType}",
+                                        Display23 = $"{Mag}"
+                                    });
+                                }
+                                LogSave("Log\\M4.5+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText_}", ID);
+                                if (Settings.Default.Socket_Enable)
+                                    SendSocket(LogText_);
+                                if (SoundLevel < 1 && Settings.Default.Sound_45_Enable)//SoundLevel上昇+M4.5以上有効
+                                    if (New)//初報
+                                        SoundLevel = 2;
+                                    else if (Settings.Default.Sound_Updt_Enable)//更新+更新有効
+                                        SoundLevel = 1;
+                                if (USGSQuakeJson[0].Features[i].Properties.Mag >= 6.0)
+                                {
+                                    LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText_}", ID);
+                                    if (SoundLevel < 3 && Settings.Default.Sound_60_Enable)
+                                        if (New)
+                                            SoundLevel = 4;
+                                        else if (Settings.Default.Sound_Updt_Enable)
+                                            SoundLevel = 3;
+                                    if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
+                                    {
+                                        LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText_}", ID);
+                                        if (SoundLevel < 5 && Settings.Default.Sound_80_Enable)
+                                            if (New)
+                                                SoundLevel = 6;
+                                            else if (Settings.Default.Sound_Updt_Enable)
+                                                SoundLevel = 5;
+                                    }
+                                }
+                                if (USGSQuakeJson[0].Features[i].Properties.Mag >= Settings.Default.Bouyomichan_LowerMagnitudeLimit || USGSQuakeJson[0].Features[i].Properties.Mmi >= Settings.Default.Bouyomichan_LowerMMILimit)
+                                    if (Settings.Default.Bouyomichan_Enable)
+                                        Bouyomichan(BouyomiText);
+                                if (USGSQuakeJson[0].Features[i].Properties.Mag >= Settings.Default.Tweet_LowerMagnitudeLimit || USGSQuakeJson[0].Features[i].Properties.Mmi >= Settings.Default.Tweet_LowerMMILimit)
+                                    if (Settings.Default.Tweet_Enable)
+                                        Task.Run(() => Tweet(LogText_, ID));
                             }
-                            if (USGSQuakeJson[0].Features[i].Properties.Mag >= Settings.Default.Bouyomichan_LowerMagnitudeLimit || USGSQuakeJson[0].Features[i].Properties.Mmi >= Settings.Default.Bouyomichan_LowerMMILimit)
-                                if (Settings.Default.Bouyomichan_Enable)
-                                    Bouyomichan(BouyomiText);
-                            if (USGSQuakeJson[0].Features[i].Properties.Mag >= Settings.Default.Tweet_LowerMagnitudeLimit || USGSQuakeJson[0].Features[i].Properties.Mmi >= Settings.Default.Tweet_LowerMMILimit)
-                                if (Settings.Default.Tweet_Enable)
-                                    Task.Run(() => Tweet(LogText_, ID));
+                            else
+                                Console.WriteLine($"[{i}] 内容更新なし");
                         }
                         else
-                            Console.WriteLine($"[{i}] 内容更新なし");
+                            Console.WriteLine($"[{i}] 更新なし(更新:{Updated})");
                     }
                     else
-                        Console.WriteLine($"[{i}] 更新なし(更新:{Updated})");
-                }
+                        continue;
                 for (int i = 0; i < 7; i++)//古いやつ削除用
-                {
-                    string ID = USGSQuakeJson[0].Features[i].Id;
-                    if (i == 0)//最新
+                    if (Histories.Count > i)
                     {
-                        USGS0.Text = Histories[ID].Display10;
-                        USGS1.Text = Histories[ID].Display11;
-                        USGS2.Text = Histories[ID].Display12;
-                        USGS3.Text = Histories[ID].Display13;
-                        USGS4.Text = $"改正メルカリ\n　　震度階級:";
-                        USGS5.Text = Histories[ID].Display15;
-                        int LocX = Histories[ID].Display1LocX;
-                        int LocY = Histories[ID].Display1LocY;
-                        int LocY_ = LocY;
-                        if (LocY > 100)//はみ出しなくす
-                            LocY_ = 100;
-                        else if (LocY < -400)
-                            LocY_ = -400;
-                        MainImg.Location = new Point(LocX, LocY_);
-                        Bitmap MainBitmap = new Bitmap(Resources.WorldMap);
-                        Graphics graphics = Graphics.FromImage(MainBitmap);
-                        graphics.DrawImage(Resources.Point, new Rectangle(LocX * -1 + 185, LocY * -1 + 285, 30, 30));//地図左上の画面座標の差
-                        MainImg.Image = MainBitmap;
-                        graphics.Dispose();
-                        if (USGSQuakeJson[0].Features[i].Properties.Mag >= 6.0)
+                        string ID = USGSQuakeJson[0].Features[i].Id;
+                        if (i == 0)//最新
                         {
-                            USGS0.ForeColor = Color.Yellow;
-                            USGS1.ForeColor = Color.Yellow;
-                            USGS2.ForeColor = Color.Yellow;
-                            USGS3.ForeColor = Color.Yellow;
-                            USGS4.ForeColor = Color.Yellow;
-                            USGS5.ForeColor = Color.Yellow;
-                            if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
+                            USGS0.Text = Histories[ID].Display10;
+                            USGS1.Text = Histories[ID].Display11;
+                            USGS2.Text = Histories[ID].Display12;
+                            USGS3.Text = Histories[ID].Display13;
+                            USGS4.Text = $"改正メルカリ\n　　震度階級:";
+                            USGS5.Text = Histories[ID].Display15;
+                            int LocX = Histories[ID].Display1LocX;
+                            int LocY = Histories[ID].Display1LocY;
+                            int LocY_ = LocY;
+                            if (LocY > 100)//はみ出しなくす
+                                LocY_ = 100;
+                            else if (LocY < -400)
+                                LocY_ = -400;
+                            MainImg.Location = new Point(LocX, LocY_);
+                            Bitmap MainBitmap = new Bitmap(Resources.WorldMap);
+                            Graphics graphics = Graphics.FromImage(MainBitmap);
+                            graphics.DrawImage(Resources.Point, new Rectangle(LocX * -1 + 185, LocY * -1 + 285, 30, 30));//地図左上の画面座標の差
+                            MainImg.Image = MainBitmap;
+                            graphics.Dispose();
+                            if (USGSQuakeJson[0].Features[i].Properties.Mag >= 6.0)
                             {
-                                USGS0.ForeColor = Color.Red;
-                                USGS1.ForeColor = Color.Red;
-                                USGS2.ForeColor = Color.Red;
-                                USGS3.ForeColor = Color.Red;
-                                USGS4.ForeColor = Color.Red;
-                                USGS5.ForeColor = Color.Red;
+                                USGS0.ForeColor = Color.Yellow;
+                                USGS1.ForeColor = Color.Yellow;
+                                USGS2.ForeColor = Color.Yellow;
+                                USGS3.ForeColor = Color.Yellow;
+                                USGS4.ForeColor = Color.Yellow;
+                                USGS5.ForeColor = Color.Yellow;
+                                if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
+                                {
+                                    USGS0.ForeColor = Color.Red;
+                                    USGS1.ForeColor = Color.Red;
+                                    USGS2.ForeColor = Color.Red;
+                                    USGS3.ForeColor = Color.Red;
+                                    USGS4.ForeColor = Color.Red;
+                                    USGS5.ForeColor = Color.Red;
+                                }
+                            }
+                            else
+                            {
+                                USGS0.ForeColor = Color.White;
+                                USGS1.ForeColor = Color.White;
+                                USGS2.ForeColor = Color.White;
+                                USGS3.ForeColor = Color.White;
+                                USGS4.ForeColor = Color.White;
+                                USGS5.ForeColor = Color.White;
+                            }
+                            if (USGSQuakeJson[0].Features[i].Properties.Alert == null)
+                            {
+                                USGS0.BackColor = Color.Black;
+                                USGS0.ForeColor = Color.White;
+                            }
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "green")
+                            {
+                                USGS0.BackColor = Color.Green;
+                                USGS0.ForeColor = Color.White;
+                            }
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "yellow")
+                            {
+                                USGS0.BackColor = Color.Yellow;
+                                USGS0.ForeColor = Color.Black;
+                            }
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "orange")
+                            {
+                                USGS0.BackColor = Color.Orange;
+                                USGS0.ForeColor = Color.Black;
+                            }
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "red")
+                            {
+                                USGS0.BackColor = Color.Red;
+                                USGS0.ForeColor = Color.White;
+                            }
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "pending")
+                            {
+                                USGS0.BackColor = Color.DimGray;
+                                USGS0.ForeColor = Color.White;
                             }
                         }
-                        else
+                        else if (i == 1)//履歴
                         {
-                            USGS0.ForeColor = Color.White;
-                            USGS1.ForeColor = Color.White;
-                            USGS2.ForeColor = Color.White;
-                            USGS3.ForeColor = Color.White;
-                            USGS4.ForeColor = Color.White;
-                            USGS5.ForeColor = Color.White;
+                            History11.Text = Histories[ID].Display21;
+                            History12.Text = Histories[ID].Display22;
+                            History13.Text = Histories[ID].Display23;
+                            if (USGSQuakeJson[0].Features[i].Properties.Mag >= 6.0)
+                            {
+                                History11.ForeColor = Color.Yellow;
+                                History12.ForeColor = Color.Yellow;
+                                History13.ForeColor = Color.Yellow;
+                                if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
+                                {
+                                    History11.ForeColor = Color.Red;
+                                    History12.ForeColor = Color.Red;
+                                    History13.ForeColor = Color.Red;
+                                }
+                            }
+                            else
+                            {
+                                History11.ForeColor = Color.White;
+                                History12.ForeColor = Color.White;
+                                History13.ForeColor = Color.White;
+                            }
+                            if (USGSQuakeJson[0].Features[i].Properties.Alert == null)
+                                History10.BackColor = Color.FromArgb(45, 45, 90);
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "green")
+                                History10.BackColor = Color.Green;
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "yellow")
+                                History10.BackColor = Color.Yellow;
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "orange")
+                                History10.BackColor = Color.Orange;
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "red")
+                                History10.BackColor = Color.Red;
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "pending")
+                                History10.BackColor = Color.DimGray;
                         }
-                        if (USGSQuakeJson[0].Features[i].Properties.Alert == null)
+                        else if (i == 2)
                         {
-                            USGS0.BackColor = Color.Black;
-                            USGS0.ForeColor = Color.White;
+                            History21.Text = Histories[ID].Display21;
+                            History22.Text = Histories[ID].Display22;
+                            History23.Text = Histories[ID].Display23;
+                            if (USGSQuakeJson[0].Features[i].Properties.Mag >= 6.0)
+                            {
+                                History21.ForeColor = Color.Yellow;
+                                History22.ForeColor = Color.Yellow;
+                                History23.ForeColor = Color.Yellow;
+                                if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
+                                {
+                                    History21.ForeColor = Color.Red;
+                                    History22.ForeColor = Color.Red;
+                                    History23.ForeColor = Color.Red;
+                                }
+                            }
+                            else
+                            {
+                                History21.ForeColor = Color.White;
+                                History22.ForeColor = Color.White;
+                                History23.ForeColor = Color.White;
+                            }
+                            if (USGSQuakeJson[0].Features[i].Properties.Alert == null)
+                                History20.BackColor = Color.FromArgb(45, 45, 90);
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "green")
+                                History20.BackColor = Color.Green;
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "yellow")
+                                History20.BackColor = Color.Yellow;
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "orange")
+                                History20.BackColor = Color.Orange;
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "red")
+                                History20.BackColor = Color.Red;
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "pending")
+                                History20.BackColor = Color.DimGray;
                         }
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "green")
+                        else if (i == 3)
                         {
-                            USGS0.BackColor = Color.Green;
-                            USGS0.ForeColor = Color.White;
+                            History31.Text = Histories[ID].Display21;
+                            History32.Text = Histories[ID].Display22;
+                            History33.Text = Histories[ID].Display23;
+                            if (USGSQuakeJson[0].Features[i].Properties.Mag >= 6.0)
+                            {
+                                History31.ForeColor = Color.Yellow;
+                                History32.ForeColor = Color.Yellow;
+                                History33.ForeColor = Color.Yellow;
+                                if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
+                                {
+                                    History31.ForeColor = Color.Red;
+                                    History32.ForeColor = Color.Red;
+                                    History33.ForeColor = Color.Red;
+                                }
+                            }
+                            else
+                            {
+                                History31.ForeColor = Color.White;
+                                History32.ForeColor = Color.White;
+                                History33.ForeColor = Color.White;
+                            }
+                            if (USGSQuakeJson[0].Features[i].Properties.Alert == null)
+                                History30.BackColor = Color.FromArgb(45, 45, 90);
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "green")
+                                History30.BackColor = Color.Green;
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "yellow")
+                                History30.BackColor = Color.Yellow;
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "orange")
+                                History30.BackColor = Color.Orange;
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "red")
+                                History30.BackColor = Color.Red;
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "pending")
+                                History30.BackColor = Color.DimGray;
                         }
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "yellow")
+                        else if (i == 4)
                         {
-                            USGS0.BackColor = Color.Yellow;
-                            USGS0.ForeColor = Color.Black;
+                            History41.Text = Histories[ID].Display21;
+                            History42.Text = Histories[ID].Display22;
+                            History43.Text = Histories[ID].Display23;
+                            if (USGSQuakeJson[0].Features[i].Properties.Mag >= 6.0)
+                            {
+                                History41.ForeColor = Color.Yellow;
+                                History42.ForeColor = Color.Yellow;
+                                History43.ForeColor = Color.Yellow;
+                                if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
+                                {
+                                    History41.ForeColor = Color.Red;
+                                    History42.ForeColor = Color.Red;
+                                    History43.ForeColor = Color.Red;
+                                }
+                            }
+                            else
+                            {
+                                History41.ForeColor = Color.White;
+                                History42.ForeColor = Color.White;
+                                History43.ForeColor = Color.White;
+                            }
+                            if (USGSQuakeJson[0].Features[i].Properties.Alert == null)
+                                History40.BackColor = Color.FromArgb(45, 45, 90);
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "green")
+                                History40.BackColor = Color.Green;
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "yellow")
+                                History40.BackColor = Color.Yellow;
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "orange")
+                                History40.BackColor = Color.Orange;
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "red")
+                                History40.BackColor = Color.Red;
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "pending")
+                                History40.BackColor = Color.DimGray;
                         }
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "orange")
+                        else if (i == 5)
                         {
-                            USGS0.BackColor = Color.Orange;
-                            USGS0.ForeColor = Color.Black;
+                            History51.Text = Histories[ID].Display21;
+                            History52.Text = Histories[ID].Display22;
+                            History53.Text = Histories[ID].Display23;
+                            if (USGSQuakeJson[0].Features[i].Properties.Mag >= 6.0)
+                            {
+                                History51.ForeColor = Color.Yellow;
+                                History52.ForeColor = Color.Yellow;
+                                History53.ForeColor = Color.Yellow;
+                                if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
+                                {
+                                    History51.ForeColor = Color.Red;
+                                    History52.ForeColor = Color.Red;
+                                    History53.ForeColor = Color.Red;
+                                }
+                            }
+                            else
+                            {
+                                History51.ForeColor = Color.White;
+                                History52.ForeColor = Color.White;
+                                History53.ForeColor = Color.White;
+                            }
+                            if (USGSQuakeJson[0].Features[i].Properties.Alert == null)
+                                History50.BackColor = Color.FromArgb(45, 45, 90);
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "green")
+                                History50.BackColor = Color.Green;
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "yellow")
+                                History50.BackColor = Color.Yellow;
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "orange")
+                                History50.BackColor = Color.Orange;
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "red")
+                                History50.BackColor = Color.Red;
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "pending")
+                                History50.BackColor = Color.DimGray;
                         }
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "red")
+                        else if (i == 6)
                         {
-                            USGS0.BackColor = Color.Red;
-                            USGS0.ForeColor = Color.White;
+                            History61.Text = Histories[ID].Display21;
+                            History62.Text = Histories[ID].Display22;
+                            History63.Text = Histories[ID].Display23;
+                            if (USGSQuakeJson[0].Features[i].Properties.Mag >= 6.0)
+                            {
+                                History61.ForeColor = Color.Yellow;
+                                History62.ForeColor = Color.Yellow;
+                                History63.ForeColor = Color.Yellow;
+                                if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
+                                {
+                                    History61.ForeColor = Color.Red;
+                                    History62.ForeColor = Color.Red;
+                                    History63.ForeColor = Color.Red;
+                                }
+                            }
+                            else
+                            {
+                                History61.ForeColor = Color.White;
+                                History62.ForeColor = Color.White;
+                                History63.ForeColor = Color.White;
+                            }
+                            if (USGSQuakeJson[0].Features[i].Properties.Alert == null)
+                                History60.BackColor = Color.FromArgb(45, 45, 90);
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "green")
+                                History60.BackColor = Color.Green;
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "yellow")
+                                History60.BackColor = Color.Yellow;
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "orange")
+                                History60.BackColor = Color.Orange;
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "red")
+                                History60.BackColor = Color.Red;
+                            else if (USGSQuakeJson[0].Features[i].Properties.Alert == "pending")
+                                History60.BackColor = Color.DimGray;
                         }
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "pending")
-                        {
-                            USGS0.BackColor = Color.DimGray;
-                            USGS0.ForeColor = Color.White;
-                        }
+                    }
+                    else if (i == 0)//最新
+                    {
+                        USGS0.Text = "USGS地震情報";
+                        USGS1.Text = "";
+                        USGS2.Text = "";
+                        USGS3.Text = "";
+                        USGS4.Text = "";
+                        USGS5.Text = "";
+                        MainImg.Image = null;
+                        USGS0.BackColor = Color.Black;
                     }
                     else if (i == 1)//履歴
                     {
-                        History11.Text = Histories[ID].Display21;
-                        History12.Text = Histories[ID].Display22;
-                        History13.Text = Histories[ID].Display23;
-                        if (USGSQuakeJson[0].Features[i].Properties.Mag >= 6.0)
-                        {
-                            History11.ForeColor = Color.Yellow;
-                            History12.ForeColor = Color.Yellow;
-                            History13.ForeColor = Color.Yellow;
-                            if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
-                            {
-                                History11.ForeColor = Color.Red;
-                                History12.ForeColor = Color.Red;
-                                History13.ForeColor = Color.Red;
-                            }
-                        }
-                        else
-                        {
-                            History11.ForeColor = Color.White;
-                            History12.ForeColor = Color.White;
-                            History13.ForeColor = Color.White;
-                        }
-                        if (USGSQuakeJson[0].Features[i].Properties.Alert == null)
-                            History10.BackColor = Color.FromArgb(45, 45, 90);
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "green")
-                            History10.BackColor = Color.Green;
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "yellow")
-                            History10.BackColor = Color.Yellow;
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "orange")
-                            History10.BackColor = Color.Orange;
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "red")
-                            History10.BackColor = Color.Red;
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "pending")
-                            History10.BackColor = Color.DimGray;
+                        History11.Text = "";
+                        History12.Text = "";
+                        History13.Text = "";
+                        History10.BackColor = Color.FromArgb(45, 45, 90);
                     }
                     else if (i == 2)
                     {
-                        History21.Text = Histories[ID].Display21;
-                        History22.Text = Histories[ID].Display22;
-                        History23.Text = Histories[ID].Display23;
-                        if (USGSQuakeJson[0].Features[i].Properties.Mag >= 6.0)
-                        {
-                            History21.ForeColor = Color.Yellow;
-                            History22.ForeColor = Color.Yellow;
-                            History23.ForeColor = Color.Yellow;
-                            if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
-                            {
-                                History21.ForeColor = Color.Red;
-                                History22.ForeColor = Color.Red;
-                                History23.ForeColor = Color.Red;
-                            }
-                        }
-                        else
-                        {
-                            History21.ForeColor = Color.White;
-                            History22.ForeColor = Color.White;
-                            History23.ForeColor = Color.White;
-                        }
-                        if (USGSQuakeJson[0].Features[i].Properties.Alert == null)
-                            History20.BackColor = Color.FromArgb(45, 45, 90);
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "green")
-                            History20.BackColor = Color.Green;
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "yellow")
-                            History20.BackColor = Color.Yellow;
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "orange")
-                            History20.BackColor = Color.Orange;
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "red")
-                            History20.BackColor = Color.Red;
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "pending")
-                            History20.BackColor = Color.DimGray;
+                        History21.Text = "";
+                        History22.Text = "";
+                        History23.Text = "";
+                        History20.BackColor = Color.FromArgb(45, 45, 90);
                     }
                     else if (i == 3)
                     {
-                        History31.Text = Histories[ID].Display21;
-                        History32.Text = Histories[ID].Display22;
-                        History33.Text = Histories[ID].Display23;
-                        if (USGSQuakeJson[0].Features[i].Properties.Mag >= 6.0)
-                        {
-                            History31.ForeColor = Color.Yellow;
-                            History32.ForeColor = Color.Yellow;
-                            History33.ForeColor = Color.Yellow;
-                            if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
-                            {
-                                History31.ForeColor = Color.Red;
-                                History32.ForeColor = Color.Red;
-                                History33.ForeColor = Color.Red;
-                            }
-                        }
-                        else
-                        {
-                            History31.ForeColor = Color.White;
-                            History32.ForeColor = Color.White;
-                            History33.ForeColor = Color.White;
-                        }
-                        if (USGSQuakeJson[0].Features[i].Properties.Alert == null)
-                            History30.BackColor = Color.FromArgb(45, 45, 90);
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "green")
-                            History30.BackColor = Color.Green;
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "yellow")
-                            History30.BackColor = Color.Yellow;
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "orange")
-                            History30.BackColor = Color.Orange;
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "red")
-                            History30.BackColor = Color.Red;
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "pending")
-                            History30.BackColor = Color.DimGray;
+                        History31.Text = "";
+                        History32.Text = "";
+                        History33.Text = "";
+                        History30.BackColor = Color.FromArgb(45, 45, 90);
                     }
                     else if (i == 4)
                     {
-                        History41.Text = Histories[ID].Display21;
-                        History42.Text = Histories[ID].Display22;
-                        History43.Text = Histories[ID].Display23;
-                        if (USGSQuakeJson[0].Features[i].Properties.Mag >= 6.0)
-                        {
-                            History41.ForeColor = Color.Yellow;
-                            History42.ForeColor = Color.Yellow;
-                            History43.ForeColor = Color.Yellow;
-                            if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
-                            {
-                                History41.ForeColor = Color.Red;
-                                History42.ForeColor = Color.Red;
-                                History43.ForeColor = Color.Red;
-                            }
-                        }
-                        else
-                        {
-                            History41.ForeColor = Color.White;
-                            History42.ForeColor = Color.White;
-                            History43.ForeColor = Color.White;
-                        }
-                        if (USGSQuakeJson[0].Features[i].Properties.Alert == null)
-                            History40.BackColor = Color.FromArgb(45, 45, 90);
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "green")
-                            History40.BackColor = Color.Green;
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "yellow")
-                            History40.BackColor = Color.Yellow;
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "orange")
-                            History40.BackColor = Color.Orange;
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "red")
-                            History40.BackColor = Color.Red;
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "pending")
-                            History40.BackColor = Color.DimGray;
+                        History41.Text = "";
+                        History42.Text = "";
+                        History43.Text = "";
+                        History40.BackColor = Color.FromArgb(45, 45, 90);
                     }
                     else if (i == 5)
                     {
-                        History51.Text = Histories[ID].Display21;
-                        History52.Text = Histories[ID].Display22;
-                        History53.Text = Histories[ID].Display23;
-                        if (USGSQuakeJson[0].Features[i].Properties.Mag >= 6.0)
-                        {
-                            History51.ForeColor = Color.Yellow;
-                            History52.ForeColor = Color.Yellow;
-                            History53.ForeColor = Color.Yellow;
-                            if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
-                            {
-                                History51.ForeColor = Color.Red;
-                                History52.ForeColor = Color.Red;
-                                History53.ForeColor = Color.Red;
-                            }
-                        }
-                        else
-                        {
-                            History51.ForeColor = Color.White;
-                            History52.ForeColor = Color.White;
-                            History53.ForeColor = Color.White;
-                        }
-                        if (USGSQuakeJson[0].Features[i].Properties.Alert == null)
-                            History50.BackColor = Color.FromArgb(45, 45, 90);
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "green")
-                            History50.BackColor = Color.Green;
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "yellow")
-                            History50.BackColor = Color.Yellow;
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "orange")
-                            History50.BackColor = Color.Orange;
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "red")
-                            History50.BackColor = Color.Red;
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "pending")
-                            History50.BackColor = Color.DimGray;
+                        History51.Text = "";
+                        History52.Text = "";
+                        History53.Text = "";
+                        History50.BackColor = Color.FromArgb(45, 45, 90);
                     }
                     else if (i == 6)
                     {
-                        History61.Text = Histories[ID].Display21;
-                        History62.Text = Histories[ID].Display22;
-                        History63.Text = Histories[ID].Display23;
-                        if (USGSQuakeJson[0].Features[i].Properties.Mag >= 6.0)
-                        {
-                            History61.ForeColor = Color.Yellow;
-                            History62.ForeColor = Color.Yellow;
-                            History63.ForeColor = Color.Yellow;
-                            if (USGSQuakeJson[0].Features[i].Properties.Mag >= 8.0)
-                            {
-                                History61.ForeColor = Color.Red;
-                                History62.ForeColor = Color.Red;
-                                History63.ForeColor = Color.Red;
-                            }
-                        }
-                        else
-                        {
-                            History61.ForeColor = Color.White;
-                            History62.ForeColor = Color.White;
-                            History63.ForeColor = Color.White;
-                        }
-                        if (USGSQuakeJson[0].Features[i].Properties.Alert == null)
-                            History60.BackColor = Color.FromArgb(45, 45, 90);
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "green")
-                            History60.BackColor = Color.Green;
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "yellow")
-                            History60.BackColor = Color.Yellow;
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "orange")
-                            History60.BackColor = Color.Orange;
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "red")
-                            History60.BackColor = Color.Red;
-                        else if (USGSQuakeJson[0].Features[i].Properties.Alert == "pending")
-                            History60.BackColor = Color.DimGray;
+                        History61.Text = "";
+                        History62.Text = "";
+                        History63.Text = "";
+                        History60.BackColor = Color.FromArgb(45, 45, 90);
                     }
-                }
                 USGS6.Text = $"{UpdateTime_}更新\n{Latestchecktime}取得\n地図データ:NationalEarth";
                 USGS6.Location = new Point(400 - USGS6.Width, 500 - USGS6.Height);
                 /*//旧処理
