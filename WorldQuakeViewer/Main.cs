@@ -30,6 +30,7 @@ namespace WorldQuakeViewer
         public string LatestURL = "";
         public static bool NoFirst = false;//最初はツイートとかしない
         public string URL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson";
+        public string ExeLog = "";
         public Dictionary<string, History> Histories = new Dictionary<string, History>();//EQID,Data
         public Dictionary<Point, int> HypoIDs = new Dictionary<Point, int>();//Location,HypoID
         public Font F9 = null;
@@ -43,8 +44,9 @@ namespace WorldQuakeViewer
         {
             InitializeComponent();
         }
-        private void MainForm_Load(object sender, EventArgs e)
+        private void MainForm_Load(object sender, EventArgs e)//ExeLog += $"{DateTime.Now:HH:mm:ss.ffff} \n";
         {
+            ExeLog += $"{DateTime.Now:HH:mm:ss.ffff} 起動処理開始\n";
             StartTime = DateTime.Now;
             HistoryBack.Text = $"履歴                                                                    Version:{Version}";
             ErrorText.Text = "フォント読み込み中…";
@@ -56,7 +58,9 @@ namespace WorldQuakeViewer
                         Directory.CreateDirectory("Font");
                     Process.Start("https://koruri.github.io/");
                     Process.Start("explorer.exe", "Font");
-                    DialogResult Result = MessageBox.Show($"フォントが見つかりません。ダウンロードサイトとFontフォルダを開きます。\"Koruri-Regular.ttf\"をFontフォルダにコピーしてください。", "WQV_FontCheck", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation);
+                    DialogResult Result = MessageBox.Show($"フォントファイルが見つかりません。ダウンロードサイトとFontフォルダを開きます。\"Koruri-Regular.ttf\"をFontフォルダにコピーしてください。", "WQV_FontCheck", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Exclamation);
+                    if (Result == DialogResult.Ignore)
+                        break;
                     if (Result != DialogResult.Retry)
                     {
                         Application.Exit();
@@ -64,6 +68,7 @@ namespace WorldQuakeViewer
                     }
                     Thread.Sleep(1000);//念のため
                 }
+            ExeLog += $"{DateTime.Now:HH:mm:ss.ffff} フォントファイルOK\n";
                 PrivateFontCollection pfc = new PrivateFontCollection();
                 pfc.AddFontFile("Font\\Koruri-Regular.ttf");
                 /*//なぜかエラー出るからフォント必須に
@@ -141,12 +146,13 @@ namespace WorldQuakeViewer
                             FontOK = true;
                         ifc.Dispose();
                     }
+                    ExeLog += $"{DateTime.Now:HH:mm:ss.ffff} フォントOK\n";
                 }
                 pfc.Dispose();
             }
             catch
             {
-
+                ExeLog += $"{DateTime.Now:HH:mm:ss.ffff} フォント確認に失敗\n";
             }
             ErrorText.Text = "設定読み込み中…";
             Configuration Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
@@ -190,13 +196,7 @@ namespace WorldQuakeViewer
                 DateTimeOffset Update_ = DateTimeOffset.FromUnixTimeMilliseconds(USGSQuakeJson[0].Metadata.Generated).ToLocalTime();
                 string UpdateTime_ = $"{Update_:yyyy/MM/dd HH:mm:ss}";
                 int SoundLevel = 0;//音声判別用 初報ほど、M大きいほど高い
-                List<long> EQTimeList = new List<long>();
-                for (int i = 0; i < 10; i++)//念のため10
-                    if (USGSQuakeJson[0].Features.Count > i)
-                        EQTimeList.Add((long)USGSQuakeJson[0].Features[i].Properties.Time);//古いやつ削除用
-                    else
-                        continue;
-                for (int i = 9; i >= 0; i--)//古い順に
+                for (int i = 6; i >= 0; i--)//古い順に
                     if (USGSQuakeJson[0].Features.Count > i)
                     {
                         bool New = false;//音声判別用
@@ -801,10 +801,12 @@ namespace WorldQuakeViewer
                 */
                 //新処理
                 Console.WriteLine($"ログ保持数:{Histories.Count} - ");
+                History[] Cache = Histories.Values.ToArray();
                 for (int i = 0; i < Histories.Count; i++)
                 {
-                    Console.WriteLine(Histories.Values.ToArray()[i].Text.Replace("\n", ""));
-                    if (!EQTimeList.Contains(Histories.Values.ToArray()[i].EQTime))
+                    TimeSpan Timed = DateTimeOffset.UtcNow- DateTimeOffset.FromUnixTimeMilliseconds(Convert.ToInt64(Cache[i].UpdateTime));
+                    Console.WriteLine(Cache[i].Text.Replace("\n", ""));
+                    if (Timed>TimeSpan.FromDays(1))
                     {
                         Console.WriteLine($"{Histories.Keys.ToArray()[i]}を削除しました。");
                         Histories.Remove(Histories.Keys.ToArray()[i]);
@@ -1143,6 +1145,12 @@ namespace WorldQuakeViewer
         private void RCEarlyEst_Click(object sender, EventArgs e)
         {
             Process.Start("http://early-est.rm.ingv.it/warning.html");
+        }
+
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            ExeLog += $"{DateTime.Now:HH:mm:ss.ffff} 実行終了\n";
+
         }
     }
 }
