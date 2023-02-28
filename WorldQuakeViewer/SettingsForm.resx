@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Tab_Info_Text.Text" xml:space="preserve">
-    <value>情報:USGS M4.5+ Earthquakes Feed
+    <value>情報:USGS M4.5+ Earthquakes Feed(week)
 
 震源コード(FE領域識別番号)取得:USGS Geoserve Regions Endpoint
 

@@ -30,7 +30,7 @@ namespace WorldQuakeViewer
         public string LatestURL = "";
         public static bool NoFirst = false;//最初はツイートとかしない
         public string URL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson";
-        public string ExeLog = "";
+        public string ExeLogs = "";
         public Dictionary<string, History> Histories = new Dictionary<string, History>();//EQID,Data
         public Dictionary<Point, int> HypoIDs = new Dictionary<Point, int>();//Location,HypoID
         public Font F9 = null;
@@ -44,9 +44,9 @@ namespace WorldQuakeViewer
         {
             InitializeComponent();
         }
-        private void MainForm_Load(object sender, EventArgs e)//ExeLog += $"{DateTime.Now:HH:mm:ss.ffff} \n";
+        private void MainForm_Load(object sender, EventArgs e)//ExeLog($"");
         {
-            ExeLog += $"{DateTime.Now:HH:mm:ss.ffff} 起動処理開始\n";
+            ExeLog($"起動処理開始");
             StartTime = DateTime.Now;
             HistoryBack.Text = $"履歴                                                                    Version:{Version}";
             ErrorText.Text = "フォント読み込み中…";
@@ -68,7 +68,7 @@ namespace WorldQuakeViewer
                     }
                     Thread.Sleep(1000);//念のため
                 }
-            ExeLog += $"{DateTime.Now:HH:mm:ss.ffff} フォントファイルOK\n";
+                ExeLog($"フォントファイルOK");
                 PrivateFontCollection pfc = new PrivateFontCollection();
                 pfc.AddFontFile("Font\\Koruri-Regular.ttf");
                 /*//なぜかエラー出るからフォント必須に
@@ -79,16 +79,16 @@ namespace WorldQuakeViewer
                 F12 = new Font(pfc.Families[0], 12F);
                 F20 = new Font(pfc.Families[0], 20F);
                 F22 = new Font(pfc.Families[0], 22F);
-                Console.WriteLine("F9  :" + F9);
-                Console.WriteLine("F9_5:" + F9_5);
-                Console.WriteLine("F10 :" + F10);
-                Console.WriteLine("F11 :" + F11);
-                Console.WriteLine("F12 :" + F12);
-                Console.WriteLine("F20 :" + F20);
-                Console.WriteLine("F22 :" + F22);
+                ExeLog("F9  :" + F9);
+                ExeLog("F9_5:" + F9_5);
+                ExeLog("F10 :" + F10);
+                ExeLog("F11 :" + F11);
+                ExeLog("F12 :" + F12);
+                ExeLog("F20 :" + F20);
+                ExeLog("F22 :" + F22);
                 if (F9 !=  F22)//おかしいときname="使用されたパラメーターが有効ではありません。"になるため　なぜかおかしくなくてもエラー出る
                 {
-                    Console.WriteLine("フォントの読み込みに成功");
+                    ExeLog("フォントの読み込みに成功");
                     Font = F10;
                     USGS0.Font = F9;
                     USGS1.Font = F11;
@@ -120,40 +120,29 @@ namespace WorldQuakeViewer
                 }
                 else*/
                 {
-                    bool FontOK = false;
-                    while (FontOK == false)
+                    InstalledFontCollection ifc = new InstalledFontCollection();
+                    while (ifc.Families.Contains(pfc.Families[0]))
                     {
-                        InstalledFontCollection ifc = new InstalledFontCollection();
-                        foreach (FontFamily f in ifc.Families)
-                            if (f.Name == pfc.Families[0].Name)
-                            {
-                                FontOK = true;
-                                break;
-                            }
-                        Console.WriteLine(pfc.Families[0]);
-                        if (FontOK == false)
+                        Process.Start("fontview.exe", "Font\\Koruri-Regular.ttf");
+                        DialogResult Result = MessageBox.Show($"フォントがインストールされていません。Font\\Koruri-Regular.ttfをインストールしてください。", "WQV_FontCheck", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation);
+                        if (Result != DialogResult.Retry)
                         {
-                            Process.Start("fontview.exe", "Font\\Koruri-Regular.ttf");
-                            DialogResult Result = MessageBox.Show($"フォントがインストールされていません。Font\\Koruri-Regular.ttfをインストールしてください。", "WQV_FontCheck", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation);
-                            if (Result != DialogResult.Retry)
-                            {
-                                Application.Exit();
-                                break;//これないとプロセス無限起動される
-                            }
-                            Thread.Sleep(1000);//念のため
+                            Application.Exit();
+                            break;//これないとプロセス無限起動される
                         }
-                        else
-                            FontOK = true;
-                        ifc.Dispose();
+                        Thread.Sleep(1000);//念のため
+                        ifc = new InstalledFontCollection();
                     }
-                    ExeLog += $"{DateTime.Now:HH:mm:ss.ffff} フォントOK\n";
+                    ifc.Dispose();
+                    ExeLog($"フォントOK");
                 }
                 pfc.Dispose();
             }
             catch
             {
-                ExeLog += $"{DateTime.Now:HH:mm:ss.ffff} フォント確認に失敗\n";
+                ExeLog($"フォント確認に失敗");
             }
+            ExeLog($"設定読み込み開始");
             ErrorText.Text = "設定読み込み中…";
             Configuration Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
             if (File.Exists("UserSetting.xml"))//AppDataに保存
@@ -161,46 +150,50 @@ namespace WorldQuakeViewer
                 if (!Directory.Exists(Config.FilePath.Replace("\\user.config", "")))//実質更新時
                     Directory.CreateDirectory(Config.FilePath.Replace("\\user.config", ""));
                 File.Copy("UserSetting.xml", Config.FilePath, true);
+                ExeLog($"設定ファイルをappdataにコピー");
             }
             SettingReload();
             ErrorText.Text = "設定の読み込みが完了しました。";
+            ExeLog($"設定読み込み完了");
             JsonTimer.Enabled = true;
         }
         private void JsonTimer_Tick(object sender, EventArgs e)//整理しろ
         {
-            Console.WriteLine("///////////開始//////////");
             JsonTimer.Interval = 30000;
             try
             {
                 ErrorText.Text = "取得中…";
+                ExeLog($"//////////取得開始//////////");
                 WebClient WC = new WebClient
                 {
                     Encoding = Encoding.UTF8
                 };//↓？　暫定対処したやつかも
                 string USGSQuakeJson_ = "[" + WC.DownloadString(URL) + "]";
+                ExeLog($"取得完了:{URL}");
                 AccessedUSGS++;
-                Console.WriteLine($"取得:{URL}");
                 string Latestchecktime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
                 double StartTime = Convert.ToDouble(DateTime.Now.ToString("yyyyMMddHHmmss.ffff"));
                 List<USGSQuake> USGSQuakeJson = JsonConvert.DeserializeObject<List<USGSQuake>>(USGSQuakeJson_);
                 if (USGSQuakeJson[0].Features.Count < 7)
                 {
+                    ExeLog($"データが不足 weekからの取得に変更");
                     URL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson";
                     USGSQuakeJson_ = "[" + WC.DownloadString(URL) + "]";
+                    ExeLog($"取得完了:{URL}");
                     AccessedUSGS++;
-                    Console.WriteLine($"取得:{URL}");
                     Latestchecktime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
                     USGSQuakeJson = JsonConvert.DeserializeObject<List<USGSQuake>>(USGSQuakeJson_);
                 }
-                Console.WriteLine("各履歴処理開始");
                 DateTimeOffset Update_ = DateTimeOffset.FromUnixTimeMilliseconds(USGSQuakeJson[0].Metadata.Generated).ToLocalTime();
                 string UpdateTime_ = $"{Update_:yyyy/MM/dd HH:mm:ss}";
                 int SoundLevel = 0;//音声判別用 初報ほど、M大きいほど高い
+                ExeLog($"各履歴処理開始");
                 for (int i = 6; i >= 0; i--)//古い順に
                     if (USGSQuakeJson[0].Features.Count > i)
                     {
                         bool New = false;//音声判別用
                         string ID = USGSQuakeJson[0].Features[i].Id;
+                        ExeLog($"処理[{i}]:{ID}");
                         DateTimeOffset Update = DateTimeOffset.FromUnixTimeMilliseconds((long)USGSQuakeJson[0].Features[i].Properties.Updated).ToLocalTime();
                         string UpdateTime = $"{Update:yyyy/MM/dd HH:mm:ss}";
                         string Updated = "null";
@@ -208,7 +201,7 @@ namespace WorldQuakeViewer
                             Updated = Histories[ID].UpdateTime;
                         if ($"{USGSQuakeJson[0].Features[i].Properties.Updated}" != Updated)
                         {
-                            Console.WriteLine($"[{i}] 更新時刻変化検知(s->{USGSQuakeJson[0].Features[i].Properties.Updated})");
+                            ExeLog($"[{i}] 更新時刻変化検知(s->{USGSQuakeJson[0].Features[i].Properties.Updated})");
                             string MaxInt = "-";
                             if (USGSQuakeJson[0].Features[i].Properties.Mmi < 1.5)
                                 MaxInt = "I";
@@ -303,16 +296,16 @@ namespace WorldQuakeViewer
                             if (HypoIDs.ContainsKey(HypoPoint))
                             {
                                 Shingen = "震源:" + HypoName[HypoIDs[HypoPoint]];
-                                Console.WriteLine($"震源キャッシュが存在します({HypoPoint.X},{HypoPoint.Y}->{HypoIDs[HypoPoint]})");
+                                ExeLog($"震源キャッシュが存在します({HypoPoint.X},{HypoPoint.Y}->{HypoIDs[HypoPoint]})");
                             }
                             else
                             {
-                                Console.WriteLine($"震源キャッシュが存在しません。({HypoPoint.X},{HypoPoint.Y})ダウンロードします。");
+                                ExeLog($"震源キャッシュが存在しません。({HypoPoint.X},{HypoPoint.Y})ダウンロードします。");
                                 try
                                 {
                                     string USGSFERegion_ = WC.DownloadString($"https://earthquake.usgs.gov/ws/geoserve/regions.json?latitude={LatShort}&longitude={LongShort}&type=fe");
                                     AccessedFE++;
-                                    Console.WriteLine($"取得:$\"https://earthquake.usgs.gov/ws/geoserve/regions.json?latitude={LatShort}&longitude={LongShort}&type=fe\"");
+                                    ExeLog($"取得:$\"https://earthquake.usgs.gov/ws/geoserve/regions.json?latitude={LatShort}&longitude={LongShort}&type=fe\"");
                                     JObject USGSFERegion = JObject.Parse(USGSFERegion_);
                                     for (int j = 0; j < (int)USGSFERegion.SelectToken("fe.count"); j++)
                                     {
@@ -330,7 +323,7 @@ namespace WorldQuakeViewer
                                 }
                                 catch (Exception ex)
                                 {
-                                    Console.WriteLine("震源名取得に失敗しました。" + ex);
+                                    ExeLog("震源名取得に失敗しました。" + ex);
                                 }
                             }
                             string Shingen2 = $"({USGSQuakeJson[0].Features[i].Properties.Place})";
@@ -352,7 +345,7 @@ namespace WorldQuakeViewer
                                 if (Histories.ContainsKey(ID))//更新
                                 {
 
-                                    Console.WriteLine($"//////////{ID}更新検知//////////\n{Histories[ID].Text.Replace("\n", "")}->\n{LogText_.Replace("\n", "")}");
+                                    ExeLog($"//////////{ID}更新検知//////////\n{Histories[ID].Text.Replace("\n", "")}->\n{LogText_.Replace("\n", "")}");
                                     Histories[ID] = new History
                                     {
                                         Text = LogText_,
@@ -369,14 +362,14 @@ namespace WorldQuakeViewer
                                         Display13 = $"{Mag}",//14は変わらない
                                         Display15 = $"{MMI.Replace("(", "").Replace(")", "")}",
                                         //履歴
-                                        Display21 = $"{Time} 発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}",
+                                        Display21 = $"{Time} 発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {DepthLong}\n推定最大改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}",
                                         Display22 = $"{MagType}",
                                         Display23 = $"{Mag}"
                                     };
                                 }
                                 else//new
                                 {
-                                    Console.WriteLine($"//////////{ID}初回検知//////////\n{LogText_.Replace("\n", "")}");
+                                    ExeLog($"//////////{ID}初回検知//////////\n{LogText_.Replace("\n", "")}");
                                     New = true;
                                     Histories.Add(ID, new History
                                     {
@@ -391,7 +384,7 @@ namespace WorldQuakeViewer
                                         Display12 = $"{MagType}",
                                         Display13 = $"{Mag}",
                                         Display15 = $"{MMI.Replace("(", "").Replace(")", "")}",
-                                        Display21 = $"{Time} 発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}",
+                                        Display21 = $"{Time} 発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {DepthLong}\n推定最大改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}",
                                         Display22 = $"{MagType}",
                                         Display23 = $"{Mag}"
                                     });
@@ -430,10 +423,10 @@ namespace WorldQuakeViewer
                                         Task.Run(() => Tweet(LogText_, ID));
                             }
                             else
-                                Console.WriteLine($"[{i}] 内容更新なし");
+                                ExeLog($"[{i}] 内容更新なし");
                         }
                         else
-                            Console.WriteLine($"[{i}] 更新なし(更新:{Updated})");
+                            ExeLog($"[{i}] 更新なし(更新:{Updated})");
                     }
                     else
                         continue;
@@ -795,24 +788,24 @@ namespace WorldQuakeViewer
                 /*//旧処理
                 if (Histories.Count > 7)//古いもの削除
                 {
-                Console.WriteLine($"{Histories.First().Key}を削除しました。");
+                ExeLog($"{Histories.First().Key}を削除しました。");
                 Histories.Remove(Histories.First().Key);
                 }
                 */
                 //新処理
-                Console.WriteLine($"ログ保持数:{Histories.Count} - ");
+                ExeLog($"ログ保持数:{Histories.Count} - ");
                 History[] Cache = Histories.Values.ToArray();
                 for (int i = 0; i < Histories.Count; i++)
                 {
-                    TimeSpan Timed = DateTimeOffset.UtcNow- DateTimeOffset.FromUnixTimeMilliseconds(Convert.ToInt64(Cache[i].UpdateTime));
-                    Console.WriteLine(Cache[i].Text.Replace("\n", ""));
-                    if (Timed>TimeSpan.FromDays(1))
+                    TimeSpan Timed = DateTimeOffset.UtcNow - DateTimeOffset.FromUnixTimeMilliseconds(Convert.ToInt64(Cache[i].UpdateTime));
+                    ExeLog(Cache[i].Text.Replace("\n", ""));
+                    if (Timed > TimeSpan.FromDays(1))
                     {
-                        Console.WriteLine($"{Histories.Keys.ToArray()[i]}を削除しました。");
+                        ExeLog($"{Histories.Keys.ToArray()[i]}を削除しました。");
                         Histories.Remove(Histories.Keys.ToArray()[i]);
                     }
                 }
-                Console.WriteLine($"ログ保持数:{Histories.Count}");
+                ExeLog($"ログ保持数:{Histories.Count}");
                 if (SoundLevel == 1)
                     Sound("M45u.wav");
                 else if (SoundLevel == 2)
@@ -837,7 +830,7 @@ namespace WorldQuakeViewer
             }
             ErrorText.Text = ErrorText.Text.Replace("取得中…", "");
             NoFirst = true;
-            Console.WriteLine("処理終了");
+            ExeLog("処理終了");
             /*//フォント変更がうまくいかない
             if (ErrorText.Font != F12)
             {
@@ -1046,6 +1039,17 @@ namespace WorldQuakeViewer
                 }
         }
         /// <summary>
+        /// 実行ログを保存・表示します。
+        /// </summary>
+        /// <param name="Text">保存するテキスト。</param>
+        /// <remarks>タイムスタンプは自動で追加されます。</remarks>
+        public void ExeLog(string Text)
+        {
+            ExeLogs += $"{DateTime.Now:HH:mm:ss.ffff} {Text}\n";
+            Console.WriteLine(Text);
+
+        }
+        /// <summary>
         /// 設定を読み込みます。
         /// </summary>
         /// <remarks>即時サイズ変更を行います。</remarks>
@@ -1149,7 +1153,7 @@ namespace WorldQuakeViewer
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            ExeLog += $"{DateTime.Now:HH:mm:ss.ffff} 実行終了\n";
+            ExeLog($"実行終了");
 
         }
     }

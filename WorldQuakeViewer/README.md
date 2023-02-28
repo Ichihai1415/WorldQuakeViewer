@@ -8,13 +8,16 @@
 
 [MITライセンス](https://opensource.org/licenses/mit-license.php)で公開しています。確認してください。
 
-バグ、予定等は[Issue](https://github.com/Ichihai1415/WorldQuakeViewer/issues)を参照してください。
+バグ、予定等は[Issue](https://github.com/Ichihai1415/WorldQuakeViewer/issues)を確認してください。
 
 [詳細(現在制作中)](https://Ichihai1415.github.io/programs/released/WQV/)
 
 ---
 ---
 # 更新履歴
+
+## v1.1.0
+feedの取得先をweekに(更新確認が1週間)
 
 ## v1.0.4
 2023/01/02
