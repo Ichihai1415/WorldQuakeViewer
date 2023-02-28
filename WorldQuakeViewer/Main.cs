@@ -1047,7 +1047,6 @@ namespace WorldQuakeViewer
         {
             ExeLogs += $"{DateTime.Now:HH:mm:ss.ffff} {Text}\n";
             Console.WriteLine(Text);
-
         }
         /// <summary>
         /// 設定を読み込みます。
@@ -1061,11 +1060,11 @@ namespace WorldQuakeViewer
                 File.Copy(Config.FilePath, "UserSetting.xml", true);
             if (Settings.Default.Display_HideHistory)
                 if (Settings.Default.Display_HideHistoryMap)
-                    Size = new Size(416, 139);//400,100
+                    ClientSize = new Size(400, 100);
                 else
-                    Size = new Size(416, 539);//400,500
+                    ClientSize = new Size(400, 500);
             else
-                Size = new Size(816, 539);//800,500
+                ClientSize = new Size(800, 500);
         }
         public static SoundPlayer Player = null;
         /// <summary>
