@@ -45,7 +45,7 @@
             this.RCMapEWSC = new System.Windows.Forms.ToolStripMenuItem();
             this.RCTsunamiGov = new System.Windows.Forms.ToolStripMenuItem();
             this.RC1Bar2 = new System.Windows.Forms.ToolStripSeparator();
-            this.RC1PSInfo = new System.Windows.Forms.ToolStripMenuItem();
+            this.RC1DevInfo = new System.Windows.Forms.ToolStripMenuItem();
             this.RCTwitter = new System.Windows.Forms.ToolStripMenuItem();
             this.RCGitHub = new System.Windows.Forms.ToolStripMenuItem();
             this.RCiInfoPage = new System.Windows.Forms.ToolStripMenuItem();
@@ -85,6 +85,7 @@
             this.History43 = new System.Windows.Forms.Label();
             this.History53 = new System.Windows.Forms.Label();
             this.History63 = new System.Windows.Forms.Label();
+            this.RC1CacheClear = new System.Windows.Forms.ToolStripMenuItem();
             this.RightClick.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MainImg)).BeginInit();
             this.SuspendLayout();
@@ -137,16 +138,17 @@
             // 
             this.RightClick.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.RightClick.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.RC1Setting,
+            this.RC1CacheClear,
             this.RC1Bar1,
-            this.RC1Sites,
+            this.RC1Setting,
             this.RC1Bar2,
-            this.RC1PSInfo,
+            this.RC1Sites,
+            this.RC1DevInfo,
             this.RC1Bar3,
             this.RC1RebootExit});
             this.RightClick.Name = "RightClick";
             this.RightClick.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.RightClick.Size = new System.Drawing.Size(243, 118);
+            this.RightClick.Size = new System.Drawing.Size(243, 170);
             this.RightClick.TabStop = true;
             this.RightClick.Text = "メニュー";
             // 
@@ -216,35 +218,35 @@
             this.RC1Bar2.Name = "RC1Bar2";
             this.RC1Bar2.Size = new System.Drawing.Size(239, 6);
             // 
-            // RC1PSInfo
+            // RC1DevInfo
             // 
-            this.RC1PSInfo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.RC1PSInfo.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.RC1DevInfo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.RC1DevInfo.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.RCTwitter,
             this.RCGitHub,
             this.RCiInfoPage});
-            this.RC1PSInfo.Name = "RC1PSInfo";
-            this.RC1PSInfo.Size = new System.Drawing.Size(242, 24);
-            this.RC1PSInfo.Text = "制作者ページ/解説ページ等";
+            this.RC1DevInfo.Name = "RC1DevInfo";
+            this.RC1DevInfo.Size = new System.Drawing.Size(242, 24);
+            this.RC1DevInfo.Text = "制作者ページ/解説ページ等";
             // 
             // RCTwitter
             // 
             this.RCTwitter.Name = "RCTwitter";
-            this.RCTwitter.Size = new System.Drawing.Size(206, 26);
+            this.RCTwitter.Size = new System.Drawing.Size(224, 26);
             this.RCTwitter.Text = "Twitter";
             this.RCTwitter.Click += new System.EventHandler(this.RCtwitter_Click);
             // 
             // RCGitHub
             // 
             this.RCGitHub.Name = "RCGitHub";
-            this.RCGitHub.Size = new System.Drawing.Size(206, 26);
+            this.RCGitHub.Size = new System.Drawing.Size(224, 26);
             this.RCGitHub.Text = "GitHub(リポジトリ)";
             this.RCGitHub.Click += new System.EventHandler(this.RCgithub_Click);
             // 
             // RCiInfoPage
             // 
             this.RCiInfoPage.Name = "RCiInfoPage";
-            this.RCiInfoPage.Size = new System.Drawing.Size(206, 26);
+            this.RCiInfoPage.Size = new System.Drawing.Size(224, 26);
             this.RCiInfoPage.Text = "解説ページ";
             this.RCiInfoPage.Click += new System.EventHandler(this.RCinfopage_Click);
             // 
@@ -266,14 +268,14 @@
             // RCreboot
             // 
             this.RCreboot.Name = "RCreboot";
-            this.RCreboot.Size = new System.Drawing.Size(137, 26);
+            this.RCreboot.Size = new System.Drawing.Size(224, 26);
             this.RCreboot.Text = "再起動";
             this.RCreboot.Click += new System.EventHandler(this.RCreboot_Click);
             // 
             // RCexit
             // 
             this.RCexit.Name = "RCexit";
-            this.RCexit.Size = new System.Drawing.Size(137, 26);
+            this.RCexit.Size = new System.Drawing.Size(224, 26);
             this.RCexit.Text = "終了";
             this.RCexit.Click += new System.EventHandler(this.RCexit_Click);
             // 
@@ -574,6 +576,13 @@
             this.History63.TabIndex = 40;
             this.History63.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
+            // RC1CacheClear
+            // 
+            this.RC1CacheClear.Name = "RC1CacheClear";
+            this.RC1CacheClear.Size = new System.Drawing.Size(242, 24);
+            this.RC1CacheClear.Text = "キャッシュクリア";
+            this.RC1CacheClear.Click += new System.EventHandler(this.RC1CacheClear_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -648,7 +657,7 @@
         private System.Windows.Forms.Label USGS5;
         private System.Windows.Forms.ToolStripSeparator RC1Bar1;
         private System.Windows.Forms.ToolStripMenuItem RC1Sites;
-        private System.Windows.Forms.ToolStripMenuItem RC1PSInfo;
+        private System.Windows.Forms.ToolStripMenuItem RC1DevInfo;
         private System.Windows.Forms.ToolStripMenuItem RC1RebootExit;
         private System.Windows.Forms.ToolStripMenuItem RC1Setting;
         private System.Windows.Forms.ToolStripSeparator RC1Bar2;
@@ -691,6 +700,7 @@
         private System.Windows.Forms.Label History43;
         private System.Windows.Forms.Label History53;
         private System.Windows.Forms.Label History63;
+        private System.Windows.Forms.ToolStripMenuItem RC1CacheClear;
     }
 }
 

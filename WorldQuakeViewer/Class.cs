@@ -38,6 +38,21 @@ namespace WorldQuakeViewer
 {
     public class History
     {
+        public string PlaceJP { get; set; }
+        public string PlaceEN { get; set; }
+        public string LatLon { get; set; }
+        public string Alert { get; set; }
+        public string ID { get; set; }
+        public string URL { get; set; }
+        public double? MMI { get; set; }
+        public double Depth { get; set; }
+        public double Lat { get; set; }
+        public double Lon { get; set; }
+        public long Update { get; set; }
+        public DateTime Time { get; set; }
+    }
+    public class History2
+    {
         public string Text { get; set; }
         public string UpdateTime { get; set; }
         public long EQTime { get; set; }
