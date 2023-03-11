@@ -1,0 +1,27 @@
+﻿{ //既定の設定
+  "Bouyomicyan": { //棒読みちゃん送信
+    "Valid": false, //有効
+    "Host": "127.0.0.1", //
+    "Port": 50001, //
+    "Voice": 0, //
+    "Speed": -1, //
+    "Tone": -1, ////
+    "Volume": -1
+  },
+  "Tweet": { //自動ツイート
+    "Valid": false, //有効
+    "ConsumerKey": "", //TwitterAPIキー
+    "ConsumerSecret": "", //TwitterAPIキー
+    "AccessToken": "", //TwitterAPIキー
+    "AccessSecret": "", //TwitterAPIキー
+    "LowerMagnitudeLimit": 6.0 //マグニチュードの下限
+  },
+  "Sound": { //音声
+    "Valid": false //有効
+  },
+  "Display": { //表示
+    "HideHistory": false, //履歴を隠す
+    "HideHistoryMap": false, //履歴と地図を隠す
+    "LatLon-Decimal": false //10進法表記(1.2345°N)
+  }
+}
