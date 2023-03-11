@@ -23,13 +23,13 @@ namespace WorldQuakeViewer
 {
     public partial class MainForm : Form
     {
-        public static readonly string Version = "1.1.0";//こことアセンブリを変える
+        public static readonly string Version = "1.1.0α1";//こことアセンブリを変える
         public static DateTime StartTime = new DateTime();
         public static int AccessedUSGS = 0;
         public static int AccessedFE = 0;
         public string LatestURL = "";
         public static bool NoFirst = false;//最初はツイートとかしない
-        public string ExeLogs = "";
+        public static string ExeLogs = "";
         public Dictionary<string, History2> Histories = new Dictionary<string, History2>();//EQID,Data
         public Dictionary<Point, int> HypoIDs = new Dictionary<Point, int>();//Location,HypoID
         public Font F9 = null;
@@ -47,7 +47,7 @@ namespace WorldQuakeViewer
         {
             ExeLog($"起動処理開始");
             StartTime = DateTime.Now;
-            HistoryBack.Text = $"履歴                                                                    Version:{Version}";
+            HistoryBack.Text = $"履歴                                                                Version:{Version}";
             ErrorText.Text = "フォント読み込み中…";
             try
             {
@@ -166,7 +166,7 @@ namespace WorldQuakeViewer
                 {
                     Encoding = Encoding.UTF8
                 };
-                string json_ = (await WC.DownloadStringTaskAsync(new Uri("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson")));
+                string json_ = await WC.DownloadStringTaskAsync(new Uri("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson"));
                 ExeLog($"取得完了");
                 AccessedUSGS++;
                 string LastCheckTime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
@@ -176,7 +176,8 @@ namespace WorldQuakeViewer
                 string UpdateTime_ = $"{Update_:yyyy/MM/dd HH:mm:ss}";
                 int SoundLevel = 0;//音声判別用 初報ほど、M大きいほど高い
                 ExeLog($"各履歴処理開始");
-                for (int i = json.Features.Count-1; i >= 0; i--)//古い順に
+                LatestURL = json.Features[0].Properties.Url;
+                for (int i = 6; i >= 0; i--)//古い順に
                     if (json.Features.Count > i)
                     {
                         bool New = false;//音声判別用
@@ -189,7 +190,8 @@ namespace WorldQuakeViewer
                             Updated = Histories[ID].UpdateTime;
                         if ($"{json.Features[i].Properties.Updated}" != Updated)
                         {
-                            ExeLog($"[{i}] 更新時刻変化検知(s->{json.Features[i].Properties.Updated})");
+                            ErrorText.Text = $"処理中…[{7 - i}/7]";
+                            ExeLog($"[{i}] 更新時刻変化検知({Updated}->{json.Features[i].Properties.Updated})");
                             string MaxInt = "-";
                             if (json.Features[i].Properties.Mmi < 1.5)
                                 MaxInt = "I";
@@ -216,56 +218,59 @@ namespace WorldQuakeViewer
                             else if (json.Features[i].Properties.Mmi >= 11.5)
                                 MaxInt = "XII";
                             DateTimeOffset DataTimeOff = DateTimeOffset.FromUnixTimeMilliseconds((long)json.Features[i].Properties.Time).ToLocalTime();
-                            string Time = Convert.ToString(DataTimeOff).Replace("+0", "※UTC +0").Replace("+1", "※UTC +1").Replace("-0", "※UTC -0").Replace("+1", "※UTC -1");
+                            string Time = Convert.ToString(DataTimeOff).Replace("+0", "UTC +0").Replace("+1", "UTC +1").Replace("-0", "UTC -0").Replace("+1", "UTC -1");
                             string Mag = $"{json.Features[i].Properties.Mag}";
                             if (Mag.Length == 1)
                                 Mag += ".0";
-                            LatestURL = json.Features[0].Properties.Url;
                             string MagType = json.Features[i].Properties.MagType;
                             double Lat = json.Features[i].Geometry.Coordinates[1];
-                            double Long = json.Features[i].Geometry.Coordinates[0];
+                            double Lon = json.Features[i].Geometry.Coordinates[0];
                             double LatShort = Math.Round(json.Features[i].Geometry.Coordinates[1], 2, MidpointRounding.AwayFromZero);
-                            double LongShort = Math.Round(json.Features[i].Geometry.Coordinates[0], 2, MidpointRounding.AwayFromZero);
+                            double LonShort = Math.Round(json.Features[i].Geometry.Coordinates[0], 2, MidpointRounding.AwayFromZero);
                             string Arart = "アラート:-";
                             if (json.Features[i].Properties.Alert != null)
                                 Arart = Arart.Replace("-", json.Features[i].Properties.Alert.Replace("green", "緑").Replace("yellow", "黄").Replace("orange", "オレンジ").Replace("red", "赤").Replace("pending", "保留中"));
-                            string LatStDecimal = $"N{Math.Round(Lat, 2, MidpointRounding.AwayFromZero)}".Replace("N-", "S");
-                            string LongStDecimal = $"E{Math.Round(Long, 2, MidpointRounding.AwayFromZero)}".Replace("E-", "W");
+                            string LatStDecimal = $"{Math.Round(Lat, 2, MidpointRounding.AwayFromZero)}°N";
+                            if (Lat < 0)
+                                LatStDecimal = $"{Math.Round(-Lat, 2, MidpointRounding.AwayFromZero)}°S";
+                            string LonStDecimal = $"{Math.Round(Lon, 2, MidpointRounding.AwayFromZero)}°E";
+                            if (Lon < 0)
+                                LonStDecimal = $"{Math.Round(-Lon, 2, MidpointRounding.AwayFromZero)}°W";
                             TimeSpan LatTime = TimeSpan.FromHours(Lat);
-                            TimeSpan LongTime = TimeSpan.FromHours(Long);
+                            TimeSpan LongTime = TimeSpan.FromHours(Lon);
                             string LatStShort = $"{(int)Lat}ﾟ{LatTime.Minutes}'N";
-                            string LongStShort = $"{(int)Long}ﾟ{LongTime.Minutes}'E";
+                            string LongStShort = $"{(int)Lon}ﾟ{LongTime.Minutes}'E";
                             if (Lat < 0)
                                 LatStShort = $"{(int)Lat * -1}ﾟ{LatTime.Minutes * -1}'S";
-                            if (Long < 0)
-                                LongStShort = $"{(int)Long * -1}ﾟ{LongTime.Minutes * -1}'W";
+                            if (Lon < 0)
+                                LongStShort = $"{(int)Lon * -1}ﾟ{LongTime.Minutes * -1}'W";
                             string LatStLong = $"{(int)Lat}ﾟ{LatTime.Minutes}'{LatTime.Seconds}\"N";
-                            string LongStLong = $"{(int)Long}ﾟ{LongTime.Minutes}'{LongTime.Seconds}\"E";
+                            string LongStLong = $"{(int)Lon}ﾟ{LongTime.Minutes}'{LongTime.Seconds}\"E";
                             if (Lat < 0)
                                 LatStLong = $"{(int)Lat * -1}ﾟ{LatTime.Minutes * -1}'{LatTime.Seconds * -1}\"S";
-                            if (Long < 0)
-                                LongStLong = $"{(int)Long * -1}ﾟ{LongTime.Minutes * -1}'{LongTime.Seconds * -1}\"W";
+                            if (Lon < 0)
+                                LongStLong = $"{(int)Lon * -1}ﾟ{LongTime.Minutes * -1}'{LongTime.Seconds * -1}\"W";
                             string LatStLongJP = $"北緯{(int)Lat}度{LatTime.Minutes}分{LatTime.Seconds}秒";
-                            string LongStLongJP = $"東経{(int)Long}度{LongTime.Minutes}分{LongTime.Seconds}秒";
+                            string LongStLongJP = $"東経{(int)Lon}度{LongTime.Minutes}分{LongTime.Seconds}秒";
                             if (Lat < 0)
                                 LatStLongJP = $"南緯{(int)Lat * -1}度{LatTime.Minutes * -1}分{LatTime.Seconds * -1}秒";
-                            if (Long < 0)
-                                LongStLongJP = $"西経{(int)Long * -1}度{LongTime.Minutes * -1}分{LongTime.Seconds * -1}秒";
+                            if (Lon < 0)
+                                LongStLongJP = $"西経{(int)Lon * -1}度{LongTime.Minutes * -1}分{LongTime.Seconds * -1}秒";
                             if (Settings.Default.Text_LatLonDecimal)
                             {
                                 LatStLongJP = $"北緯{Lat}度";
-                                LongStLongJP = $"東経{Long}度";
+                                LongStLongJP = $"東経{Lon}度";
                                 if (Lat < 0)
                                     LatStLongJP = $"南緯{Lat * -1}度";
-                                if (Long < 0)
-                                    LongStLongJP = $"西経{Long * -1}度";
+                                if (Lon < 0)
+                                    LongStLongJP = $"西経{Lon * -1}度";
                             }
                             string LatView = LatStShort;
                             string LongView = LongStShort;
                             if (Settings.Default.Text_LatLonDecimal)
                             {
                                 LatView = LatStDecimal;
-                                LongView = LongStDecimal;
+                                LongView = LonStDecimal;
                             }
                             string Depth = $"深さ:約{(int)Math.Round(json.Features[i].Geometry.Coordinates[2], MidpointRounding.AwayFromZero)}km";
                             if (json.Features[i].Geometry.Coordinates[2] == (int)json.Features[i].Geometry.Coordinates[2])
@@ -280,7 +285,7 @@ namespace WorldQuakeViewer
                             string JPNameNotFoundLogText = "";
                             if (File.Exists("Log\\JPNameNotFound.txt"))
                                 JPNameNotFoundLogText = $"{File.ReadAllText($"Log\\JPNameNotFound.txt")}";
-                            Point HypoPoint = new Point((int)(LatShort * 100), (int)(LongShort * 100));
+                            Point HypoPoint = new Point((int)(LatShort * 100), (int)(LonShort * 100));
                             if (HypoIDs.ContainsKey(HypoPoint))
                             {
                                 Shingen = "震源:" + HypoName[HypoIDs[HypoPoint]];
@@ -291,9 +296,8 @@ namespace WorldQuakeViewer
                                 ExeLog($"震源キャッシュが存在しません。({HypoPoint.X},{HypoPoint.Y})ダウンロードします。");
                                 try
                                 {
-                                    string USGSFERegion_ = WC.DownloadString($"https://earthquake.usgs.gov/ws/geoserve/regions.json?latitude={LatShort}&longitude={LongShort}&type=fe");
+                                    string USGSFERegion_ = await WC.DownloadStringTaskAsync(new Uri($"https://earthquake.usgs.gov/ws/geoserve/regions.json?latitude={LatShort}&longitude={LonShort}&type=fe"));
                                     AccessedFE++;
-                                    ExeLog($"取得:$\"https://earthquake.usgs.gov/ws/geoserve/regions.json?latitude={LatShort}&longitude={LongShort}&type=fe\"");
                                     JObject USGSFERegion = JObject.Parse(USGSFERegion_);
                                     for (int j = 0; j < (int)USGSFERegion.SelectToken("fe.count"); j++)
                                     {
@@ -304,8 +308,8 @@ namespace WorldQuakeViewer
                                                 HypoIDs.Add(HypoPoint, (int)USGSFERegion.SelectToken($"fe.features[{j}].properties.number"));
                                                 break;
                                             }
-                                        if (JPNameNotFoundLogText.Contains($"lat={LatShort},lon={LongShort},num=null,name={USGSFERegion.SelectToken($"fe.features[{j}].properties.name")}"))
-                                            JPNameNotFoundLogText += $"\nlat={LatShort},lon={LongShort},num=null,name={USGSFERegion.SelectToken($"fe.features[{j}].properties.name")}";
+                                        if (JPNameNotFoundLogText.Contains($"lat={LatShort},lon={LonShort},num=null,name={USGSFERegion.SelectToken($"fe.features[{j}].properties.name")}"))
+                                            JPNameNotFoundLogText += $"\nlat={LatShort},lon={LonShort},num=null,name={USGSFERegion.SelectToken($"fe.features[{j}].properties.name")}";
                                     }
                                     File.WriteAllText($"Log\\JPNameNotFound.txt", JPNameNotFoundLogText);
                                 }
@@ -341,7 +345,7 @@ namespace WorldQuakeViewer
                                         EQTime = (long)json.Features[i].Properties.Time,
                                         TweetID = Histories[ID].TweetID,
                                         //地図画像位置　x:+200が中心※左余白-250 -> -50 y:+300が中心
-                                        Display1LocX = (int)(Long + 180) * -5 - 50,//(-180,0,180) + 180 -> (0,180,360)
+                                        Display1LocX = (int)(Lon + 180) * -5 - 50,//(-180,0,180) + 180 -> (0,180,360)
                                         Display1LocY = (int)(90 - Lat) * -5 + 300,//90 - (90,0,-90) -> (0,90,180)
                                                                                   //最新
                                         Display10 = $"USGS地震情報                                     {Time}",
@@ -365,7 +369,7 @@ namespace WorldQuakeViewer
                                         UpdateTime = Convert.ToString(json.Features[i].Properties.Updated),
                                         EQTime = (long)json.Features[i].Properties.Time,
                                         TweetID = 0,
-                                        Display1LocX = (int)(Long + 180) * -5 - 50,
+                                        Display1LocX = (int)(Lon + 180) * -5 - 50,
                                         Display1LocY = (int)(90 - Lat) * -5 + 300,
                                         Display10 = $"USGS地震情報                                     {Time}",
                                         Display11 = $"{Shingen}\n{Shingen2}\n{LatView},{LongView}\n{Depth}",
@@ -416,10 +420,9 @@ namespace WorldQuakeViewer
                         else
                             ExeLog($"[{i}] 更新なし(更新:{Updated})");
                     }
-                    else
-                        continue;
-                for (int i = 0; i < 7; i++)//古いやつ削除用
-                    if (Histories.Count > i)
+                ErrorText.Text = "表示処理中…";
+                for (int i = 0; i < 7; i++)
+                    if (Histories.Count > i)//データ不足対処
                     {
                         string ID = json.Features[i].Id;
                         if (i == 0)//最新
@@ -796,7 +799,8 @@ namespace WorldQuakeViewer
                 ErrorText.Text = $"エラーが発生しました。エラーログの内容を報告してください。内容:" + ex.Message;
                 LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main Version:{Version}\n{ex}");
             }
-            ErrorText.Text = ErrorText.Text.Replace("取得中…", "");
+            if (!ErrorText.Text.Contains("エラー"))
+                ErrorText.Text = "";
             NoFirst = true;
             ExeLog("処理終了");
             /*//フォント変更がうまくいかない
@@ -870,11 +874,7 @@ namespace WorldQuakeViewer
             if (!Directory.Exists(SaveDirectory))
                 Directory.CreateDirectory(SaveDirectory);
             if (SaveDirectory == "Log")
-            {
-                if (File.Exists($"Log\\log.txt"))
-                    SaveText += "\n--------------------------------------------------\n" + File.ReadAllText($"Log\\log.txt");
                 File.WriteAllText($"Log\\log.txt", SaveText);
-            }
             else if (SaveDirectory == "Log\\ErrorLog")
             {
                 if (File.Exists($"Log\\ErrorLog\\{NowTime:yyyyMM}.txt"))
@@ -924,16 +924,21 @@ namespace WorldQuakeViewer
                     if (Histories[ID].TweetID != 0)
                         try
                         {
+                            ExeLog($"ツイート(リプライ)中…(ID:{Histories[ID].TweetID})");
                             status = tokens.Statuses.UpdateAsync(new { status = Text, in_reply_to_status_id = Histories[ID].TweetID }).Result;
                         }
                         catch
                         {
+                            ExeLog($"ツイート(リプライ)失敗、リトライ中…");
                             status = tokens.Statuses.UpdateAsync(new { status = Text }).Result;
                         }
                     else
+                    {
+                        ExeLog($"ツイート中…");
                         status = tokens.Statuses.UpdateAsync(new { status = Text }).Result;
-
+                    }
                     Histories[ID].TweetID = status.Id;
+                    ExeLog($"ツイート成功(ID:{status.Id})");
                 }
                 catch (Exception ex)
                 {
@@ -950,17 +955,19 @@ namespace WorldQuakeViewer
             if (NoFirst)
                 try
                 {
-                    IPEndPoint IPEndPoint = new IPEndPoint(IPAddress.Parse(Settings.Default.Socket_Host), Settings.Default.Socket_Port);
-                    using (TcpClient TcpClient = new TcpClient())
+                    ExeLog($"Socket送信中…({Settings.Default.Socket_Host}:{Settings.Default.Socket_Port})");
+                    IPEndPoint iPEndPoint = new IPEndPoint(IPAddress.Parse(Settings.Default.Socket_Host), Settings.Default.Socket_Port);
+                    using (TcpClient tcpClient = new TcpClient())
                     {
-                        TcpClient.Connect(IPEndPoint);
-                        using (NetworkStream NetworkStream = TcpClient.GetStream())
+                        tcpClient.Connect(iPEndPoint);
+                        using (NetworkStream networkStream = tcpClient.GetStream())
                         {
                             byte[] Bytes = new byte[4096];
                             Bytes = Encoding.UTF8.GetBytes(Text);
-                            NetworkStream.Write(Bytes, 0, Bytes.Length);
+                            networkStream.Write(Bytes, 0, Bytes.Length);
                         }
                     }
+                    ExeLog($"Socket送信成功");
                 }
                 catch (Exception ex)
                 {
@@ -977,6 +984,7 @@ namespace WorldQuakeViewer
             if (NoFirst)
                 try
                 {
+                    ExeLog($"棒読みちゃん送信中…");
                     byte[] Message = Encoding.UTF8.GetBytes(Text);
                     int Length = Message.Length;
                     byte Code = 0;
@@ -998,6 +1006,7 @@ namespace WorldQuakeViewer
                         BinaryWriter.Write(Length);
                         BinaryWriter.Write(Message);
                     }
+                    ExeLog($"棒読みちゃん送信成功");
                 }
                 catch (Exception ex)
                 {
@@ -1010,8 +1019,10 @@ namespace WorldQuakeViewer
         /// </summary>
         /// <param name="Text">保存するテキスト。</param>
         /// <remarks>タイムスタンプは自動で追加されます。</remarks>
-        public void ExeLog(string Text)
+        public static void ExeLog(string Text)
         {
+            if (File.Exists("nolog.txt"))
+                return;
             ExeLogs += $"{DateTime.Now:HH:mm:ss.ffff} {Text}\n";
             Console.WriteLine(Text);
         }
@@ -1043,27 +1054,34 @@ namespace WorldQuakeViewer
         public static void Sound(string SoundFile)
         {
             if (NoFirst)
-            {
-                if (Player != null)
+                try
                 {
-                    Player.Stop();
-                    Player.Dispose();
-                    Player = null;
+                    ExeLog($"音声再生開始(Sound\\{SoundFile})");
+                    if (Player != null)
+                    {
+                        Player.Stop();
+                        Player.Dispose();
+                        Player = null;
+                    }
+                    Player = new SoundPlayer($"Sound\\{SoundFile}");
+                    Player.Play();
+                    ExeLog($"音声再生成功");
                 }
-                Player = new SoundPlayer($"Sound\\{SoundFile}");
-                Player.Play();
-            }
+                catch (Exception ex)
+                {
+                    LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Sound Version:{Version}\n{ex}");
+                }
         }
         private void RCsetting_Click(object sender, EventArgs e)
         {
-            ExeLog($"設定フォームオープン");
+            ExeLog($"設定form表示");
             SettingsForm Settings = new SettingsForm();
             Settings.FormClosed += SettingForm_FormClosed;//閉じたとき呼び出し
             Settings.Show();
         }
         private void SettingForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            ExeLog($"設定フォームクローズ");
+            ExeLog($"設定form終了");
             SettingReload();
             ErrorText.Text = "設定を再読み込みしました。一部の設定は情報受信または再起動が必要です。";
         }
@@ -1099,19 +1117,6 @@ namespace WorldQuakeViewer
         {
             Process.Start("https://Ichihai1415.github.io/programs/released/WQV");
         }
-        private void MainForm_HelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            try
-            {
-                Process.Start("notepad.exe", "README.md");
-            }
-            catch (Exception ex)
-            {
-                DialogResult Result = MessageBox.Show($"README.mdを開けませんでした。({ex.Message})\nブラウザで表示しますか?", "WQV_help", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-                if (Result == DialogResult.Yes)
-                    Process.Start("https://github.com/Ichihai1415/WorldQuakeViewer/blob/main/README.md");
-            }
-        }
         private void RCMapEWSC_Click(object sender, EventArgs e)
         {
             Process.Start("https://www.emsc-csem.org/#2w");
@@ -1123,10 +1128,33 @@ namespace WorldQuakeViewer
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             ExeLog($"実行終了");
+            LogSave("Log", ExeLogs);
         }
         private void RC1CacheClear_Click(object sender, EventArgs e)
         {
+            DialogResult allow = MessageBox.Show("動作ログ、地震ログを消去してよろしいですか？消去した場合処理は起動時と同じようになります。(震源キャッシュは消去されません)", "確認", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+            if (allow == DialogResult.Cancel)
+                return;
+            ExeLogs = "";
+            Histories = new Dictionary<string, History2>();
+            NoFirst = false;
+        }
 
+        private void RC1ExeLogOpen_Click(object sender, EventArgs e)
+        {
+            LogSave("Log", ExeLogs);
+            Process.Start("notepad.exe", "Log\\log.txt");
+        }
+
+        private void ExeLogAutoDelete_Tick(object sender, EventArgs e)//規定は3600000ms(1h)
+        {
+            ExeLogs = "";
+        }
+
+        private void RC1IntConvert_Click(object sender, EventArgs e)
+        {
+            IntConvert intConverter = new IntConvert();
+            intConverter.Show();
         }
     }
 }

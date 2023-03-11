@@ -38,13 +38,15 @@
             this.RightClick = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.RC1Setting = new System.Windows.Forms.ToolStripMenuItem();
             this.RC1Bar1 = new System.Windows.Forms.ToolStripSeparator();
+            this.RC1CacheClear = new System.Windows.Forms.ToolStripMenuItem();
+            this.RC1ExeLogOpen = new System.Windows.Forms.ToolStripMenuItem();
+            this.RC1Bar2 = new System.Windows.Forms.ToolStripSeparator();
             this.RC1Sites = new System.Windows.Forms.ToolStripMenuItem();
             this.RCThisInfo = new System.Windows.Forms.ToolStripMenuItem();
             this.RCEarlyEst = new System.Windows.Forms.ToolStripMenuItem();
             this.RCMapUSGS = new System.Windows.Forms.ToolStripMenuItem();
             this.RCMapEWSC = new System.Windows.Forms.ToolStripMenuItem();
             this.RCTsunamiGov = new System.Windows.Forms.ToolStripMenuItem();
-            this.RC1Bar2 = new System.Windows.Forms.ToolStripSeparator();
             this.RC1DevInfo = new System.Windows.Forms.ToolStripMenuItem();
             this.RCTwitter = new System.Windows.Forms.ToolStripMenuItem();
             this.RCGitHub = new System.Windows.Forms.ToolStripMenuItem();
@@ -85,7 +87,8 @@
             this.History43 = new System.Windows.Forms.Label();
             this.History53 = new System.Windows.Forms.Label();
             this.History63 = new System.Windows.Forms.Label();
-            this.RC1CacheClear = new System.Windows.Forms.ToolStripMenuItem();
+            this.ExeLogAutoDelete = new System.Windows.Forms.Timer(this.components);
+            this.RC1IntConvert = new System.Windows.Forms.ToolStripMenuItem();
             this.RightClick.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MainImg)).BeginInit();
             this.SuspendLayout();
@@ -138,17 +141,19 @@
             // 
             this.RightClick.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.RightClick.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.RC1CacheClear,
-            this.RC1Bar1,
             this.RC1Setting,
+            this.RC1Bar1,
+            this.RC1CacheClear,
+            this.RC1ExeLogOpen,
             this.RC1Bar2,
             this.RC1Sites,
+            this.RC1IntConvert,
             this.RC1DevInfo,
             this.RC1Bar3,
             this.RC1RebootExit});
             this.RightClick.Name = "RightClick";
             this.RightClick.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.RightClick.Size = new System.Drawing.Size(243, 170);
+            this.RightClick.Size = new System.Drawing.Size(243, 218);
             this.RightClick.TabStop = true;
             this.RightClick.Text = "メニュー";
             // 
@@ -163,6 +168,25 @@
             // 
             this.RC1Bar1.Name = "RC1Bar1";
             this.RC1Bar1.Size = new System.Drawing.Size(239, 6);
+            // 
+            // RC1CacheClear
+            // 
+            this.RC1CacheClear.Name = "RC1CacheClear";
+            this.RC1CacheClear.Size = new System.Drawing.Size(242, 24);
+            this.RC1CacheClear.Text = "キャッシュクリア";
+            this.RC1CacheClear.Click += new System.EventHandler(this.RC1CacheClear_Click);
+            // 
+            // RC1ExeLogOpen
+            // 
+            this.RC1ExeLogOpen.Name = "RC1ExeLogOpen";
+            this.RC1ExeLogOpen.Size = new System.Drawing.Size(242, 24);
+            this.RC1ExeLogOpen.Text = "動作ログ表示";
+            this.RC1ExeLogOpen.Click += new System.EventHandler(this.RC1ExeLogOpen_Click);
+            // 
+            // RC1Bar2
+            // 
+            this.RC1Bar2.Name = "RC1Bar2";
+            this.RC1Bar2.Size = new System.Drawing.Size(239, 6);
             // 
             // RC1Sites
             // 
@@ -213,11 +237,6 @@
             this.RCTsunamiGov.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.RCTsunamiGov.Click += new System.EventHandler(this.RCtsunami_Click);
             // 
-            // RC1Bar2
-            // 
-            this.RC1Bar2.Name = "RC1Bar2";
-            this.RC1Bar2.Size = new System.Drawing.Size(239, 6);
-            // 
             // RC1DevInfo
             // 
             this.RC1DevInfo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -232,21 +251,21 @@
             // RCTwitter
             // 
             this.RCTwitter.Name = "RCTwitter";
-            this.RCTwitter.Size = new System.Drawing.Size(224, 26);
+            this.RCTwitter.Size = new System.Drawing.Size(206, 26);
             this.RCTwitter.Text = "Twitter";
             this.RCTwitter.Click += new System.EventHandler(this.RCtwitter_Click);
             // 
             // RCGitHub
             // 
             this.RCGitHub.Name = "RCGitHub";
-            this.RCGitHub.Size = new System.Drawing.Size(224, 26);
+            this.RCGitHub.Size = new System.Drawing.Size(206, 26);
             this.RCGitHub.Text = "GitHub(リポジトリ)";
             this.RCGitHub.Click += new System.EventHandler(this.RCgithub_Click);
             // 
             // RCiInfoPage
             // 
             this.RCiInfoPage.Name = "RCiInfoPage";
-            this.RCiInfoPage.Size = new System.Drawing.Size(224, 26);
+            this.RCiInfoPage.Size = new System.Drawing.Size(206, 26);
             this.RCiInfoPage.Text = "解説ページ";
             this.RCiInfoPage.Click += new System.EventHandler(this.RCinfopage_Click);
             // 
@@ -268,14 +287,14 @@
             // RCreboot
             // 
             this.RCreboot.Name = "RCreboot";
-            this.RCreboot.Size = new System.Drawing.Size(224, 26);
+            this.RCreboot.Size = new System.Drawing.Size(137, 26);
             this.RCreboot.Text = "再起動";
             this.RCreboot.Click += new System.EventHandler(this.RCreboot_Click);
             // 
             // RCexit
             // 
             this.RCexit.Name = "RCexit";
-            this.RCexit.Size = new System.Drawing.Size(224, 26);
+            this.RCexit.Size = new System.Drawing.Size(137, 26);
             this.RCexit.Text = "終了";
             this.RCexit.Click += new System.EventHandler(this.RCexit_Click);
             // 
@@ -576,12 +595,18 @@
             this.History63.TabIndex = 40;
             this.History63.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // RC1CacheClear
+            // ExeLogAutoDelete
             // 
-            this.RC1CacheClear.Name = "RC1CacheClear";
-            this.RC1CacheClear.Size = new System.Drawing.Size(242, 24);
-            this.RC1CacheClear.Text = "キャッシュクリア";
-            this.RC1CacheClear.Click += new System.EventHandler(this.RC1CacheClear_Click);
+            this.ExeLogAutoDelete.Enabled = true;
+            this.ExeLogAutoDelete.Interval = 3600000;
+            this.ExeLogAutoDelete.Tick += new System.EventHandler(this.ExeLogAutoDelete_Tick);
+            // 
+            // RC1IntConvert
+            // 
+            this.RC1IntConvert.Name = "RC1IntConvert";
+            this.RC1IntConvert.Size = new System.Drawing.Size(242, 24);
+            this.RC1IntConvert.Text = "簡易震度変換ツール";
+            this.RC1IntConvert.Click += new System.EventHandler(this.RC1IntConvert_Click);
             // 
             // MainForm
             // 
@@ -633,7 +658,6 @@
             this.MinimumSize = new System.Drawing.Size(416, 139);
             this.Name = "MainForm";
             this.Text = "WorldQuakeViewer";
-            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.MainForm_HelpButtonClicked);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.RightClick.ResumeLayout(false);
@@ -701,6 +725,9 @@
         private System.Windows.Forms.Label History53;
         private System.Windows.Forms.Label History63;
         private System.Windows.Forms.ToolStripMenuItem RC1CacheClear;
+        private System.Windows.Forms.ToolStripMenuItem RC1ExeLogOpen;
+        private System.Windows.Forms.Timer ExeLogAutoDelete;
+        private System.Windows.Forms.ToolStripMenuItem RC1IntConvert;
     }
 }
 

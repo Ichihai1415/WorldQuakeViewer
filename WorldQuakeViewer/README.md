@@ -1,23 +1,41 @@
+<!--GitHub用開始-->
 ![GitHub](https://img.shields.io/github/license/Ichihai1415/WorldQuakeViewer)
 ![GitHub Release Date](https://img.shields.io/github/release-date/Ichihai1415/WorldQuakeViewer)
 ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/Ichihai1415/WorldQuakeViewer)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Ichihai1415/WorldQuakeViewer)
 ![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/Ichihai1415/WorldQuakeViewer/latest)
-![サンプル画像](https://github.com/Ichihai1415/WorldQuakeViewer/blob/main/image/WQV_20221224_v1.0.0.png)
+<div display="flex">
+  <img alt="v1.0.0" src="https://github.com/Ichihai1415/WorldQuakeViewer/blob/main/image/WQV_20221224_v1.0.0.png" width="49%" />
+  <img alt="v1.0.4" src="https://github.com/Ichihai1415/WorldQuakeViewer/blob/main/image/WQV_20230206_v1.0.4.png" width="49%" />
+</div>
+<!--GitHub用終了-->
+
 世界の地震情報を表示します。
 
 [MITライセンス](https://opensource.org/licenses/mit-license.php)で公開しています。確認してください。
 
 バグ、予定等は[Issue](https://github.com/Ichihai1415/WorldQuakeViewer/issues)を確認してください。
 
-[詳細(現在制作中)](https://Ichihai1415.github.io/programs/released/WQV/)
+[詳細(現在制作中)](https://Ichihai1415.github.io/programs/released/wqv/)
 
 ---
 ---
 # 更新履歴
 
-## v1.1.0
-feedの取得先をweekに(更新確認が1週間)
+## v1.1.0α1(内部バージョン1.0.5)
+2023/03/11
+
+※一部の機能を先行公開します。不完全なところもあるためご注意ください。
+
+feedの取得先をweekに(インデックスが範囲を超えていますエラーの対処)
+
+改正メルカリ震度階級・最大速度・気象庁震度階級の相互変換機能追加
+
+動作ログ出力追加(内部に保存され1時間ごとに削除されます。保存しない場合"nolog.txt"を実行ファイルと同じフォルダに入れてください。(仮処置))
+
+震源ログの自動削除を無効化(長期間起動しているとメモリ使用率が大きくなる可能性があります。右クリックメニューで削除できます。)
+
+その他コード修正(中規模、一部の動作がおかしくなる可能性あり)
 
 ## v1.0.4
 2023/01/02

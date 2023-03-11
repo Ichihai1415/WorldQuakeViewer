@@ -100,13 +100,21 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HypoName.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IntConvert.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IntConvert.Designer.cs">
+      <DependentUpon>IntConvert.cs</DependentUpon>
     </Compile>
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
@@ -129,6 +137,9 @@
     <Compile Include="Class.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="IntConvert.resx">
+      <DependentUpon>IntConvert.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
