@@ -194,7 +194,7 @@ namespace WorldQuakeViewer
                         {
                             ExeLog($"[{i}] 更新時刻変化検知({LastUpdated}->{Updated})");
                             double? MMI = json.Features[i].Properties.Mmi;
-                            string MMISt = $"({MMI})".Replace("()", "");
+                            string MMISt = $"({MMI})".Replace("()", "-");
                             string MaxInt = "-";
                             if (MMI < 1.5)
                                 MaxInt = "I";
@@ -307,7 +307,7 @@ namespace WorldQuakeViewer
                                         if ((int?)USGSFERegion_.SelectToken($"properties.number") != null)
                                             if (HypoName.ContainsKey((int)USGSFERegion_.SelectToken($"properties.number")))
                                             {
-                                                Shingen = "震源:" + HypoName[(int)USGSFERegion_.SelectToken($"properties.number")];
+                                                Shingen = HypoName[(int)USGSFERegion_.SelectToken($"properties.number")];
                                                 HypoIDs.Add(HypoPoint, (int)USGSFERegion_.SelectToken($"properties.number"));
                                                 break;
                                             }
@@ -323,7 +323,7 @@ namespace WorldQuakeViewer
                             }
                             string Shingen2 = $"({json.Features[i].Properties.Place})";
                             string LogText_ = $"USGS地震情報【{MagType}{Mag}】{Time.Replace("※", "(")})\n{Shingen}{Shingen2}\n{LatView},{LongView}　{Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}　{AlertJP.Replace("アラート:-", "")}\n{json.Features[i].Properties.Url}";
-                            string BouyomiText = $"USGS地震情報。{TimeJP}、マグニチュード{Mag}、震源、{Shingen.Replace(" ", "、").Replace("/", "、").Replace("震源:", "")}、{LatStLongJP}、{LonStLongJP}、深さ{DepthLong.Replace("深さ:", "")}。{$"推定最大改正メルカリ震度階級{MMISt}。".Replace("推定最大改正メルカリ震度階級-。", "")}{AlertJP.Replace("アラート:-", "")}";
+                            string BouyomiText = $"USGS地震情報。{TimeJP}、マグニチュード{Mag}、震源、{Shingen.Replace(" ", "、").Replace("/", "、")}、{LatStLongJP}、{LonStLongJP}、深さ{DepthLong.Replace("深さ:", "")}。{$"推定最大改正メルカリ震度階級{MMISt}。".Replace("推定最大改正メルカリ震度階級-。", "")}{AlertJP.Replace("アラート:-", "")}";
 
                             History history = new History
                             {
@@ -335,8 +335,8 @@ namespace WorldQuakeViewer
                                 Display11 = $"{Shingen}\n{Shingen2}\n{LatView},{LongView}\n{Depth}",
                                 Display12 = $"{MagType}",
                                 Display13 = $"{Mag}",//14は変わらない
-                                Display15 = $"{MMI}",
-                                Display21 = $"{Time} 発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {DepthLong}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt}",
+                                Display15 = $"{MMISt}",
+                                Display21 = $"{Time} 発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {DepthLong}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-","")}",
                                 Display22 = $"{MagType}",
                                 Display23 = $"{Mag}",
 
@@ -360,55 +360,55 @@ namespace WorldQuakeViewer
                                     if (Histories[ID].Time != history.Time)
                                     {
                                         NewUpdt = true;
-                                        ExeLog($"{Histories[ID].Time}->{history.Time}");
+                                        ExeLog($"Time:{Histories[ID].Time}->{history.Time}");
                                     }
                                 if (Settings.Default.Update_HypoJP)
                                     if (Histories[ID].HypoJP != history.HypoJP)
                                     {
                                         NewUpdt = true;
-                                        ExeLog($"{Histories[ID].HypoJP}->{history.HypoJP}");
+                                        ExeLog($"HypoJP:{Histories[ID].HypoJP}->{history.HypoJP}");
                                     }
                                 if (Settings.Default.Update_HypoEN)
                                     if (Histories[ID].HypoEN != history.HypoEN)
                                     {
                                         NewUpdt = true;
-                                        ExeLog($"{Histories[ID].HypoEN}->{history.HypoEN}");
+                                        ExeLog($"HypoEN:{Histories[ID].HypoEN}->{history.HypoEN}");
                                     }
                                 if (Settings.Default.Update_LatLon)
                                     if (Histories[ID].Lat != history.Lat|| Histories[ID].Lon != history.Lon)
                                     {
                                         NewUpdt = true;
-                                        ExeLog($"{Histories[ID].Lat}->{history.Lat}, {Histories[ID].Lon}->{history.Lon}");
+                                        ExeLog($"Lat:{Histories[ID].Lat}->{history.Lat}, Lon:{Histories[ID].Lon}->{history.Lon}");
                                     }
                                 if (Settings.Default.Update_Depth)
                                     if (Histories[ID].Depth != history.Depth)
                                     {
                                         NewUpdt = true;
-                                        ExeLog($"{Histories[ID].Depth}->{history.Depth}");
+                                        ExeLog($"Depth:{Histories[ID].Depth}->{history.Depth}");
                                     }
                                 if (Settings.Default.Update_MagType)
                                     if (Histories[ID].MagType != history.MagType)
                                     {
                                         NewUpdt = true;
-                                        ExeLog($"{Histories[ID].MagType}->{history.MagType}");
+                                        ExeLog($"MagType:{Histories[ID].MagType}->{history.MagType}");
                                     }
                                 if (Settings.Default.Update_Mag)
                                     if (Histories[ID].Mag != history.Mag)
                                     {
                                         NewUpdt = true;
-                                        ExeLog($"{Histories[ID].Mag}->{history.Mag}");
+                                        ExeLog($"Mag:{Histories[ID].Mag}->{history.Mag}");
                                     }
                                 if (Settings.Default.Update_MMI)
                                     if (Histories[ID].MMI != history.MMI)
                                     {
                                         NewUpdt = true;
-                                        ExeLog($"{Histories[ID].MMI}->{history.MMI}");
+                                        ExeLog($"MMI:{Histories[ID].MMI}->{history.MMI}");
                                     }
                                 if (Settings.Default.Update_Alert)
                                     if (Histories[ID].Alert != history.Alert)
                                     {
                                         NewUpdt = true;
-                                        ExeLog($"{Histories[ID].Alert}->{history.Alert}");
+                                        ExeLog($"Alert:{Histories[ID].Alert}->{history.Alert}");
                                     }
                                 LogText_ = LogText_.Replace("USGS地震情報", "USGS地震情報(更新)");
                                 BouyomiText = BouyomiText.Replace("USGS地震情報", "USGS地震情報、更新");
