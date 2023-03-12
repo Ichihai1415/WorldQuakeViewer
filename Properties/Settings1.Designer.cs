@@ -12,7 +12,7 @@ namespace WorldQuakeViewer.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.4.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.5.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -277,7 +277,7 @@ namespace WorldQuakeViewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool Sound_45_Enable {
             get {
                 return ((bool)(this["Sound_45_Enable"]));
@@ -289,7 +289,7 @@ namespace WorldQuakeViewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool Sound_60_Enable {
             get {
                 return ((bool)(this["Sound_60_Enable"]));
@@ -301,7 +301,7 @@ namespace WorldQuakeViewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool Sound_80_Enable {
             get {
                 return ((bool)(this["Sound_80_Enable"]));
@@ -313,7 +313,7 @@ namespace WorldQuakeViewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool Sound_Updt_Enable {
             get {
                 return ((bool)(this["Sound_Updt_Enable"]));
@@ -368,6 +368,138 @@ namespace WorldQuakeViewer.Properties {
             }
             set {
                 this["Tweet_Lower_And"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Log_Enable {
+            get {
+                return ((bool)(this["Log_Enable"]));
+            }
+            set {
+                this["Log_Enable"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3600")]
+        public int Log_DeleteTime {
+            get {
+                return ((int)(this["Log_DeleteTime"]));
+            }
+            set {
+                this["Log_DeleteTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Update_Time {
+            get {
+                return ((bool)(this["Update_Time"]));
+            }
+            set {
+                this["Update_Time"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Update_HypoJP {
+            get {
+                return ((bool)(this["Update_HypoJP"]));
+            }
+            set {
+                this["Update_HypoJP"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Update_HypoEN {
+            get {
+                return ((bool)(this["Update_HypoEN"]));
+            }
+            set {
+                this["Update_HypoEN"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Update_LatLon {
+            get {
+                return ((bool)(this["Update_LatLon"]));
+            }
+            set {
+                this["Update_LatLon"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Update_Depth {
+            get {
+                return ((bool)(this["Update_Depth"]));
+            }
+            set {
+                this["Update_Depth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Update_MagType {
+            get {
+                return ((bool)(this["Update_MagType"]));
+            }
+            set {
+                this["Update_MagType"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Update_Mag {
+            get {
+                return ((bool)(this["Update_Mag"]));
+            }
+            set {
+                this["Update_Mag"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Update_MMI {
+            get {
+                return ((bool)(this["Update_MMI"]));
+            }
+            set {
+                this["Update_MMI"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Update_Alert {
+            get {
+                return ((bool)(this["Update_Alert"]));
+            }
+            set {
+                this["Update_Alert"] = value;
             }
         }
     }
