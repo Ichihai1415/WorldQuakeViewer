@@ -23,14 +23,14 @@ namespace WorldQuakeViewer
 {
     public partial class MainForm : Form
     {
-        public static readonly string Version = "1.1.0α1";//こことアセンブリを変える
+        public static readonly string Version = "1.1.0α2";//こことアセンブリを変える
         public static DateTime StartTime = new DateTime();
         public static int AccessedUSGS = 0;
         public static int AccessedFE = 0;
         public string LatestURL = "";
         public static bool NoFirst = false;//最初はツイートとかしない
         public static string ExeLogs = "";
-        public Dictionary<string, History2> Histories = new Dictionary<string, History2>();//EQID,Data
+        public Dictionary<string, History> Histories = new Dictionary<string, History>();//EQID,Data
         public Dictionary<Point, int> HypoIDs = new Dictionary<Point, int>();//Location,HypoID
         public Font F9 = null;
         public Font F9_5 = null;
@@ -155,7 +155,7 @@ namespace WorldQuakeViewer
             ExeLog($"設定読み込み完了");
             JsonTimer.Enabled = true;
         }
-        private async void JsonTimer_Tick(object sender, EventArgs e)//整理しろ
+        private async void JsonTimer_Tick(object sender, EventArgs e)
         {
             JsonTimer.Interval = 30000;
             try
@@ -177,48 +177,53 @@ namespace WorldQuakeViewer
                 int SoundLevel = 0;//音声判別用 初報ほど、M大きいほど高い
                 ExeLog($"各履歴処理開始");
                 LatestURL = json.Features[0].Properties.Url;
-                for (int i = 6; i >= 0; i--)//古い順に
+                for (int i = 6; i >= 0; i--)//古い順に//feがなんとかなったら処理制限に
                     if (json.Features.Count > i)
                     {
                         bool New = false;//音声判別用
                         string ID = json.Features[i].Id;
+                        long Updated = json.Features[i].Properties.Updated;
                         ExeLog($"処理[{i}]:{ID}");
-                        DateTimeOffset Update = DateTimeOffset.FromUnixTimeMilliseconds((long)json.Features[i].Properties.Updated).ToLocalTime();
+                        DateTimeOffset Update = DateTimeOffset.FromUnixTimeMilliseconds(Updated).ToLocalTime();
                         string UpdateTime = $"{Update:yyyy/MM/dd HH:mm:ss}";
-                        string Updated = "null";
+                        long LastUpdated = 0;
                         if (Histories.ContainsKey(ID))
-                            Updated = Histories[ID].UpdateTime;
-                        if ($"{json.Features[i].Properties.Updated}" != Updated)
+                            LastUpdated = Histories[ID].Update;
+                        ErrorText.Text = $"処理中…[{7 - i}/7]";
+                        if (Updated != LastUpdated)//新規か更新
                         {
-                            ErrorText.Text = $"処理中…[{7 - i}/7]";
-                            ExeLog($"[{i}] 更新時刻変化検知({Updated}->{json.Features[i].Properties.Updated})");
+                            ExeLog($"[{i}] 更新時刻変化検知({LastUpdated}->{Updated})");
+                            double? MMI = json.Features[i].Properties.Mmi;
+                            string MMISt = $"({MMI})".Replace("()", "");
                             string MaxInt = "-";
-                            if (json.Features[i].Properties.Mmi < 1.5)
+                            if (MMI < 1.5)
                                 MaxInt = "I";
-                            else if (json.Features[i].Properties.Mmi < 2.5)
+                            else if (MMI < 2.5)
                                 MaxInt = "II";
-                            else if (json.Features[i].Properties.Mmi < 3.5)
+                            else if (MMI < 3.5)
                                 MaxInt = "III";
-                            else if (json.Features[i].Properties.Mmi < 4.5)
+                            else if (MMI < 4.5)
                                 MaxInt = "IV";
-                            else if (json.Features[i].Properties.Mmi < 5.5)
+                            else if (MMI < 5.5)
                                 MaxInt = "V";
-                            else if (json.Features[i].Properties.Mmi < 6.5)
+                            else if (MMI < 6.5)
                                 MaxInt = "VI";
-                            else if (json.Features[i].Properties.Mmi < 7.5)
+                            else if (MMI < 7.5)
                                 MaxInt = "VII";
-                            else if (json.Features[i].Properties.Mmi < 8.5)
+                            else if (MMI < 8.5)
                                 MaxInt = "VIII";
-                            else if (json.Features[i].Properties.Mmi < 9.5)
+                            else if (MMI < 9.5)
                                 MaxInt = "IX";
-                            else if (json.Features[i].Properties.Mmi < 10.5)
+                            else if (MMI < 10.5)
                                 MaxInt = "X";
-                            else if (json.Features[i].Properties.Mmi < 11.5)
+                            else if (MMI < 11.5)
                                 MaxInt = "XI";
-                            else if (json.Features[i].Properties.Mmi >= 11.5)
+                            else if (MMI >= 11.5)
                                 MaxInt = "XII";
-                            DateTimeOffset DataTimeOff = DateTimeOffset.FromUnixTimeMilliseconds((long)json.Features[i].Properties.Time).ToLocalTime();
-                            string Time = Convert.ToString(DataTimeOff).Replace("+0", "UTC +0").Replace("+1", "UTC +1").Replace("-0", "UTC -0").Replace("+1", "UTC -1");
+                            DateTimeOffset DataTimeOff = DateTimeOffset.FromUnixTimeMilliseconds(json.Features[i].Properties.Time).ToLocalTime();
+                            string Time = Convert.ToString(DataTimeOff).Replace("+0", " UTC +0").Replace("+1", " UTC +1").Replace("-0", " UTC -0").Replace("+1", " UTC -1");
+                            DateTime TimeJP_ = DataTimeOff.DateTime;
+                            string TimeJP = TimeJP_.ToString("dd日HH時mm分ss秒");
                             string Mag = $"{json.Features[i].Properties.Mag}";
                             if (Mag.Length == 1)
                                 Mag += ".0";
@@ -227,9 +232,10 @@ namespace WorldQuakeViewer
                             double Lon = json.Features[i].Geometry.Coordinates[0];
                             double LatShort = Math.Round(json.Features[i].Geometry.Coordinates[1], 2, MidpointRounding.AwayFromZero);
                             double LonShort = Math.Round(json.Features[i].Geometry.Coordinates[0], 2, MidpointRounding.AwayFromZero);
-                            string Arart = "アラート:-";
-                            if (json.Features[i].Properties.Alert != null)
-                                Arart = Arart.Replace("-", json.Features[i].Properties.Alert.Replace("green", "緑").Replace("yellow", "黄").Replace("orange", "オレンジ").Replace("red", "赤").Replace("pending", "保留中"));
+                            string Alert = json.Features[i].Properties.Alert;
+                            string AlertJP = "アラート:-";
+                            if (Alert != null)
+                                AlertJP = AlertJP.Replace("-", json.Features[i].Properties.Alert.Replace("green", "緑").Replace("yellow", "黄").Replace("orange", "オレンジ").Replace("red", "赤").Replace("pending", "保留中"));
                             string LatStDecimal = $"{Math.Round(Lat, 2, MidpointRounding.AwayFromZero)}°N";
                             if (Lat < 0)
                                 LatStDecimal = $"{Math.Round(-Lat, 2, MidpointRounding.AwayFromZero)}°S";
@@ -237,36 +243,36 @@ namespace WorldQuakeViewer
                             if (Lon < 0)
                                 LonStDecimal = $"{Math.Round(-Lon, 2, MidpointRounding.AwayFromZero)}°W";
                             TimeSpan LatTime = TimeSpan.FromHours(Lat);
-                            TimeSpan LongTime = TimeSpan.FromHours(Lon);
+                            TimeSpan LonTime = TimeSpan.FromHours(Lon);
                             string LatStShort = $"{(int)Lat}ﾟ{LatTime.Minutes}'N";
-                            string LongStShort = $"{(int)Lon}ﾟ{LongTime.Minutes}'E";
+                            string LonStShort = $"{(int)Lon}ﾟ{LonTime.Minutes}'E";
                             if (Lat < 0)
-                                LatStShort = $"{(int)Lat * -1}ﾟ{LatTime.Minutes * -1}'S";
+                                LatStShort = $"{(int)-Lat}ﾟ{-LatTime.Minutes}'S";
                             if (Lon < 0)
-                                LongStShort = $"{(int)Lon * -1}ﾟ{LongTime.Minutes * -1}'W";
+                                LonStShort = $"{(int)-Lon}ﾟ{-LonTime.Minutes}'W";
                             string LatStLong = $"{(int)Lat}ﾟ{LatTime.Minutes}'{LatTime.Seconds}\"N";
-                            string LongStLong = $"{(int)Lon}ﾟ{LongTime.Minutes}'{LongTime.Seconds}\"E";
+                            string LonStLong = $"{(int)Lon}ﾟ{LonTime.Minutes}'{LonTime.Seconds}\"E";
                             if (Lat < 0)
-                                LatStLong = $"{(int)Lat * -1}ﾟ{LatTime.Minutes * -1}'{LatTime.Seconds * -1}\"S";
+                                LatStLong = $"{(int)-Lat} ﾟ {-LatTime.Minutes} '";
                             if (Lon < 0)
-                                LongStLong = $"{(int)Lon * -1}ﾟ{LongTime.Minutes * -1}'{LongTime.Seconds * -1}\"W";
+                                LonStLong = $"{(int)-Lon} ﾟ {-LonTime.Minutes} '";
                             string LatStLongJP = $"北緯{(int)Lat}度{LatTime.Minutes}分{LatTime.Seconds}秒";
-                            string LongStLongJP = $"東経{(int)Lon}度{LongTime.Minutes}分{LongTime.Seconds}秒";
+                            string LonStLongJP = $"東経{(int)Lon}度{LonTime.Minutes}分{LonTime.Seconds}秒";
                             if (Lat < 0)
-                                LatStLongJP = $"南緯{(int)Lat * -1}度{LatTime.Minutes * -1}分{LatTime.Seconds * -1}秒";
+                                LatStLongJP = $"南緯{(int)-Lat}度{-LatTime.Minutes}分{-LatTime.Seconds}秒";
                             if (Lon < 0)
-                                LongStLongJP = $"西経{(int)Lon * -1}度{LongTime.Minutes * -1}分{LongTime.Seconds * -1}秒";
+                                LonStLongJP = $"西経{(int)-Lon}度{-LonTime.Minutes}分{-LonTime.Seconds}秒";
                             if (Settings.Default.Text_LatLonDecimal)
                             {
                                 LatStLongJP = $"北緯{Lat}度";
-                                LongStLongJP = $"東経{Lon}度";
+                                LonStLongJP = $"東経{Lon}度";
                                 if (Lat < 0)
-                                    LatStLongJP = $"南緯{Lat * -1}度";
+                                    LatStLongJP = $"南緯{-Lat}度";
                                 if (Lon < 0)
-                                    LongStLongJP = $"西経{Lon * -1}度";
+                                    LonStLongJP = $"西経{-Lon}度";
                             }
                             string LatView = LatStShort;
-                            string LongView = LongStShort;
+                            string LongView = LonStShort;
                             if (Settings.Default.Text_LatLonDecimal)
                             {
                                 LatView = LatStDecimal;
@@ -278,9 +284,6 @@ namespace WorldQuakeViewer
                             string DepthLong = $"深さ:{json.Features[i].Geometry.Coordinates[2]}km";
                             if (json.Features[i].Geometry.Coordinates[2] == (int)json.Features[i].Geometry.Coordinates[2])
                                 DepthLong = Depth;
-                            string MMI = "-";
-                            if (json.Features[i].Properties.Mmi != null)
-                                MMI = $"({Convert.ToString(json.Features[i].Properties.Mmi)})";
                             string Shingen = "震源の取得に失敗しました。";
                             string JPNameNotFoundLogText = "";
                             if (File.Exists("Log\\JPNameNotFound.txt"))
@@ -288,7 +291,7 @@ namespace WorldQuakeViewer
                             Point HypoPoint = new Point((int)(LatShort * 100), (int)(LonShort * 100));
                             if (HypoIDs.ContainsKey(HypoPoint))
                             {
-                                Shingen = "震源:" + HypoName[HypoIDs[HypoPoint]];
+                                Shingen = HypoName[HypoIDs[HypoPoint]];
                                 ExeLog($"震源キャッシュが存在します({HypoPoint.X},{HypoPoint.Y}->{HypoIDs[HypoPoint]})");
                             }
                             else
@@ -296,20 +299,20 @@ namespace WorldQuakeViewer
                                 ExeLog($"震源キャッシュが存在しません。({HypoPoint.X},{HypoPoint.Y})ダウンロードします。");
                                 try
                                 {
-                                    string USGSFERegion_ = await WC.DownloadStringTaskAsync(new Uri($"https://earthquake.usgs.gov/ws/geoserve/regions.json?latitude={LatShort}&longitude={LonShort}&type=fe"));
+                                    string USGSFERegionJSON = await WC.DownloadStringTaskAsync(new Uri($"https://earthquake.usgs.gov/ws/geoserve/regions.json?latitude={LatShort}&longitude={LonShort}&type=fe"));
                                     AccessedFE++;
-                                    JObject USGSFERegion = JObject.Parse(USGSFERegion_);
-                                    for (int j = 0; j < (int)USGSFERegion.SelectToken("fe.count"); j++)
+                                    JObject USGSFERegion = JObject.Parse(USGSFERegionJSON);
+                                    foreach (JToken USGSFERegion_ in USGSFERegion.SelectToken("fe.features"))
                                     {
-                                        if ((int?)USGSFERegion.SelectToken($"fe.features[{j}].properties.number") != null)
-                                            if (HypoName.ContainsKey((int)USGSFERegion.SelectToken($"fe.features[{j}].properties.number")))
+                                        if ((int?)USGSFERegion_.SelectToken($"properties.number") != null)
+                                            if (HypoName.ContainsKey((int)USGSFERegion_.SelectToken($"properties.number")))
                                             {
-                                                Shingen = "震源:" + HypoName[(int)USGSFERegion.SelectToken($"fe.features[{j}].properties.number")];
-                                                HypoIDs.Add(HypoPoint, (int)USGSFERegion.SelectToken($"fe.features[{j}].properties.number"));
+                                                Shingen = "震源:" + HypoName[(int)USGSFERegion_.SelectToken($"properties.number")];
+                                                HypoIDs.Add(HypoPoint, (int)USGSFERegion_.SelectToken($"properties.number"));
                                                 break;
                                             }
-                                        if (JPNameNotFoundLogText.Contains($"lat={LatShort},lon={LonShort},num=null,name={USGSFERegion.SelectToken($"fe.features[{j}].properties.name")}"))
-                                            JPNameNotFoundLogText += $"\nlat={LatShort},lon={LonShort},num=null,name={USGSFERegion.SelectToken($"fe.features[{j}].properties.name")}";
+                                        if (JPNameNotFoundLogText.Contains($"lat={LatShort},lon={LonShort},num=null,name={USGSFERegion_.SelectToken($"properties.name")}"))
+                                            JPNameNotFoundLogText += $"\nlat={LatShort},lon={LonShort},num=null,name={USGSFERegion_.SelectToken($"properties.name")}";
                                     }
                                     File.WriteAllText($"Log\\JPNameNotFound.txt", JPNameNotFoundLogText);
                                 }
@@ -319,67 +322,111 @@ namespace WorldQuakeViewer
                                 }
                             }
                             string Shingen2 = $"({json.Features[i].Properties.Place})";
-                            string LogText_ = $"USGS地震情報【{MagType}{Mag}】{Time.Replace("※", "(")})\n{Shingen}{Shingen2}\n{LatView},{LongView}　{Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}　{Arart.Replace("アラート:-", "")}\n{json.Features[i].Properties.Url}";
-                            string BouyomiText = $"USGS地震情報。マグニチュード{Mag}、震源、{Shingen.Replace(" ", "、").Replace("/", "、").Replace("震源:", "")}、{LatStLongJP}、{LongStLongJP}、深さ{DepthLong.Replace("深さ:", "")}。{$"推定最大改正メルカリ震度階級{MMI.Replace("(", "").Replace(")", "")}".Replace("推定最大改正メルカリ震度階級-", "")}。{Arart.Replace("アラート:-", "")}";
-                            bool NewUpdt = false;
+                            string LogText_ = $"USGS地震情報【{MagType}{Mag}】{Time.Replace("※", "(")})\n{Shingen}{Shingen2}\n{LatView},{LongView}　{Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}　{AlertJP.Replace("アラート:-", "")}\n{json.Features[i].Properties.Url}";
+                            string BouyomiText = $"USGS地震情報。{TimeJP}、マグニチュード{Mag}、震源、{Shingen.Replace(" ", "、").Replace("/", "、").Replace("震源:", "")}、{LatStLongJP}、{LonStLongJP}、深さ{DepthLong.Replace("深さ:", "")}。{$"推定最大改正メルカリ震度階級{MMISt}。".Replace("推定最大改正メルカリ震度階級-。", "")}{AlertJP.Replace("アラート:-", "")}";
 
+                            History history = new History
+                            {
+                                URL = json.Features[i].Properties.Url,
+                                Update = Updated,
+                                TweetID = 0,//更新の場合は上書き前に変更するから0でおｋ
+
+                                Display10 = $"USGS地震情報                                         {Time}",
+                                Display11 = $"{Shingen}\n{Shingen2}\n{LatView},{LongView}\n{Depth}",
+                                Display12 = $"{MagType}",
+                                Display13 = $"{Mag}",//14は変わらない
+                                Display15 = $"{MMI}",
+                                Display21 = $"{Time} 発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {DepthLong}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt}",
+                                Display22 = $"{MagType}",
+                                Display23 = $"{Mag}",
+
+                                Time = json.Features[i].Properties.Time,
+                                HypoJP = Shingen,
+                                HypoEN = Shingen2,//()付く
+                                Lat = Lat,
+                                Lon = Lon,
+                                Depth = json.Features[i].Geometry.Coordinates[2],
+                                MagType = MagType,
+                                Mag = Mag,
+                                MMI = MMI,
+                                Alert = Alert
+                            };
+                            bool NewUpdt = false;
                             if (!Histories.ContainsKey(ID))//Keyないと探したときエラーになるから別化
                                 NewUpdt = true;
                             else
                             {
+                                if (Settings.Default.Update_Time)
+                                    if (Histories[ID].Time != history.Time)
+                                    {
+                                        NewUpdt = true;
+                                        ExeLog($"{Histories[ID].Time}->{history.Time}");
+                                    }
+                                if (Settings.Default.Update_HypoJP)
+                                    if (Histories[ID].HypoJP != history.HypoJP)
+                                    {
+                                        NewUpdt = true;
+                                        ExeLog($"{Histories[ID].HypoJP}->{history.HypoJP}");
+                                    }
+                                if (Settings.Default.Update_HypoEN)
+                                    if (Histories[ID].HypoEN != history.HypoEN)
+                                    {
+                                        NewUpdt = true;
+                                        ExeLog($"{Histories[ID].HypoEN}->{history.HypoEN}");
+                                    }
+                                if (Settings.Default.Update_LatLon)
+                                    if (Histories[ID].Lat != history.Lat|| Histories[ID].Lon != history.Lon)
+                                    {
+                                        NewUpdt = true;
+                                        ExeLog($"{Histories[ID].Lat}->{history.Lat}, {Histories[ID].Lon}->{history.Lon}");
+                                    }
+                                if (Settings.Default.Update_Depth)
+                                    if (Histories[ID].Depth != history.Depth)
+                                    {
+                                        NewUpdt = true;
+                                        ExeLog($"{Histories[ID].Depth}->{history.Depth}");
+                                    }
+                                if (Settings.Default.Update_MagType)
+                                    if (Histories[ID].MagType != history.MagType)
+                                    {
+                                        NewUpdt = true;
+                                        ExeLog($"{Histories[ID].MagType}->{history.MagType}");
+                                    }
+                                if (Settings.Default.Update_Mag)
+                                    if (Histories[ID].Mag != history.Mag)
+                                    {
+                                        NewUpdt = true;
+                                        ExeLog($"{Histories[ID].Mag}->{history.Mag}");
+                                    }
+                                if (Settings.Default.Update_MMI)
+                                    if (Histories[ID].MMI != history.MMI)
+                                    {
+                                        NewUpdt = true;
+                                        ExeLog($"{Histories[ID].MMI}->{history.MMI}");
+                                    }
+                                if (Settings.Default.Update_Alert)
+                                    if (Histories[ID].Alert != history.Alert)
+                                    {
+                                        NewUpdt = true;
+                                        ExeLog($"{Histories[ID].Alert}->{history.Alert}");
+                                    }
                                 LogText_ = LogText_.Replace("USGS地震情報", "USGS地震情報(更新)");
                                 BouyomiText = BouyomiText.Replace("USGS地震情報", "USGS地震情報、更新");
-                                if (Histories[ID].Text != LogText_)
-                                    NewUpdt = true;
                             }
                             if (NewUpdt)//更新、初回検知
                             {
                                 if (Histories.ContainsKey(ID))//更新
                                 {
 
-                                    ExeLog($"//////////{ID}更新検知//////////\n{Histories[ID].Text.Replace("\n", "")}->\n{LogText_.Replace("\n", "")}");
-                                    Histories[ID] = new History2
-                                    {
-                                        Text = LogText_,
-                                        UpdateTime = Convert.ToString(json.Features[i].Properties.Updated),
-                                        EQTime = (long)json.Features[i].Properties.Time,
-                                        TweetID = Histories[ID].TweetID,
-                                        //地図画像位置　x:+200が中心※左余白-250 -> -50 y:+300が中心
-                                        Display1LocX = (int)(Lon + 180) * -5 - 50,//(-180,0,180) + 180 -> (0,180,360)
-                                        Display1LocY = (int)(90 - Lat) * -5 + 300,//90 - (90,0,-90) -> (0,90,180)
-                                                                                  //最新
-                                        Display10 = $"USGS地震情報                                     {Time}",
-                                        Display11 = $"{Shingen}\n{Shingen2}\n{LatView},{LongView}\n{Depth}",
-                                        Display12 = $"{MagType}",
-                                        Display13 = $"{Mag}",//14は変わらない
-                                        Display15 = $"{MMI.Replace("(", "").Replace(")", "")}",
-                                        //履歴
-                                        Display21 = $"{Time} 発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {DepthLong}\n推定最大改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}",
-                                        Display22 = $"{MagType}",
-                                        Display23 = $"{Mag}"
-                                    };
+                                    ExeLog($"//////////{ID}更新検知//////////");
+                                    history.TweetID = Histories[ID].TweetID;
+                                    Histories[ID] = history;
                                 }
                                 else//new
                                 {
-                                    ExeLog($"//////////{ID}初回検知//////////\n{LogText_.Replace("\n", "")}");
+                                    ExeLog($"//////////{ID}初回検知//////////");
                                     New = true;
-                                    Histories.Add(ID, new History2
-                                    {
-                                        Text = LogText_,
-                                        UpdateTime = Convert.ToString(json.Features[i].Properties.Updated),
-                                        EQTime = (long)json.Features[i].Properties.Time,
-                                        TweetID = 0,
-                                        Display1LocX = (int)(Lon + 180) * -5 - 50,
-                                        Display1LocY = (int)(90 - Lat) * -5 + 300,
-                                        Display10 = $"USGS地震情報                                     {Time}",
-                                        Display11 = $"{Shingen}\n{Shingen2}\n{LatView},{LongView}\n{Depth}",
-                                        Display12 = $"{MagType}",
-                                        Display13 = $"{Mag}",
-                                        Display15 = $"{MMI.Replace("(", "").Replace(")", "")}",
-                                        Display21 = $"{Time} 発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {DepthLong}\n推定最大改正メルカリ震度階級:{MaxInt}{MMI.Replace("-", "")}",
-                                        Display22 = $"{MagType}",
-                                        Display23 = $"{Mag}"
-                                    });
+                                    Histories.Add(ID, history);
                                 }
                                 LogSave("Log\\M4.5+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText_}", ID);
                                 if (Settings.Default.Socket_Enable)
@@ -407,10 +454,10 @@ namespace WorldQuakeViewer
                                                 SoundLevel = 5;
                                     }
                                 }
-                                if (json.Features[i].Properties.Mag >= Settings.Default.Bouyomichan_LowerMagnitudeLimit || json.Features[i].Properties.Mmi >= Settings.Default.Bouyomichan_LowerMMILimit)
+                                if (json.Features[i].Properties.Mag >= Settings.Default.Bouyomichan_LowerMagnitudeLimit || MMI >= Settings.Default.Bouyomichan_LowerMMILimit)
                                     if (Settings.Default.Bouyomichan_Enable)
                                         Bouyomichan(BouyomiText);
-                                if (json.Features[i].Properties.Mag >= Settings.Default.Tweet_LowerMagnitudeLimit || json.Features[i].Properties.Mmi >= Settings.Default.Tweet_LowerMMILimit)
+                                if (json.Features[i].Properties.Mag >= Settings.Default.Tweet_LowerMagnitudeLimit || MMI >= Settings.Default.Tweet_LowerMMILimit)
                                     if (Settings.Default.Tweet_Enable)
                                         await Task.Run(() => Tweet(LogText_, ID));
                             }
@@ -425,6 +472,7 @@ namespace WorldQuakeViewer
                     if (Histories.Count > i)//データ不足対処
                     {
                         string ID = json.Features[i].Id;
+                        string Alert = json.Features[i].Properties.Alert;
                         if (i == 0)//最新
                         {
                             USGS0.Text = Histories[ID].Display10;
@@ -433,8 +481,8 @@ namespace WorldQuakeViewer
                             USGS3.Text = Histories[ID].Display13;
                             USGS4.Text = $"改正メルカリ\n　　震度階級:";
                             USGS5.Text = Histories[ID].Display15;
-                            int LocX = Histories[ID].Display1LocX;
-                            int LocY = Histories[ID].Display1LocY;
+                            int LocX = (int)((Histories[ID].Lon + 180) * -5 - 50);//(-180,0,180) + 180 -> (0,180,360)
+                            int LocY = (int)((90 - Histories[ID].Lat) * -5 + 300);//90 - (90,0,-90) -> (0,90,180)
                             int LocY_ = LocY;
                             if (LocY > 100)//はみ出しなくす
                                 LocY_ = 100;
@@ -443,7 +491,7 @@ namespace WorldQuakeViewer
                             MainImg.Location = new Point(LocX, LocY_);
                             Bitmap MainBitmap = new Bitmap(Resources.WorldMap);
                             Graphics graphics = Graphics.FromImage(MainBitmap);
-                            graphics.DrawImage(Resources.Point, new Rectangle(LocX * -1 + 185, LocY * -1 + 285, 30, 30));//地図左上の画面座標の差
+                            graphics.DrawImage(Resources.Point, new Rectangle(-LocX + 185, -LocY + 285, 30, 30));//地図左上の画面座標の差
                             MainImg.Image = MainBitmap;
                             graphics.Dispose();
                             if (json.Features[i].Properties.Mag >= 6.0)
@@ -473,32 +521,32 @@ namespace WorldQuakeViewer
                                 USGS4.ForeColor = Color.White;
                                 USGS5.ForeColor = Color.White;
                             }
-                            if (json.Features[i].Properties.Alert == null)
+                            if (Alert == null)
                             {
                                 USGS0.BackColor = Color.Black;
                                 USGS0.ForeColor = Color.White;
                             }
-                            else if (json.Features[i].Properties.Alert == "green")
+                            else if (Alert == "green")
                             {
                                 USGS0.BackColor = Color.Green;
                                 USGS0.ForeColor = Color.White;
                             }
-                            else if (json.Features[i].Properties.Alert == "yellow")
+                            else if (Alert == "yellow")
                             {
                                 USGS0.BackColor = Color.Yellow;
                                 USGS0.ForeColor = Color.Black;
                             }
-                            else if (json.Features[i].Properties.Alert == "orange")
+                            else if (Alert == "orange")
                             {
                                 USGS0.BackColor = Color.Orange;
                                 USGS0.ForeColor = Color.Black;
                             }
-                            else if (json.Features[i].Properties.Alert == "red")
+                            else if (Alert == "red")
                             {
                                 USGS0.BackColor = Color.Red;
                                 USGS0.ForeColor = Color.White;
                             }
-                            else if (json.Features[i].Properties.Alert == "pending")
+                            else if (Alert == "pending")
                             {
                                 USGS0.BackColor = Color.DimGray;
                                 USGS0.ForeColor = Color.White;
@@ -527,17 +575,17 @@ namespace WorldQuakeViewer
                                 History12.ForeColor = Color.White;
                                 History13.ForeColor = Color.White;
                             }
-                            if (json.Features[i].Properties.Alert == null)
+                            if (Alert == null)
                                 History10.BackColor = Color.FromArgb(45, 45, 90);
-                            else if (json.Features[i].Properties.Alert == "green")
+                            else if (Alert == "green")
                                 History10.BackColor = Color.Green;
-                            else if (json.Features[i].Properties.Alert == "yellow")
+                            else if (Alert == "yellow")
                                 History10.BackColor = Color.Yellow;
-                            else if (json.Features[i].Properties.Alert == "orange")
+                            else if (Alert == "orange")
                                 History10.BackColor = Color.Orange;
-                            else if (json.Features[i].Properties.Alert == "red")
+                            else if (Alert == "red")
                                 History10.BackColor = Color.Red;
-                            else if (json.Features[i].Properties.Alert == "pending")
+                            else if (Alert == "pending")
                                 History10.BackColor = Color.DimGray;
                         }
                         else if (i == 2)
@@ -563,17 +611,17 @@ namespace WorldQuakeViewer
                                 History22.ForeColor = Color.White;
                                 History23.ForeColor = Color.White;
                             }
-                            if (json.Features[i].Properties.Alert == null)
+                            if (Alert == null)
                                 History20.BackColor = Color.FromArgb(45, 45, 90);
-                            else if (json.Features[i].Properties.Alert == "green")
+                            else if (Alert == "green")
                                 History20.BackColor = Color.Green;
-                            else if (json.Features[i].Properties.Alert == "yellow")
+                            else if (Alert == "yellow")
                                 History20.BackColor = Color.Yellow;
-                            else if (json.Features[i].Properties.Alert == "orange")
+                            else if (Alert == "orange")
                                 History20.BackColor = Color.Orange;
-                            else if (json.Features[i].Properties.Alert == "red")
+                            else if (Alert == "red")
                                 History20.BackColor = Color.Red;
-                            else if (json.Features[i].Properties.Alert == "pending")
+                            else if (Alert == "pending")
                                 History20.BackColor = Color.DimGray;
                         }
                         else if (i == 3)
@@ -599,17 +647,17 @@ namespace WorldQuakeViewer
                                 History32.ForeColor = Color.White;
                                 History33.ForeColor = Color.White;
                             }
-                            if (json.Features[i].Properties.Alert == null)
+                            if (Alert == null)
                                 History30.BackColor = Color.FromArgb(45, 45, 90);
-                            else if (json.Features[i].Properties.Alert == "green")
+                            else if (Alert == "green")
                                 History30.BackColor = Color.Green;
-                            else if (json.Features[i].Properties.Alert == "yellow")
+                            else if (Alert == "yellow")
                                 History30.BackColor = Color.Yellow;
-                            else if (json.Features[i].Properties.Alert == "orange")
+                            else if (Alert == "orange")
                                 History30.BackColor = Color.Orange;
-                            else if (json.Features[i].Properties.Alert == "red")
+                            else if (Alert == "red")
                                 History30.BackColor = Color.Red;
-                            else if (json.Features[i].Properties.Alert == "pending")
+                            else if (Alert == "pending")
                                 History30.BackColor = Color.DimGray;
                         }
                         else if (i == 4)
@@ -635,17 +683,17 @@ namespace WorldQuakeViewer
                                 History42.ForeColor = Color.White;
                                 History43.ForeColor = Color.White;
                             }
-                            if (json.Features[i].Properties.Alert == null)
+                            if (Alert == null)
                                 History40.BackColor = Color.FromArgb(45, 45, 90);
-                            else if (json.Features[i].Properties.Alert == "green")
+                            else if (Alert == "green")
                                 History40.BackColor = Color.Green;
-                            else if (json.Features[i].Properties.Alert == "yellow")
+                            else if (Alert == "yellow")
                                 History40.BackColor = Color.Yellow;
-                            else if (json.Features[i].Properties.Alert == "orange")
+                            else if (Alert == "orange")
                                 History40.BackColor = Color.Orange;
-                            else if (json.Features[i].Properties.Alert == "red")
+                            else if (Alert == "red")
                                 History40.BackColor = Color.Red;
-                            else if (json.Features[i].Properties.Alert == "pending")
+                            else if (Alert == "pending")
                                 History40.BackColor = Color.DimGray;
                         }
                         else if (i == 5)
@@ -671,17 +719,17 @@ namespace WorldQuakeViewer
                                 History52.ForeColor = Color.White;
                                 History53.ForeColor = Color.White;
                             }
-                            if (json.Features[i].Properties.Alert == null)
+                            if (Alert == null)
                                 History50.BackColor = Color.FromArgb(45, 45, 90);
-                            else if (json.Features[i].Properties.Alert == "green")
+                            else if (Alert == "green")
                                 History50.BackColor = Color.Green;
-                            else if (json.Features[i].Properties.Alert == "yellow")
+                            else if (Alert == "yellow")
                                 History50.BackColor = Color.Yellow;
-                            else if (json.Features[i].Properties.Alert == "orange")
+                            else if (Alert == "orange")
                                 History50.BackColor = Color.Orange;
-                            else if (json.Features[i].Properties.Alert == "red")
+                            else if (Alert == "red")
                                 History50.BackColor = Color.Red;
-                            else if (json.Features[i].Properties.Alert == "pending")
+                            else if (Alert == "pending")
                                 History50.BackColor = Color.DimGray;
                         }
                         else if (i == 6)
@@ -707,17 +755,17 @@ namespace WorldQuakeViewer
                                 History62.ForeColor = Color.White;
                                 History63.ForeColor = Color.White;
                             }
-                            if (json.Features[i].Properties.Alert == null)
+                            if (Alert == null)
                                 History60.BackColor = Color.FromArgb(45, 45, 90);
-                            else if (json.Features[i].Properties.Alert == "green")
+                            else if (Alert == "green")
                                 History60.BackColor = Color.Green;
-                            else if (json.Features[i].Properties.Alert == "yellow")
+                            else if (Alert == "yellow")
                                 History60.BackColor = Color.Yellow;
-                            else if (json.Features[i].Properties.Alert == "orange")
+                            else if (Alert == "orange")
                                 History60.BackColor = Color.Orange;
-                            else if (json.Features[i].Properties.Alert == "red")
+                            else if (Alert == "red")
                                 History60.BackColor = Color.Red;
-                            else if (json.Features[i].Properties.Alert == "pending")
+                            else if (Alert == "pending")
                                 History60.BackColor = Color.DimGray;
                         }
                     }
@@ -863,7 +911,7 @@ namespace WorldQuakeViewer
         /// <summary>
         /// ログを保存します。
         /// </summary>
-        /// <param name="SaveDirectory">保存するディレクトリ。Log\\[M4.5+,M6.0+,M8.0+,ErrorLog...]</param>
+        /// <param name="SaveDirectory">保存するディレクトリ。</param>
         /// <param name="SaveText">保存するテキスト。</param>
         /// <param name="ID">地震ログ保存時用地震ID。</param>
         public static void LogSave(string SaveDirectory, string SaveText, string ID = "unknown")
@@ -1021,9 +1069,8 @@ namespace WorldQuakeViewer
         /// <remarks>タイムスタンプは自動で追加されます。</remarks>
         public static void ExeLog(string Text)
         {
-            if (File.Exists("nolog.txt"))
-                return;
-            ExeLogs += $"{DateTime.Now:HH:mm:ss.ffff} {Text}\n";
+            if (Settings.Default.Log_Enable)
+                ExeLogs += $"{DateTime.Now:HH:mm:ss.ffff} {Text}\n";
             Console.WriteLine(Text);
         }
         /// <summary>
@@ -1044,6 +1091,7 @@ namespace WorldQuakeViewer
                     ClientSize = new Size(400, 500);
             else
                 ClientSize = new Size(800, 500);
+            ExeLogAutoDelete.Interval = Settings.Default.Log_DeleteTime * 1000;
             ExeLog($"設定読み込み終了");
         }
         public static SoundPlayer Player = null;
@@ -1136,7 +1184,7 @@ namespace WorldQuakeViewer
             if (allow == DialogResult.Cancel)
                 return;
             ExeLogs = "";
-            Histories = new Dictionary<string, History2>();
+            Histories = new Dictionary<string, History>();
             NoFirst = false;
         }
 

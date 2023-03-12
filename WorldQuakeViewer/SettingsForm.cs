@@ -1,6 +1,5 @@
 ﻿using CoreTweet;
 using System;
-using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
@@ -38,6 +37,17 @@ namespace WorldQuakeViewer
             Tab_View_HideHist.Checked = Settings.Default.Display_HideHistory;
             Tab_View_HideMap.Checked = Settings.Default.Display_HideHistoryMap;
             Tab_View_LatLonDecimal.Checked = Settings.Default.Text_LatLonDecimal;
+            Tab_View_LogEnable.Checked = Settings.Default.Log_Enable;
+            Tab_View_LogTime.Value = Settings.Default.Log_DeleteTime;
+            Tab_Update_Time.Checked = Settings.Default.Update_Time;
+            Tab_Update_HypoJP.Checked = Settings.Default.Update_HypoJP;
+            Tab_Update_HypoEN.Checked = Settings.Default.Update_HypoEN;
+            Tab_Update_LatLon.Checked = Settings.Default.Update_LatLon;
+            Tab_Update_Depth.Checked = Settings.Default.Update_Depth;
+            Tab_Update_MagType.Checked = Settings.Default.Update_MagType;
+            Tab_Update_Mag.Checked = Settings.Default.Update_Mag;
+            Tab_Update_MMI.Checked = Settings.Default.Update_MMI;
+            Tab_Update_Alert.Checked = Settings.Default.Update_Alert;
             Tab_Sound_M45.Checked = Settings.Default.Sound_45_Enable;
             Tab_Sound_M60.Checked = Settings.Default.Sound_60_Enable;
             Tab_Sound_M80.Checked = Settings.Default.Sound_80_Enable;
@@ -70,6 +80,17 @@ namespace WorldQuakeViewer
             Settings.Default.Display_HideHistory = Tab_View_HideHist.Checked;
             Settings.Default.Display_HideHistoryMap = Tab_View_HideMap.Checked;
             Settings.Default.Text_LatLonDecimal = Tab_View_LatLonDecimal.Checked;
+            Settings.Default.Log_Enable = Tab_View_LogEnable.Checked;
+            Settings.Default.Log_DeleteTime = (int)Tab_View_LogTime.Value;
+            Settings.Default.Update_Time = Tab_Update_Time.Checked;
+            Settings.Default.Update_HypoJP = Tab_Update_HypoJP.Checked;
+            Settings.Default.Update_HypoEN = Tab_Update_HypoEN.Checked;
+            Settings.Default.Update_LatLon = Tab_Update_LatLon.Checked;
+            Settings.Default.Update_Depth = Tab_Update_Depth.Checked;
+            Settings.Default.Update_MagType = Tab_Update_MagType.Checked;
+            Settings.Default.Update_Mag = Tab_Update_Mag.Checked;
+            Settings.Default.Update_MMI = Tab_Update_MMI.Checked;
+            Settings.Default.Update_Alert = Tab_Update_Alert.Checked;
             Settings.Default.Sound_45_Enable = Tab_Sound_M45.Checked;
             Settings.Default.Sound_60_Enable = Tab_Sound_M60.Checked;
             Settings.Default.Sound_80_Enable = Tab_Sound_M80.Checked;
@@ -99,12 +120,12 @@ namespace WorldQuakeViewer
             Settings.Default.Save();
             Configuration Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
             File.Copy(Config.FilePath, "UserSetting.xml", true);
-            MessageBox.Show("設定を保存しました。設定ウィンドウを閉じると設定が再読み込みされます。", "WQV_setting", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("設定を保存しました。設定ウィンドウを閉じると設定が再読み込みされます。", "WQV - setting", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void SettingReset_Click(object sender, EventArgs e)
         {
-            DialogResult Result = MessageBox.Show("リセットしてもよろしいですか？\nリセットすると設定画面を開き直します。", "WQV_setting", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+            DialogResult Result = MessageBox.Show("リセットしてもよろしいですか？\nリセットすると設定画面を開き直します。", "WQV - setting", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
             if (Result == DialogResult.Yes)
             {
                 Settings.Default.Reset();
@@ -116,22 +137,6 @@ namespace WorldQuakeViewer
                     File.Delete(Config.FilePath);
                 Setting.Show();
                 Close();
-            }
-        }
-
-        private void SettingsForm_HelpButtonClicked(object sender, CancelEventArgs e)
-        {
-            try
-            {
-                Process.Start("notepad.exe", "UserSetting.readme.md");
-            }
-            catch (Exception ex)
-            {
-                DialogResult Result = MessageBox.Show($"UserSetting.readme.mdを開けませんでした。({ex.Message})\nブラウザで表示しますか?", "WQV_help", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-                if (Result == DialogResult.Yes)
-                {
-                    Process.Start("https://github.com/Ichihai1415/WorldQuakeViewer/blob/main/UserSetting.readme.md");
-                }
             }
         }
 
@@ -194,7 +199,7 @@ namespace WorldQuakeViewer
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"読み上げ指令の送信に失敗しました。({ex.Message})", "WQV_setting", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"読み上げ指令の送信に失敗しました。({ex.Message})", "WQV - setting", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 MainForm.LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Setting,Bouyomichan Version:{MainForm.Version}\n{ex}");
             }
             Tab_Yomi_Test.Enabled = true;
@@ -211,7 +216,7 @@ namespace WorldQuakeViewer
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"ツイートの送信に失敗しました。({ex.Message})", "WQV_setting", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"ツイートの送信に失敗しました。({ex.Message})", "WQV - setting", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 MainForm.LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Setting,Tweet Version:{MainForm.Version}\n{ex}");
             }
             Tab_Tweet_Test.Enabled = true;
@@ -235,7 +240,7 @@ namespace WorldQuakeViewer
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Socket送信に失敗しました。({ex.Message})", "WQV_setting", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Socket送信に失敗しました。({ex.Message})", "WQV - setting", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 MainForm.LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Setting,Socket Version:{MainForm.Version}\n{ex}");
             }
             Tab_Socket_Test.Enabled = true;
@@ -279,14 +284,14 @@ namespace WorldQuakeViewer
             Process.Start("https://koruri.github.io/");
         }
 
-        private void LinkOtoLigic_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LinkOtoLogic_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("https://otologic.jp");
         }
 
         private void Tab_Tweet_ViewToken_CheckedChanged(object sender, EventArgs e)
         {
-            if(Tab_Tweet_ViewToken.Checked)
+            if (Tab_Tweet_ViewToken.Checked)
             {
                 Tab_Tweet_ConKey.PasswordChar = (char)0;
                 Tab_Tweet_ConSec.PasswordChar = (char)0;
