@@ -23,7 +23,7 @@ namespace WorldQuakeViewer
 {
     public partial class MainForm : Form
     {
-        public static readonly string Version = "1.1.0α2";//こことアセンブリを変える
+        public static readonly string Version = "1.1.0α3";//こことアセンブリを変える
         public static DateTime StartTime = new DateTime();
         public static int AccessedUSGS = 0;
         public static int AccessedFE = 0;
@@ -323,7 +323,7 @@ namespace WorldQuakeViewer
                             }
                             string Shingen2 = $"({json.Features[i].Properties.Place})";
                             string LogText_ = $"USGS地震情報【{MagType}{Mag}】{Time.Replace("※", "(")})\n{Shingen}{Shingen2}\n{LatView},{LongView}　{Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}　{AlertJP.Replace("アラート:-", "")}\n{json.Features[i].Properties.Url}";
-                            string BouyomiText = $"USGS地震情報。{TimeJP}発生、マグニチュード{Mag}、震源、{Shingen.Replace(" ", "、").Replace("/", "、")}、{LatStLongJP}、{LonStLongJP}、深さ{DepthLong.Replace("深さ:", "")}。{$"推定最大改正メルカリ震度階級{MMISt}。".Replace("推定最大改正メルカリ震度階級-。", "")}{AlertJP.Replace("アラート:-", "")}";
+                            string BouyomiText = $"USGS地震情報。{TimeJP}発生、マグニチュード{Mag}、震源、{Shingen.Replace(" ", "、").Replace("/", "、")}、{LatStLongJP}、{LonStLongJP}、深さ{DepthLong.Replace("深さ:", "")}。{$"推定最大改正メルカリ震度階級{MMISt.Replace("(", "").Replace(")", "")}。".Replace("推定最大改正メルカリ震度階級-。", "")}{AlertJP.Replace("アラート:-", "")}";
 
                             History history = new History
                             {
@@ -335,7 +335,7 @@ namespace WorldQuakeViewer
                                 Display11 = $"{Shingen}\n{Shingen2}\n{LatView},{LongView}\n{Depth}",
                                 Display12 = $"{MagType}",
                                 Display13 = $"{Mag}",//14は変わらない
-                                Display15 = $"{MMISt}",
+                                Display15 = $"{MMISt.Replace("(","").Replace(")", "")}",
                                 Display21 = $"{Time} 発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {DepthLong}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-","")}",
                                 Display22 = $"{MagType}",
                                 Display23 = $"{Mag}",
