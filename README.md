@@ -1,5 +1,6 @@
 <!--GitHub用開始-->
 ![GitHub](https://img.shields.io/github/license/Ichihai1415/WorldQuakeViewer)
+![GitHub last commit](https://img.shields.io/github/last-commit/Ichihai1415/WorldQuakeViewer)
 
 main:
 ![GitHub Release Date](https://img.shields.io/github/release-date/Ichihai1415/WorldQuakeViewer)
