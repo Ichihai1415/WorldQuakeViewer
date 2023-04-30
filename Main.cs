@@ -23,13 +23,13 @@ namespace WorldQuakeViewer
 {
     public partial class MainForm : Form
     {
-        public static readonly string Version = "1.1.0α4";//こことアセンブリを変える
+        public static readonly string Version = "1.1.0α5";//こことアセンブリを変える
         public static DateTime StartTime = new DateTime();
         public static int AccessedUSGS = 0;
         public string LatestURL = "";
         public static bool NoFirst = false;//最初はツイートとかしない
         public static string ExeLogs = "";
-        public Dictionary<string, History> Histories = new Dictionary<string, History>();//EQID,Data
+        public static Dictionary<string, History> Histories = new Dictionary<string, History>();//EQID,Data
         public Font F9 = null;
         public Font F9_5 = null;
         public Font F10 = null;
@@ -175,7 +175,8 @@ namespace WorldQuakeViewer
                 int SoundLevel = 0;//音声判別用 初報ほど、M大きいほど高い
                 ExeLog($"各履歴処理開始");
                 LatestURL = json.Features[0].Properties.Url;
-                for (int i = Math.Min(Settings.Default.Update_MaxCount, json.Features.Count) - 1; i >= 0; i--)//送信の都合上古い順に
+                int DatasCount = Math.Min(Settings.Default.Update_MaxCount, json.Features.Count);
+                for (int i = DatasCount - 1; i >= 0; i--)//送信の都合上古い順に
                     if (json.Features.Count > i)
                     {
                         bool New = false;//音声判別用
@@ -187,7 +188,7 @@ namespace WorldQuakeViewer
                         long LastUpdated = 0;
                         if (Histories.ContainsKey(ID))
                             LastUpdated = Histories[ID].Update;
-                        ErrorText.Text = $"処理中…[{Math.Min(Settings.Default.Update_MaxCount, json.Features.Count) - i}/7]";
+                        ErrorText.Text = $"処理中…[{DatasCount - i}/{DatasCount}]";
                         if (Updated != LastUpdated)//新規か更新
                         {
                             ExeLog($"[{i}] 更新時刻変化検知({LastUpdated}->{Updated})");
@@ -1093,6 +1094,7 @@ namespace WorldQuakeViewer
         {
             ExeLog($"設定form終了");
             SettingReload();
+            NoFirst = false;//処理量増加時用
             ErrorText.Text = "設定を再読み込みしました。一部の設定は情報受信または再起動が必要です。";
         }
         private void RCusgsmap_Click(object sender, EventArgs e)
@@ -1142,7 +1144,7 @@ namespace WorldQuakeViewer
         }
         private void RC1CacheClear_Click(object sender, EventArgs e)
         {
-            DialogResult allow = MessageBox.Show("動作ログ、地震ログを消去してよろしいですか？消去した場合処理は起動時と同じようになります。(震源キャッシュは消去されません)", "確認", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+            DialogResult allow = MessageBox.Show("動作ログ、地震ログを消去してよろしいですか？消去した場合処理は起動時と同じようになります。", "確認", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
             if (allow == DialogResult.Cancel)
                 return;
             ExeLogs = "";
