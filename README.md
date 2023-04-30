@@ -25,8 +25,6 @@ pre:
 
 [詳細(現在制作中)](https://Ichihai1415.github.io/programs/released/wqv/)
 
----
----
 # 更新履歴
 ## v1.1.0α4(内部バージョン1.0.8)
 2023/04/30
@@ -37,6 +35,8 @@ pre:
 
 小規模コード修正
 
+---
+<details><summary>過去のバージョン</summary><div>
 
 ## v1.1.0α3(内部バージョン1.0.7)
 2023/03/14
@@ -108,8 +108,10 @@ Y座標がはみ出す場合収まるように
 
 などなど
 
----
-#### 以下は[ここ](https://github.com/Ichihai1415/WorldQuakeViewer_Beta)にあります。
+</div></details>
+<details><summary>ベータバージョン</summary><div>
+[ここ](https://github.com/Ichihai1415/WorldQuakeViewer_Beta)にあります。
+
 ## v0.2.6
 7/16
 
@@ -174,3 +176,5 @@ Y座標がはみ出す場合収まるように
 震源名日本語対応
 
 震源を中心としたマップ表示
+
+</div></details>
