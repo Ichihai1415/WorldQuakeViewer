@@ -39,6 +39,7 @@ namespace WorldQuakeViewer
             Tab_View_LatLonDecimal.Checked = Settings.Default.Text_LatLonDecimal;
             Tab_View_LogEnable.Checked = Settings.Default.Log_Enable;
             Tab_View_LogTime.Value = Settings.Default.Log_DeleteTime;
+            Tab_Update_MaxCount.Value = Settings.Default.Update_MaxCount;
             Tab_Update_Time.Checked = Settings.Default.Update_Time;
             Tab_Update_HypoJP.Checked = Settings.Default.Update_HypoJP;
             Tab_Update_HypoEN.Checked = Settings.Default.Update_HypoEN;
@@ -82,6 +83,7 @@ namespace WorldQuakeViewer
             Settings.Default.Text_LatLonDecimal = Tab_View_LatLonDecimal.Checked;
             Settings.Default.Log_Enable = Tab_View_LogEnable.Checked;
             Settings.Default.Log_DeleteTime = (int)Tab_View_LogTime.Value;
+            Settings.Default.Update_MaxCount = (int)Tab_Update_MaxCount.Value;
             Settings.Default.Update_Time = Tab_Update_Time.Checked;
             Settings.Default.Update_HypoJP = Tab_Update_HypoJP.Checked;
             Settings.Default.Update_HypoEN = Tab_Update_HypoEN.Checked;

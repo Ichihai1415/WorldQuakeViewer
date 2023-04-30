@@ -421,7 +421,7 @@ namespace WorldQuakeViewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool Update_HypoEN {
             get {
                 return ((bool)(this["Update_HypoEN"]));
@@ -500,6 +500,18 @@ namespace WorldQuakeViewer.Properties {
             }
             set {
                 this["Update_Alert"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int Update_MaxCount {
+            get {
+                return ((int)(this["Update_MaxCount"]));
+            }
+            set {
+                this["Update_MaxCount"] = value;
             }
         }
     }

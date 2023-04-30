@@ -112,6 +112,7 @@
             this.Tab_ProInfo = new System.Windows.Forms.TabPage();
             this.Tab_ProInfo_Text = new System.Windows.Forms.Label();
             this.ProInfoChange = new System.Windows.Forms.Timer(this.components);
+            this.Tab_Update_MaxCount = new System.Windows.Forms.NumericUpDown();
             this.Tabs.SuspendLayout();
             this.Tab_Info.SuspendLayout();
             this.Tab_View.SuspendLayout();
@@ -132,6 +133,7 @@
             this.Tab_Socket.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Tab_Socket_Port)).BeginInit();
             this.Tab_ProInfo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Tab_Update_MaxCount)).BeginInit();
             this.SuspendLayout();
             // 
             // SettingSave
@@ -366,6 +368,7 @@
             // 
             // Tab_Update
             // 
+            this.Tab_Update.Controls.Add(this.Tab_Update_MaxCount);
             this.Tab_Update.Controls.Add(this.Tab_Update_Time);
             this.Tab_Update.Controls.Add(this.Tab_Update_Alert);
             this.Tab_Update.Controls.Add(this.Tab_Update_MMI);
@@ -476,11 +479,11 @@
             // Tab_Update_Text
             // 
             this.Tab_Update_Text.AutoSize = true;
-            this.Tab_Update_Text.Location = new System.Drawing.Point(8, 3);
+            this.Tab_Update_Text.Location = new System.Drawing.Point(8, 6);
             this.Tab_Update_Text.Name = "Tab_Update_Text";
-            this.Tab_Update_Text.Size = new System.Drawing.Size(426, 22);
+            this.Tab_Update_Text.Size = new System.Drawing.Size(574, 22);
             this.Tab_Update_Text.TabIndex = 0;
-            this.Tab_Update_Text.Text = "チェックをつけたものが変わった場合更新と判定します。";
+            this.Tab_Update_Text.Text = "チェックをつけたものが変わった場合更新と判定します。　最大処理データ数:";
             // 
             // Tab_Sound
             // 
@@ -1105,15 +1108,37 @@
             this.Tab_ProInfo_Text.AutoSize = true;
             this.Tab_ProInfo_Text.Location = new System.Drawing.Point(8, 3);
             this.Tab_ProInfo_Text.Name = "Tab_ProInfo_Text";
-            this.Tab_ProInfo_Text.Size = new System.Drawing.Size(192, 66);
+            this.Tab_ProInfo_Text.Size = new System.Drawing.Size(192, 44);
             this.Tab_ProInfo_Text.TabIndex = 0;
-            this.Tab_ProInfo_Text.Text = "起動時間:0d00:00:00\r\nUSGS Feedアクセス回数:\r\nUSGE FE アクセス回数:";
+            this.Tab_ProInfo_Text.Text = "起動時間:0d00:00:00\r\nUSGS Feedアクセス回数:";
             // 
             // ProInfoChange
             // 
             this.ProInfoChange.Enabled = true;
             this.ProInfoChange.Interval = 1000;
             this.ProInfoChange.Tick += new System.EventHandler(this.ProInfoChange_Tick);
+            // 
+            // Tab_Update_MaxCount
+            // 
+            this.Tab_Update_MaxCount.Location = new System.Drawing.Point(579, 3);
+            this.Tab_Update_MaxCount.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
+            this.Tab_Update_MaxCount.Minimum = new decimal(new int[] {
+            7,
+            0,
+            0,
+            0});
+            this.Tab_Update_MaxCount.Name = "Tab_Update_MaxCount";
+            this.Tab_Update_MaxCount.Size = new System.Drawing.Size(50, 31);
+            this.Tab_Update_MaxCount.TabIndex = 10;
+            this.Tab_Update_MaxCount.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
             // 
             // SettingsForm
             // 
@@ -1163,6 +1188,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.Tab_Socket_Port)).EndInit();
             this.Tab_ProInfo.ResumeLayout(false);
             this.Tab_ProInfo.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Tab_Update_MaxCount)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1251,5 +1277,6 @@
         private System.Windows.Forms.CheckBox Tab_Update_Depth;
         private System.Windows.Forms.CheckBox Tab_Update_Time;
         private System.Windows.Forms.NumericUpDown Tab_View_LogTime;
+        private System.Windows.Forms.NumericUpDown Tab_Update_MaxCount;
     }
 }
