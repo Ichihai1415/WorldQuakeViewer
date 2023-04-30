@@ -1,9 +1,15 @@
 <!--GitHub用開始-->
 ![GitHub](https://img.shields.io/github/license/Ichihai1415/WorldQuakeViewer)
+
+main:
 ![GitHub Release Date](https://img.shields.io/github/release-date/Ichihai1415/WorldQuakeViewer)
-![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/Ichihai1415/WorldQuakeViewer)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Ichihai1415/WorldQuakeViewer)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/Ichihai1415/WorldQuakeViewer)
 ![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/Ichihai1415/WorldQuakeViewer/latest)
+<!--臨時-->
+pre:
+![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/Ichihai1415/WorldQuakeViewer)
+![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/Ichihai1415/WorldQuakeViewer?include_prereleases)
+
 <div display="flex">
   <img alt="v1.0.0" src="https://github.com/Ichihai1415/WorldQuakeViewer/blob/main/image/WQV_20221224_v1.0.0.png" width="49%" />
   <img alt="v1.0.4" src="https://github.com/Ichihai1415/WorldQuakeViewer/blob/main/image/WQV_20230206_v1.0.4.png" width="49%" />
@@ -11,8 +17,6 @@
 <!--GitHub用終了-->
 
 世界の地震情報を表示します。
-
-[MITライセンス](https://opensource.org/licenses/mit-license.php)で公開しています。確認してください。
 
 バグ、予定等は[Issue](https://github.com/Ichihai1415/WorldQuakeViewer/issues)を確認してください。
 
