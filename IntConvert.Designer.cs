@@ -46,7 +46,7 @@
             // MMItoPGV
             // 
             this.MMItoPGV.Location = new System.Drawing.Point(77, 50);
-            this.MMItoPGV.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.MMItoPGV.Margin = new System.Windows.Forms.Padding(4);
             this.MMItoPGV.Name = "MMItoPGV";
             this.MMItoPGV.Size = new System.Drawing.Size(27, 27);
             this.MMItoPGV.TabIndex = 0;
@@ -78,7 +78,7 @@
             // 
             // MMIv
             // 
-            this.MMIv.DecimalPlaces = 2;
+            this.MMIv.DecimalPlaces = 3;
             this.MMIv.Location = new System.Drawing.Point(17, 50);
             this.MMIv.Maximum = new decimal(new int[] {
             15,
@@ -92,7 +92,7 @@
             // 
             // PGVv
             // 
-            this.PGVv.DecimalPlaces = 2;
+            this.PGVv.DecimalPlaces = 3;
             this.PGVv.Location = new System.Drawing.Point(131, 50);
             this.PGVv.Maximum = new decimal(new int[] {
             99999,
@@ -106,7 +106,7 @@
             // 
             // JIv
             // 
-            this.JIv.DecimalPlaces = 2;
+            this.JIv.DecimalPlaces = 3;
             this.JIv.Location = new System.Drawing.Point(245, 50);
             this.JIv.Maximum = new decimal(new int[] {
             999,
@@ -182,7 +182,7 @@
             this.Controls.Add(this.Text2);
             this.Font = new System.Drawing.Font("Koruri Regular", 10F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.Name = "IntConvert";
             this.Text = "WQV - 簡易震度変換ツール";
