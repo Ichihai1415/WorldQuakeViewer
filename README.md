@@ -2,6 +2,7 @@
 ![GitHub](https://img.shields.io/github/license/Ichihai1415/WorldQuakeViewer)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Ichihai1415/WorldQuakeViewer)
 ![GitHub issues](https://img.shields.io/github/issues/Ichihai1415/WorldQuakeViewer)
+![GitHub all releases](https://img.shields.io/github/downloads/Ichihai1415/WorldQuakeViewer/total)
 
 main:
 ![GitHub Release Date](https://img.shields.io/github/release-date/Ichihai1415/WorldQuakeViewer)
