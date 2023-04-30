@@ -1,6 +1,6 @@
 ﻿using CoreTweet;
+using LL2FERC;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -26,12 +26,10 @@ namespace WorldQuakeViewer
         public static readonly string Version = "1.1.0α3";//こことアセンブリを変える
         public static DateTime StartTime = new DateTime();
         public static int AccessedUSGS = 0;
-        public static int AccessedFE = 0;
         public string LatestURL = "";
         public static bool NoFirst = false;//最初はツイートとかしない
         public static string ExeLogs = "";
         public Dictionary<string, History> Histories = new Dictionary<string, History>();//EQID,Data
-        public Dictionary<Point, int> HypoIDs = new Dictionary<Point, int>();//Location,HypoID
         public Font F9 = null;
         public Font F9_5 = null;
         public Font F10 = null;
@@ -284,43 +282,7 @@ namespace WorldQuakeViewer
                             string DepthLong = $"深さ:{json.Features[i].Geometry.Coordinates[2]}km";
                             if (json.Features[i].Geometry.Coordinates[2] == (int)json.Features[i].Geometry.Coordinates[2])
                                 DepthLong = Depth;
-                            string Shingen = "震源の取得に失敗しました。";
-                            string JPNameNotFoundLogText = "";
-                            if (File.Exists("Log\\JPNameNotFound.txt"))
-                                JPNameNotFoundLogText = $"{File.ReadAllText($"Log\\JPNameNotFound.txt")}";
-                            Point HypoPoint = new Point((int)(LatShort * 100), (int)(LonShort * 100));
-                            if (HypoIDs.ContainsKey(HypoPoint))
-                            {
-                                Shingen = HypoName[HypoIDs[HypoPoint]];
-                                ExeLog($"震源キャッシュが存在します({HypoPoint.X},{HypoPoint.Y}->{HypoIDs[HypoPoint]})");
-                            }
-                            else
-                            {
-                                ExeLog($"震源キャッシュが存在しません。({HypoPoint.X},{HypoPoint.Y})ダウンロードします。");
-                                try
-                                {
-                                    string USGSFERegionJSON = await WC.DownloadStringTaskAsync(new Uri($"https://earthquake.usgs.gov/ws/geoserve/regions.json?latitude={LatShort}&longitude={LonShort}&type=fe"));
-                                    AccessedFE++;
-                                    JObject USGSFERegion = JObject.Parse(USGSFERegionJSON);
-                                    foreach (JToken USGSFERegion_ in USGSFERegion.SelectToken("fe.features"))
-                                    {
-                                        if ((int?)USGSFERegion_.SelectToken($"properties.number") != null)
-                                            if (HypoName.ContainsKey((int)USGSFERegion_.SelectToken($"properties.number")))
-                                            {
-                                                Shingen = HypoName[(int)USGSFERegion_.SelectToken($"properties.number")];
-                                                HypoIDs.Add(HypoPoint, (int)USGSFERegion_.SelectToken($"properties.number"));
-                                                break;
-                                            }
-                                        if (JPNameNotFoundLogText.Contains($"lat={LatShort},lon={LonShort},num=null,name={USGSFERegion_.SelectToken($"properties.name")}"))
-                                            JPNameNotFoundLogText += $"\nlat={LatShort},lon={LonShort},num=null,name={USGSFERegion_.SelectToken($"properties.name")}";
-                                    }
-                                    File.WriteAllText($"Log\\JPNameNotFound.txt", JPNameNotFoundLogText);
-                                }
-                                catch (Exception ex)
-                                {
-                                    ExeLog("震源名取得に失敗しました。" + ex);
-                                }
-                            }
+                            string Shingen = HypoName[LL2FERCode.Code(Lat, Lon)];
                             string Shingen2 = $"({json.Features[i].Properties.Place})";
                             string LogText_ = $"USGS地震情報【{MagType}{Mag}】{Time.Replace("※", "(")})\n{Shingen}{Shingen2}\n{LatView},{LongView}　{Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}　{AlertJP.Replace("アラート:-", "")}\n{json.Features[i].Properties.Url}";
                             string BouyomiText = $"USGS地震情報。{TimeJP}発生、マグニチュード{Mag}、震源、{Shingen.Replace(" ", "、").Replace("/", "、")}、{LatStLongJP}、{LonStLongJP}、深さ{DepthLong.Replace("深さ:", "")}。{$"推定最大改正メルカリ震度階級{MMISt.Replace("(", "").Replace(")", "")}。".Replace("推定最大改正メルカリ震度階級-。", "")}{AlertJP.Replace("アラート:-", "")}";
@@ -335,8 +297,8 @@ namespace WorldQuakeViewer
                                 Display11 = $"{Shingen}\n{Shingen2}\n{LatView},{LongView}\n{Depth}",
                                 Display12 = $"{MagType}",
                                 Display13 = $"{Mag}",//14は変わらない
-                                Display15 = $"{MMISt.Replace("(","").Replace(")", "")}",
-                                Display21 = $"{Time} 発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {DepthLong}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-","")}",
+                                Display15 = $"{MMISt.Replace("(", "").Replace(")", "")}",
+                                Display21 = $"{Time} 発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {DepthLong}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}",
                                 Display22 = $"{MagType}",
                                 Display23 = $"{Mag}",
 
@@ -375,7 +337,7 @@ namespace WorldQuakeViewer
                                         ExeLog($"HypoEN:{Histories[ID].HypoEN}->{history.HypoEN}");
                                     }
                                 if (Settings.Default.Update_LatLon)
-                                    if (Histories[ID].Lat != history.Lat|| Histories[ID].Lon != history.Lon)
+                                    if (Histories[ID].Lat != history.Lat || Histories[ID].Lon != history.Lon)
                                     {
                                         NewUpdt = true;
                                         ExeLog($"Lat:{Histories[ID].Lat}->{history.Lat}, Lon:{Histories[ID].Lon}->{history.Lon}");
