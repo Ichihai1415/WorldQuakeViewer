@@ -23,7 +23,7 @@ namespace WorldQuakeViewer
 {
     public partial class MainForm : Form
     {
-        public static readonly string Version = "1.1.0α3";//こことアセンブリを変える
+        public static readonly string Version = "1.1.0α4";//こことアセンブリを変える
         public static DateTime StartTime = new DateTime();
         public static int AccessedUSGS = 0;
         public string LatestURL = "";
@@ -175,7 +175,7 @@ namespace WorldQuakeViewer
                 int SoundLevel = 0;//音声判別用 初報ほど、M大きいほど高い
                 ExeLog($"各履歴処理開始");
                 LatestURL = json.Features[0].Properties.Url;
-                for (int i = 6; i >= 0; i--)//古い順に//feがなんとかなったら処理制限に
+                for (int i = Math.Min(Settings.Default.Update_MaxCount, json.Features.Count) - 1; i >= 0; i--)//送信の都合上古い順に
                     if (json.Features.Count > i)
                     {
                         bool New = false;//音声判別用
@@ -187,7 +187,7 @@ namespace WorldQuakeViewer
                         long LastUpdated = 0;
                         if (Histories.ContainsKey(ID))
                             LastUpdated = Histories[ID].Update;
-                        ErrorText.Text = $"処理中…[{7 - i}/7]";
+                        ErrorText.Text = $"処理中…[{Math.Min(Settings.Default.Update_MaxCount, json.Features.Count) - i}/7]";
                         if (Updated != LastUpdated)//新規か更新
                         {
                             ExeLog($"[{i}] 更新時刻変化検知({LastUpdated}->{Updated})");
@@ -284,7 +284,7 @@ namespace WorldQuakeViewer
                                 DepthLong = Depth;
                             string Shingen = HypoName[LL2FERCode.Code(Lat, Lon)];
                             string Shingen2 = $"({json.Features[i].Properties.Place})";
-                            string LogText_ = $"USGS地震情報【{MagType}{Mag}】{Time.Replace("※", "(")})\n{Shingen}{Shingen2}\n{LatView},{LongView}　{Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}　{AlertJP.Replace("アラート:-", "")}\n{json.Features[i].Properties.Url}";
+                            string LogText_ = $"USGS地震情報【{MagType}{Mag}】{Time}\n{Shingen}{Shingen2}\n{LatView},{LongView}　{Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}　{AlertJP.Replace("アラート:-", "")}\n{json.Features[i].Properties.Url}";
                             string BouyomiText = $"USGS地震情報。{TimeJP}発生、マグニチュード{Mag}、震源、{Shingen.Replace(" ", "、").Replace("/", "、")}、{LatStLongJP}、{LonStLongJP}、深さ{DepthLong.Replace("深さ:", "")}。{$"推定最大改正メルカリ震度階級{MMISt.Replace("(", "").Replace(")", "")}。".Replace("推定最大改正メルカリ震度階級-。", "")}{AlertJP.Replace("アラート:-", "")}";
 
                             History history = new History
