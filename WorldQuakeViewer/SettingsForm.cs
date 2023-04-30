@@ -253,7 +253,7 @@ namespace WorldQuakeViewer
             try
             {
                 TimeSpan ProTime = DateTime.Now - MainForm.StartTime;
-                Tab_ProInfo_Text.Text = $"起動時間:{(int)ProTime.TotalDays}d{ProTime:hh}:{ProTime:mm}:{ProTime:ss}\nUSGS Feed アクセス回数:{MainForm.AccessedUSGS}回";
+                Tab_ProInfo_Text.Text = $"起動時間:{(int)ProTime.TotalDays}d{ProTime:hh}:{ProTime:mm}:{ProTime:ss}\nUSGS Feed アクセス回数:{MainForm.AccessedUSGS}回\nログ保持数:{MainForm.Histories.Count}";
             }
             catch (Exception ex)
             {
