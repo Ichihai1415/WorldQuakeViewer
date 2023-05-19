@@ -283,7 +283,7 @@ namespace WorldQuakeViewer
                             string DepthLong = $"深さ:{json.Features[i].Geometry.Coordinates[2]}km";
                             if (json.Features[i].Geometry.Coordinates[2] == (int)json.Features[i].Geometry.Coordinates[2])
                                 DepthLong = Depth;
-                            string Shingen = HypoName[LL2FERCode.Code(Lat, Lon)];
+                            string Shingen = LL2FERCode.Name_JP(LL2FERCode.Code(Lat, Lon));
                             string Shingen2 = $"({json.Features[i].Properties.Place})";
                             string LogText_ = $"USGS地震情報【{MagType}{Mag}】{Time}\n{Shingen}{Shingen2}\n{LatView},{LongView}　{Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}　{AlertJP.Replace("アラート:-", "")}\n{json.Features[i].Properties.Url}";
                             string BouyomiText = $"USGS地震情報。{TimeJP}発生、マグニチュード{Mag}、震源、{Shingen.Replace(" ", "、").Replace("/", "、")}、{LatStLongJP}、{LonStLongJP}、深さ{DepthLong.Replace("深さ:", "")}。{$"推定最大改正メルカリ震度階級{MMISt.Replace("(", "").Replace(")", "")}。".Replace("推定最大改正メルカリ震度階級-。", "")}{AlertJP.Replace("アラート:-", "")}";
