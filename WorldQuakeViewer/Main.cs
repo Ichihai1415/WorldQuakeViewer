@@ -14,7 +14,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using USGSQuakeClass;
 using WorldQuakeViewer.Properties;
@@ -422,7 +421,7 @@ namespace WorldQuakeViewer
                                         Bouyomichan(BouyomiText);
                                 if (json.Features[i].Properties.Mag >= Settings.Default.Tweet_LowerMagnitudeLimit || MMI >= Settings.Default.Tweet_LowerMMILimit)
                                     if (Settings.Default.Tweet_Enable)
-                                        await Task.Run(() => Tweet(LogText_, ID));
+                                        Tweet(LogText_, ID);
                             }
                             else
                                 ExeLog($"[{i}] 内容更新なし");
@@ -923,7 +922,7 @@ namespace WorldQuakeViewer
         /// </summary>
         /// <param name="Text">ツイートするテキスト。</param>
         /// <param name="ID">リプライ判別用ID。</param>
-        public void Tweet(string Text, string ID)
+        public async void Tweet(string Text, string ID)
         {
             if (NoFirst)
                 try
@@ -943,17 +942,17 @@ namespace WorldQuakeViewer
                         try
                         {
                             ExeLog($"ツイート(リプライ)中…(ID:{Histories[ID].TweetID})");
-                            status = tokens.Statuses.UpdateAsync(new { status = Text, in_reply_to_status_id = Histories[ID].TweetID }).Result;
+                            status = await tokens.Statuses.UpdateAsync(new { status = Text, in_reply_to_status_id = Histories[ID].TweetID });
                         }
                         catch
                         {
                             ExeLog($"ツイート(リプライ)失敗、リトライ中…");
-                            status = tokens.Statuses.UpdateAsync(new { status = Text }).Result;
+                            status = await tokens.Statuses.UpdateAsync(new { status = Text });
                         }
                     else
                     {
                         ExeLog($"ツイート中…");
-                        status = tokens.Statuses.UpdateAsync(new { status = Text }).Result;
+                        status = await tokens.Statuses.UpdateAsync(new { status = Text });
                     }
                     Histories[ID].TweetID = status.Id;
                     ExeLog($"ツイート成功(ID:{status.Id})");
