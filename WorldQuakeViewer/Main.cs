@@ -487,31 +487,37 @@ namespace WorldQuakeViewer
                             if (Alert == null)
                             {
                                 USGS0.BackColor = Color.Black;
+                                USGS01.BackColor = Color.Black;
                                 USGS0.ForeColor = Color.White;
                             }
                             else if (Alert == "green")
                             {
                                 USGS0.BackColor = Color.Green;
+                                USGS01.BackColor = Color.Green;
                                 USGS0.ForeColor = Color.White;
                             }
                             else if (Alert == "yellow")
                             {
                                 USGS0.BackColor = Color.Yellow;
+                                USGS01.BackColor = Color.Yellow;
                                 USGS0.ForeColor = Color.Black;
                             }
                             else if (Alert == "orange")
                             {
                                 USGS0.BackColor = Color.Orange;
+                                USGS01.BackColor = Color.Orange;
                                 USGS0.ForeColor = Color.Black;
                             }
                             else if (Alert == "red")
                             {
                                 USGS0.BackColor = Color.Red;
+                                USGS01.BackColor = Color.Red;
                                 USGS0.ForeColor = Color.White;
                             }
                             else if (Alert == "pending")
                             {
                                 USGS0.BackColor = Color.DimGray;
+                                USGS01.BackColor = Color.DimGray;
                                 USGS0.ForeColor = Color.White;
                             }
                         }
@@ -742,6 +748,7 @@ namespace WorldQuakeViewer
                         USGS5.Text = "";
                         MainImg.Image = null;
                         USGS0.BackColor = Color.Black;
+                        USGS01.BackColor = Color.Black;
                     }
                     else if (i == 1)//履歴
                     {
