@@ -22,7 +22,7 @@ namespace WorldQuakeViewer
 {
     public partial class MainForm : Form
     {
-        public static readonly string Version = "1.1.0α5";//こことアセンブリを変える
+        public static readonly string Version = "1.1.0α6";//こことアセンブリを変える
         public static DateTime StartTime = new DateTime();
         public static int AccessedUSGS = 0;
         public string LatestURL = "";
@@ -36,6 +36,7 @@ namespace WorldQuakeViewer
         public Font F12 = null;
         public Font F20 = null;
         public Font F22 = null;
+        public string LatestText = "";
         public MainForm()
         {
             InitializeComponent();
@@ -282,10 +283,10 @@ namespace WorldQuakeViewer
                             string DepthLong = $"深さ:{json.Features[i].Geometry.Coordinates[2]}km";
                             if (json.Features[i].Geometry.Coordinates[2] == (int)json.Features[i].Geometry.Coordinates[2])
                                 DepthLong = Depth;
-                            string Shingen = LL2FERCode.Name_JP(LL2FERCode.Code(Lat, Lon));
-                            string Shingen2 = $"({json.Features[i].Properties.Place})";
-                            string LogText_ = $"USGS地震情報【{MagType}{Mag}】{Time}\n{Shingen}{Shingen2}\n{LatView},{LongView}　{Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}　{AlertJP.Replace("アラート:-", "")}\n{json.Features[i].Properties.Url}";
-                            string BouyomiText = $"USGS地震情報。{TimeJP}発生、マグニチュード{Mag}、震源、{Shingen.Replace(" ", "、").Replace("/", "、")}、{LatStLongJP}、{LonStLongJP}、深さ{DepthLong.Replace("深さ:", "")}。{$"推定最大改正メルカリ震度階級{MMISt.Replace("(", "").Replace(")", "")}。".Replace("推定最大改正メルカリ震度階級-。", "")}{AlertJP.Replace("アラート:-", "")}";
+                            string HypoJP = LL2FERCode.Name_JP(LL2FERCode.Code(Lat, Lon));
+                            string HypoEN = $"({json.Features[i].Properties.Place})";
+                            string LogText = $"USGS地震情報【{MagType}{Mag}】{Time}\n{HypoJP}{HypoEN}\n{LatView},{LongView}　{Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}　{AlertJP.Replace("アラート:-", "")}\n{json.Features[i].Properties.Url}";
+                            string BouyomiText = $"USGS地震情報。{TimeJP}発生、マグニチュード{Mag}、震源、{HypoJP.Replace(" ", "、").Replace("/", "、")}、{LatStLongJP}、{LonStLongJP}、深さ{DepthLong.Replace("深さ:", "")}。{$"推定最大改正メルカリ震度階級{MMISt.Replace("(", "").Replace(")", "")}。".Replace("推定最大改正メルカリ震度階級-。", "")}{AlertJP.Replace("アラート:-", "")}";
 
                             History history = new History
                             {
@@ -294,17 +295,17 @@ namespace WorldQuakeViewer
                                 TweetID = 0,//更新の場合は上書き前に変更するから0でおｋ
 
                                 Display10 = $"USGS地震情報                                         {Time}",
-                                Display11 = $"{Shingen}\n{Shingen2}\n{LatView},{LongView}\n{Depth}",
+                                Display11 = $"{HypoJP}\n{HypoEN}\n{LatView},{LongView}\n{Depth}",
                                 Display12 = $"{MagType}",
                                 Display13 = $"{Mag}",//14は変わらない
                                 Display15 = $"{MMISt.Replace("(", "").Replace(")", "")}",
-                                Display21 = $"{Time} 発生  ID:{ID}\n{Shingen}\n{LatView},{LongView} {DepthLong}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}",
+                                Display21 = $"{Time} 発生  ID:{ID}\n{HypoJP}\n{LatView},{LongView} {DepthLong}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}",
                                 Display22 = $"{MagType}",
                                 Display23 = $"{Mag}",
 
                                 Time = json.Features[i].Properties.Time,
-                                HypoJP = Shingen,
-                                HypoEN = Shingen2,//()付く
+                                HypoJP = HypoJP,
+                                HypoEN = HypoEN,//()付く
                                 Lat = Lat,
                                 Lon = Lon,
                                 Depth = json.Features[i].Geometry.Coordinates[2],
@@ -372,7 +373,7 @@ namespace WorldQuakeViewer
                                         NewUpdt = true;
                                         ExeLog($"Alert:{Histories[ID].Alert}->{history.Alert}");
                                     }
-                                LogText_ = LogText_.Replace("USGS地震情報", "USGS地震情報(更新)");
+                                LogText = LogText.Replace("USGS地震情報", "USGS地震情報(更新)");
                                 BouyomiText = BouyomiText.Replace("USGS地震情報", "USGS地震情報、更新");
                             }
                             if (NewUpdt)//更新、初回検知
@@ -390,9 +391,9 @@ namespace WorldQuakeViewer
                                     New = true;
                                     Histories.Add(ID, history);
                                 }
-                                LogSave("Log\\M4.5+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText_}", ID);
+                                LogSave("Log\\M4.5+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", ID);
                                 if (Settings.Default.Socket_Enable)
-                                    SendSocket(LogText_);
+                                    SendSocket(LogText);
                                 if (SoundLevel < 1 && Settings.Default.Sound_45_Enable)//SoundLevel上昇+M4.5以上有効
                                     if (New)//初報
                                         SoundLevel = 2;
@@ -400,7 +401,7 @@ namespace WorldQuakeViewer
                                         SoundLevel = 1;
                                 if (json.Features[i].Properties.Mag >= 6.0)
                                 {
-                                    LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText_}", ID);
+                                    LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", ID);
                                     if (SoundLevel < 3 && Settings.Default.Sound_60_Enable)
                                         if (New)
                                             SoundLevel = 4;
@@ -408,7 +409,7 @@ namespace WorldQuakeViewer
                                             SoundLevel = 3;
                                     if (json.Features[i].Properties.Mag >= 8.0)
                                     {
-                                        LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText_}", ID);
+                                        LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", ID);
                                         if (SoundLevel < 5 && Settings.Default.Sound_80_Enable)
                                             if (New)
                                                 SoundLevel = 6;
@@ -416,12 +417,14 @@ namespace WorldQuakeViewer
                                                 SoundLevel = 5;
                                     }
                                 }
-                                if (json.Features[i].Properties.Mag >= Settings.Default.Bouyomichan_LowerMagnitudeLimit || MMI >= Settings.Default.Bouyomichan_LowerMMILimit)
+                                if (i == 0)
+                                    LatestText = LogText;
+                                    if (json.Features[i].Properties.Mag >= Settings.Default.Bouyomichan_LowerMagnitudeLimit || MMI >= Settings.Default.Bouyomichan_LowerMMILimit)
                                     if (Settings.Default.Bouyomichan_Enable)
                                         Bouyomichan(BouyomiText);
                                 if (json.Features[i].Properties.Mag >= Settings.Default.Tweet_LowerMagnitudeLimit || MMI >= Settings.Default.Tweet_LowerMMILimit)
                                     if (Settings.Default.Tweet_Enable)
-                                        Tweet(LogText_, ID);
+                                        Tweet(LogText, ID);
                             }
                             else
                                 ExeLog($"[{i}] 内容更新なし");
@@ -1173,6 +1176,11 @@ namespace WorldQuakeViewer
         {
             IntConvert intConverter = new IntConvert();
             intConverter.Show();
+        }
+
+        private void RC1TextCopy_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(LatestText);
         }
     }
 }
