@@ -58,7 +58,9 @@
             this.RCbar5 = new System.Windows.Forms.ToolStripSeparator();
             this.ExeLogAutoDelete = new System.Windows.Forms.Timer(this.components);
             this.EMSCget = new System.Windows.Forms.Timer(this.components);
+            this.MainImage = new System.Windows.Forms.PictureBox();
             this.RightClick.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MainImage)).BeginInit();
             this.SuspendLayout();
             // 
             // USGSget
@@ -83,40 +85,40 @@
             this.RC1RebootExit});
             this.RightClick.Name = "RightClick";
             this.RightClick.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.RightClick.Size = new System.Drawing.Size(243, 214);
+            this.RightClick.Size = new System.Drawing.Size(208, 198);
             this.RightClick.TabStop = true;
             this.RightClick.Text = "メニュー";
             // 
             // RC1Setting
             // 
             this.RC1Setting.Name = "RC1Setting";
-            this.RC1Setting.Size = new System.Drawing.Size(242, 24);
+            this.RC1Setting.Size = new System.Drawing.Size(207, 22);
             this.RC1Setting.Text = "設定";
             this.RC1Setting.Click += new System.EventHandler(this.RCsetting_Click);
             // 
             // RC1Bar1
             // 
             this.RC1Bar1.Name = "RC1Bar1";
-            this.RC1Bar1.Size = new System.Drawing.Size(239, 6);
+            this.RC1Bar1.Size = new System.Drawing.Size(204, 6);
             // 
             // RC1CacheClear
             // 
             this.RC1CacheClear.Name = "RC1CacheClear";
-            this.RC1CacheClear.Size = new System.Drawing.Size(242, 24);
+            this.RC1CacheClear.Size = new System.Drawing.Size(207, 22);
             this.RC1CacheClear.Text = "キャッシュクリア";
             this.RC1CacheClear.Click += new System.EventHandler(this.RC1CacheClear_Click);
             // 
             // RC1ExeLogOpen
             // 
             this.RC1ExeLogOpen.Name = "RC1ExeLogOpen";
-            this.RC1ExeLogOpen.Size = new System.Drawing.Size(242, 24);
+            this.RC1ExeLogOpen.Size = new System.Drawing.Size(207, 22);
             this.RC1ExeLogOpen.Text = "動作ログ表示";
             this.RC1ExeLogOpen.Click += new System.EventHandler(this.RC1ExeLogOpen_Click);
             // 
             // RC1Bar2
             // 
             this.RC1Bar2.Name = "RC1Bar2";
-            this.RC1Bar2.Size = new System.Drawing.Size(239, 6);
+            this.RC1Bar2.Size = new System.Drawing.Size(204, 6);
             // 
             // RC1Sites
             // 
@@ -128,41 +130,41 @@
             this.RCMapEWSC,
             this.RCTsunamiGov});
             this.RC1Sites.Name = "RC1Sites";
-            this.RC1Sites.Size = new System.Drawing.Size(242, 24);
+            this.RC1Sites.Size = new System.Drawing.Size(207, 22);
             this.RC1Sites.Text = "各サイト";
             // 
             // RCThisInfo
             // 
             this.RCThisInfo.Name = "RCThisInfo";
-            this.RCThisInfo.Size = new System.Drawing.Size(252, 26);
+            this.RCThisInfo.Size = new System.Drawing.Size(202, 22);
             this.RCThisInfo.Text = "最新の地震の詳細(USGS)";
             this.RCThisInfo.Click += new System.EventHandler(this.RCusgsthis_Click);
             // 
             // RCEarlyEst
             // 
             this.RCEarlyEst.Name = "RCEarlyEst";
-            this.RCEarlyEst.Size = new System.Drawing.Size(252, 26);
+            this.RCEarlyEst.Size = new System.Drawing.Size(202, 22);
             this.RCEarlyEst.Text = "Early-est";
             this.RCEarlyEst.Click += new System.EventHandler(this.RCEarlyEst_Click);
             // 
             // RCMapUSGS
             // 
             this.RCMapUSGS.Name = "RCMapUSGS";
-            this.RCMapUSGS.Size = new System.Drawing.Size(252, 26);
+            this.RCMapUSGS.Size = new System.Drawing.Size(202, 22);
             this.RCMapUSGS.Text = "USGS";
             this.RCMapUSGS.Click += new System.EventHandler(this.RCusgsmap_Click);
             // 
             // RCMapEWSC
             // 
             this.RCMapEWSC.Name = "RCMapEWSC";
-            this.RCMapEWSC.Size = new System.Drawing.Size(252, 26);
+            this.RCMapEWSC.Size = new System.Drawing.Size(202, 22);
             this.RCMapEWSC.Text = "EMSC";
             this.RCMapEWSC.Click += new System.EventHandler(this.RCMapEWSC_Click);
             // 
             // RCTsunamiGov
             // 
             this.RCTsunamiGov.Name = "RCTsunamiGov";
-            this.RCTsunamiGov.Size = new System.Drawing.Size(252, 26);
+            this.RCTsunamiGov.Size = new System.Drawing.Size(202, 22);
             this.RCTsunamiGov.Text = "PTWC";
             this.RCTsunamiGov.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.RCTsunamiGov.Click += new System.EventHandler(this.RCtsunami_Click);
@@ -170,14 +172,14 @@
             // RC1TextCopy
             // 
             this.RC1TextCopy.Name = "RC1TextCopy";
-            this.RC1TextCopy.Size = new System.Drawing.Size(242, 24);
+            this.RC1TextCopy.Size = new System.Drawing.Size(207, 22);
             this.RC1TextCopy.Text = "最新の情報をコピー";
             this.RC1TextCopy.Click += new System.EventHandler(this.RC1TextCopy_Click);
             // 
             // RC1IntConvert
             // 
             this.RC1IntConvert.Name = "RC1IntConvert";
-            this.RC1IntConvert.Size = new System.Drawing.Size(242, 24);
+            this.RC1IntConvert.Size = new System.Drawing.Size(207, 22);
             this.RC1IntConvert.Text = "簡易震度変換ツール";
             this.RC1IntConvert.Click += new System.EventHandler(this.RC1IntConvert_Click);
             // 
@@ -189,34 +191,34 @@
             this.RCGitHub,
             this.RCiInfoPage});
             this.RC1DevInfo.Name = "RC1DevInfo";
-            this.RC1DevInfo.Size = new System.Drawing.Size(242, 24);
+            this.RC1DevInfo.Size = new System.Drawing.Size(207, 22);
             this.RC1DevInfo.Text = "制作者ページ/解説ページ等";
             // 
             // RCTwitter
             // 
             this.RCTwitter.Name = "RCTwitter";
-            this.RCTwitter.Size = new System.Drawing.Size(206, 26);
+            this.RCTwitter.Size = new System.Drawing.Size(164, 22);
             this.RCTwitter.Text = "Twitter";
             this.RCTwitter.Click += new System.EventHandler(this.RCtwitter_Click);
             // 
             // RCGitHub
             // 
             this.RCGitHub.Name = "RCGitHub";
-            this.RCGitHub.Size = new System.Drawing.Size(206, 26);
+            this.RCGitHub.Size = new System.Drawing.Size(164, 22);
             this.RCGitHub.Text = "GitHub(リポジトリ)";
             this.RCGitHub.Click += new System.EventHandler(this.RCgithub_Click);
             // 
             // RCiInfoPage
             // 
             this.RCiInfoPage.Name = "RCiInfoPage";
-            this.RCiInfoPage.Size = new System.Drawing.Size(206, 26);
+            this.RCiInfoPage.Size = new System.Drawing.Size(164, 22);
             this.RCiInfoPage.Text = "解説ページ";
             this.RCiInfoPage.Click += new System.EventHandler(this.RCinfopage_Click);
             // 
             // RC1Bar3
             // 
             this.RC1Bar3.Name = "RC1Bar3";
-            this.RC1Bar3.Size = new System.Drawing.Size(239, 6);
+            this.RC1Bar3.Size = new System.Drawing.Size(204, 6);
             // 
             // RC1RebootExit
             // 
@@ -225,20 +227,20 @@
             this.RCreboot,
             this.RCexit});
             this.RC1RebootExit.Name = "RC1RebootExit";
-            this.RC1RebootExit.Size = new System.Drawing.Size(242, 24);
+            this.RC1RebootExit.Size = new System.Drawing.Size(207, 22);
             this.RC1RebootExit.Text = "再起動/終了";
             // 
             // RCreboot
             // 
             this.RCreboot.Name = "RCreboot";
-            this.RCreboot.Size = new System.Drawing.Size(137, 26);
+            this.RCreboot.Size = new System.Drawing.Size(110, 22);
             this.RCreboot.Text = "再起動";
             this.RCreboot.Click += new System.EventHandler(this.RCreboot_Click);
             // 
             // RCexit
             // 
             this.RCexit.Name = "RCexit";
-            this.RCexit.Size = new System.Drawing.Size(137, 26);
+            this.RCexit.Size = new System.Drawing.Size(110, 22);
             this.RCexit.Text = "終了";
             this.RCexit.Click += new System.EventHandler(this.RCexit_Click);
             // 
@@ -250,7 +252,7 @@
             this.ErrorText.Location = new System.Drawing.Point(0, 100);
             this.ErrorText.MaximumSize = new System.Drawing.Size(400, 400);
             this.ErrorText.Name = "ErrorText";
-            this.ErrorText.Size = new System.Drawing.Size(0, 28);
+            this.ErrorText.Size = new System.Drawing.Size(0, 22);
             this.ErrorText.TabIndex = 15;
             // 
             // RCbar3
@@ -274,16 +276,27 @@
             this.EMSCget.Interval = 500;
             this.EMSCget.Tick += new System.EventHandler(this.EMSCget_Tick);
             // 
+            // MainImage
+            // 
+            this.MainImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.MainImage.Location = new System.Drawing.Point(0, 0);
+            this.MainImage.Name = "MainImage";
+            this.MainImage.Size = new System.Drawing.Size(800, 500);
+            this.MainImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.MainImage.TabIndex = 16;
+            this.MainImage.TabStop = false;
+            // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(60)))));
-            this.ClientSize = new System.Drawing.Size(798, 492);
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.ClientSize = new System.Drawing.Size(800, 500);
             this.ContextMenuStrip = this.RightClick;
             this.Controls.Add(this.ErrorText);
+            this.Controls.Add(this.MainImage);
             this.Font = new System.Drawing.Font("Koruri Regular", 10F);
             this.ForeColor = System.Drawing.Color.White;
-            this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
@@ -294,6 +307,7 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.RightClick.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.MainImage)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -329,6 +343,7 @@
         private System.Windows.Forms.ToolStripMenuItem RC1IntConvert;
         private System.Windows.Forms.ToolStripMenuItem RC1TextCopy;
         private System.Windows.Forms.Timer EMSCget;
+        private System.Windows.Forms.PictureBox MainImage;
     }
 }
 

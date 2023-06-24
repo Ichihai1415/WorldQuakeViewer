@@ -56,12 +56,12 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                         break;//これないとプロセス無限起動される
                     }
                     Thread.Sleep(1000);//念のため
-
-                    PrivateFontCollection pfc = new PrivateFontCollection();
-                    pfc.AddFontFile("Font\\Koruri-Regular.ttf");
-                    font = pfc.Families[0];
                 }
                 ExeLog($"[Main]フォントファイルOK");
+                PrivateFontCollection pfc = new PrivateFontCollection();
+                pfc.AddFontFile("Font\\Koruri-Regular.ttf");
+                font = pfc.Families[0];
+                ExeLog($"[Main]フォントOK");
             }
             catch
             {
@@ -94,12 +94,12 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             DateTime now = DateTime.Now;
             DateTime Next15Second = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 15);
             DateTime Next45Second = Next15Second.AddSeconds(30);
-            if (now.Second >= 15)
+            if (now.Second >= 14)
                 Next15Second = Next15Second.AddMinutes(1);
-            if (now.Second >= 45)
+            if (now.Second >= 44)
                 Next45Second = Next45Second.AddMinutes(1);
             USGSget.Interval = (int)Math.Min((Next15Second - now).TotalMilliseconds, (Next45Second - now).TotalMilliseconds);
-            try
+            //try
             {
                 ErrorText.Text = "取得中…";
                 ExeLog($"[USGS]取得開始");
@@ -120,7 +120,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                     bool New = false;//音声判別用
                     string ID = (string)features.SelectToken("id");
                     ExeLog($"[USGS]処理[{i}]:{ID}");
-                    if (i < 7)
+                    if (i < 6)
                         IDs[i] = ID;
                     JToken propertie = features.SelectToken("properties");
                     long Updated = (long)propertie.SelectToken("updated");
@@ -147,14 +147,14 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                         double LonShort = Math.Round(Lon, 2, MidpointRounding.AwayFromZero);
                         string Alert = (string)propertie.SelectToken("alert");
                         string AlertJP = Alert == null ? "アラート:-" : $"アラート:{Alert.Replace("green", "緑").Replace("yellow", "黄").Replace("orange", "オレンジ").Replace("red", "赤").Replace("pending", "保留中")}";
-                        string LatStDecimal = Lat > 0 ? $"{LatShort}°N" : $"{LatShort}°S";
-                        string LonStDecimal = Lon > 0 ? $"{LonShort}°E" : $"{LonShort}°W";
+                        string LatStDecimal = Lat > 0 ? $"{LatShort}°N" : $"{-LatShort}°S";
+                        string LonStDecimal = Lon > 0 ? $"{LonShort}°E" : $"{-LonShort}°W";
                         TimeSpan LatTime = TimeSpan.FromHours(Lat);
                         TimeSpan LonTime = TimeSpan.FromHours(Lon);
                         string LatStShort = Lat > 0 ? $"{(int)Lat}ﾟ{LatTime.Minutes}'N" : $"{(int)-Lat}ﾟ{-LatTime.Minutes}'S";
                         string LonStShort = Lon > 0 ? $"{(int)Lon}ﾟ{LonTime.Minutes}'E" : $"{(int)-Lon}ﾟ{-LonTime.Minutes}'W";
-                        string LatStLong = Lat > 0 ? $"{(int)Lat}ﾟ{LatTime.Minutes}'{LatTime.Seconds}\"N" : $"{(int)-Lat} ﾟ {-LatTime.Minutes} '";
-                        string LonStLong = Lon > 0 ? $"{(int)Lon}ﾟ{LonTime.Minutes}'{LonTime.Seconds}\"E" : $"{(int)-Lon} ﾟ {-LonTime.Minutes} '";
+                        //string LatStLong = Lat > 0 ? $"{(int)Lat}ﾟ{LatTime.Minutes}'{LatTime.Seconds}\"N" : $"{(int)-Lat} ﾟ {-LatTime.Minutes} '";
+                        //string LonStLong = Lon > 0 ? $"{(int)Lon}ﾟ{LonTime.Minutes}'{LonTime.Seconds}\"E" : $"{(int)-Lon} ﾟ {-LonTime.Minutes} '";
                         string LatStLongJP = Lat > 0 ? $"北緯{(int)Lat}度{LatTime.Minutes}分{LatTime.Seconds}秒" : $"南緯{(int)-Lat}度{-LatTime.Minutes}分{-LatTime.Seconds}秒";
                         string LonStLongJP = Lon > 0 ? $"東経{(int)Lon}度{LonTime.Minutes}分{LonTime.Seconds}秒" : $"西経{(int)-Lon}度{-LonTime.Minutes}分{-LonTime.Seconds}秒";
                         if (Settings.Default.Text_LatLonDecimal)
@@ -171,7 +171,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                         }
                         double Depth = (double)features.SelectToken("geometry.coordinates[2]");
                         string DepthSt = Depth == (int)Depth ? $"(深さ:{Depth}km?)" : $"深さ:約{(int)Math.Round(Depth, MidpointRounding.AwayFromZero)}km";
-                        string DepthLong = Depth == (int)Depth ? DepthLong = DepthSt : $"深さ:{Depth}km";
+                        string DepthLong = Depth == (int)Depth ? DepthSt : $"深さ:{Depth}km";
                         string HypoJP = LL2FERCode.Name_JP(LL2FERCode.Code(Lat, Lon));
                         string HypoEN = $"({(string)propertie.SelectToken("place")})";
                         string URL = (string)propertie.SelectToken("url");
@@ -314,23 +314,23 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 Graphics g = Graphics.FromImage(bitmap);
                 g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 800, 0, 800, 1000);
                 g.DrawRectangle(new Pen(Color.FromArgb(200, 200, 200)), 800, 0, 800, 1000);
-                g.DrawString($"USGS地震情報(M4.5+)                                          Version:{Version}", new Font(font, 17), Brushes.White, 802, 2);
-                for (int i = 0; i < 7; i++)
+                g.DrawString($"USGS地震情報(M4.5+)                                          Version:{Version}", new Font(font, 20), Brushes.White, 802, 2);
+                for (int i = 0; i < 6; i++)
                 {
                     if (Histories.Count > i)//データ不足対処
                     {
                         History hist = Histories[IDs[i]];
                         g.FillRectangle(new SolidBrush(Alert2Color(hist.Alert)), 804, 40 + 160 * i, 792, 156);
                         g.FillRectangle(new SolidBrush(Color.FromArgb(45, 45, 90)), 808, 44 + 160 * i, 784, 148);
-                        g.DrawString(hist.Display1, new Font(font, 15), Brushes.White, 808, 44 + 160 * i);
-                        g.DrawString(hist.Display2, new Font(font, 15), Mag2Brush(hist.Mag), 1370, 154 + 160 * i);
-                        g.DrawString(hist.Display3, new Font(font, 40), Mag2Brush(hist.Mag), 1440, 110 + 160 * i);
+                        g.DrawString(hist.Display1, new Font(font, 19), Brushes.White, 808, 44 + 160 * i);
+                        g.DrawString(hist.Display2, new Font(font, 19), Mag2Brush(hist.Mag), 1370, 154 + 160 * i);
+                        g.DrawString(hist.Display3, new Font(font, 50), Mag2Brush(hist.Mag), 1440, 110 + 160 * i);
                     }
                     else
                         g.FillRectangle(new SolidBrush(Color.FromArgb(45, 45, 90)), 804, 40 + 160 * i, 792, 156);
                 }
                 g.Dispose();
-                BackgroundImage = bitmap;
+                MainImage.BackgroundImage = bitmap;
                 if (SoundLevel == 1)
                     Sound("M45u.wav");
                 else if (SoundLevel == 2)
@@ -344,7 +344,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 else if (SoundLevel == 6)
                     Sound("M80.wav");
                 ExeLog($"[USGS]ログ保持数:{Histories.Count}");
-            }
+            }/*
             catch (WebException ex)
             {
                 ErrorText.Text = $"ネットワークエラーが発生しました。内容:" + ex.Message;
@@ -353,7 +353,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             {
                 LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main Version:{Version}\n{ex}");
                 ErrorText.Text = $"エラーが発生しました。エラーログの内容を報告してください。内容:" + ex.Message;
-            }
+            }*/
             if (!ErrorText.Text.Contains("エラー"))
                 ErrorText.Text = "";
             NoFirst = true;
@@ -654,6 +654,8 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 {
                     Settings.Default.Log_Enable = true;
                     Settings.Default.Save();
+                    Configuration Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
+                    File.Copy(Config.FilePath, "UserSetting.xml", true);
                     ExeLog($"[RC]動作ログの保存をオンにしました");
                 }
             }
