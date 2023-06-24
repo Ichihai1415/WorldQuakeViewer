@@ -66,74 +66,6 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                     Thread.Sleep(1000);//念のため
                 }
                 ExeLog($"フォントファイルOK");
-                PrivateFontCollection pfc = new PrivateFontCollection();
-                pfc.AddFontFile("Font\\Koruri-Regular.ttf");
-                /*//なぜかエラー出るからフォント必須に
-                F9 = new Font(pfc.Families[0], 9F);
-                F9_5 = new Font(pfc.Families[0], 9.5F);
-                F10 = new Font(pfc.Families[0], 10F);
-                F11 = new Font(pfc.Families[0], 11F);
-                F12 = new Font(pfc.Families[0], 12F);
-                F20 = new Font(pfc.Families[0], 20F);
-                F22 = new Font(pfc.Families[0], 22F);
-                ExeLog("F9  :" + F9);
-                ExeLog("F9_5:" + F9_5);
-                ExeLog("F10 :" + F10);
-                ExeLog("F11 :" + F11);
-                ExeLog("F12 :" + F12);
-                ExeLog("F20 :" + F20);
-                ExeLog("F22 :" + F22);
-                if (F9 !=  F22)//おかしいときname="使用されたパラメーターが有効ではありません。"になるため　なぜかおかしくなくてもエラー出る
-                {
-                    ExeLog("フォントの読み込みに成功");
-                    Font = F10;
-                    USGS0.Font = F9;
-                    USGS1.Font = F11;
-                    USGS2.Font = F11;
-                    USGS3.Font = F20;
-                    USGS4.Font = F11;
-                    USGS5.Font = F20;
-                    USGS6.Font = F9;
-                    ErrorText.Font = F12;
-                    HistoryBack.Font = F10;
-                    History11.Font = F9_5;
-                    History12.Font = F10;
-                    History13.Font = F22;
-                    History21.Font = F9_5;
-                    History22.Font = F10;
-                    History23.Font = F22;
-                    History31.Font = F9_5;
-                    History32.Font = F10;
-                    History33.Font = F22;
-                    History41.Font = F9_5;
-                    History42.Font = F10;
-                    History43.Font = F22;
-                    History51.Font = F9_5;
-                    History52.Font = F10;
-                    History53.Font = F22;
-                    History61.Font = F9_5;
-                    History62.Font = F10;
-                    History63.Font = F22;
-                }
-                else*/
-                {
-                    InstalledFontCollection ifc = new InstalledFontCollection();
-                    while (ifc.Families.Contains(pfc.Families[0]))
-                    {
-                        Process.Start("fontview.exe", "Font\\Koruri-Regular.ttf");
-                        DialogResult Result = MessageBox.Show($"フォントがインストールされていません。Font\\Koruri-Regular.ttfをインストールしてください。", "WQV_FontCheck", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation);
-                        if (Result != DialogResult.Retry)
-                        {
-                            Application.Exit();
-                            break;//これないとプロセス無限起動される
-                        }
-                        Thread.Sleep(1000);//念のため
-                        ifc = new InstalledFontCollection();
-                    }
-                    ifc.Dispose();
-                    ExeLog($"フォントOK");
-                }
-                pfc.Dispose();
             }
             catch
             {
@@ -151,11 +83,18 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             SettingReload();
             ErrorText.Text = "設定の読み込みが完了しました。";
             ExeLog($"設定読み込み完了");
-            JsonTimer.Enabled = true;
+            USGSget.Enabled = true;
         }
-        private async void JsonTimer_Tick(object sender, EventArgs e)
+
+        private void EMSCget_Tick(object sender, EventArgs e)
         {
-            JsonTimer.Interval = 30000;
+
+        }
+
+
+        private async void USGSget_Tick(object sender, EventArgs e)
+        {
+            USGSget.Interval = 30000;
             try
             {
                 ErrorText.Text = "取得中…";
@@ -823,61 +762,6 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 ErrorText.Text = "";
             NoFirst = true;
             ExeLog("処理終了");
-            /*//フォント変更がうまくいかない
-            if (ErrorText.Font != F12)
-            {
-                if (F12 == null)
-                    try
-                    {
-                        Console.WriteLine("Font=null");
-                        PrivateFontCollection pfc = new PrivateFontCollection();
-                        pfc.AddFontFile("Font\\Koruri-Regular.ttf");
-                        F9 = new Font(pfc.Families[0], 9F);
-                        F9_5 = new Font(pfc.Families[0], 9.5F);
-                        F10 = new Font(pfc.Families[0], 10F);
-                        F11 = new Font(pfc.Families[0], 11F);
-                        F12 = new Font(pfc.Families[0], 12F);
-                        F20 = new Font(pfc.Families[0], 20F);
-                        F22 = new Font(pfc.Families[0], 22F);
-                        pfc.Dispose();
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex);
-                    }
-                Console.WriteLine(ErrorText.Font);
-                Console.WriteLine(F12);
-                Console.WriteLine(F9);
-                Font = F10;
-                USGS0.Font = F9;
-                USGS1.Font = F11;
-                USGS2.Font = F11;
-                USGS3.Font = F20;
-                USGS4.Font = F11;
-                USGS5.Font = F20;
-                USGS6.Font = F9;
-                ErrorText.Font = F12;
-                HistoryBack.Font = F10;
-                History11.Font = F9_5;
-                History12.Font = F10;
-                History13.Font = F22;
-                History21.Font = F9_5;
-                History22.Font = F10;
-                History23.Font = F22;
-                History31.Font = F9_5;
-                History32.Font = F10;
-                History33.Font = F22;
-                History41.Font = F9_5;
-                History42.Font = F10;
-                History43.Font = F22;
-                History51.Font = F9_5;
-                History52.Font = F10;
-                History53.Font = F22;
-                History61.Font = F9_5;
-                History62.Font = F10;
-                History63.Font = F22;
-                Console.WriteLine(ErrorText.Font);
-            }*/
         }
 
         /// <summary>
