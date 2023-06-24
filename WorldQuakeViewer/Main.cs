@@ -1,12 +1,12 @@
 ﻿using CoreTweet;
 using LL2FERC;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Media;
@@ -43,9 +43,8 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
         }
         private void MainForm_Load(object sender, EventArgs e)//ExeLog($"");
         {
-            ExeLog($"起動処理開始");
+            ExeLog($"[Load]起動処理開始");
             StartTime = DateTime.Now;
-            HistoryBack.Text = $"履歴                                                                Version:{Version}";
             ErrorText.Text = "フォント読み込み中…";
             try
             {
@@ -65,11 +64,11 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                     }
                     Thread.Sleep(1000);//念のため
                 }
-                ExeLog($"フォントファイルOK");
+                ExeLog($"[Load]フォントファイルOK");
             }
             catch
             {
-                ExeLog($"フォント確認に失敗");
+                ExeLog($"[Load]フォント確認に失敗");
             }
             ErrorText.Text = "設定読み込み中…";
             Configuration Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
@@ -78,11 +77,11 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 if (!Directory.Exists(Config.FilePath.Replace("\\user.config", "")))//実質更新時
                     Directory.CreateDirectory(Config.FilePath.Replace("\\user.config", ""));
                 File.Copy("UserSetting.xml", Config.FilePath, true);
-                ExeLog($"設定ファイルをAppDataにコピー");
+                ExeLog($"[Load]設定ファイルをAppDataにコピー");
             }
             SettingReload();
             ErrorText.Text = "設定の読み込みが完了しました。";
-            ExeLog($"設定読み込み完了");
+            ExeLog($"[Load]設定読み込み完了");
             USGSget.Enabled = true;
         }
 
@@ -94,283 +93,241 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
 
         private async void USGSget_Tick(object sender, EventArgs e)
         {
-            USGSget.Interval = 30000;
+            //次の15/45秒までの時間を計算
+            DateTime now = DateTime.Now;
+            DateTime Next15Second = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 15);
+            DateTime Next45Second = Next15Second.AddSeconds(30);
+            if (now.Second > 15)
+                Next15Second = Next15Second.AddMinutes(1);
+            if (now.Second > 45)
+                Next45Second = Next45Second.AddMinutes(1);
+            USGSget.Interval = (int)Math.Min((Next15Second - now).TotalMilliseconds, (Next45Second - now).TotalMilliseconds);
             try
             {
                 ErrorText.Text = "取得中…";
-                ExeLog($"//////////取得開始//////////");
-                WebClient WC = new WebClient
-                {
-                    Encoding = Encoding.UTF8
-                };
-                string json_ = await WC.DownloadStringTaskAsync(new Uri("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson"));
-                ExeLog($"取得完了");
+                ExeLog($"[USGS]取得開始");
+                WebClient wc = new WebClient();
+                string json_ = await wc.DownloadStringTaskAsync(new Uri("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson"));
+                ExeLog($"[USGS]取得完了");
                 AccessedUSGS++;
-                string LastCheckTime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
-                double StartTime = Convert.ToDouble(DateTime.Now.ToString("yyyyMMddHHmmss.ffff"));
-                USGSQuake json = JsonConvert.DeserializeObject<USGSQuake>(json_);
-                DateTimeOffset Update_ = DateTimeOffset.FromUnixTimeMilliseconds(json.Metadata.Generated).ToLocalTime();
-                string UpdateTime_ = $"{Update_:yyyy/MM/dd HH:mm:ss}";
-                int SoundLevel = 0;//音声判別用 初報ほど、M大きいほど高い
-                ExeLog($"各履歴処理開始");
-                LatestURL = json.Features[0].Properties.Url;
-                int DatasCount = Math.Min(Settings.Default.Update_MaxCount, json.Features.Count);
+                JObject json = JObject.Parse(json_);
+                json_ = "";//早く処分(多分効果ほぼない) 
+                int SoundLevel = 0;//音声判別用 初報ほど,M大きいほど高い
+
+                ExeLog($"[USGS]各履歴処理開始");
+                JToken features = json.SelectToken("features");
+                int DatasCount = Math.Min(Settings.Default.Update_MaxCount, features.Count());
                 for (int i = DatasCount - 1; i >= 0; i--)//送信の都合上古い順に
-                    if (json.Features.Count > i)
+                {
+                    bool New = false;//音声判別用
+                    string ID = (string)features.SelectToken("id");
+                    ExeLog($"[USGS]処理[{i}]:{ID}");
+                    JToken properties = features.SelectToken("properties");
+                    long Updated = (long)properties.SelectToken("updated");
+                    DateTimeOffset Update = DateTimeOffset.FromUnixTimeMilliseconds(Updated).ToLocalTime();
+                    string UpdateTime = $"{Update:yyyy/MM/dd HH:mm:ss}";
+                    long LastUpdated = Histories.ContainsKey(ID) ? Histories[ID].Update : 0;
+                    ErrorText.Text = $"処理中…[{DatasCount - i}/{DatasCount}]";
+                    if (Updated != LastUpdated)//新規か更新
                     {
-                        bool New = false;//音声判別用
-                        string ID = json.Features[i].Id;
-                        long Updated = json.Features[i].Properties.Updated;
-                        ExeLog($"処理[{i}]:{ID}");
-                        DateTimeOffset Update = DateTimeOffset.FromUnixTimeMilliseconds(Updated).ToLocalTime();
-                        string UpdateTime = $"{Update:yyyy/MM/dd HH:mm:ss}";
-                        long LastUpdated = 0;
-                        if (Histories.ContainsKey(ID))
-                            LastUpdated = Histories[ID].Update;
-                        ErrorText.Text = $"処理中…[{DatasCount - i}/{DatasCount}]";
-                        if (Updated != LastUpdated)//新規か更新
+                        ExeLog($"[USGS][{i}] 更新時刻変化検知({LastUpdated}->{Updated})");
+                        double? MMI = (double?)properties.SelectToken("mmi");
+                        string MMISt = $"({MMI})".Replace("()", "-");//(1.2)/-
+                        string MaxInt = MMI < 1.5 ? "I" : MMI < 2.5 ? "II" : MMI < 3.5 ? "III" : MMI < 4.5 ? "IV" : MMI < 5.5 ? "V" : MMI < 6.5 ? "VI" : MMI < 7.5 ? "VII" : MMI < 8.5 ? "VIII" : MMI < 9.5 ? "IX" : MMI < 10.5 ? "X" : MMI < 11.5 ? "XI" : MMI >= 11.5 ? "XII" : "-";
+                        long Time = (long)properties.SelectToken("time");
+                        DateTimeOffset DataTimeOff = DateTimeOffset.FromUnixTimeMilliseconds(Time).ToLocalTime();
+                        string TimeSt = Convert.ToString(DataTimeOff).Replace("+0", " UTC +0").Replace("+1", " UTC +1").Replace("-0", " UTC -0").Replace("+1", " UTC -1");
+                        string TimeJP = DataTimeOff.DateTime.ToString("d日HH時mm分ss秒");
+                        double Mag = (double)properties.SelectToken("mag");
+                        string MagSt = Mag.ToString("F1");
+                        string MagType = (string)properties.SelectToken("magType");
+                        double Lat = (double)features.SelectToken("geometry.coordinates[1]");
+                        double Lon = (double)features.SelectToken("geometry.coordinates[0]");
+                        double LatShort = Math.Round(Lat, 2, MidpointRounding.AwayFromZero);
+                        double LonShort = Math.Round(Lon, 2, MidpointRounding.AwayFromZero);
+                        string Alert = (string)properties.SelectToken("alert");
+                        string AlertJP = Alert == null ? "アラート:-" : $"アラート:{Alert.Replace("green", "緑").Replace("yellow", "黄").Replace("orange", "オレンジ").Replace("red", "赤").Replace("pending", "保留中")}";
+                        string LatStDecimal = Lat > 0 ? $"{LatShort}°N" : $"{LatShort}°S";
+                        string LonStDecimal = Lon > 0 ? $"{LonShort}°E" : $"{LonShort}°W";
+                        TimeSpan LatTime = TimeSpan.FromHours(Lat);
+                        TimeSpan LonTime = TimeSpan.FromHours(Lon);
+                        string LatStShort = Lat > 0 ? $"{(int)Lat}ﾟ{LatTime.Minutes}'N" : $"{(int)-Lat}ﾟ{-LatTime.Minutes}'S";
+                        string LonStShort = Lon > 0 ? $"{(int)Lon}ﾟ{LonTime.Minutes}'E" : $"{(int)-Lon}ﾟ{-LonTime.Minutes}'W";
+                        string LatStLong = Lat > 0 ? $"{(int)Lat}ﾟ{LatTime.Minutes}'{LatTime.Seconds}\"N" : $"{(int)-Lat} ﾟ {-LatTime.Minutes} '";
+                        string LonStLong = Lon > 0 ? $"{(int)Lon}ﾟ{LonTime.Minutes}'{LonTime.Seconds}\"E" : $"{(int)-Lon} ﾟ {-LonTime.Minutes} '";
+                        string LatStLongJP = Lat > 0 ? $"北緯{(int)Lat}度{LatTime.Minutes}分{LatTime.Seconds}秒" : $"南緯{(int)-Lat}度{-LatTime.Minutes}分{-LatTime.Seconds}秒";
+                        string LonStLongJP = Lon > 0 ? $"東経{(int)Lon}度{LonTime.Minutes}分{LonTime.Seconds}秒" : $"西経{(int)-Lon}度{-LonTime.Minutes}分{-LonTime.Seconds}秒";
+                        if (Settings.Default.Text_LatLonDecimal)
                         {
-                            ExeLog($"[{i}] 更新時刻変化検知({LastUpdated}->{Updated})");
-                            double? MMI = json.Features[i].Properties.Mmi;
-                            string MMISt = $"({MMI})".Replace("()", "-");
-                            string MaxInt = "-";
-                            if (MMI < 1.5)
-                                MaxInt = "I";
-                            else if (MMI < 2.5)
-                                MaxInt = "II";
-                            else if (MMI < 3.5)
-                                MaxInt = "III";
-                            else if (MMI < 4.5)
-                                MaxInt = "IV";
-                            else if (MMI < 5.5)
-                                MaxInt = "V";
-                            else if (MMI < 6.5)
-                                MaxInt = "VI";
-                            else if (MMI < 7.5)
-                                MaxInt = "VII";
-                            else if (MMI < 8.5)
-                                MaxInt = "VIII";
-                            else if (MMI < 9.5)
-                                MaxInt = "IX";
-                            else if (MMI < 10.5)
-                                MaxInt = "X";
-                            else if (MMI < 11.5)
-                                MaxInt = "XI";
-                            else if (MMI >= 11.5)
-                                MaxInt = "XII";
-                            DateTimeOffset DataTimeOff = DateTimeOffset.FromUnixTimeMilliseconds(json.Features[i].Properties.Time).ToLocalTime();
-                            string Time = Convert.ToString(DataTimeOff).Replace("+0", " UTC +0").Replace("+1", " UTC +1").Replace("-0", " UTC -0").Replace("+1", " UTC -1");
-                            DateTime TimeJP_ = DataTimeOff.DateTime;
-                            string TimeJP = TimeJP_.ToString("dd日HH時mm分ss秒");
-                            string Mag = $"{json.Features[i].Properties.Mag}";
-                            if (Mag.Length == 1)
-                                Mag += ".0";
-                            string MagType = json.Features[i].Properties.MagType;
-                            double Lat = json.Features[i].Geometry.Coordinates[1];
-                            double Lon = json.Features[i].Geometry.Coordinates[0];
-                            double LatShort = Math.Round(json.Features[i].Geometry.Coordinates[1], 2, MidpointRounding.AwayFromZero);
-                            double LonShort = Math.Round(json.Features[i].Geometry.Coordinates[0], 2, MidpointRounding.AwayFromZero);
-                            string Alert = json.Features[i].Properties.Alert;
-                            string AlertJP = "アラート:-";
-                            if (Alert != null)
-                                AlertJP = AlertJP.Replace("-", json.Features[i].Properties.Alert.Replace("green", "緑").Replace("yellow", "黄").Replace("orange", "オレンジ").Replace("red", "赤").Replace("pending", "保留中"));
-                            string LatStDecimal = $"{Math.Round(Lat, 2, MidpointRounding.AwayFromZero)}°N";
-                            if (Lat < 0)
-                                LatStDecimal = $"{Math.Round(-Lat, 2, MidpointRounding.AwayFromZero)}°S";
-                            string LonStDecimal = $"{Math.Round(Lon, 2, MidpointRounding.AwayFromZero)}°E";
-                            if (Lon < 0)
-                                LonStDecimal = $"{Math.Round(-Lon, 2, MidpointRounding.AwayFromZero)}°W";
-                            TimeSpan LatTime = TimeSpan.FromHours(Lat);
-                            TimeSpan LonTime = TimeSpan.FromHours(Lon);
-                            string LatStShort = $"{(int)Lat}ﾟ{LatTime.Minutes}'N";
-                            string LonStShort = $"{(int)Lon}ﾟ{LonTime.Minutes}'E";
-                            if (Lat < 0)
-                                LatStShort = $"{(int)-Lat}ﾟ{-LatTime.Minutes}'S";
-                            if (Lon < 0)
-                                LonStShort = $"{(int)-Lon}ﾟ{-LonTime.Minutes}'W";
-                            string LatStLong = $"{(int)Lat}ﾟ{LatTime.Minutes}'{LatTime.Seconds}\"N";
-                            string LonStLong = $"{(int)Lon}ﾟ{LonTime.Minutes}'{LonTime.Seconds}\"E";
-                            if (Lat < 0)
-                                LatStLong = $"{(int)-Lat} ﾟ {-LatTime.Minutes} '";
-                            if (Lon < 0)
-                                LonStLong = $"{(int)-Lon} ﾟ {-LonTime.Minutes} '";
-                            string LatStLongJP = $"北緯{(int)Lat}度{LatTime.Minutes}分{LatTime.Seconds}秒";
-                            string LonStLongJP = $"東経{(int)Lon}度{LonTime.Minutes}分{LonTime.Seconds}秒";
-                            if (Lat < 0)
-                                LatStLongJP = $"南緯{(int)-Lat}度{-LatTime.Minutes}分{-LatTime.Seconds}秒";
-                            if (Lon < 0)
-                                LonStLongJP = $"西経{(int)-Lon}度{-LonTime.Minutes}分{-LonTime.Seconds}秒";
-                            if (Settings.Default.Text_LatLonDecimal)
-                            {
-                                LatStLongJP = $"北緯{Lat}度";
-                                LonStLongJP = $"東経{Lon}度";
-                                if (Lat < 0)
-                                    LatStLongJP = $"南緯{-Lat}度";
-                                if (Lon < 0)
-                                    LonStLongJP = $"西経{-Lon}度";
-                            }
-                            string LatView = LatStShort;
-                            string LongView = LonStShort;
-                            if (Settings.Default.Text_LatLonDecimal)
-                            {
-                                LatView = LatStDecimal;
-                                LongView = LonStDecimal;
-                            }
-                            string Depth = $"深さ:約{(int)Math.Round(json.Features[i].Geometry.Coordinates[2], MidpointRounding.AwayFromZero)}km";
-                            if (json.Features[i].Geometry.Coordinates[2] == (int)json.Features[i].Geometry.Coordinates[2])
-                                Depth = $"(深さ:{json.Features[i].Geometry.Coordinates[2]}km?)";//整数
-                            string DepthLong = $"深さ:{json.Features[i].Geometry.Coordinates[2]}km";
-                            if (json.Features[i].Geometry.Coordinates[2] == (int)json.Features[i].Geometry.Coordinates[2])
-                                DepthLong = Depth;
-                            string HypoJP = LL2FERCode.Name_JP(LL2FERCode.Code(Lat, Lon));
-                            string HypoEN = $"({json.Features[i].Properties.Place})";
-                            string LogText = $"USGS地震情報【{MagType}{Mag}】{Time}\n{HypoJP}{HypoEN}\n{LatView},{LongView}　{Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}　{AlertJP.Replace("アラート:-", "")}\n{json.Features[i].Properties.Url}";
-                            string BouyomiText = $"USGS地震情報。{TimeJP}発生、マグニチュード{Mag}、震源、{HypoJP.Replace(" ", "、").Replace("/", "、")}、{LatStLongJP}、{LonStLongJP}、深さ{DepthLong.Replace("深さ:", "")}。{$"推定最大改正メルカリ震度階級{MMISt.Replace("(", "").Replace(")", "")}。".Replace("推定最大改正メルカリ震度階級-。", "")}{AlertJP.Replace("アラート:-", "")}";
+                            LatStLongJP = Lat > 0 ? $"北緯{Lat}度" : $"南緯{-Lat}度";
+                            LonStLongJP = Lon > 0 ? $"東経{Lon}度" : $"西経{-Lon}度";
+                        }
+                        string LatView = LatStShort;
+                        string LongView = LonStShort;
+                        if (Settings.Default.Text_LatLonDecimal)
+                        {
+                            LatView = LatStDecimal;
+                            LongView = LonStDecimal;
+                        }
+                        double Depth = (double)features.SelectToken("geometry.coordinates[2]");
+                        string DepthSt = Depth == (int)Depth ? $"(深さ:{Depth}km?)" : $"深さ:約{(int)Math.Round(Depth, MidpointRounding.AwayFromZero)}km";
+                        string DepthLong = Depth == (int)Depth ? DepthLong = DepthSt : $"深さ:{Depth}km";
+                        string HypoJP = LL2FERCode.Name_JP(LL2FERCode.Code(Lat, Lon));
+                        string HypoEN = $"({(string)properties.SelectToken("place")})";
+                        string URL = (string)properties.SelectToken("url");
+                        string LogText = $"USGS地震情報【{MagType}{MagSt}】{TimeSt}\n{HypoJP}{HypoEN}\n{LatView},{LongView}　{Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}　{AlertJP.Replace("アラート:-", "")}\n{URL}";
+                        string BouyomiText = $"USGS地震情報。{TimeJP}発生、マグニチュード{MagSt}、震源、{HypoJP.Replace(" ", "、").Replace("/", "、")}、{LatStLongJP}、{LonStLongJP}、深さ{DepthLong.Replace("深さ:", "")}。{$"推定最大改正メルカリ震度階級{MMISt.Replace("(", "").Replace(")", "")}。".Replace("推定最大改正メルカリ震度階級-。", "")}{AlertJP.Replace("アラート:-", "")}";
 
-                            History history = new History
-                            {
-                                URL = json.Features[i].Properties.Url,
-                                Update = Updated,
-                                TweetID = 0,//更新の場合は上書き前に変更するから0でおｋ
+                        History history = new History
+                        {
+                            URL = URL,
+                            Update = Updated,
+                            TweetID = 0,//更新の場合は上書き前に変更するから0でおｋ
 
-                                Display10 = $"USGS地震情報                                         {Time}",
-                                Display11 = $"{HypoJP}\n{HypoEN}\n{LatView},{LongView}\n{Depth}",
-                                Display12 = $"{MagType}",
-                                Display13 = $"{Mag}",//14は変わらない
-                                Display15 = $"{MMISt.Replace("(", "").Replace(")", "")}",
-                                Display21 = $"{Time} 発生  ID:{ID}\n{HypoJP}\n{LatView},{LongView} {DepthLong}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}",
-                                Display22 = $"{MagType}",
-                                Display23 = $"{Mag}",
+                            Display21 = $"{TimeSt} 発生  ID:{ID}\n{HypoJP}\n{LatView},{LongView} {DepthLong}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}",
+                            Display22 = $"{MagType}",
+                            Display23 = $"{MagSt}",
 
-                                Time = json.Features[i].Properties.Time,
-                                HypoJP = HypoJP,
-                                HypoEN = HypoEN,//()付く
-                                Lat = Lat,
-                                Lon = Lon,
-                                Depth = json.Features[i].Geometry.Coordinates[2],
-                                MagType = MagType,
-                                Mag = Mag,
-                                MMI = MMI,
-                                Alert = Alert
-                            };
-                            bool NewUpdt = false;
-                            if (!Histories.ContainsKey(ID))//Keyないと探したときエラーになるから別化
-                                NewUpdt = true;
-                            else
-                            {
-                                if (Settings.Default.Update_Time)
-                                    if (Histories[ID].Time != history.Time)
-                                    {
-                                        NewUpdt = true;
-                                        ExeLog($"Time:{Histories[ID].Time}->{history.Time}");
-                                    }
-                                if (Settings.Default.Update_HypoJP)
-                                    if (Histories[ID].HypoJP != history.HypoJP)
-                                    {
-                                        NewUpdt = true;
-                                        ExeLog($"HypoJP:{Histories[ID].HypoJP}->{history.HypoJP}");
-                                    }
-                                if (Settings.Default.Update_HypoEN)
-                                    if (Histories[ID].HypoEN != history.HypoEN)
-                                    {
-                                        NewUpdt = true;
-                                        ExeLog($"HypoEN:{Histories[ID].HypoEN}->{history.HypoEN}");
-                                    }
-                                if (Settings.Default.Update_LatLon)
-                                    if (Histories[ID].Lat != history.Lat || Histories[ID].Lon != history.Lon)
-                                    {
-                                        NewUpdt = true;
-                                        ExeLog($"Lat:{Histories[ID].Lat}->{history.Lat}, Lon:{Histories[ID].Lon}->{history.Lon}");
-                                    }
-                                if (Settings.Default.Update_Depth)
-                                    if (Histories[ID].Depth != history.Depth)
-                                    {
-                                        NewUpdt = true;
-                                        ExeLog($"Depth:{Histories[ID].Depth}->{history.Depth}");
-                                    }
-                                if (Settings.Default.Update_MagType)
-                                    if (Histories[ID].MagType != history.MagType)
-                                    {
-                                        NewUpdt = true;
-                                        ExeLog($"MagType:{Histories[ID].MagType}->{history.MagType}");
-                                    }
-                                if (Settings.Default.Update_Mag)
-                                    if (Histories[ID].Mag != history.Mag)
-                                    {
-                                        NewUpdt = true;
-                                        ExeLog($"Mag:{Histories[ID].Mag}->{history.Mag}");
-                                    }
-                                if (Settings.Default.Update_MMI)
-                                    if (Histories[ID].MMI != history.MMI)
-                                    {
-                                        NewUpdt = true;
-                                        ExeLog($"MMI:{Histories[ID].MMI}->{history.MMI}");
-                                    }
-                                if (Settings.Default.Update_Alert)
-                                    if (Histories[ID].Alert != history.Alert)
-                                    {
-                                        NewUpdt = true;
-                                        ExeLog($"Alert:{Histories[ID].Alert}->{history.Alert}");
-                                    }
-                                LogText = LogText.Replace("USGS地震情報", "USGS地震情報(更新)");
-                                BouyomiText = BouyomiText.Replace("USGS地震情報", "USGS地震情報、更新");
-                            }
-                            if (NewUpdt)//更新、初回検知
-                            {
-                                if (Histories.ContainsKey(ID))//更新
+                            Time = Time,
+                            HypoJP = HypoJP,
+                            HypoEN = HypoEN,//()付く
+                            Lat = Lat,
+                            Lon = Lon,
+                            Depth = Depth,
+                            MagType = MagType,
+                            Mag = MagSt,
+                            MMI = MMI,
+                            Alert = Alert
+                        };
+                        bool NewUpdt = false;
+                        if (!Histories.ContainsKey(ID))//Keyないと探したときエラーになるから別化
+                            NewUpdt = true;
+                        else
+                        {
+                            if (Settings.Default.Update_Time)
+                                if (Histories[ID].Time != history.Time)
                                 {
+                                    NewUpdt = true;
+                                    ExeLog($"[USGS]Time:{Histories[ID].Time}->{history.Time}");
+                                }
+                            if (Settings.Default.Update_HypoJP)
+                                if (Histories[ID].HypoJP != history.HypoJP)
+                                {
+                                    NewUpdt = true;
+                                    ExeLog($"[USGS]HypoJP:{Histories[ID].HypoJP}->{history.HypoJP}");
+                                }
+                            if (Settings.Default.Update_HypoEN)
+                                if (Histories[ID].HypoEN != history.HypoEN)
+                                {
+                                    NewUpdt = true;
+                                    ExeLog($"[USGS]HypoEN:{Histories[ID].HypoEN}->{history.HypoEN}");
+                                }
+                            if (Settings.Default.Update_LatLon)
+                                if (Histories[ID].Lat != history.Lat || Histories[ID].Lon != history.Lon)
+                                {
+                                    NewUpdt = true;
+                                    ExeLog($"[USGS]Lat:{Histories[ID].Lat}->{history.Lat}, Lon:{Histories[ID].Lon}->{history.Lon}");
+                                }
+                            if (Settings.Default.Update_Depth)
+                                if (Histories[ID].Depth != history.Depth)
+                                {
+                                    NewUpdt = true;
+                                    ExeLog($"[USGS]Depth:{Histories[ID].Depth}->{history.Depth}");
+                                }
+                            if (Settings.Default.Update_MagType)
+                                if (Histories[ID].MagType != history.MagType)
+                                {
+                                    NewUpdt = true;
+                                    ExeLog($"[USGS]MagType:{Histories[ID].MagType}->{history.MagType}");
+                                }
+                            if (Settings.Default.Update_Mag)
+                                if (Histories[ID].Mag != history.Mag)
+                                {
+                                    NewUpdt = true;
+                                    ExeLog($"[USGS]Mag:{Histories[ID].Mag}->{history.Mag}");
+                                }
+                            if (Settings.Default.Update_MMI)
+                                if (Histories[ID].MMI != history.MMI)
+                                {
+                                    NewUpdt = true;
+                                    ExeLog($"[USGS]MMI:{Histories[ID].MMI}->{history.MMI}");
+                                }
+                            if (Settings.Default.Update_Alert)
+                                if (Histories[ID].Alert != history.Alert)
+                                {
+                                    NewUpdt = true;
+                                    ExeLog($"[USGS]Alert:{Histories[ID].Alert}->{history.Alert}");
+                                }
+                            LogText = LogText.Replace("USGS地震情報", "USGS地震情報(更新)");
+                            BouyomiText = BouyomiText.Replace("USGS地震情報", "USGS地震情報、更新");
+                        }
+                        if (NewUpdt)
+                        {
+                            if (Histories.ContainsKey(ID))//更新
+                            {
 
-                                    ExeLog($"//////////{ID}更新検知//////////");
-                                    history.TweetID = Histories[ID].TweetID;
-                                    Histories[ID] = history;
-                                }
-                                else//new
-                                {
-                                    ExeLog($"//////////{ID}初回検知//////////");
-                                    New = true;
-                                    Histories.Add(ID, history);
-                                }
-                                LogSave("Log\\M4.5+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", ID);
-                                if (Settings.Default.Socket_Enable)
-                                    SendSocket(LogText);
-                                if (SoundLevel < 1 && Settings.Default.Sound_45_Enable)//SoundLevel上昇+M4.5以上有効
-                                    if (New)//初報
-                                        SoundLevel = 2;
-                                    else if (Settings.Default.Sound_Updt_Enable)//更新+更新有効
-                                        SoundLevel = 1;
-                                if (json.Features[i].Properties.Mag >= 6.0)
-                                {
-                                    LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", ID);
-                                    if (SoundLevel < 3 && Settings.Default.Sound_60_Enable)
-                                        if (New)
-                                            SoundLevel = 4;
-                                        else if (Settings.Default.Sound_Updt_Enable)
-                                            SoundLevel = 3;
-                                    if (json.Features[i].Properties.Mag >= 8.0)
-                                    {
-                                        LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", ID);
-                                        if (SoundLevel < 5 && Settings.Default.Sound_80_Enable)
-                                            if (New)
-                                                SoundLevel = 6;
-                                            else if (Settings.Default.Sound_Updt_Enable)
-                                                SoundLevel = 5;
-                                    }
-                                }
-                                if (i == 0)
-                                    LatestText = LogText;
-                                    if (json.Features[i].Properties.Mag >= Settings.Default.Bouyomichan_LowerMagnitudeLimit || MMI >= Settings.Default.Bouyomichan_LowerMMILimit)
-                                    if (Settings.Default.Bouyomichan_Enable)
-                                        Bouyomichan(BouyomiText);
-                                if (json.Features[i].Properties.Mag >= Settings.Default.Tweet_LowerMagnitudeLimit || MMI >= Settings.Default.Tweet_LowerMMILimit)
-                                    if (Settings.Default.Tweet_Enable)
-                                        Tweet(LogText, ID);
+                                ExeLog($"[USGS]{ID}更新検知");
+                                history.TweetID = Histories[ID].TweetID;
+                                Histories[ID] = history;
                             }
-                            else
-                                ExeLog($"[{i}] 内容更新なし");
+                            else//new
+                            {
+                                ExeLog($"[USGS]{ID}初回");
+                                New = true;
+                                Histories.Add(ID, history);
+                            }
+                            LogSave("Log\\M4.5+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", ID);
+                            if (Settings.Default.Socket_Enable)
+                                SendSocket(LogText);
+                            if (SoundLevel < 1 && Settings.Default.Sound_45_Enable)//SoundLevel上昇+M4.5以上有効
+                                    SoundLevel = New ? 2 : 1;
+                            if (Mag >= 6)
+                            {
+                                LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", ID);
+
+                                if (SoundLevel < 3 && Settings.Default.Sound_60_Enable)
+                                    SoundLevel = New ? 4 : 3;
+                                if (Mag >= 8)
+                                {
+                                    LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", ID);
+                                    if (SoundLevel < 5 && Settings.Default.Sound_80_Enable)
+                                    SoundLevel = New ? 6 : 5;
+                                }
+                            }
+                            if (i == 0)
+                                LatestText = LogText;
+                            if (Mag >= Settings.Default.Bouyomichan_LowerMagnitudeLimit || MMI >= Settings.Default.Bouyomichan_LowerMMILimit)
+                                if (Settings.Default.Bouyomichan_Enable)
+                                    Bouyomichan(BouyomiText);
+                            if (Mag >= Settings.Default.Tweet_LowerMagnitudeLimit || MMI >= Settings.Default.Tweet_LowerMMILimit)
+                                if (Settings.Default.Tweet_Enable)
+                                    Tweet(LogText, ID);
                         }
                         else
-                            ExeLog($"[{i}] 更新なし(更新:{Updated})");
+                            ExeLog($"[USGS][{i}] 内容更新なし(更新:{UpdateTime})");
                     }
+                    else
+                        ExeLog($"[USGS][{i}] 更新なし(更新:{UpdateTime})");
+                }
+            }
+            catch (WebException ex)
+            {
+                ErrorText.Text = $"ネットワークエラーが発生しました。内容:" + ex.Message;
+            }
+            catch (Exception ex)
+            {
+                ErrorText.Text = $"エラーが発生しました。エラーログの内容を報告してください。内容:" + ex.Message;
+                LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main[USGS] Version:{Version}\n{ex}");
+            }
+            if (!ErrorText.Text.Contains("エラー"))
+                ErrorText.Text = "";
+            NoFirst = true;
+            ExeLog("[USGS]処理終了");
+
+
+
+
+
                 ErrorText.Text = "表示処理中…";
                 for (int i = 0; i < 7; i++)
                     if (Histories.Count > i)//データ不足対処
@@ -748,20 +705,6 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                     Sound("M80u.wav");
                 else if (SoundLevel == 6)
                     Sound("M80.wav");
-            }
-            catch (WebException ex)
-            {
-                ErrorText.Text = $"ネットワークエラーが発生しました。内容:" + ex.Message;
-            }
-            catch (Exception ex)
-            {
-                ErrorText.Text = $"エラーが発生しました。エラーログの内容を報告してください。内容:" + ex.Message;
-                LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main Version:{Version}\n{ex}");
-            }
-            if (!ErrorText.Text.Contains("エラー"))
-                ErrorText.Text = "";
-            NoFirst = true;
-            ExeLog("処理終了");
         }
 
         /// <summary>
