@@ -76,7 +76,7 @@ namespace WorldQuakeViewer
             Tab_Socket_Port.Value = Settings.Default.Socket_Port;
             Tab_Socket_TextFormat.Text = Settings.Default.Socket_Text;
         }
-        private void SettingSave_Click(object sender, EventArgs e)
+        private void SettingSave_Click(object sender, EventArgs e)//todo:設定のバックアップを作る setting-backup202212310000.xmlみたいに
         {
             Settings.Default.Display_HideHistory = Tab_View_HideHist.Checked;
             Settings.Default.Display_HideHistoryMap = Tab_View_HideMap.Checked;

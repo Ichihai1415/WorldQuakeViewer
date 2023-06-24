@@ -18,7 +18,7 @@ using System.Windows.Forms;
 using USGSQuakeClass;
 using WorldQuakeViewer.Properties;
 
-namespace WorldQuakeViewer
+namespace WorldQuakeViewer//todo:discordに送るやつを追加
 {
     public partial class MainForm : Form
     {
