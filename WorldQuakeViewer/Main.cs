@@ -94,12 +94,12 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             DateTime now = DateTime.Now;
             DateTime Next15Second = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 15);
             DateTime Next45Second = Next15Second.AddSeconds(30);
-            if (now.Second >= 14)
+            if (now.Second >= 14)//念のため14にしとく
                 Next15Second = Next15Second.AddMinutes(1);
             if (now.Second >= 44)
                 Next45Second = Next45Second.AddMinutes(1);
             USGSget.Interval = (int)Math.Min((Next15Second - now).TotalMilliseconds, (Next45Second - now).TotalMilliseconds);
-            //try
+            try
             {
                 ErrorText.Text = "取得中…";
                 ExeLog($"[USGS]取得開始");
@@ -178,7 +178,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                         string LogText = $"USGS地震情報【{MagType}{MagSt}】{TimeSt}\n{HypoJP}{HypoEN}\n{LatView},{LongView}　{Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}　{AlertJP.Replace("アラート:-", "")}\n{URL}";
                         string BouyomiText = $"USGS地震情報。{TimeJP}発生、マグニチュード{MagSt}、震源、{HypoJP.Replace(" ", "、").Replace("/", "、")}、{LatStLongJP}、{LonStLongJP}、深さ{DepthLong.Replace("深さ:", "")}。{$"推定最大改正メルカリ震度階級{MMISt.Replace("(", "").Replace(")", "")}。".Replace("推定最大改正メルカリ震度階級-。", "")}{AlertJP.Replace("アラート:-", "")}";
 
-                        string MagTypeWithSpace = MagType.Length == 3 ? MagType : MagType.Length == 2 ? "    " + MagType : "      " + MagType;
+                        string MagTypeWithSpace = MagType.Length == 3 ? MagType : MagType.Length == 2 ? "   " + MagType : "      " + MagType;
                         History history = new History
                         {
                             URL = URL,
@@ -344,7 +344,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 else if (SoundLevel == 6)
                     Sound("M80.wav");
                 ExeLog($"[USGS]ログ保持数:{Histories.Count}");
-            }/*
+            }
             catch (WebException ex)
             {
                 ErrorText.Text = $"ネットワークエラーが発生しました。内容:" + ex.Message;
@@ -353,7 +353,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             {
                 LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main Version:{Version}\n{ex}");
                 ErrorText.Text = $"エラーが発生しました。エラーログの内容を報告してください。内容:" + ex.Message;
-            }*/
+            }
             if (!ErrorText.Text.Contains("エラー"))
                 ErrorText.Text = "";
             NoFirst = true;
@@ -650,7 +650,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             else
             {
                 DialogResult dr = MessageBox.Show("動作ログの保存がオフになっています。有効にしますか？", "確認", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
-                if(dr==DialogResult.OK)
+                if (dr == DialogResult.OK)
                 {
                     Settings.Default.Log_Enable = true;
                     Settings.Default.Save();
