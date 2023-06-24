@@ -14,6 +14,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using System.Xml;
 using WorldQuakeViewer.Properties;
 
 namespace WorldQuakeViewer//todo:discordに送るやつを追加
@@ -84,9 +85,60 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
 
         private void EMSCget_Tick(object sender, EventArgs e)
         {
+            //次の0/30秒までの時間を計算
+            DateTime now = DateTime.Now;
+            DateTime Next15Second = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute + 1, 0);
+            DateTime Next45Second = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 30);
+            if (now.Second >= 29)//念のため29にしとく
+                Next45Second = Next45Second.AddMinutes(1);
+            USGSget.Interval = (int)Math.Min((Next15Second - now).TotalMilliseconds, (Next45Second - now).TotalMilliseconds);
 
+            try
+            {
+                XmlDocument xml = new XmlDocument();
+                xml.Load($"https://www.emsc-csem.org/service/rss/rss.php?typ=emsc&magmin=5");
+                XmlNamespaceManager nsmgr = new XmlNamespaceManager(xml.NameTable);
+                nsmgr.AddNamespace("geo", "http://www.w3.org/2003/01/geo/");
+                nsmgr.AddNamespace("emsc", "https://www.emsc-csem.org");
+                XmlNode item = xml.SelectSingleNode("/rss/channel/item[0]", nsmgr);//最新のみ
+                string title = item.SelectSingleNode("title", nsmgr).InnerText;
+                string link = item.SelectSingleNode("link", nsmgr).InnerText;
+                string id = link.Replace("https://www.emsc-csem.org/Earthquake/earthquake.php?id=", "");
+                string lat = item.SelectSingleNode("geo:lat", nsmgr).InnerText;
+                double Lat = double.Parse(lat);
+                string lon = item.SelectSingleNode("geo:long", nsmgr).InnerText;
+                double Lon = double.Parse(lon);
+                string depth = item.SelectSingleNode("emsc:depth", nsmgr).InnerText.Replace("f", "").Replace(" ", "") + "km";//10fは10km以下っぽい
+                string mag = item.SelectSingleNode("emsc:magnitude", nsmgr).InnerText;
+                string[] mag_ = mag.Split(' ');
+                string magType = mag_[0];
+                double Mag = double.Parse(mag.Substring(3));
+                string time = item.SelectSingleNode("emsc:time", nsmgr).InnerText.Replace(" UTC", "");
+                DateTime Time = DateTime.Parse(time);
+                DateTimeOffset TimeOff = Time.ToLocalTime();
+                string status = item.SelectSingleNode("status", nsmgr).InnerText;
+                int hypoCode = LL2FERCode.Code(Lat, Lon);
+                string hypoJP = LL2FERCode.Name_JP(hypoCode);
+                string hypoEN = title.Replace(mag + "  ", "");
+                string hypoEN2 = LL2FERCode.Name_EN(hypoCode);
+
+
+
+            }
+            catch (WebException ex)
+            {
+                ErrorText.Text = $"ネットワークエラーが発生しました。内容:" + ex.Message;
+            }
+            catch (Exception ex)
+            {
+                LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main Version:{Version}\n{ex}");
+                ErrorText.Text = $"エラーが発生しました。エラーログの内容を報告してください。内容:" + ex.Message;
+            }
+            if (!ErrorText.Text.Contains("エラー"))
+                ErrorText.Text = "";
+            NoFirst = true;
+            ExeLog("[USGS]処理終了");
         }
-
 
         private async void USGSget_Tick(object sender, EventArgs e)
         {
@@ -96,7 +148,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             DateTime Next45Second = Next15Second.AddSeconds(30);
             if (now.Second >= 14)//念のため14にしとく
                 Next15Second = Next15Second.AddMinutes(1);
-            if (now.Second >= 44)
+            if (now.Second >= 44)//念のため44にしとく
                 Next45Second = Next45Second.AddMinutes(1);
             USGSget.Interval = (int)Math.Min((Next15Second - now).TotalMilliseconds, (Next45Second - now).TotalMilliseconds);
             try
