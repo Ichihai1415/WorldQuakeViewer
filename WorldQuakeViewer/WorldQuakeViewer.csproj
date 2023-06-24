@@ -195,13 +195,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\WorldMap.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Point.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\WQV.ico" />
+    <None Include="Resources\hypo.png" />
+    <None Include="Resources\map.png" />
     <Content Include="Sound\M45.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
