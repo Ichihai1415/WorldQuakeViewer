@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
 using System.Media;
@@ -80,7 +81,8 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             SettingReload();
             ErrorText.Text = "設定の読み込みが完了しました。";
             ExeLog($"[Main]設定読み込み完了");
-            USGSget.Enabled = true;
+            EMSCget.Enabled = true;
+            //USGSget.Enabled = true;
         }
 
         private void EMSCget_Tick(object sender, EventArgs e)
@@ -91,16 +93,18 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             DateTime Next45Second = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 30);
             if (now.Second >= 29)//念のため29にしとく
                 Next45Second = Next45Second.AddMinutes(1);
-            USGSget.Interval = (int)Math.Min((Next15Second - now).TotalMilliseconds, (Next45Second - now).TotalMilliseconds);
+            EMSCget.Interval = (int)Math.Min((Next15Second - now).TotalMilliseconds, (Next45Second - now).TotalMilliseconds);
 
-            try
+            //try
             {
                 XmlDocument xml = new XmlDocument();
+                ExeLog($"[EMSC]取得開始");
                 xml.Load($"https://www.emsc-csem.org/service/rss/rss.php?typ=emsc&magmin=5");
+                ExeLog($"[EMSC]処理開始");
                 XmlNamespaceManager nsmgr = new XmlNamespaceManager(xml.NameTable);
                 nsmgr.AddNamespace("geo", "http://www.w3.org/2003/01/geo/");
                 nsmgr.AddNamespace("emsc", "https://www.emsc-csem.org");
-                XmlNode item = xml.SelectSingleNode("/rss/channel/item[0]", nsmgr);//最新のみ
+                XmlNode item = xml.SelectSingleNode("/rss/channel/item", nsmgr);//最新のみ
                 string title = item.SelectSingleNode("title", nsmgr).InnerText;
                 string link = item.SelectSingleNode("link", nsmgr).InnerText;
                 string id = link.Replace("https://www.emsc-csem.org/Earthquake/earthquake.php?id=", "");
@@ -108,23 +112,73 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 double Lat = double.Parse(lat);
                 string lon = item.SelectSingleNode("geo:long", nsmgr).InnerText;
                 double Lon = double.Parse(lon);
+                Lat2String(Lat, out _, out _, out _, out _, out _, out string LatDisplay);
+                Lon2String(Lon, out _, out _, out _, out _, out _, out string LonDisplay);
                 string depth = item.SelectSingleNode("emsc:depth", nsmgr).InnerText.Replace("f", "").Replace(" ", "") + "km";//10fは10km以下っぽい
                 string mag = item.SelectSingleNode("emsc:magnitude", nsmgr).InnerText;
                 string[] mag_ = mag.Split(' ');
                 string magType = mag_[0];
-                double Mag = double.Parse(mag.Substring(3));
+                string MagSt = mag_[mag_.Length - 1];
+                double Mag = double.Parse(MagSt);
                 string time = item.SelectSingleNode("emsc:time", nsmgr).InnerText.Replace(" UTC", "");
                 DateTime Time = DateTime.Parse(time);
                 DateTimeOffset TimeOff = Time.ToLocalTime();
+                string TimeSt = Convert.ToString(TimeOff).Replace("+0", " UTC +0").Replace("+1", " UTC +1").Replace("-0", " UTC -0").Replace("+1", " UTC -1");
                 string status = item.SelectSingleNode("status", nsmgr).InnerText;
+                string StatusJP = status.Replace("AUTOMATIC", "自動処理").Replace("REVIEWED", "レビュー済み");
                 int hypoCode = LL2FERCode.Code(Lat, Lon);
                 string hypoJP = LL2FERCode.Name_JP(hypoCode);
                 string hypoEN = title.Replace(mag + "  ", "");
                 string hypoEN2 = LL2FERCode.Name_EN(hypoCode);
+                string MagTypeWithSpace = magType.Length == 3 ? magType : magType.Length == 2 ? "   " + magType : "      " + magType;
 
 
 
-            }
+
+
+                ExeLog($"[EMSC]描画開始");
+
+                Graphics g = Graphics.FromImage(bitmap);
+                g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 0, 0, 800, 1000);
+
+                int locX = Lon > 0 ? (int)Math.Round((Lon + 90d) * 10d, MidpointRounding.AwayFromZero) : (int)Math.Round((Lon + 450d) * 10d, MidpointRounding.AwayFromZero);
+                int locY = (int)Math.Round((90d - Lat) * 10d, MidpointRounding.AwayFromZero);
+                int locX_image = 400 - locX;
+                int locY_image = Math.Min(200, Math.Max(-800, 600 - locY));
+                g.FillRectangle(new SolidBrush(Color.FromArgb(60, 60, 90)), 0, 200, 800, 800);
+                ImageCheck("map.png");
+                g.DrawImage(Image.FromFile("Image\\map.png"), locX_image, locY_image, 5400, 1800);
+                ColorMap[] ColorChange = new ColorMap[]
+                {
+                    new ColorMap()
+                };
+                ColorChange[0].OldColor = Color.Black;
+                ColorChange[0].NewColor = Color.Transparent;
+                ImageAttributes ia = new ImageAttributes();
+                ia.SetRemapTable(ColorChange);
+                ImageCheck("hypo.png");
+                g.DrawImage(Image.FromFile("Image\\hypo.png"), new Rectangle(360, locY + locY_image - 40, 80, 80), 0, 0, 80, 80, GraphicsUnit.Pixel, ia);
+
+                g.FillRectangle(new SolidBrush(Color.FromArgb(128, 0, 0, 30)), 460, 950, 340, 50);
+                g.DrawString("地図データ:Natural Earth", new Font(font, 19), Brushes.White, 469, 956);
+
+                g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 0, 0, 800, 200);
+                g.FillRectangle(new SolidBrush(Color.FromArgb(30, 30, 60)), 4, 30, 792, 166);
+                Brush color = Mag2Brush(Mag);
+                g.DrawString($"EMSC地震情報(M5.0+)                                {TimeSt}", new Font(font, 17), color, 0, 0);
+                g.DrawString($"{hypoJP}\n{hypoEN}\n{LatDisplay}, {LonDisplay}  深さ{depth}\nID:{id}  {StatusJP}", new Font(font, 20), Brushes.White, 4, 32);
+                g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 796, 0, 4, 200);
+                g.DrawString(MagTypeWithSpace, new Font(font, 20), Brushes.White, 590, 160);
+                g.DrawString(MagSt, new Font(font, 50), Brushes.White, 670, 100);
+
+
+                ExeLog($"[EMSC]描画完了");
+
+                g.Dispose();
+                MainImage.BackgroundImage = bitmap;
+
+
+            }/*
             catch (WebException ex)
             {
                 ErrorText.Text = $"ネットワークエラーが発生しました。内容:" + ex.Message;
@@ -133,11 +187,11 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             {
                 LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main Version:{Version}\n{ex}");
                 ErrorText.Text = $"エラーが発生しました。エラーログの内容を報告してください。内容:" + ex.Message;
-            }
+            }*/
             if (!ErrorText.Text.Contains("エラー"))
                 ErrorText.Text = "";
             NoFirst = true;
-            ExeLog("[USGS]処理終了");
+            ExeLog("[EMSC]処理終了");
         }
 
         private async void USGSget_Tick(object sender, EventArgs e)
@@ -195,41 +249,18 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                         string MagType = (string)propertie.SelectToken("magType");
                         double Lat = (double)features.SelectToken("geometry.coordinates[1]");
                         double Lon = (double)features.SelectToken("geometry.coordinates[0]");
-                        double LatShort = Math.Round(Lat, 2, MidpointRounding.AwayFromZero);
-                        double LonShort = Math.Round(Lon, 2, MidpointRounding.AwayFromZero);
+                        Lat2String(Lat, out double LatShort, out string LatStDecimal, out string LatStShort, out string LatStLong, out string LatStLongJP, out string LatDisplay);
+                        Lon2String(Lon, out double LonShort, out string LonStDecimal, out string LonStShort, out string LonStLong, out string LonStLongJP, out string LonDisplay);
                         string Alert = (string)propertie.SelectToken("alert");
                         string AlertJP = Alert == null ? "アラート:-" : $"アラート:{Alert.Replace("green", "緑").Replace("yellow", "黄").Replace("orange", "オレンジ").Replace("red", "赤").Replace("pending", "保留中")}";
-                        string LatStDecimal = Lat > 0 ? $"{LatShort}°N" : $"{-LatShort}°S";
-                        string LonStDecimal = Lon > 0 ? $"{LonShort}°E" : $"{-LonShort}°W";
-                        TimeSpan LatTime = TimeSpan.FromHours(Lat);
-                        TimeSpan LonTime = TimeSpan.FromHours(Lon);
-                        string LatStShort = Lat > 0 ? $"{(int)Lat}ﾟ{LatTime.Minutes}'N" : $"{(int)-Lat}ﾟ{-LatTime.Minutes}'S";
-                        string LonStShort = Lon > 0 ? $"{(int)Lon}ﾟ{LonTime.Minutes}'E" : $"{(int)-Lon}ﾟ{-LonTime.Minutes}'W";
-                        //string LatStLong = Lat > 0 ? $"{(int)Lat}ﾟ{LatTime.Minutes}'{LatTime.Seconds}\"N" : $"{(int)-Lat} ﾟ {-LatTime.Minutes} '";
-                        //string LonStLong = Lon > 0 ? $"{(int)Lon}ﾟ{LonTime.Minutes}'{LonTime.Seconds}\"E" : $"{(int)-Lon} ﾟ {-LonTime.Minutes} '";
-                        string LatStLongJP = Lat > 0 ? $"北緯{(int)Lat}度{LatTime.Minutes}分{LatTime.Seconds}秒" : $"南緯{(int)-Lat}度{-LatTime.Minutes}分{-LatTime.Seconds}秒";
-                        string LonStLongJP = Lon > 0 ? $"東経{(int)Lon}度{LonTime.Minutes}分{LonTime.Seconds}秒" : $"西経{(int)-Lon}度{-LonTime.Minutes}分{-LonTime.Seconds}秒";
-                        if (Settings.Default.Text_LatLonDecimal)
-                        {
-                            LatStLongJP = Lat > 0 ? $"北緯{Lat}度" : $"南緯{-Lat}度";
-                            LonStLongJP = Lon > 0 ? $"東経{Lon}度" : $"西経{-Lon}度";
-                        }
-                        string LatView = LatStShort;
-                        string LongView = LonStShort;
-                        if (Settings.Default.Text_LatLonDecimal)
-                        {
-                            LatView = LatStDecimal;
-                            LongView = LonStDecimal;
-                        }
                         double Depth = (double)features.SelectToken("geometry.coordinates[2]");
                         string DepthSt = Depth == (int)Depth ? $"(深さ:{Depth}km?)" : $"深さ:約{(int)Math.Round(Depth, MidpointRounding.AwayFromZero)}km";
                         string DepthLong = Depth == (int)Depth ? DepthSt : $"深さ:{Depth}km";
                         string HypoJP = LL2FERCode.Name_JP(LL2FERCode.Code(Lat, Lon));
                         string HypoEN = $"({(string)propertie.SelectToken("place")})";
                         string URL = (string)propertie.SelectToken("url");
-                        string LogText = $"USGS地震情報【{MagType}{MagSt}】{TimeSt}\n{HypoJP}{HypoEN}\n{LatView},{LongView}　{Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}　{AlertJP.Replace("アラート:-", "")}\n{URL}";
+                        string LogText = $"USGS地震情報【{MagType}{MagSt}】{TimeSt}\n{HypoJP}{HypoEN}\n{LatDisplay},{LonDisplay}　{Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}　{AlertJP.Replace("アラート:-", "")}\n{URL}";
                         string BouyomiText = $"USGS地震情報。{TimeJP}発生、マグニチュード{MagSt}、震源、{HypoJP.Replace(" ", "、").Replace("/", "、")}、{LatStLongJP}、{LonStLongJP}、深さ{DepthLong.Replace("深さ:", "")}。{$"推定最大改正メルカリ震度階級{MMISt.Replace("(", "").Replace(")", "")}。".Replace("推定最大改正メルカリ震度階級-。", "")}{AlertJP.Replace("アラート:-", "")}";
-
                         string MagTypeWithSpace = MagType.Length == 3 ? MagType : MagType.Length == 2 ? "   " + MagType : "      " + MagType;
                         History history = new History
                         {
@@ -237,7 +268,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                             Update = Updated,
                             TweetID = 0,//更新の場合は上書き前に変更するから0でおｋ
 
-                            Display1 = $"{TimeSt} 発生  ID:{ID}\n{HypoJP}\n{LatView},{LongView} {DepthLong}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}",
+                            Display1 = $"{TimeSt} 発生  ID:{ID}\n{HypoJP}\n{LatDisplay}, {LonDisplay} {DepthLong}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}",
                             Display2 = $"{MagTypeWithSpace}",
                             Display3 = $"{MagSt}",
 
@@ -754,6 +785,51 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                     return Color.DimGray;
                 default:
                     return Color.FromArgb(45, 45, 90);
+            }
+        }
+        public static void Lat2String(double Lat, out double LatShort, out string LatStDecimal, out string LatStShort, out string LatStLong, out string LatStLongJP, out string LatDisplay)
+        {
+            LatShort = Math.Round(Lat, 2, MidpointRounding.AwayFromZero);
+            LatStDecimal = Lat > 0 ? $"{LatShort}°N" : $"{-LatShort}°S";
+            TimeSpan LatTime = TimeSpan.FromHours(Lat);
+            LatStShort = Lat > 0 ? $"{(int)Lat}ﾟ{LatTime.Minutes}'N" : $"{(int)-Lat}ﾟ{-LatTime.Minutes}'S";
+            LatStLong = Lat > 0 ? $"{(int)Lat}ﾟ{LatTime.Minutes}'{LatTime.Seconds}\"N" : $"{(int)-Lat} ﾟ {-LatTime.Minutes} '";
+            LatStLongJP = Settings.Default.Text_LatLonDecimal ? Lat > 0 ? $"北緯{Lat}度" : $"南緯{-Lat}度" : Lat > 0 ? $"北緯{(int)Lat}度{LatTime.Minutes}分{LatTime.Seconds}秒" : $"南緯{(int)-Lat}度{-LatTime.Minutes}分{-LatTime.Seconds}秒";
+            LatDisplay = Settings.Default.Text_LatLonDecimal ? LatStDecimal : LatStShort;
+        }
+        public static void Lon2String(double Lon, out double LonShort, out string LonStDecimal, out string LonStShort, out string LonStLong, out string LonStLongJP, out string LonDisplay)
+        {
+            LonShort = Math.Round(Lon, 2, MidpointRounding.AwayFromZero);
+            LonStDecimal = Lon > 0 ? $"{LonShort}°E" : $"{-LonShort}°W";
+            TimeSpan LonTime = TimeSpan.FromHours(Lon);
+            LonStShort = Lon > 0 ? $"{(int)Lon}ﾟ{LonTime.Minutes}'E" : $"{(int)-Lon}ﾟ{-LonTime.Minutes}'W";
+            LonStLong = Lon > 0 ? $"{(int)Lon}ﾟ{LonTime.Minutes}'{LonTime.Seconds}\"E" : $"{(int)-Lon} ﾟ {-LonTime.Minutes} '";
+            LonStLongJP = Settings.Default.Text_LatLonDecimal ? Lon > 0 ? $"東経{Lon}度" : $"西経{-Lon}度" : Lon > 0 ? $"東経{(int)Lon}度{LonTime.Minutes}分{LonTime.Seconds}秒" : $"西経{(int)-Lon}度{-LonTime.Minutes}分{-LonTime.Seconds}秒";
+            LonDisplay = Settings.Default.Text_LatLonDecimal ? LonStDecimal : LonStShort;
+        }
+        public static void ImageCheck(string FileName)
+        {
+            if (!Directory.Exists("Image"))
+            {
+                Directory.CreateDirectory("Image");
+                ExeLog($"[ImageCheck]Imageフォルダを作成しました");
+            }
+            if (!File.Exists($"Image\\{FileName}"))
+            {
+                Bitmap image;
+                switch (FileName)
+                {
+                    case "map.png":
+                        image = Resources.map;
+                        break;
+                    case "hypo.png":
+                        image = Resources.hypo;
+                        break;
+                    default:
+                        throw new Exception("画像のコピーに失敗しました。", new ArgumentException($"指定された画像({FileName})はResourcesにありません。"));
+                }
+                image.Save($"Image\\{FileName}");
+                ExeLog($"[ImageCheck]動作ログの保存をオンにしました");
             }
         }
     }

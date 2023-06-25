@@ -65,7 +65,7 @@
             // 
             // USGSget
             // 
-            this.USGSget.Interval = 500;
+            this.USGSget.Interval = 2000;
             this.USGSget.Tick += new System.EventHandler(this.USGSget_Tick);
             // 
             // RightClick
@@ -273,7 +273,7 @@
             // 
             // EMSCget
             // 
-            this.EMSCget.Interval = 500;
+            this.EMSCget.Interval = 100;
             this.EMSCget.Tick += new System.EventHandler(this.EMSCget_Tick);
             // 
             // MainImage
