@@ -31,6 +31,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
         public static Dictionary<string, History> Histories = new Dictionary<string, History>();//EQID,Data
         public string LatestText = "";
         public static Bitmap bitmap = new Bitmap(1600, 1000);
+        public static Bitmap bitmap_USGS = new Bitmap(800, 1000);
         public static FontFamily font;
         public MainForm()
         {
@@ -82,24 +83,25 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             ErrorText.Text = "設定の読み込みが完了しました。";
             ExeLog($"[Main]設定読み込み完了");
             EMSCget.Enabled = true;
-            //USGSget.Enabled = true;
         }
 
         private void EMSCget_Tick(object sender, EventArgs e)
         {
+            ExeLog($"[EMSC]取得開始");
             //次の0/30秒までの時間を計算
             DateTime now = DateTime.Now;
-            DateTime Next15Second = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute + 1, 0);
+            DateTime Next15Second = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0).AddMinutes(1);
             DateTime Next45Second = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 30);
             if (now.Second >= 29)//念のため29にしとく
                 Next45Second = Next45Second.AddMinutes(1);
             EMSCget.Interval = (int)Math.Min((Next15Second - now).TotalMilliseconds, (Next45Second - now).TotalMilliseconds);
-
-            //try
+            ExeLog($"[USGS]次回実行まであと{USGSget.Interval}ms");
+            try
             {
                 XmlDocument xml = new XmlDocument();
-                ExeLog($"[EMSC]取得開始");
+                ErrorText.Text = "取得中…";
                 xml.Load($"https://www.emsc-csem.org/service/rss/rss.php?typ=emsc&magmin=5");
+                ErrorText.Text = "処理中…";
                 ExeLog($"[EMSC]処理開始");
                 XmlNamespaceManager nsmgr = new XmlNamespaceManager(xml.NameTable);
                 nsmgr.AddNamespace("geo", "http://www.w3.org/2003/01/geo/");
@@ -112,7 +114,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 double Lat = double.Parse(lat);
                 string lon = item.SelectSingleNode("geo:long", nsmgr).InnerText;
                 double Lon = double.Parse(lon);
-                Lat2String(Lat, out _, out _, out _, out _, out _, out string LatDisplay);
+                Lat2String(Lat, out _, out _, out _, out _, out _, out string LatDisplay);//草
                 Lon2String(Lon, out _, out _, out _, out _, out _, out string LonDisplay);
                 string depth = item.SelectSingleNode("emsc:depth", nsmgr).InnerText.Replace("f", "").Replace(" ", "") + "km";//10fは10km以下っぽい
                 string mag = item.SelectSingleNode("emsc:magnitude", nsmgr).InnerText;
@@ -129,15 +131,11 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 int hypoCode = LL2FERCode.Code(Lat, Lon);
                 string hypoJP = LL2FERCode.Name_JP(hypoCode);
                 string hypoEN = title.Replace(mag + "  ", "");
-                string hypoEN2 = LL2FERCode.Name_EN(hypoCode);
                 string MagTypeWithSpace = magType.Length == 3 ? magType : magType.Length == 2 ? "   " + magType : "      " + magType;
 
 
-
-
-
+                ErrorText.Text = "表示処理中…";
                 ExeLog($"[EMSC]描画開始");
-
                 Graphics g = Graphics.FromImage(bitmap);
                 g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 0, 0, 800, 1000);
 
@@ -159,26 +157,27 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 ImageCheck("hypo.png");
                 g.DrawImage(Image.FromFile("Image\\hypo.png"), new Rectangle(360, locY + locY_image - 40, 80, 80), 0, 0, 80, 80, GraphicsUnit.Pixel, ia);
 
-                g.FillRectangle(new SolidBrush(Color.FromArgb(128, 0, 0, 30)), 460, 950, 340, 50);
-                g.DrawString("地図データ:Natural Earth", new Font(font, 19), Brushes.White, 469, 956);
+                g.FillRectangle(new SolidBrush(Color.FromArgb(128, 0, 0, 30)), 470, 950, 330, 50);
+                g.DrawString("地図データ:Natural Earth", new Font(font, 19), Brushes.White, 480, 956);
 
                 g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 0, 0, 800, 200);
                 g.FillRectangle(new SolidBrush(Color.FromArgb(30, 30, 60)), 4, 30, 792, 166);
                 Brush color = Mag2Brush(Mag);
                 g.DrawString($"EMSC地震情報(M5.0+)                                {TimeSt}", new Font(font, 17), color, 0, 0);
-                g.DrawString($"{hypoJP}\n{hypoEN}\n{LatDisplay}, {LonDisplay}  深さ{depth}\nID:{id}  {StatusJP}", new Font(font, 20), Brushes.White, 4, 32);
+                g.DrawString($"{hypoJP}\n({hypoEN})\n{LatDisplay}, {LonDisplay}  深さ{depth}\nID:{id}  状態:{StatusJP}", new Font(font, 21), Brushes.White, 4, 32);
                 g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 796, 0, 4, 200);
                 g.DrawString(MagTypeWithSpace, new Font(font, 20), Brushes.White, 590, 160);
                 g.DrawString(MagSt, new Font(font, 50), Brushes.White, 670, 100);
-
+                g.DrawImage(bitmap_USGS, 800, 0, 800, 1000);
 
                 ExeLog($"[EMSC]描画完了");
 
                 g.Dispose();
+                if (NoFirst)//こうしないと以降変わらない
                 MainImage.BackgroundImage = bitmap;
 
 
-            }/*
+            }
             catch (WebException ex)
             {
                 ErrorText.Text = $"ネットワークエラーが発生しました。内容:" + ex.Message;
@@ -187,15 +186,17 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             {
                 LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main Version:{Version}\n{ex}");
                 ErrorText.Text = $"エラーが発生しました。エラーログの内容を報告してください。内容:" + ex.Message;
-            }*/
+            }
             if (!ErrorText.Text.Contains("エラー"))
                 ErrorText.Text = "";
             NoFirst = true;
+            USGSget.Enabled = true;
             ExeLog("[EMSC]処理終了");
         }
 
         private async void USGSget_Tick(object sender, EventArgs e)
         {
+            ExeLog($"[USGS]取得開始");
             //次の15/45秒までの時間を計算
             DateTime now = DateTime.Now;
             DateTime Next15Second = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 15);
@@ -205,19 +206,17 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             if (now.Second >= 44)//念のため44にしとく
                 Next45Second = Next45Second.AddMinutes(1);
             USGSget.Interval = (int)Math.Min((Next15Second - now).TotalMilliseconds, (Next45Second - now).TotalMilliseconds);
+                ExeLog($"[USGS]次回実行まであと{USGSget.Interval}ms");
             try
             {
                 ErrorText.Text = "取得中…";
-                ExeLog($"[USGS]取得開始");
                 WebClient wc = new WebClient();
                 string json_ = await wc.DownloadStringTaskAsync(new Uri("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson"));
-                ExeLog($"[USGS]取得完了");
+                ExeLog($"[USGS]処理開始");
                 AccessedUSGS++;
                 JObject json = JObject.Parse(json_);
                 json_ = "";//早く処分(多分効果ほぼない) 
                 int SoundLevel = 0;//音声判別用 初報ほど,M大きいほど高い
-
-                ExeLog($"[USGS]各履歴処理開始");
                 int DatasCount = Math.Min(Settings.Default.Update_MaxCount, (int)json.SelectToken("metadata.count"));
                 string[] IDs = new string[6];
                 for (int i = DatasCount - 1; i >= 0; i--)//送信の都合上古い順に
@@ -245,7 +244,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                         string TimeSt = Convert.ToString(DataTimeOff).Replace("+0", " UTC +0").Replace("+1", " UTC +1").Replace("-0", " UTC -0").Replace("+1", " UTC -1");
                         string TimeJP = DataTimeOff.DateTime.ToString("d日HH時mm分ss秒");
                         double Mag = (double)propertie.SelectToken("mag");
-                        string MagSt = Mag.ToString("0.##");
+                        string MagSt = Mag.ToString("0.0#");
                         string MagType = (string)propertie.SelectToken("magType");
                         double Lat = (double)features.SelectToken("geometry.coordinates[1]");
                         double Lon = (double)features.SelectToken("geometry.coordinates[0]");
@@ -390,30 +389,32 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                         else
                             ExeLog($"[USGS][{i}] 内容更新なし(更新:{UpdateTime})");
                     }
-                    else
-                        ExeLog($"[USGS][{i}] 更新なし(更新:{UpdateTime})");
                 }
                 ErrorText.Text = "表示処理中…";
-                Graphics g = Graphics.FromImage(bitmap);
-                g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 800, 0, 800, 1000);
-                g.DrawRectangle(new Pen(Color.FromArgb(200, 200, 200)), 800, 0, 800, 1000);
-                g.DrawString($"USGS地震情報(M4.5+)                                          Version:{Version}", new Font(font, 20), Brushes.White, 802, 2);
+                Graphics g = Graphics.FromImage(bitmap_USGS);
+                g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 0, 0, 800, 1000);
+                g.DrawRectangle(new Pen(Color.FromArgb(200, 200, 200)), 0, 0, 800, 1000);
+                g.DrawString($"USGS地震情報(M4.5+)                                          Version:{Version}", new Font(font, 20), Brushes.White, 2, 2);
                 for (int i = 0; i < 6; i++)
                 {
                     if (Histories.Count > i)//データ不足対処
                     {
                         History hist = Histories[IDs[i]];
-                        g.FillRectangle(new SolidBrush(Alert2Color(hist.Alert)), 804, 40 + 160 * i, 792, 156);
-                        g.FillRectangle(new SolidBrush(Color.FromArgb(45, 45, 90)), 808, 44 + 160 * i, 784, 148);
-                        g.DrawString(hist.Display1, new Font(font, 19), Brushes.White, 808, 44 + 160 * i);
-                        g.DrawString(hist.Display2, new Font(font, 19), Mag2Brush(hist.Mag), 1370, 154 + 160 * i);
-                        g.DrawString(hist.Display3, new Font(font, 50), Mag2Brush(hist.Mag), 1440, 110 + 160 * i);
+                        g.FillRectangle(new SolidBrush(Alert2Color(hist.Alert)), 4, 40 + 160 * i, 792, 156);
+                        g.FillRectangle(new SolidBrush(Color.FromArgb(45, 45, 90)), 8, 44 + 160 * i, 784, 148);
+                        g.DrawString(hist.Display1, new Font(font, 19), Brushes.White, 8, 44 + 160 * i);
+                        g.DrawString(hist.Display2, new Font(font, 19), Mag2Brush(hist.Mag), 570, 154 + 160 * i);
+                        g.DrawString(hist.Display3, new Font(font, 50), Mag2Brush(hist.Mag), 640, 110 + 160 * i);
                     }
                     else
-                        g.FillRectangle(new SolidBrush(Color.FromArgb(45, 45, 90)), 804, 40 + 160 * i, 792, 156);
+                        g.FillRectangle(new SolidBrush(Color.FromArgb(45, 45, 90)), 4, 40 + 160 * i, 792, 156);
                 }
-                g.Dispose();
+                g=null;
+                g = Graphics.FromImage(bitmap);
+                g.DrawImage(bitmap_USGS, 800, 0, 800, 1000);
                 MainImage.BackgroundImage = bitmap;
+                g.Dispose();
+
                 if (SoundLevel == 1)
                     Sound("M45u.wav");
                 else if (SoundLevel == 2)
@@ -828,7 +829,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                     default:
                         throw new Exception("画像のコピーに失敗しました。", new ArgumentException($"指定された画像({FileName})はResourcesにありません。"));
                 }
-                image.Save($"Image\\{FileName}");
+                image.Save($"Image\\{FileName}",ImageFormat.Png);
                 ExeLog($"[ImageCheck]動作ログの保存をオンにしました");
             }
         }

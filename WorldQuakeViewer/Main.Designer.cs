@@ -65,7 +65,7 @@
             // 
             // USGSget
             // 
-            this.USGSget.Interval = 2000;
+            this.USGSget.Interval = 100;
             this.USGSget.Tick += new System.EventHandler(this.USGSget_Tick);
             // 
             // RightClick
