@@ -100,7 +100,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             {
                 XmlDocument xml = new XmlDocument();
                 ErrorText.Text = "取得中…";
-                xml.Load($"https://www.emsc-csem.org/service/rss/rss.php?typ=emsc&magmin=5");
+                xml.Load($"https://www.emsc-csem.org/service/rss/rss.php?typ=emsc&magmin=5.0");//.0にしないと出ないものがある？
                 ErrorText.Text = "処理中…";
                 ExeLog($"[EMSC]処理開始");
                 XmlNamespaceManager nsmgr = new XmlNamespaceManager(xml.NameTable);
@@ -163,18 +163,18 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 0, 0, 800, 200);
                 g.FillRectangle(new SolidBrush(Color.FromArgb(30, 30, 60)), 4, 30, 792, 166);
                 Brush color = Mag2Brush(Mag);
-                g.DrawString($"EMSC地震情報(M5.0+)                                {TimeSt}", new Font(font, 17), color, 0, 0);
-                g.DrawString($"{hypoJP}\n({hypoEN})\n{LatDisplay}, {LonDisplay}  深さ{depth}\nID:{id}  状態:{StatusJP}", new Font(font, 21), Brushes.White, 4, 32);
+                g.DrawString($"EMSC地震情報(M5.0+)                                {TimeSt}", new Font(font, 17), Brushes.White, 0, 0);
+                g.DrawString($"{hypoJP}\n({hypoEN})\n{LatDisplay}, {LonDisplay}   深さ:{depth}\nID:{id}  状態:{StatusJP}", new Font(font, 21), color, 4, 32);
                 g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 796, 0, 4, 200);
-                g.DrawString(MagTypeWithSpace, new Font(font, 20), Brushes.White, 590, 160);
-                g.DrawString(MagSt, new Font(font, 50), Brushes.White, 670, 100);
+                g.DrawString(MagTypeWithSpace, new Font(font, 20), color, 590, 160);
+                g.DrawString(MagSt, new Font(font, 50), color, 670, 100);
                 g.DrawImage(bitmap_USGS, 800, 0, 800, 1000);
 
                 ExeLog($"[EMSC]描画完了");
 
                 g.Dispose();
                 if (NoFirst)//こうしないと以降変わらない
-                MainImage.BackgroundImage = bitmap;
+                    MainImage.BackgroundImage = bitmap;
 
 
             }
@@ -206,7 +206,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             if (now.Second >= 44)//念のため44にしとく
                 Next45Second = Next45Second.AddMinutes(1);
             USGSget.Interval = (int)Math.Min((Next15Second - now).TotalMilliseconds, (Next45Second - now).TotalMilliseconds);
-                ExeLog($"[USGS]次回実行まであと{USGSget.Interval}ms");
+            ExeLog($"[USGS]次回実行まであと{USGSget.Interval}ms");
             try
             {
                 ErrorText.Text = "取得中…";
@@ -267,7 +267,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                             Update = Updated,
                             TweetID = 0,//更新の場合は上書き前に変更するから0でおｋ
 
-                            Display1 = $"{TimeSt} 発生  ID:{ID}\n{HypoJP}\n{LatDisplay}, {LonDisplay} {DepthLong}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}",
+                            Display1 = $"{TimeSt} 発生  ID:{ID}\n{HypoJP}\n{LatDisplay}, {LonDisplay}   {DepthLong}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}",
                             Display2 = $"{MagTypeWithSpace}",
                             Display3 = $"{MagSt}",
 
@@ -400,16 +400,17 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                     if (Histories.Count > i)//データ不足対処
                     {
                         History hist = Histories[IDs[i]];
+                        Brush color = Mag2Brush(hist.Mag);
                         g.FillRectangle(new SolidBrush(Alert2Color(hist.Alert)), 4, 40 + 160 * i, 792, 156);
                         g.FillRectangle(new SolidBrush(Color.FromArgb(45, 45, 90)), 8, 44 + 160 * i, 784, 148);
-                        g.DrawString(hist.Display1, new Font(font, 19), Brushes.White, 8, 44 + 160 * i);
-                        g.DrawString(hist.Display2, new Font(font, 19), Mag2Brush(hist.Mag), 570, 154 + 160 * i);
-                        g.DrawString(hist.Display3, new Font(font, 50), Mag2Brush(hist.Mag), 640, 110 + 160 * i);
+                        g.DrawString(hist.Display1, new Font(font, 19), color, 8, 44 + 160 * i);
+                        g.DrawString(hist.Display2, new Font(font, 19), color, 570, 154 + 160 * i);
+                        g.DrawString(hist.Display3, new Font(font, 50), color, 640, 110 + 160 * i);
                     }
                     else
                         g.FillRectangle(new SolidBrush(Color.FromArgb(45, 45, 90)), 4, 40 + 160 * i, 792, 156);
                 }
-                g=null;
+                g = null;
                 g = Graphics.FromImage(bitmap);
                 g.DrawImage(bitmap_USGS, 800, 0, 800, 1000);
                 MainImage.BackgroundImage = bitmap;
@@ -829,7 +830,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                     default:
                         throw new Exception("画像のコピーに失敗しました。", new ArgumentException($"指定された画像({FileName})はResourcesにありません。"));
                 }
-                image.Save($"Image\\{FileName}",ImageFormat.Png);
+                image.Save($"Image\\{FileName}", ImageFormat.Png);
                 ExeLog($"[ImageCheck]動作ログの保存をオンにしました");
             }
         }
