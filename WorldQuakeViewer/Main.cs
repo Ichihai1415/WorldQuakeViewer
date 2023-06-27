@@ -831,7 +831,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                         throw new Exception("画像のコピーに失敗しました。", new ArgumentException($"指定された画像({FileName})はResourcesにありません。"));
                 }
                 image.Save($"Image\\{FileName}", ImageFormat.Png);
-                ExeLog($"[ImageCheck]動作ログの保存をオンにしました");
+                ExeLog($"[ImageCheck]画像("\"Image\\{FileName}\")をコピーしました");
             }
         }
     }
