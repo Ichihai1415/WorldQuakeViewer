@@ -29,7 +29,8 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
         public static bool NoFirst = false;//最初はツイートとかしない
         public static string ExeLogs = "";
         public static Dictionary<string, History> Histories = new Dictionary<string, History>();//EQID,Data
-        public string LatestText = "";
+        public string LatestUSGSText = "";
+        public string LatestEMSCText = "";
         public static Bitmap bitmap = new Bitmap(1600, 1000);
         public static Bitmap bitmap_USGS = new Bitmap(800, 1000);
         public static FontFamily font;
@@ -125,6 +126,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 string DepthSt = depth + "km";
                 string source = texts[5];
                 string id = texts[8];
+                string URL = "https://www.emsc-csem.org/Earthquake/earthquake.php?id=" + id;
                 string magType = texts[9];
                 string mag = texts[10];
                 double Mag = double.Parse(mag);
@@ -133,6 +135,11 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 string hypoJP = LL2FERCode.Name_JP(hypoCode);
                 string hypoEN = texts[12];
                 string MagTypeWithSpace = magType.Length == 3 ? magType : magType.Length == 2 ? "   " + magType : "      " + magType;
+
+                string LogText = $"EMSC地震情報【{magType}{MagSt}】{TimeSt}\n{hypoJP}({hypoEN})\n{LatDisplay},{LonDisplay}　{DepthSt}\n{URL}";
+
+
+
 
                 ErrorText.Text = "[EMSC]描画中…";
                 ExeLog($"[EMSC]描画開始");
@@ -381,7 +388,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                                 }
                             }
                             if (i == 0)
-                                LatestText = LogText;
+                                LatestUSGSText = LogText;
                             if (Mag >= Settings.Default.Bouyomichan_LowerMagnitudeLimit || MMI >= Settings.Default.Bouyomichan_LowerMMILimit)
                                 if (Settings.Default.Bouyomichan_Enable)
                                     Bouyomichan(BouyomiText);
@@ -764,7 +771,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
 
         private void RC1TextCopy_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(LatestText);
+            Clipboard.SetText(LatestUSGSText);
         }
 
         public static Brush Mag2Brush(double Mag)
