@@ -24,6 +24,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
     {
         public static readonly string Version = "1.1.0α6";//こことアセンブリを変える
         public static DateTime StartTime = new DateTime();
+        public static int AccessedEMSC = 0;
         public static int AccessedUSGS = 0;
         public string LatestURL = "";
         public static bool NoFirst = false;//最初はツイートとかしない
@@ -85,7 +86,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             EMSCget.Enabled = true;
         }
 
-        private void EMSCget_Tick(object sender, EventArgs e)
+        private async void EMSCget_Tick(object sender, EventArgs e)
         {
             ExeLog($"[EMSC]取得開始");
             //次の0/30秒までの時間を計算
@@ -95,46 +96,45 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             if (now.Second >= 29)//念のため29にしとく
                 Next45Second = Next45Second.AddMinutes(1);
             EMSCget.Interval = (int)Math.Min((Next15Second - now).TotalMilliseconds, (Next45Second - now).TotalMilliseconds);
-            ExeLog($"[USGS]次回実行まであと{USGSget.Interval}ms");
+            ExeLog($"[EMSC]次回実行まであと{EMSCget.Interval}ms");
             try
             {
-                XmlDocument xml = new XmlDocument();
-                ErrorText.Text = "取得中…";
-                xml.Load($"https://www.emsc-csem.org/service/rss/rss.php?typ=emsc&magmin=5.0");//.0にしないと出ないものがある？
-                ErrorText.Text = "処理中…";
+                //https://www.seismicportal.eu/fdsnws/event/1/query?limit=1&format=text&minmag=5.0
+                //#EventID        |Time                    |Latitude|Longitude|Depth/km|Author|Catalog |Contributor|ContributorID|MagType|Magnitude|MagAuthor|EventLocationName
+                //20230701_0000038|2023-07-01T03:29:25.534Z|-31.7703|-68.7812 |30.3    |NEIC  |EMSC-RTS|NEIC       |1522821      |mb     |5.3      |NEIC     |SAN JUAN, ARGENTINA
+                // 0              | 1                      | 2      | 3       | 4      | 5    | 6      | 7         | 8           | 9     | 10      | 11      | 12
+                //?               |                        |        |         |        |ソース|全部同? |ソース     |ID           |       |         |ソース   |
+                WebClient wc = new WebClient();
+                ErrorText.Text = "[EMSC]取得中…";
+                string text = await wc.DownloadStringTaskAsync(new Uri("https://www.seismicportal.eu/fdsnws/event/1/query?limit=1&format=text&minmag=5.0"));
                 ExeLog($"[EMSC]処理開始");
-                XmlNamespaceManager nsmgr = new XmlNamespaceManager(xml.NameTable);
-                nsmgr.AddNamespace("geo", "http://www.w3.org/2003/01/geo/");
-                nsmgr.AddNamespace("emsc", "https://www.emsc-csem.org");
-                XmlNode item = xml.SelectSingleNode("/rss/channel/item", nsmgr);//最新のみ
-                string title = item.SelectSingleNode("title", nsmgr).InnerText;
-                string link = item.SelectSingleNode("link", nsmgr).InnerText;
-                string id = link.Replace("https://www.emsc-csem.org/Earthquake/earthquake.php?id=", "");
-                string lat = item.SelectSingleNode("geo:lat", nsmgr).InnerText;
-                double Lat = double.Parse(lat);
-                string lon = item.SelectSingleNode("geo:long", nsmgr).InnerText;
-                double Lon = double.Parse(lon);
-                Lat2String(Lat, out _, out _, out _, out _, out _, out string LatDisplay);//草
-                Lon2String(Lon, out _, out _, out _, out _, out _, out string LonDisplay);
-                string depth = item.SelectSingleNode("emsc:depth", nsmgr).InnerText.Replace("f", "").Replace(" ", "") + "km";//10fは10km以下っぽい
-                string mag = item.SelectSingleNode("emsc:magnitude", nsmgr).InnerText;
-                string[] mag_ = mag.Split(' ');
-                string magType = mag_[0];
-                string MagSt = mag_[mag_.Length - 1];
-                double Mag = double.Parse(MagSt);
-                string time = item.SelectSingleNode("emsc:time", nsmgr).InnerText.Replace(" UTC", "");
+                AccessedEMSC++;
+                string[] texts = text.Split('\n')[1].Split('|');
+                string time = texts[1];
                 DateTime Time = DateTime.Parse(time);
                 DateTimeOffset TimeOff = Time.ToLocalTime();
                 string TimeSt = Convert.ToString(TimeOff).Replace("+0", " UTC +0").Replace("+1", " UTC +1").Replace("-0", " UTC -0").Replace("+1", " UTC -1");
-                string status = item.SelectSingleNode("status", nsmgr).InnerText;
-                string StatusJP = status.Replace("AUTOMATIC", "自動処理").Replace("REVIEWED", "レビュー済み");
+                string lat = texts[2];
+                double Lat = double.Parse(lat);
+                string lon = texts[3];
+                double Lon = double.Parse(lon);
+                Lat2String(Lat, out string LatStLongJP, out string LatDisplay);
+                Lon2String(Lon, out string LonStLongJP, out string LonDisplay);
+                string depth = texts[4];
+                double Depth = double.Parse(depth);
+                string DepthSt = depth + "km";
+                string source = texts[5];
+                string id = texts[8];
+                string magType = texts[9];
+                string mag = texts[10];
+                double Mag = double.Parse(mag);
+                string MagSt = Mag.ToString("#.#");
                 int hypoCode = LL2FERCode.Code(Lat, Lon);
                 string hypoJP = LL2FERCode.Name_JP(hypoCode);
-                string hypoEN = title.Replace(mag + "  ", "");
+                string hypoEN = texts[12];
                 string MagTypeWithSpace = magType.Length == 3 ? magType : magType.Length == 2 ? "   " + magType : "      " + magType;
 
-
-                ErrorText.Text = "表示処理中…";
+                ErrorText.Text = "[EMSC]描画中…";
                 ExeLog($"[EMSC]描画開始");
                 Graphics g = Graphics.FromImage(bitmap);
                 g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 0, 0, 800, 1000);
@@ -164,7 +164,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 g.FillRectangle(new SolidBrush(Color.FromArgb(30, 30, 60)), 4, 30, 792, 166);
                 Brush color = Mag2Brush(Mag);
                 g.DrawString($"EMSC地震情報(M5.0+)                                {TimeSt}", new Font(font, 17), Brushes.White, 0, 0);
-                g.DrawString($"{hypoJP}\n({hypoEN})\n{LatDisplay}, {LonDisplay}   深さ:{depth}\nID:{id}  状態:{StatusJP}", new Font(font, 21), color, 4, 32);
+                g.DrawString($"{hypoJP}\n({hypoEN})\n{LatDisplay}, {LonDisplay}   深さ:{DepthSt}\nID:{id}  ソース:{source}", new Font(font, 21), color, 4, 32);
                 g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 796, 0, 4, 200);
                 g.DrawString(MagTypeWithSpace, new Font(font, 20), color, 590, 160);
                 g.DrawString(MagSt, new Font(font, 50), color, 670, 100);
@@ -180,12 +180,12 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             }
             catch (WebException ex)
             {
-                ErrorText.Text = $"ネットワークエラーが発生しました。内容:" + ex.Message;
+                ErrorText.Text = $"[EMSC]ネットワークエラーが発生しました。内容:{ex.Message}";
             }
             catch (Exception ex)
             {
                 LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main Version:{Version}\n{ex}");
-                ErrorText.Text = $"エラーが発生しました。エラーログの内容を報告してください。内容:" + ex.Message;
+                ErrorText.Text = $"[EMSC]エラーが発生しました。エラーログの内容を報告してください。内容:{ex.Message}";
             }
             if (!ErrorText.Text.Contains("エラー"))
                 ErrorText.Text = "";
@@ -209,7 +209,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             ExeLog($"[USGS]次回実行まであと{USGSget.Interval}ms");
             try
             {
-                ErrorText.Text = "取得中…";
+                ErrorText.Text = "[USGS]取得中…";
                 WebClient wc = new WebClient();
                 string json_ = await wc.DownloadStringTaskAsync(new Uri("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson"));
                 ExeLog($"[USGS]処理開始");
@@ -390,7 +390,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                             ExeLog($"[USGS][{i}] 内容更新なし(更新:{UpdateTime})");
                     }
                 }
-                ErrorText.Text = "表示処理中…";
+                ErrorText.Text = "[USGS]描画中…";
                 Graphics g = Graphics.FromImage(bitmap_USGS);
                 g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 0, 0, 800, 1000);
                 g.DrawRectangle(new Pen(Color.FromArgb(200, 200, 200)), 0, 0, 800, 1000);
@@ -432,12 +432,12 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             }
             catch (WebException ex)
             {
-                ErrorText.Text = $"ネットワークエラーが発生しました。内容:" + ex.Message;
+                ErrorText.Text = $"[USGS]ネットワークエラーが発生しました。内容:{ex.Message}";
             }
             catch (Exception ex)
             {
                 LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main Version:{Version}\n{ex}");
-                ErrorText.Text = $"エラーが発生しました。エラーログの内容を報告してください。内容:" + ex.Message;
+                ErrorText.Text = $"[USGS]エラーが発生しました。エラーログの内容を報告してください。内容:{ex.Message}";
             }
             if (!ErrorText.Text.Contains("エラー"))
                 ErrorText.Text = "";
@@ -526,7 +526,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 }
                 catch (Exception ex)
                 {
-                    ErrorText.Text = $"ツイートに失敗しました。わからない場合エラーログの内容を報告してください。内容:" + ex.Message;
+                    ErrorText.Text = $"ツイートに失敗しました。わからない場合エラーログの内容を報告してください。内容:{ex.Message}";
                     LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Tweet Version:{Version}\n{ex}");
                 }
         }
@@ -555,7 +555,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 }
                 catch (Exception ex)
                 {
-                    ErrorText.Text = $"Socket送信に失敗しました。わからない場合エラーログの内容を報告してください。内容:" + ex.Message;
+                    ErrorText.Text = $"Socket送信に失敗しました。わからない場合エラーログの内容を報告してください。内容:{ex.Message}";
                     LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Socket Version:{Version}\n{ex}");
                 }
         }
@@ -594,7 +594,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 }
                 catch (Exception ex)
                 {
-                    ErrorText.Text = $"棒読みちゃんへの送信に失敗しました。わからない場合エラーログの内容を報告してください。内容:" + ex.Message;
+                    ErrorText.Text = $"棒読みちゃんへの送信に失敗しました。わからない場合エラーログの内容を報告してください。内容:{ex.Message}";
                     LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Bouyomichan Version:{Version}\n{ex}");
                 }
         }
@@ -789,8 +789,18 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                     return Color.FromArgb(45, 45, 90);
             }
         }
+        public static void Lat2String(double Lat, out string LatStLongJP, out string LatDisplay)
+        {
+            double LatShort = Math.Round(Lat, 2, MidpointRounding.AwayFromZero);
+            string LatStDecimal = Lat > 0 ? $"{LatShort}°N" : $"{-LatShort}°S";
+            TimeSpan LatTime = TimeSpan.FromHours(Lat);
+            string LatStShort = Lat > 0 ? $"{(int)Lat}ﾟ{LatTime.Minutes}'N" : $"{(int)-Lat}ﾟ{-LatTime.Minutes}'S";
+            LatStLongJP = Settings.Default.Text_LatLonDecimal ? Lat > 0 ? $"北緯{Lat}度" : $"南緯{-Lat}度" : Lat > 0 ? $"北緯{(int)Lat}度{LatTime.Minutes}分{LatTime.Seconds}秒" : $"南緯{(int)-Lat}度{-LatTime.Minutes}分{-LatTime.Seconds}秒";
+            LatDisplay = Settings.Default.Text_LatLonDecimal ? LatStDecimal : LatStShort;
+        }
         public static void Lat2String(double Lat, out double LatShort, out string LatStDecimal, out string LatStShort, out string LatStLong, out string LatStLongJP, out string LatDisplay)
         {
+            //Lat2String(Lat, out double LatShort, out string LatStDecimal, out string LatStShort, out string LatStLong, out string LatStLongJP, out string LatDisplay);
             LatShort = Math.Round(Lat, 2, MidpointRounding.AwayFromZero);
             LatStDecimal = Lat > 0 ? $"{LatShort}°N" : $"{-LatShort}°S";
             TimeSpan LatTime = TimeSpan.FromHours(Lat);
@@ -799,8 +809,18 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             LatStLongJP = Settings.Default.Text_LatLonDecimal ? Lat > 0 ? $"北緯{Lat}度" : $"南緯{-Lat}度" : Lat > 0 ? $"北緯{(int)Lat}度{LatTime.Minutes}分{LatTime.Seconds}秒" : $"南緯{(int)-Lat}度{-LatTime.Minutes}分{-LatTime.Seconds}秒";
             LatDisplay = Settings.Default.Text_LatLonDecimal ? LatStDecimal : LatStShort;
         }
+        public static void Lon2String(double Lon, out string LonStLongJP, out string LonDisplay)
+        {
+            double LonShort = Math.Round(Lon, 2, MidpointRounding.AwayFromZero);
+            string LonStDecimal = Lon > 0 ? $"{LonShort}°E" : $"{-LonShort}°W";
+            TimeSpan LonTime = TimeSpan.FromHours(Lon);
+            string LonStShort = Lon > 0 ? $"{(int)Lon}ﾟ{LonTime.Minutes}'E" : $"{(int)-Lon}ﾟ{-LonTime.Minutes}'W";
+            LonStLongJP = Settings.Default.Text_LatLonDecimal ? Lon > 0 ? $"東経{Lon}度" : $"西経{-Lon}度" : Lon > 0 ? $"東経{(int)Lon}度{LonTime.Minutes}分{LonTime.Seconds}秒" : $"西経{(int)-Lon}度{-LonTime.Minutes}分{-LonTime.Seconds}秒";
+            LonDisplay = Settings.Default.Text_LatLonDecimal ? LonStDecimal : LonStShort;
+        }
         public static void Lon2String(double Lon, out double LonShort, out string LonStDecimal, out string LonStShort, out string LonStLong, out string LonStLongJP, out string LonDisplay)
         {
+            //Lon2String(Lon, out double LonShort, out string LonStDecimal, out string LonStShort, out string LonStLong, out string LonStLongJP, out string LonDisplay);
             LonShort = Math.Round(Lon, 2, MidpointRounding.AwayFromZero);
             LonStDecimal = Lon > 0 ? $"{LonShort}°E" : $"{-LonShort}°W";
             TimeSpan LonTime = TimeSpan.FromHours(Lon);
