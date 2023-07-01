@@ -15,7 +15,6 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using System.Xml;
 using WorldQuakeViewer.Properties;
 
 namespace WorldQuakeViewer//todo:discordに送るやつを追加
@@ -99,6 +98,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             ExeLog($"[EMSC]次回実行まであと{EMSCget.Interval}ms");
             try
             {
+                //https://www.emsc-csem.org/Earthquake/earthquake.php?id=
                 //https://www.seismicportal.eu/fdsnws/event/1/query?limit=1&format=text&minmag=5.0
                 //#EventID        |Time                    |Latitude|Longitude|Depth/km|Author|Catalog |Contributor|ContributorID|MagType|Magnitude|MagAuthor|EventLocationName
                 //20230701_0000038|2023-07-01T03:29:25.534Z|-31.7703|-68.7812 |30.3    |NEIC  |EMSC-RTS|NEIC       |1522821      |mb     |5.3      |NEIC     |SAN JUAN, ARGENTINA
@@ -128,7 +128,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 string magType = texts[9];
                 string mag = texts[10];
                 double Mag = double.Parse(mag);
-                string MagSt = Mag.ToString("#.#");
+                string MagSt = Mag.ToString("0.0");
                 int hypoCode = LL2FERCode.Code(Lat, Lon);
                 string hypoJP = LL2FERCode.Name_JP(hypoCode);
                 string hypoEN = texts[12];
@@ -169,14 +169,17 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 g.DrawString(MagTypeWithSpace, new Font(font, 20), color, 590, 160);
                 g.DrawString(MagSt, new Font(font, 50), color, 670, 100);
                 g.DrawImage(bitmap_USGS, 800, 0, 800, 1000);
-
+                if (!NoFirst)
+                {
+                    g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 800, 0, 800, 1000);
+                    g.DrawRectangle(new Pen(Color.FromArgb(200, 200, 200)), 800, 0, 800, 1000);
+                }
                 ExeLog($"[EMSC]描画完了");
 
                 g.Dispose();
-                if (NoFirst)//こうしないと以降変わらない
-                    MainImage.BackgroundImage = bitmap;
-
-
+                MainImage.BackgroundImage = null;
+                MainImage.BackgroundImage = bitmap;
+                wc.Dispose();
             }
             catch (WebException ex)
             {
@@ -394,7 +397,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 Graphics g = Graphics.FromImage(bitmap_USGS);
                 g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 0, 0, 800, 1000);
                 g.DrawRectangle(new Pen(Color.FromArgb(200, 200, 200)), 0, 0, 800, 1000);
-                g.DrawString($"USGS地震情報(M4.5+)                                          Version:{Version}", new Font(font, 20), Brushes.White, 2, 2);
+                g.DrawString($"USGS地震情報(M4.5+)                                           Version:{Version}", new Font(font, 20), Brushes.White, 2, 2);
                 for (int i = 0; i < 6; i++)
                 {
                     if (Histories.Count > i)//データ不足対処
@@ -413,6 +416,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 g = null;
                 g = Graphics.FromImage(bitmap);
                 g.DrawImage(bitmap_USGS, 800, 0, 800, 1000);
+                MainImage.BackgroundImage = null;
                 MainImage.BackgroundImage = bitmap;
                 g.Dispose();
 
@@ -429,6 +433,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 else if (SoundLevel == 6)
                     Sound("M80.wav");
                 ExeLog($"[USGS]ログ保持数:{Histories.Count}");
+                wc.Dispose();
             }
             catch (WebException ex)
             {
