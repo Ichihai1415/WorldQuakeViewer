@@ -37,10 +37,13 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
         public static Bitmap bitmap = new Bitmap(1600, 1000);
         public static Bitmap bitmap_USGS = new Bitmap(800, 1000);
         public static FontFamily font;
+        public static SoundPlayer Player = null;
+
         public MainForm()
         {
             InitializeComponent();
         }
+
         private void MainForm_Load(object sender, EventArgs e)//ExeLog($"");
         {
             ExeLog($"[Main]起動処理開始");
@@ -227,20 +230,20 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 if (NewUpdt)
                 {
                     EMSCHist = history;
-                    LogSave("Log\\M4.5+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", id);
+                    LogSave("Log\\EMSC\\M4.5+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", id);
                     if (Settings.Default.Socket_Enable)
                         SendSocket(LogText);
                     if (SoundLevel < 1 && Settings.Default.Sound_45_Enable)//SoundLevel上昇+M4.5以上有効
                         SoundLevel = New ? 2 : 1;
                     if (Mag >= 6)
                     {
-                        LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", id);
+                        LogSave("Log\\EMSC\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", id);
 
                         if (SoundLevel < 3 && Settings.Default.Sound_60_Enable)
                             SoundLevel = New ? 4 : 3;
                         if (Mag >= 8)
                         {
-                            LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", id);
+                            LogSave("Log\\EMSC\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", id);
                             if (SoundLevel < 5 && Settings.Default.Sound_80_Enable)
                                 SoundLevel = New ? 6 : 5;
                         }
@@ -374,8 +377,8 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                         string MagType = (string)propertie.SelectToken("magType");
                         double Lat = (double)features.SelectToken("geometry.coordinates[1]");
                         double Lon = (double)features.SelectToken("geometry.coordinates[0]");
-                        Lat2String(Lat, out double LatShort, out string LatStDecimal, out string LatStShort, out string LatStLong, out string LatStLongJP, out string LatDisplay);
-                        Lon2String(Lon, out double LonShort, out string LonStDecimal, out string LonStShort, out string LonStLong, out string LonStLongJP, out string LonDisplay);
+                        Lat2String(Lat, out string LatStLongJP, out string LatDisplay);
+                        Lon2String(Lon, out string LonStLongJP, out string LonDisplay);
                         string Alert = (string)propertie.SelectToken("alert");
                         string AlertJP = Alert == null ? "アラート:-" : $"アラート:{Alert.Replace("green", "緑").Replace("yellow", "黄").Replace("orange", "オレンジ").Replace("red", "赤").Replace("pending", "保留中")}";
                         double Depth = (double)features.SelectToken("geometry.coordinates[2]");
@@ -485,20 +488,20 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                                 New = true;
                                 USGSHist.Add(ID, history);
                             }
-                            LogSave("Log\\M4.5+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", ID);
+                            LogSave("Log\\USGS\\M4.5+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", ID);
                             if (Settings.Default.Socket_Enable)
                                 SendSocket(LogText);
                             if (SoundLevel < 1 && Settings.Default.Sound_45_Enable)//SoundLevel上昇+M4.5以上有効
                                 SoundLevel = New ? 2 : 1;
                             if (Mag >= 6)
                             {
-                                LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", ID);
+                                LogSave("Log\\USGS\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", ID);
 
                                 if (SoundLevel < 3 && Settings.Default.Sound_60_Enable)
                                     SoundLevel = New ? 4 : 3;
                                 if (Mag >= 8)
                                 {
-                                    LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", ID);
+                                    LogSave("Log\\USGS\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", ID);
                                     if (SoundLevel < 5 && Settings.Default.Sound_80_Enable)
                                         SoundLevel = New ? 6 : 5;
                                 }
@@ -574,6 +577,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             NoFirst = true;
             ExeLog("[USGS]処理終了");
         }
+
         /// <summary>
         /// ログを保存します。
         /// </summary>
@@ -583,8 +587,14 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
         public static void LogSave(string SaveDirectory, string SaveText, string ID = "unknown")
         {
             DateTime NowTime = DateTime.Now;
-            if (Directory.Exists("Log") == false)
+            if (!Directory.Exists("Log"))
                 Directory.CreateDirectory("Log");
+            if (SaveDirectory.StartsWith("Log\\EMSC"))
+                if (!Directory.Exists("Log\\EMSC"))
+                    Directory.CreateDirectory("Log\\EMSC");
+            if (SaveDirectory.StartsWith("Log\\USGS"))
+                if (!Directory.Exists("Log\\USGS"))
+                    Directory.CreateDirectory("Log\\USGS");
             if (!Directory.Exists(SaveDirectory))
                 Directory.CreateDirectory(SaveDirectory);
             if (SaveDirectory == "Log")
@@ -595,7 +605,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                     SaveText += "\n--------------------------------------------------\n" + File.ReadAllText($"Log\\ErrorLog\\{NowTime:yyyyMM}.txt");
                 File.WriteAllText($"Log\\ErrorLog\\{NowTime:yyyyMM}.txt", SaveText);
             }
-            else if (SaveDirectory.Contains("Log\\M"))
+            else if (SaveDirectory.StartsWith("Log\\USGS") || SaveDirectory.StartsWith("Log\\EMSC"))
             {
                 if (!Directory.Exists($"{SaveDirectory}\\{NowTime:yyyyMM}"))
                     Directory.CreateDirectory($"{SaveDirectory}\\{NowTime:yyyyMM}");
@@ -614,12 +624,13 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 File.WriteAllText($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:yyyyMMdd}.txt", SaveText);
             }
         }
+
         /// <summary>
         /// ツイートします。
         /// </summary>
         /// <param name="Text">ツイートするテキスト。</param>
         /// <param name="source">データ元</param>
-        /// <param name="ID">リプライ判別用ID。</param>
+        /// <param name="ID">リプライ判別用地震ID。</param>
         public async void Tweet(string Text, string source, string ID)
         {
             if (NoFirst)
@@ -685,6 +696,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                     LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Tweet Version:{Version}\n{ex}");
                 }
         }
+
         /// <summary>
         /// Socket通信で送信します。
         /// </summary>
@@ -714,6 +726,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                     LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Socket Version:{Version}\n{ex}");
                 }
         }
+
         /// <summary>
         /// 棒読みちゃんに読み上げ指令を送ります。
         /// </summary>
@@ -753,6 +766,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                     LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Bouyomichan Version:{Version}\n{ex}");
                 }
         }
+
         /// <summary>
         /// 実行ログを保存・表示します。
         /// </summary>
@@ -764,6 +778,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 ExeLogs += $"{DateTime.Now:HH:mm:ss.ffff} {Text}\n";
             Console.WriteLine(Text);
         }
+
         /// <summary>
         /// 設定を読み込みます。
         /// </summary>
@@ -785,7 +800,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             ExeLogAutoDelete.Interval = Settings.Default.Log_DeleteTime * 1000;
             ExeLog($"[SettingReload]設定読み込み終了");
         }
-        public static SoundPlayer Player = null;
+
         /// <summary>
         /// 音声を再生します。
         /// </summary>
@@ -811,6 +826,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                     LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Sound Version:{Version}\n{ex}");
                 }
         }
+
         private void RCsetting_Click(object sender, EventArgs e)
         {
             ExeLog($"[RC]設定表示");
@@ -818,6 +834,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             Settings.FormClosed += SettingForm_FormClosed;//閉じたとき呼び出し
             Settings.Show();
         }
+
         private void SettingForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             ExeLog($"[RC]設定終了");
@@ -825,51 +842,63 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             NoFirst = false;//処理量増加時用
             ErrorText.Text = "設定を再読み込みしました。一部の設定は情報受信または再起動が必要です。";
         }
+
         private void RCusgsmap_Click(object sender, EventArgs e)
         {
             Process.Start("https://earthquake.usgs.gov/earthquakes/map/");
         }
+
         private void RCusgsthis_Click(object sender, EventArgs e)
         {
             Process.Start(LatestURL);
         }
+
         private void RCreboot_Click(object sender, EventArgs e)
         {
             Application.Restart();
         }
+
         private void RCexit_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
+
         private void RCgithub_Click(object sender, EventArgs e)
         {
             Process.Start("https://github.com/Ichihai1415/WorldQuakeViewer");
         }
+
         private void RCtwitter_Click(object sender, EventArgs e)
         {
             Process.Start("https://twitter.com/ProjectS31415_1");
         }
+
         private void RCtsunami_Click(object sender, EventArgs e)
         {
             Process.Start("https://www.tsunami.gov/");
         }
+
         private void RCinfopage_Click(object sender, EventArgs e)
         {
             Process.Start("https://Ichihai1415.github.io/programs/released/WQV");
         }
+
         private void RCMapEWSC_Click(object sender, EventArgs e)
         {
-            Process.Start("https://www.emsc-csem.org/#2w");
+            Process.Start("https://www.emsc-csem.org");
         }
+
         private void RCEarlyEst_Click(object sender, EventArgs e)
         {
             Process.Start("http://early-est.rm.ingv.it/warning.html");
         }
+
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             ExeLog($"[Main]実行終了");
             LogSave("Log", ExeLogs);
         }
+
         private void RC1CacheClear_Click(object sender, EventArgs e)
         {
             DialogResult allow = MessageBox.Show("動作ログ、地震ログを消去してよろしいですか？消去した場合処理は起動時と同じようになります。", "確認", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
@@ -926,6 +955,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             else
                 return Brushes.Red;
         }
+
         public static Color Alert2Color(string Alert)
         {
             switch (Alert)
@@ -944,6 +974,14 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                     return Color.FromArgb(45, 45, 90);
             }
         }
+
+        /// <summary>
+        /// 緯度を様々なフォーマットに変換します。
+        /// </summary>
+        /// <remarks>指定ミスに注意してください。</remarks>
+        /// <param name="Lat">経度</param>
+        /// <param name="LatStLongJP">(string) 設定により 北緯{###.##…}度 または 北緯{##}度{##}分{##}秒 </param>
+        /// <param name="LatDisplay">(string) 設定により {###.00}°N または {###}ﾟ{##}'{##}"N </param>
         public static void Lat2String(double Lat, out string LatStLongJP, out string LatDisplay)
         {
             double LatShort = Math.Round(Lat, 2, MidpointRounding.AwayFromZero);
@@ -953,6 +991,18 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             LatStLongJP = Settings.Default.Text_LatLonDecimal ? Lat > 0 ? $"北緯{Lat}度" : $"南緯{-Lat}度" : Lat > 0 ? $"北緯{(int)Lat}度{LatTime.Minutes}分{LatTime.Seconds}秒" : $"南緯{(int)-Lat}度{-LatTime.Minutes}分{-LatTime.Seconds}秒";
             LatDisplay = Settings.Default.Text_LatLonDecimal ? LatStDecimal : LatStShort;
         }
+
+        /// <summary>
+        /// 緯度を様々なフォーマットに変換します。
+        /// </summary>
+        /// <remarks>指定ミスに注意してください。</remarks>
+        /// <param name="Lat">経度</param>
+        /// <param name="LatShort">(double) ###.00</param>
+        /// <param name="LatStDecimal">(string) {###.00}°N</param>
+        /// <param name="LatStShort">(string) {###}ﾟ{##}'N</param>
+        /// <param name="LatStLong">(string) {###}ﾟ{##}'{##}"N</param>
+        /// <param name="LatStLongJP">(string) 設定により 北緯{###.##…}度 または 北緯{##}度{##}分{##}秒 </param>
+        /// <param name="LatDisplay">(string) 設定により<paramref name="LatStDecimal"/>または<paramref name="LatStShort"/></param>
         public static void Lat2String(double Lat, out double LatShort, out string LatStDecimal, out string LatStShort, out string LatStLong, out string LatStLongJP, out string LatDisplay)
         {
             //Lat2String(Lat, out double LatShort, out string LatStDecimal, out string LatStShort, out string LatStLong, out string LatStLongJP, out string LatDisplay);
@@ -964,6 +1014,14 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             LatStLongJP = Settings.Default.Text_LatLonDecimal ? Lat > 0 ? $"北緯{Lat}度" : $"南緯{-Lat}度" : Lat > 0 ? $"北緯{(int)Lat}度{LatTime.Minutes}分{LatTime.Seconds}秒" : $"南緯{(int)-Lat}度{-LatTime.Minutes}分{-LatTime.Seconds}秒";
             LatDisplay = Settings.Default.Text_LatLonDecimal ? LatStDecimal : LatStShort;
         }
+
+        /// <summary>
+        /// 経度を様々なフォーマットに変換します。
+        /// </summary>
+        /// <remarks>指定ミスに注意してください。</remarks>
+        /// <param name="Lon">経度</param>
+        /// <param name="LonStLongJP">(string) 設定により 東経{###.##…}度 または 東経{##}度{##}分{##}秒 </param>
+        /// <param name="LonDisplay">(string) 設定により {###.00}°E または {###}ﾟ{##}'{##}"E</param>
         public static void Lon2String(double Lon, out string LonStLongJP, out string LonDisplay)
         {
             double LonShort = Math.Round(Lon, 2, MidpointRounding.AwayFromZero);
@@ -973,6 +1031,18 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             LonStLongJP = Settings.Default.Text_LatLonDecimal ? Lon > 0 ? $"東経{Lon}度" : $"西経{-Lon}度" : Lon > 0 ? $"東経{(int)Lon}度{LonTime.Minutes}分{LonTime.Seconds}秒" : $"西経{(int)-Lon}度{-LonTime.Minutes}分{-LonTime.Seconds}秒";
             LonDisplay = Settings.Default.Text_LatLonDecimal ? LonStDecimal : LonStShort;
         }
+
+        /// <summary>
+        /// 経度を様々なフォーマットに変換します。
+        /// </summary>
+        /// <remarks>指定ミスに注意してください。</remarks>
+        /// <param name="Lon">経度</param>
+        /// <param name="LonShort">(double) ###.00</param>
+        /// <param name="LonStDecimal">(string) {###.00}°E</param>
+        /// <param name="LonStShort">(string) {###}ﾟ{##}'E</param>
+        /// <param name="LonStLong">(string) {###}ﾟ{##}'{##}"E</param>
+        /// <param name="LonStLongJP">(string) 設定により 東経{###.##…}度 または 東経{##}度{##}分{##}秒 </param>
+        /// <param name="LonDisplay">(string) 設定により<paramref name="LonStDecimal"/>または<paramref name="LonStShort"/></param>
         public static void Lon2String(double Lon, out double LonShort, out string LonStDecimal, out string LonStShort, out string LonStLong, out string LonStLongJP, out string LonDisplay)
         {
             //Lon2String(Lon, out double LonShort, out string LonStDecimal, out string LonStShort, out string LonStLong, out string LonStLongJP, out string LonDisplay);
@@ -984,6 +1054,12 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             LonStLongJP = Settings.Default.Text_LatLonDecimal ? Lon > 0 ? $"東経{Lon}度" : $"西経{-Lon}度" : Lon > 0 ? $"東経{(int)Lon}度{LonTime.Minutes}分{LonTime.Seconds}秒" : $"西経{(int)-Lon}度{-LonTime.Minutes}分{-LonTime.Seconds}秒";
             LonDisplay = Settings.Default.Text_LatLonDecimal ? LonStDecimal : LonStShort;
         }
+
+        /// <summary>
+        /// 画像ファイルがない場合リソースからコピーします。
+        /// </summary>
+        /// <param name="FileName">ファイル名。</param>
+        /// <exception cref="Exception">画像指定が間違っている場合。</exception>
         public static void ImageCheck(string FileName)
         {
             if (!Directory.Exists("Image"))
