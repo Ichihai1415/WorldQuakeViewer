@@ -538,6 +538,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                                 Bouyomichan(BouyomiText);
                             if (Mag >= Settings.Default.Tweet_LowerMagnitudeLimit || MMI >= Settings.Default.Tweet_LowerMMILimit)
                                 Tweet(LogText, "USGS", ID);
+                            WebHook(LogText);
                         }
                         else
                             ExeLog($"[USGS][{i}] 内容更新なし(更新:{UpdateTime})");
