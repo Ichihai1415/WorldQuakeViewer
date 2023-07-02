@@ -39,16 +39,16 @@ namespace WorldQuakeViewer
             Tab_View_LatLonDecimal.Checked = Settings.Default.Text_LatLonDecimal;
             Tab_View_LogEnable.Checked = Settings.Default.Log_Enable;
             Tab_View_LogTime.Value = Settings.Default.Log_DeleteTime;
-            Tab_Update_MaxCount.Value = Settings.Default.Update_MaxCount;
-            Tab_Update_Time.Checked = Settings.Default.Update_Time;
-            Tab_Update_HypoJP.Checked = Settings.Default.Update_HypoJP;
-            Tab_Update_HypoEN.Checked = Settings.Default.Update_HypoEN;
-            Tab_Update_LatLon.Checked = Settings.Default.Update_LatLon;
-            Tab_Update_Depth.Checked = Settings.Default.Update_Depth;
-            Tab_Update_MagType.Checked = Settings.Default.Update_MagType;
-            Tab_Update_Mag.Checked = Settings.Default.Update_Mag;
-            Tab_Update_MMI.Checked = Settings.Default.Update_MMI;
-            Tab_Update_Alert.Checked = Settings.Default.Update_Alert;
+            Tab_Update_MaxCount.Value = Settings.Default.Update_USGS_MaxCount;
+            Tab_Update_Time.Checked = Settings.Default.Update_USGS_Time;
+            Tab_Update_HypoJP.Checked = Settings.Default.Update_USGS_HypoJP;
+            Tab_Update_HypoEN.Checked = Settings.Default.Update_USGS_HypoEN;
+            Tab_Update_LatLon.Checked = Settings.Default.Update_USGS_LatLon;
+            Tab_Update_Depth.Checked = Settings.Default.Update_USGS_Depth;
+            Tab_Update_MagType.Checked = Settings.Default.Update_USGS_MagType;
+            Tab_Update_Mag.Checked = Settings.Default.Update_USGS_Mag;
+            Tab_Update_MMI.Checked = Settings.Default.Update_USGS_MMI;
+            Tab_Update_Alert.Checked = Settings.Default.Update_USGS_Alert;
             Tab_Sound_M45.Checked = Settings.Default.Sound_45_Enable;
             Tab_Sound_M60.Checked = Settings.Default.Sound_60_Enable;
             Tab_Sound_M80.Checked = Settings.Default.Sound_80_Enable;
@@ -83,16 +83,16 @@ namespace WorldQuakeViewer
             Settings.Default.Text_LatLonDecimal = Tab_View_LatLonDecimal.Checked;
             Settings.Default.Log_Enable = Tab_View_LogEnable.Checked;
             Settings.Default.Log_DeleteTime = (int)Tab_View_LogTime.Value;
-            Settings.Default.Update_MaxCount = (int)Tab_Update_MaxCount.Value;
-            Settings.Default.Update_Time = Tab_Update_Time.Checked;
-            Settings.Default.Update_HypoJP = Tab_Update_HypoJP.Checked;
-            Settings.Default.Update_HypoEN = Tab_Update_HypoEN.Checked;
-            Settings.Default.Update_LatLon = Tab_Update_LatLon.Checked;
-            Settings.Default.Update_Depth = Tab_Update_Depth.Checked;
-            Settings.Default.Update_MagType = Tab_Update_MagType.Checked;
-            Settings.Default.Update_Mag = Tab_Update_Mag.Checked;
-            Settings.Default.Update_MMI = Tab_Update_MMI.Checked;
-            Settings.Default.Update_Alert = Tab_Update_Alert.Checked;
+            Settings.Default.Update_USGS_MaxCount = (int)Tab_Update_MaxCount.Value;
+            Settings.Default.Update_USGS_Time = Tab_Update_Time.Checked;
+            Settings.Default.Update_USGS_HypoJP = Tab_Update_HypoJP.Checked;
+            Settings.Default.Update_USGS_HypoEN = Tab_Update_HypoEN.Checked;
+            Settings.Default.Update_USGS_LatLon = Tab_Update_LatLon.Checked;
+            Settings.Default.Update_USGS_Depth = Tab_Update_Depth.Checked;
+            Settings.Default.Update_USGS_MagType = Tab_Update_MagType.Checked;
+            Settings.Default.Update_USGS_Mag = Tab_Update_Mag.Checked;
+            Settings.Default.Update_USGS_MMI = Tab_Update_MMI.Checked;
+            Settings.Default.Update_USGS_Alert = Tab_Update_Alert.Checked;
             Settings.Default.Sound_45_Enable = Tab_Sound_M45.Checked;
             Settings.Default.Sound_60_Enable = Tab_Sound_M60.Checked;
             Settings.Default.Sound_80_Enable = Tab_Sound_M80.Checked;
@@ -253,7 +253,7 @@ namespace WorldQuakeViewer
             try
             {
                 TimeSpan ProTime = DateTime.Now - MainForm.StartTime;
-                Tab_ProInfo_Text.Text = $"起動時間:{(int)ProTime.TotalDays}d{ProTime:hh}:{ProTime:mm}:{ProTime:ss}\nUSGS Feed アクセス回数:{MainForm.AccessedUSGS}回\nログ保持数:{MainForm.Histories.Count}";
+                Tab_ProInfo_Text.Text = $"起動時間:{(int)ProTime.TotalDays}d{ProTime:hh}:{ProTime:mm}:{ProTime:ss}\nUSGS Feed アクセス回数:{MainForm.AccessedUSGS}回\nログ保持数:{MainForm.USGSHist.Count}";
             }
             catch (Exception ex)
             {

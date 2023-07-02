@@ -1,51 +1,56 @@
 ﻿using CoreTweet;
 using LL2FERC;
-using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
-using System.Linq;
 using System.Media;
 using System.Net;
+using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using USGSQuakeClass;
 using WorldQuakeViewer.Properties;
 
-namespace WorldQuakeViewer//todo:discordに送るやつを追加
+namespace WorldQuakeViewer//TODO:設定Formの作り直し
 {
-    public partial class MainForm : Form
+    public partial class MainForm : Form//TODO:設定の分割(USGSとEMSC)
     {
         public static readonly string Version = "1.1.0α6";//こことアセンブリを変える
         public static DateTime StartTime = new DateTime();
+        public static readonly Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
+        public static int AccessedEMSC = 0;
         public static int AccessedUSGS = 0;
-        public string LatestURL = "";
+        public static string LatestUSGSURL = "";
+        public static string LatestEMSCURL = "";
         public static bool NoFirst = false;//最初はツイートとかしない
+        public static bool WaitEMSCDraw = true;//最初の描画を待機(USGS用)
         public static string ExeLogs = "";
-        public static Dictionary<string, History> Histories = new Dictionary<string, History>();//EQID,Data
-        public Font F9 = null;
-        public Font F9_5 = null;
-        public Font F10 = null;
-        public Font F11 = null;
-        public Font F12 = null;
-        public Font F20 = null;
-        public Font F22 = null;
-        public string LatestText = "";
+        public static History EMSCHist = new History();
+        public static Dictionary<string, History> USGSHist = new Dictionary<string, History>();//EQID,Data
+        public static string LatestUSGSText = "";
+        public static string LatestEMSCText = "";
+        public static Bitmap bitmap = new Bitmap(1600, 1000);
+        public static Bitmap bitmap_USGS = new Bitmap(800, 1000);
+        public static FontFamily font;
+        public static SoundPlayer Player = null;
+
         public MainForm()
         {
             InitializeComponent();
         }
+
         private void MainForm_Load(object sender, EventArgs e)//ExeLog($"");
         {
-            ExeLog($"起動処理開始");
+            ExeLog($"[Main]起動処理開始");//TODO:Soundとともにリソースにできたらする
             StartTime = DateTime.Now;
-            HistoryBack.Text = $"履歴                                                                Version:{Version}";
             ErrorText.Text = "フォント読み込み中…";
             try
             {
@@ -65,819 +70,545 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                     }
                     Thread.Sleep(1000);//念のため
                 }
-                ExeLog($"フォントファイルOK");
+                ExeLog($"[Main]フォントファイルOK");
                 PrivateFontCollection pfc = new PrivateFontCollection();
                 pfc.AddFontFile("Font\\Koruri-Regular.ttf");
-                /*//なぜかエラー出るからフォント必須に
-                F9 = new Font(pfc.Families[0], 9F);
-                F9_5 = new Font(pfc.Families[0], 9.5F);
-                F10 = new Font(pfc.Families[0], 10F);
-                F11 = new Font(pfc.Families[0], 11F);
-                F12 = new Font(pfc.Families[0], 12F);
-                F20 = new Font(pfc.Families[0], 20F);
-                F22 = new Font(pfc.Families[0], 22F);
-                ExeLog("F9  :" + F9);
-                ExeLog("F9_5:" + F9_5);
-                ExeLog("F10 :" + F10);
-                ExeLog("F11 :" + F11);
-                ExeLog("F12 :" + F12);
-                ExeLog("F20 :" + F20);
-                ExeLog("F22 :" + F22);
-                if (F9 !=  F22)//おかしいときname="使用されたパラメーターが有効ではありません。"になるため　なぜかおかしくなくてもエラー出る
-                {
-                    ExeLog("フォントの読み込みに成功");
-                    Font = F10;
-                    USGS0.Font = F9;
-                    USGS1.Font = F11;
-                    USGS2.Font = F11;
-                    USGS3.Font = F20;
-                    USGS4.Font = F11;
-                    USGS5.Font = F20;
-                    USGS6.Font = F9;
-                    ErrorText.Font = F12;
-                    HistoryBack.Font = F10;
-                    History11.Font = F9_5;
-                    History12.Font = F10;
-                    History13.Font = F22;
-                    History21.Font = F9_5;
-                    History22.Font = F10;
-                    History23.Font = F22;
-                    History31.Font = F9_5;
-                    History32.Font = F10;
-                    History33.Font = F22;
-                    History41.Font = F9_5;
-                    History42.Font = F10;
-                    History43.Font = F22;
-                    History51.Font = F9_5;
-                    History52.Font = F10;
-                    History53.Font = F22;
-                    History61.Font = F9_5;
-                    History62.Font = F10;
-                    History63.Font = F22;
-                }
-                else*/
-                {
-                    InstalledFontCollection ifc = new InstalledFontCollection();
-                    while (ifc.Families.Contains(pfc.Families[0]))
-                    {
-                        Process.Start("fontview.exe", "Font\\Koruri-Regular.ttf");
-                        DialogResult Result = MessageBox.Show($"フォントがインストールされていません。Font\\Koruri-Regular.ttfをインストールしてください。", "WQV_FontCheck", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation);
-                        if (Result != DialogResult.Retry)
-                        {
-                            Application.Exit();
-                            break;//これないとプロセス無限起動される
-                        }
-                        Thread.Sleep(1000);//念のため
-                        ifc = new InstalledFontCollection();
-                    }
-                    ifc.Dispose();
-                    ExeLog($"フォントOK");
-                }
-                pfc.Dispose();
+                font = pfc.Families[0];
+                ExeLog($"[Main]フォントOK");
             }
             catch
             {
-                ExeLog($"フォント確認に失敗");
+                ExeLog($"[Main]フォント確認に失敗");
             }
             ErrorText.Text = "設定読み込み中…";
-            Configuration Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
             if (File.Exists("UserSetting.xml"))//AppDataに保存
             {
-                if (!Directory.Exists(Config.FilePath.Replace("\\user.config", "")))//実質更新時
-                    Directory.CreateDirectory(Config.FilePath.Replace("\\user.config", ""));
-                File.Copy("UserSetting.xml", Config.FilePath, true);
-                ExeLog($"設定ファイルをAppDataにコピー");
+                if (!Directory.Exists(config.FilePath.Replace("\\user.config", "")))//実質更新時
+                    Directory.CreateDirectory(config.FilePath.Replace("\\user.config", ""));
+                File.Copy("UserSetting.xml", config.FilePath, true);
+                ExeLog($"[Main]設定ファイルをAppDataにコピー");
             }
+            if (!File.Exists("AppDataPath.txt"))
+                File.WriteAllText("AppDataPath.txt", config.FilePath);
             SettingReload();
             ErrorText.Text = "設定の読み込みが完了しました。";
-            ExeLog($"設定読み込み完了");
-            JsonTimer.Enabled = true;
+            ExeLog($"[Main]設定読み込み完了");
+            EMSCget.Enabled = true;
+            USGSget.Enabled = true;
         }
-        private async void JsonTimer_Tick(object sender, EventArgs e)
+
+        private async void EMSCget_Tick(object sender, EventArgs e)//TODO:取得頻度を2/1mだけでなく1/1mでもにする？
         {
-            JsonTimer.Interval = 30000;
+            ExeLog($"[EMSC]取得開始");
+            //次の0/30秒までの時間を計算
+            DateTime now = DateTime.Now;
+            DateTime Next0Second = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0).AddMinutes(1);
+            DateTime Next30Second = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 30);
+            if (now.Second >= 59)//早いと59秒になるため
+                Next0Second = Next0Second.AddMinutes(1);
+            if (now.Second >= 29)//早いと29秒になるため
+                Next30Second = Next30Second.AddMinutes(1);
+            EMSCget.Interval = (int)Math.Max(-1, Math.Min((Next0Second - now).TotalMilliseconds, (Next30Second - now).TotalMilliseconds));
+            ExeLog($"[EMSC]次回実行まであと{EMSCget.Interval}ms");
             try
             {
-                ErrorText.Text = "取得中…";
-                ExeLog($"//////////取得開始//////////");
-                WebClient WC = new WebClient
+                //https://www.emsc-csem.org/Earthquake/earthquake.php?id=
+                //https://www.seismicportal.eu/fdsnws/event/1/query?limit=1&format=text&minmag=5.0
+                //#EventID        |Time                    |Latitude|Longitude|Depth/km|Author|Catalog |Contributor|ContributorID|MagType|Magnitude|MagAuthor|EventLocationName
+                //20230701_0000038|2023-07-01T03:29:25.534Z|-31.7703|-68.7812 |30.3    |NEIC  |EMSC-RTS|NEIC       |1522821      |mb     |5.3      |NEIC     |SAN JUAN, ARGENTINA
+                // 0              | 1                      | 2      | 3       | 4      | 5    | 6      | 7         | 8           | 9     | 10      | 11      | 12
+                //?               |                        |        |         |        |ソース|全部同? |ソース     |ID           |       |         |ソース   |
+                WebClient wc = new WebClient();
+                ErrorText.Text = "[EMSC]取得中…";
+                string text = await wc.DownloadStringTaskAsync(new Uri("https://www.seismicportal.eu/fdsnws/event/1/query?limit=1&format=text&minmag=5.0"));
+                wc.Dispose();
+                ExeLog($"[EMSC]処理開始");
+                AccessedEMSC++;
+                string[] texts = text.Split('\n')[1].Split('|');//TODO:処理を複数にするか？(処理自体は最新のだけでいい)
+                string time = texts[1];
+                DateTime Time = DateTime.Parse(time);
+                long Time_long = Time.Ticks;
+                DateTimeOffset TimeOff = Time.ToLocalTime();
+                string TimeSt = Convert.ToString(TimeOff).Replace("+0", " UTC +0").Replace("+1", " UTC +1").Replace("-0", " UTC -0").Replace("+1", " UTC -1");
+                string TimeJP = TimeOff.DateTime.ToString("d日HH時mm分ss秒");
+                string lat = texts[2];
+                double Lat = double.Parse(lat);
+                string lon = texts[3];
+                double Lon = double.Parse(lon);
+                Lat2String(Lat, out string LatStLongJP, out string LatDisplay);
+                Lon2String(Lon, out string LonStLongJP, out string LonDisplay);
+                string depth = texts[4];
+                double Depth = double.Parse(depth);
+                string DepthSt = depth + "km";
+                string source = texts[5];
+                string id = texts[8];
+                string URL = "https://www.emsc-csem.org/Earthquake/earthquake.php?id=" + id;
+                LatestEMSCURL = URL;
+                string magType = texts[9];
+                string mag = texts[10];
+                double Mag = double.Parse(mag);
+                string MagSt = Mag.ToString("0.0");
+                int hypoCode = LL2FERCode.Code(Lat, Lon);
+                string hypoJP = LL2FERCode.Name_JP(hypoCode);
+                string hypoEN = texts[12];
+                string MagTypeWithSpace = magType.Length == 3 ? magType : magType.Length == 2 ? "   " + magType : "      " + magType;
+
+                string LogText = $"EMSC地震情報【{magType}{MagSt}】{TimeSt}\n{hypoJP}({hypoEN})\n{LatDisplay},{LonDisplay}　{DepthSt}\n{URL}";
+                string BouyomiText = $"EMSC地震情報。{TimeJP}発生、マグニチュード{MagSt}、震源、{hypoJP.Replace(" ", "、").Replace("/", "、")}、{LatStLongJP}、{LonStLongJP}、深さ{DepthSt}キロメートル。";
+
+                History history = new History
                 {
-                    Encoding = Encoding.UTF8
+                    URL = URL,
+                    TweetID = 0,//更新の場合は上書き前に変更するから0でおｋ
+                    ID = id,
+
+                    Time = Time_long,
+                    HypoJP = hypoJP,
+                    HypoEN = hypoEN,//()つかない
+                    Lat = Lat,
+                    Lon = Lon,
+                    Depth = Depth,
+                    MagType = magType,
+                    Mag = Mag
                 };
-                string json_ = await WC.DownloadStringTaskAsync(new Uri("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson"));
-                ExeLog($"取得完了");
-                AccessedUSGS++;
-                string LastCheckTime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
-                double StartTime = Convert.ToDouble(DateTime.Now.ToString("yyyyMMddHHmmss.ffff"));
-                USGSQuake json = JsonConvert.DeserializeObject<USGSQuake>(json_);
-                DateTimeOffset Update_ = DateTimeOffset.FromUnixTimeMilliseconds(json.Metadata.Generated).ToLocalTime();
-                string UpdateTime_ = $"{Update_:yyyy/MM/dd HH:mm:ss}";
-                int SoundLevel = 0;//音声判別用 初報ほど、M大きいほど高い
-                ExeLog($"各履歴処理開始");
-                LatestURL = json.Features[0].Properties.Url;
-                int DatasCount = Math.Min(Settings.Default.Update_MaxCount, json.Features.Count);
-                for (int i = DatasCount - 1; i >= 0; i--)//送信の都合上古い順に
-                    if (json.Features.Count > i)
-                    {
-                        bool New = false;//音声判別用
-                        string ID = json.Features[i].Id;
-                        long Updated = json.Features[i].Properties.Updated;
-                        ExeLog($"処理[{i}]:{ID}");
-                        DateTimeOffset Update = DateTimeOffset.FromUnixTimeMilliseconds(Updated).ToLocalTime();
-                        string UpdateTime = $"{Update:yyyy/MM/dd HH:mm:ss}";
-                        long LastUpdated = 0;
-                        if (Histories.ContainsKey(ID))
-                            LastUpdated = Histories[ID].Update;
-                        ErrorText.Text = $"処理中…[{DatasCount - i}/{DatasCount}]";
-                        if (Updated != LastUpdated)//新規か更新
+                int SoundLevel = 0;//音声判別用 初報ほど,M大きいほど高い
+                bool New = false;
+                bool NewUpdt = false;
+                int i = 0;
+                if (EMSCHist.ID == id)//同じか更新
+                {
+                    if (Settings.Default.Update_EMSC_Time)
+                        if (EMSCHist.Time != history.Time)
                         {
-                            ExeLog($"[{i}] 更新時刻変化検知({LastUpdated}->{Updated})");
-                            double? MMI = json.Features[i].Properties.Mmi;
-                            string MMISt = $"({MMI})".Replace("()", "-");
-                            string MaxInt = "-";
-                            if (MMI < 1.5)
-                                MaxInt = "I";
-                            else if (MMI < 2.5)
-                                MaxInt = "II";
-                            else if (MMI < 3.5)
-                                MaxInt = "III";
-                            else if (MMI < 4.5)
-                                MaxInt = "IV";
-                            else if (MMI < 5.5)
-                                MaxInt = "V";
-                            else if (MMI < 6.5)
-                                MaxInt = "VI";
-                            else if (MMI < 7.5)
-                                MaxInt = "VII";
-                            else if (MMI < 8.5)
-                                MaxInt = "VIII";
-                            else if (MMI < 9.5)
-                                MaxInt = "IX";
-                            else if (MMI < 10.5)
-                                MaxInt = "X";
-                            else if (MMI < 11.5)
-                                MaxInt = "XI";
-                            else if (MMI >= 11.5)
-                                MaxInt = "XII";
-                            DateTimeOffset DataTimeOff = DateTimeOffset.FromUnixTimeMilliseconds(json.Features[i].Properties.Time).ToLocalTime();
-                            string Time = Convert.ToString(DataTimeOff).Replace("+0", " UTC +0").Replace("+1", " UTC +1").Replace("-0", " UTC -0").Replace("+1", " UTC -1");
-                            DateTime TimeJP_ = DataTimeOff.DateTime;
-                            string TimeJP = TimeJP_.ToString("dd日HH時mm分ss秒");
-                            string Mag = $"{json.Features[i].Properties.Mag}";
-                            if (Mag.Length == 1)
-                                Mag += ".0";
-                            string MagType = json.Features[i].Properties.MagType;
-                            double Lat = json.Features[i].Geometry.Coordinates[1];
-                            double Lon = json.Features[i].Geometry.Coordinates[0];
-                            double LatShort = Math.Round(json.Features[i].Geometry.Coordinates[1], 2, MidpointRounding.AwayFromZero);
-                            double LonShort = Math.Round(json.Features[i].Geometry.Coordinates[0], 2, MidpointRounding.AwayFromZero);
-                            string Alert = json.Features[i].Properties.Alert;
-                            string AlertJP = "アラート:-";
-                            if (Alert != null)
-                                AlertJP = AlertJP.Replace("-", json.Features[i].Properties.Alert.Replace("green", "緑").Replace("yellow", "黄").Replace("orange", "オレンジ").Replace("red", "赤").Replace("pending", "保留中"));
-                            string LatStDecimal = $"{Math.Round(Lat, 2, MidpointRounding.AwayFromZero)}°N";
-                            if (Lat < 0)
-                                LatStDecimal = $"{Math.Round(-Lat, 2, MidpointRounding.AwayFromZero)}°S";
-                            string LonStDecimal = $"{Math.Round(Lon, 2, MidpointRounding.AwayFromZero)}°E";
-                            if (Lon < 0)
-                                LonStDecimal = $"{Math.Round(-Lon, 2, MidpointRounding.AwayFromZero)}°W";
-                            TimeSpan LatTime = TimeSpan.FromHours(Lat);
-                            TimeSpan LonTime = TimeSpan.FromHours(Lon);
-                            string LatStShort = $"{(int)Lat}ﾟ{LatTime.Minutes}'N";
-                            string LonStShort = $"{(int)Lon}ﾟ{LonTime.Minutes}'E";
-                            if (Lat < 0)
-                                LatStShort = $"{(int)-Lat}ﾟ{-LatTime.Minutes}'S";
-                            if (Lon < 0)
-                                LonStShort = $"{(int)-Lon}ﾟ{-LonTime.Minutes}'W";
-                            string LatStLong = $"{(int)Lat}ﾟ{LatTime.Minutes}'{LatTime.Seconds}\"N";
-                            string LonStLong = $"{(int)Lon}ﾟ{LonTime.Minutes}'{LonTime.Seconds}\"E";
-                            if (Lat < 0)
-                                LatStLong = $"{(int)-Lat} ﾟ {-LatTime.Minutes} '";
-                            if (Lon < 0)
-                                LonStLong = $"{(int)-Lon} ﾟ {-LonTime.Minutes} '";
-                            string LatStLongJP = $"北緯{(int)Lat}度{LatTime.Minutes}分{LatTime.Seconds}秒";
-                            string LonStLongJP = $"東経{(int)Lon}度{LonTime.Minutes}分{LonTime.Seconds}秒";
-                            if (Lat < 0)
-                                LatStLongJP = $"南緯{(int)-Lat}度{-LatTime.Minutes}分{-LatTime.Seconds}秒";
-                            if (Lon < 0)
-                                LonStLongJP = $"西経{(int)-Lon}度{-LonTime.Minutes}分{-LonTime.Seconds}秒";
-                            if (Settings.Default.Text_LatLonDecimal)
-                            {
-                                LatStLongJP = $"北緯{Lat}度";
-                                LonStLongJP = $"東経{Lon}度";
-                                if (Lat < 0)
-                                    LatStLongJP = $"南緯{-Lat}度";
-                                if (Lon < 0)
-                                    LonStLongJP = $"西経{-Lon}度";
-                            }
-                            string LatView = LatStShort;
-                            string LongView = LonStShort;
-                            if (Settings.Default.Text_LatLonDecimal)
-                            {
-                                LatView = LatStDecimal;
-                                LongView = LonStDecimal;
-                            }
-                            string Depth = $"深さ:約{(int)Math.Round(json.Features[i].Geometry.Coordinates[2], MidpointRounding.AwayFromZero)}km";
-                            if (json.Features[i].Geometry.Coordinates[2] == (int)json.Features[i].Geometry.Coordinates[2])
-                                Depth = $"(深さ:{json.Features[i].Geometry.Coordinates[2]}km?)";//整数
-                            string DepthLong = $"深さ:{json.Features[i].Geometry.Coordinates[2]}km";
-                            if (json.Features[i].Geometry.Coordinates[2] == (int)json.Features[i].Geometry.Coordinates[2])
-                                DepthLong = Depth;
-                            string HypoJP = LL2FERCode.Name_JP(LL2FERCode.Code(Lat, Lon));
-                            string HypoEN = $"({json.Features[i].Properties.Place})";
-                            string LogText = $"USGS地震情報【{MagType}{Mag}】{Time}\n{HypoJP}{HypoEN}\n{LatView},{LongView}　{Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}　{AlertJP.Replace("アラート:-", "")}\n{json.Features[i].Properties.Url}";
-                            string BouyomiText = $"USGS地震情報。{TimeJP}発生、マグニチュード{Mag}、震源、{HypoJP.Replace(" ", "、").Replace("/", "、")}、{LatStLongJP}、{LonStLongJP}、深さ{DepthLong.Replace("深さ:", "")}。{$"推定最大改正メルカリ震度階級{MMISt.Replace("(", "").Replace(")", "")}。".Replace("推定最大改正メルカリ震度階級-。", "")}{AlertJP.Replace("アラート:-", "")}";
+                            NewUpdt = true;
+                            ExeLog($"[EMSC]Time:{EMSCHist.Time}->{history.Time}");
+                        }
+                    if (Settings.Default.Update_EMSC_HypoJP)
+                        if (EMSCHist.HypoJP != history.HypoJP)
+                        {
+                            NewUpdt = true;
+                            ExeLog($"[EMSC]HypoJP:{EMSCHist.HypoJP}->{history.HypoJP}");
+                        }
+                    if (Settings.Default.Update_EMSC_HypoEN)
+                        if (EMSCHist.HypoEN != history.HypoEN)
+                        {
+                            NewUpdt = true;
+                            ExeLog($"[EMSC]HypoEN:{EMSCHist.HypoEN}->{history.HypoEN}");
+                        }
+                    if (Settings.Default.Update_EMSC_LatLon)
+                        if (EMSCHist.Lat != history.Lat || EMSCHist.Lon != history.Lon)
+                        {
+                            NewUpdt = true;
+                            ExeLog($"[EMSC]Lat:{EMSCHist.Lat}->{history.Lat}, Lon:{EMSCHist.Lon}->{history.Lon}");
+                        }
+                    if (Settings.Default.Update_EMSC_Depth)
+                        if (EMSCHist.Depth != history.Depth)
+                        {
+                            NewUpdt = true;
+                            ExeLog($"[EMSC]Depth:{EMSCHist.Depth}->{history.Depth}");
+                        }
+                    if (Settings.Default.Update_EMSC_MagType)
+                        if (EMSCHist.MagType != history.MagType)
+                        {
+                            NewUpdt = true;
+                            ExeLog($"[EMSC]MagType:{EMSCHist.MagType}->{history.MagType}");
+                        }
+                    if (Settings.Default.Update_EMSC_Mag)
+                        if (EMSCHist.Mag != history.Mag)
+                        {
+                            NewUpdt = true;
+                            ExeLog($"[EMSC]Mag:{EMSCHist.Mag}->{history.Mag}");
+                        }
+                    if (NewUpdt)
+                    {
+                        LogText = LogText.Replace("EMSC地震情報", "EMSC地震情報(更新)");
+                        BouyomiText = BouyomiText.Replace("EMSC地震情報", "EMSC地震情報、更新");
+                        ExeLog($"[EMSC]{id}更新検知");
+                    }
+                }
+                else
+                {
+                    New = true;
+                    NewUpdt = true;
+                    ExeLog($"[EMSC]{id}初回");
+                }
 
-                            History history = new History
-                            {
-                                URL = json.Features[i].Properties.Url,
-                                Update = Updated,
-                                TweetID = 0,//更新の場合は上書き前に変更するから0でおｋ
+                if (NewUpdt)
+                {
+                    EMSCHist = history;
+                    LogSave("Log\\EMSC\\M4.5+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", id);
+                    SendSocket(LogText);
 
-                                Display10 = $"USGS地震情報                                         {Time}",
-                                Display11 = $"{HypoJP}\n{HypoEN}\n{LatView},{LongView}\n{Depth}",
-                                Display12 = $"{MagType}",
-                                Display13 = $"{Mag}",//14は変わらない
-                                Display15 = $"{MMISt.Replace("(", "").Replace(")", "")}",
-                                Display21 = $"{Time} 発生  ID:{ID}\n{HypoJP}\n{LatView},{LongView} {DepthLong}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}",
-                                Display22 = $"{MagType}",
-                                Display23 = $"{Mag}",
+                    WebHook(LogText);
 
-                                Time = json.Features[i].Properties.Time,
-                                HypoJP = HypoJP,
-                                HypoEN = HypoEN,//()付く
-                                Lat = Lat,
-                                Lon = Lon,
-                                Depth = json.Features[i].Geometry.Coordinates[2],
-                                MagType = MagType,
-                                Mag = Mag,
-                                MMI = MMI,
-                                Alert = Alert
-                            };
-                            bool NewUpdt = false;
-                            if (!Histories.ContainsKey(ID))//Keyないと探したときエラーになるから別化
-                                NewUpdt = true;
-                            else
-                            {
-                                if (Settings.Default.Update_Time)
-                                    if (Histories[ID].Time != history.Time)
-                                    {
-                                        NewUpdt = true;
-                                        ExeLog($"Time:{Histories[ID].Time}->{history.Time}");
-                                    }
-                                if (Settings.Default.Update_HypoJP)
-                                    if (Histories[ID].HypoJP != history.HypoJP)
-                                    {
-                                        NewUpdt = true;
-                                        ExeLog($"HypoJP:{Histories[ID].HypoJP}->{history.HypoJP}");
-                                    }
-                                if (Settings.Default.Update_HypoEN)
-                                    if (Histories[ID].HypoEN != history.HypoEN)
-                                    {
-                                        NewUpdt = true;
-                                        ExeLog($"HypoEN:{Histories[ID].HypoEN}->{history.HypoEN}");
-                                    }
-                                if (Settings.Default.Update_LatLon)
-                                    if (Histories[ID].Lat != history.Lat || Histories[ID].Lon != history.Lon)
-                                    {
-                                        NewUpdt = true;
-                                        ExeLog($"Lat:{Histories[ID].Lat}->{history.Lat}, Lon:{Histories[ID].Lon}->{history.Lon}");
-                                    }
-                                if (Settings.Default.Update_Depth)
-                                    if (Histories[ID].Depth != history.Depth)
-                                    {
-                                        NewUpdt = true;
-                                        ExeLog($"Depth:{Histories[ID].Depth}->{history.Depth}");
-                                    }
-                                if (Settings.Default.Update_MagType)
-                                    if (Histories[ID].MagType != history.MagType)
-                                    {
-                                        NewUpdt = true;
-                                        ExeLog($"MagType:{Histories[ID].MagType}->{history.MagType}");
-                                    }
-                                if (Settings.Default.Update_Mag)
-                                    if (Histories[ID].Mag != history.Mag)
-                                    {
-                                        NewUpdt = true;
-                                        ExeLog($"Mag:{Histories[ID].Mag}->{history.Mag}");
-                                    }
-                                if (Settings.Default.Update_MMI)
-                                    if (Histories[ID].MMI != history.MMI)
-                                    {
-                                        NewUpdt = true;
-                                        ExeLog($"MMI:{Histories[ID].MMI}->{history.MMI}");
-                                    }
-                                if (Settings.Default.Update_Alert)
-                                    if (Histories[ID].Alert != history.Alert)
-                                    {
-                                        NewUpdt = true;
-                                        ExeLog($"Alert:{Histories[ID].Alert}->{history.Alert}");
-                                    }
-                                LogText = LogText.Replace("USGS地震情報", "USGS地震情報(更新)");
-                                BouyomiText = BouyomiText.Replace("USGS地震情報", "USGS地震情報、更新");
-                            }
-                            if (NewUpdt)//更新、初回検知
-                            {
-                                if (Histories.ContainsKey(ID))//更新
-                                {
+                    if (SoundLevel < 1 && Settings.Default.Sound_45_Enable)//SoundLevel上昇+M4.5以上有効
+                        SoundLevel = New ? 2 : 1;
+                    if (Mag >= 6)
+                    {
+                        LogSave("Log\\EMSC\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", id);
 
-                                    ExeLog($"//////////{ID}更新検知//////////");
-                                    history.TweetID = Histories[ID].TweetID;
-                                    Histories[ID] = history;
-                                }
-                                else//new
-                                {
-                                    ExeLog($"//////////{ID}初回検知//////////");
-                                    New = true;
-                                    Histories.Add(ID, history);
-                                }
-                                LogSave("Log\\M4.5+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", ID);
-                                if (Settings.Default.Socket_Enable)
-                                    SendSocket(LogText);
-                                if (SoundLevel < 1 && Settings.Default.Sound_45_Enable)//SoundLevel上昇+M4.5以上有効
-                                    if (New)//初報
-                                        SoundLevel = 2;
-                                    else if (Settings.Default.Sound_Updt_Enable)//更新+更新有効
-                                        SoundLevel = 1;
-                                if (json.Features[i].Properties.Mag >= 6.0)
-                                {
-                                    LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", ID);
-                                    if (SoundLevel < 3 && Settings.Default.Sound_60_Enable)
-                                        if (New)
-                                            SoundLevel = 4;
-                                        else if (Settings.Default.Sound_Updt_Enable)
-                                            SoundLevel = 3;
-                                    if (json.Features[i].Properties.Mag >= 8.0)
-                                    {
-                                        LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", ID);
-                                        if (SoundLevel < 5 && Settings.Default.Sound_80_Enable)
-                                            if (New)
-                                                SoundLevel = 6;
-                                            else if (Settings.Default.Sound_Updt_Enable)
-                                                SoundLevel = 5;
-                                    }
-                                }
-                                if (i == 0)
-                                    LatestText = LogText;
-                                    if (json.Features[i].Properties.Mag >= Settings.Default.Bouyomichan_LowerMagnitudeLimit || MMI >= Settings.Default.Bouyomichan_LowerMMILimit)
-                                    if (Settings.Default.Bouyomichan_Enable)
-                                        Bouyomichan(BouyomiText);
-                                if (json.Features[i].Properties.Mag >= Settings.Default.Tweet_LowerMagnitudeLimit || MMI >= Settings.Default.Tweet_LowerMMILimit)
-                                    if (Settings.Default.Tweet_Enable)
-                                        Tweet(LogText, ID);
-                            }
-                            else
-                                ExeLog($"[{i}] 内容更新なし");
-                        }
-                        else
-                            ExeLog($"[{i}] 更新なし(更新:{Updated})");
-                    }
-                ErrorText.Text = "表示処理中…";
-                for (int i = 0; i < 7; i++)
-                    if (Histories.Count > i)//データ不足対処
-                    {
-                        string ID = json.Features[i].Id;
-                        string Alert = json.Features[i].Properties.Alert;
-                        if (i == 0)//最新
+                        if (SoundLevel < 3 && Settings.Default.Sound_60_Enable)
+                            SoundLevel = New ? 4 : 3;
+                        if (Mag >= 8)
                         {
-                            USGS0.Text = Histories[ID].Display10;
-                            USGS1.Text = Histories[ID].Display11;
-                            USGS2.Text = Histories[ID].Display12;
-                            USGS3.Text = Histories[ID].Display13;
-                            USGS4.Text = $"改正メルカリ\n　　震度階級:";
-                            USGS5.Text = Histories[ID].Display15;
-                            int LocX = (int)((Histories[ID].Lon + 180) * -5 - 50);//(-180,0,180) + 180 -> (0,180,360)
-                            int LocY = (int)((90 - Histories[ID].Lat) * -5 + 300);//90 - (90,0,-90) -> (0,90,180)
-                            int LocY_ = LocY;
-                            if (LocY > 100)//はみ出しなくす
-                                LocY_ = 100;
-                            else if (LocY < -400)
-                                LocY_ = -400;
-                            MainImg.Location = new Point(LocX, LocY_);
-                            Bitmap MainBitmap = new Bitmap(Resources.WorldMap);
-                            Graphics graphics = Graphics.FromImage(MainBitmap);
-                            graphics.DrawImage(Resources.Point, new Rectangle(-LocX + 185, -LocY + 285, 30, 30));//地図左上の画面座標の差
-                            MainImg.Image = MainBitmap;
-                            graphics.Dispose();
-                            if (json.Features[i].Properties.Mag >= 6.0)
-                            {
-                                USGS0.ForeColor = Color.Yellow;
-                                USGS1.ForeColor = Color.Yellow;
-                                USGS2.ForeColor = Color.Yellow;
-                                USGS3.ForeColor = Color.Yellow;
-                                USGS4.ForeColor = Color.Yellow;
-                                USGS5.ForeColor = Color.Yellow;
-                                if (json.Features[i].Properties.Mag >= 8.0)
-                                {
-                                    USGS0.ForeColor = Color.Red;
-                                    USGS1.ForeColor = Color.Red;
-                                    USGS2.ForeColor = Color.Red;
-                                    USGS3.ForeColor = Color.Red;
-                                    USGS4.ForeColor = Color.Red;
-                                    USGS5.ForeColor = Color.Red;
-                                }
-                            }
-                            else
-                            {
-                                USGS0.ForeColor = Color.White;
-                                USGS1.ForeColor = Color.White;
-                                USGS2.ForeColor = Color.White;
-                                USGS3.ForeColor = Color.White;
-                                USGS4.ForeColor = Color.White;
-                                USGS5.ForeColor = Color.White;
-                            }
-                            if (Alert == null)
-                            {
-                                USGS0.BackColor = Color.Black;
-                                USGS01.BackColor = Color.Black;
-                                USGS0.ForeColor = Color.White;
-                            }
-                            else if (Alert == "green")
-                            {
-                                USGS0.BackColor = Color.Green;
-                                USGS01.BackColor = Color.Green;
-                                USGS0.ForeColor = Color.White;
-                            }
-                            else if (Alert == "yellow")
-                            {
-                                USGS0.BackColor = Color.Yellow;
-                                USGS01.BackColor = Color.Yellow;
-                                USGS0.ForeColor = Color.Black;
-                            }
-                            else if (Alert == "orange")
-                            {
-                                USGS0.BackColor = Color.Orange;
-                                USGS01.BackColor = Color.Orange;
-                                USGS0.ForeColor = Color.Black;
-                            }
-                            else if (Alert == "red")
-                            {
-                                USGS0.BackColor = Color.Red;
-                                USGS01.BackColor = Color.Red;
-                                USGS0.ForeColor = Color.White;
-                            }
-                            else if (Alert == "pending")
-                            {
-                                USGS0.BackColor = Color.DimGray;
-                                USGS01.BackColor = Color.DimGray;
-                                USGS0.ForeColor = Color.White;
-                            }
-                        }
-                        else if (i == 1)//履歴
-                        {
-                            History11.Text = Histories[ID].Display21;
-                            History12.Text = Histories[ID].Display22;
-                            History13.Text = Histories[ID].Display23;
-                            if (json.Features[i].Properties.Mag >= 6.0)
-                            {
-                                History11.ForeColor = Color.Yellow;
-                                History12.ForeColor = Color.Yellow;
-                                History13.ForeColor = Color.Yellow;
-                                if (json.Features[i].Properties.Mag >= 8.0)
-                                {
-                                    History11.ForeColor = Color.Red;
-                                    History12.ForeColor = Color.Red;
-                                    History13.ForeColor = Color.Red;
-                                }
-                            }
-                            else
-                            {
-                                History11.ForeColor = Color.White;
-                                History12.ForeColor = Color.White;
-                                History13.ForeColor = Color.White;
-                            }
-                            if (Alert == null)
-                                History10.BackColor = Color.FromArgb(45, 45, 90);
-                            else if (Alert == "green")
-                                History10.BackColor = Color.Green;
-                            else if (Alert == "yellow")
-                                History10.BackColor = Color.Yellow;
-                            else if (Alert == "orange")
-                                History10.BackColor = Color.Orange;
-                            else if (Alert == "red")
-                                History10.BackColor = Color.Red;
-                            else if (Alert == "pending")
-                                History10.BackColor = Color.DimGray;
-                        }
-                        else if (i == 2)
-                        {
-                            History21.Text = Histories[ID].Display21;
-                            History22.Text = Histories[ID].Display22;
-                            History23.Text = Histories[ID].Display23;
-                            if (json.Features[i].Properties.Mag >= 6.0)
-                            {
-                                History21.ForeColor = Color.Yellow;
-                                History22.ForeColor = Color.Yellow;
-                                History23.ForeColor = Color.Yellow;
-                                if (json.Features[i].Properties.Mag >= 8.0)
-                                {
-                                    History21.ForeColor = Color.Red;
-                                    History22.ForeColor = Color.Red;
-                                    History23.ForeColor = Color.Red;
-                                }
-                            }
-                            else
-                            {
-                                History21.ForeColor = Color.White;
-                                History22.ForeColor = Color.White;
-                                History23.ForeColor = Color.White;
-                            }
-                            if (Alert == null)
-                                History20.BackColor = Color.FromArgb(45, 45, 90);
-                            else if (Alert == "green")
-                                History20.BackColor = Color.Green;
-                            else if (Alert == "yellow")
-                                History20.BackColor = Color.Yellow;
-                            else if (Alert == "orange")
-                                History20.BackColor = Color.Orange;
-                            else if (Alert == "red")
-                                History20.BackColor = Color.Red;
-                            else if (Alert == "pending")
-                                History20.BackColor = Color.DimGray;
-                        }
-                        else if (i == 3)
-                        {
-                            History31.Text = Histories[ID].Display21;
-                            History32.Text = Histories[ID].Display22;
-                            History33.Text = Histories[ID].Display23;
-                            if (json.Features[i].Properties.Mag >= 6.0)
-                            {
-                                History31.ForeColor = Color.Yellow;
-                                History32.ForeColor = Color.Yellow;
-                                History33.ForeColor = Color.Yellow;
-                                if (json.Features[i].Properties.Mag >= 8.0)
-                                {
-                                    History31.ForeColor = Color.Red;
-                                    History32.ForeColor = Color.Red;
-                                    History33.ForeColor = Color.Red;
-                                }
-                            }
-                            else
-                            {
-                                History31.ForeColor = Color.White;
-                                History32.ForeColor = Color.White;
-                                History33.ForeColor = Color.White;
-                            }
-                            if (Alert == null)
-                                History30.BackColor = Color.FromArgb(45, 45, 90);
-                            else if (Alert == "green")
-                                History30.BackColor = Color.Green;
-                            else if (Alert == "yellow")
-                                History30.BackColor = Color.Yellow;
-                            else if (Alert == "orange")
-                                History30.BackColor = Color.Orange;
-                            else if (Alert == "red")
-                                History30.BackColor = Color.Red;
-                            else if (Alert == "pending")
-                                History30.BackColor = Color.DimGray;
-                        }
-                        else if (i == 4)
-                        {
-                            History41.Text = Histories[ID].Display21;
-                            History42.Text = Histories[ID].Display22;
-                            History43.Text = Histories[ID].Display23;
-                            if (json.Features[i].Properties.Mag >= 6.0)
-                            {
-                                History41.ForeColor = Color.Yellow;
-                                History42.ForeColor = Color.Yellow;
-                                History43.ForeColor = Color.Yellow;
-                                if (json.Features[i].Properties.Mag >= 8.0)
-                                {
-                                    History41.ForeColor = Color.Red;
-                                    History42.ForeColor = Color.Red;
-                                    History43.ForeColor = Color.Red;
-                                }
-                            }
-                            else
-                            {
-                                History41.ForeColor = Color.White;
-                                History42.ForeColor = Color.White;
-                                History43.ForeColor = Color.White;
-                            }
-                            if (Alert == null)
-                                History40.BackColor = Color.FromArgb(45, 45, 90);
-                            else if (Alert == "green")
-                                History40.BackColor = Color.Green;
-                            else if (Alert == "yellow")
-                                History40.BackColor = Color.Yellow;
-                            else if (Alert == "orange")
-                                History40.BackColor = Color.Orange;
-                            else if (Alert == "red")
-                                History40.BackColor = Color.Red;
-                            else if (Alert == "pending")
-                                History40.BackColor = Color.DimGray;
-                        }
-                        else if (i == 5)
-                        {
-                            History51.Text = Histories[ID].Display21;
-                            History52.Text = Histories[ID].Display22;
-                            History53.Text = Histories[ID].Display23;
-                            if (json.Features[i].Properties.Mag >= 6.0)
-                            {
-                                History51.ForeColor = Color.Yellow;
-                                History52.ForeColor = Color.Yellow;
-                                History53.ForeColor = Color.Yellow;
-                                if (json.Features[i].Properties.Mag >= 8.0)
-                                {
-                                    History51.ForeColor = Color.Red;
-                                    History52.ForeColor = Color.Red;
-                                    History53.ForeColor = Color.Red;
-                                }
-                            }
-                            else
-                            {
-                                History51.ForeColor = Color.White;
-                                History52.ForeColor = Color.White;
-                                History53.ForeColor = Color.White;
-                            }
-                            if (Alert == null)
-                                History50.BackColor = Color.FromArgb(45, 45, 90);
-                            else if (Alert == "green")
-                                History50.BackColor = Color.Green;
-                            else if (Alert == "yellow")
-                                History50.BackColor = Color.Yellow;
-                            else if (Alert == "orange")
-                                History50.BackColor = Color.Orange;
-                            else if (Alert == "red")
-                                History50.BackColor = Color.Red;
-                            else if (Alert == "pending")
-                                History50.BackColor = Color.DimGray;
-                        }
-                        else if (i == 6)
-                        {
-                            History61.Text = Histories[ID].Display21;
-                            History62.Text = Histories[ID].Display22;
-                            History63.Text = Histories[ID].Display23;
-                            if (json.Features[i].Properties.Mag >= 6.0)
-                            {
-                                History61.ForeColor = Color.Yellow;
-                                History62.ForeColor = Color.Yellow;
-                                History63.ForeColor = Color.Yellow;
-                                if (json.Features[i].Properties.Mag >= 8.0)
-                                {
-                                    History61.ForeColor = Color.Red;
-                                    History62.ForeColor = Color.Red;
-                                    History63.ForeColor = Color.Red;
-                                }
-                            }
-                            else
-                            {
-                                History61.ForeColor = Color.White;
-                                History62.ForeColor = Color.White;
-                                History63.ForeColor = Color.White;
-                            }
-                            if (Alert == null)
-                                History60.BackColor = Color.FromArgb(45, 45, 90);
-                            else if (Alert == "green")
-                                History60.BackColor = Color.Green;
-                            else if (Alert == "yellow")
-                                History60.BackColor = Color.Yellow;
-                            else if (Alert == "orange")
-                                History60.BackColor = Color.Orange;
-                            else if (Alert == "red")
-                                History60.BackColor = Color.Red;
-                            else if (Alert == "pending")
-                                History60.BackColor = Color.DimGray;
+                            LogSave("Log\\EMSC\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", id);
+                            if (SoundLevel < 5 && Settings.Default.Sound_80_Enable)
+                                SoundLevel = New ? 6 : 5;
                         }
                     }
-                    else if (i == 0)//最新
-                    {
-                        USGS0.Text = "USGS地震情報";
-                        USGS1.Text = "";
-                        USGS2.Text = "";
-                        USGS3.Text = "";
-                        USGS4.Text = "";
-                        USGS5.Text = "";
-                        MainImg.Image = null;
-                        USGS0.BackColor = Color.Black;
-                        USGS01.BackColor = Color.Black;
-                    }
-                    else if (i == 1)//履歴
-                    {
-                        History11.Text = "";
-                        History12.Text = "";
-                        History13.Text = "";
-                        History10.BackColor = Color.FromArgb(45, 45, 90);
-                    }
-                    else if (i == 2)
-                    {
-                        History21.Text = "";
-                        History22.Text = "";
-                        History23.Text = "";
-                        History20.BackColor = Color.FromArgb(45, 45, 90);
-                    }
-                    else if (i == 3)
-                    {
-                        History31.Text = "";
-                        History32.Text = "";
-                        History33.Text = "";
-                        History30.BackColor = Color.FromArgb(45, 45, 90);
-                    }
-                    else if (i == 4)
-                    {
-                        History41.Text = "";
-                        History42.Text = "";
-                        History43.Text = "";
-                        History40.BackColor = Color.FromArgb(45, 45, 90);
-                    }
-                    else if (i == 5)
-                    {
-                        History51.Text = "";
-                        History52.Text = "";
-                        History53.Text = "";
-                        History50.BackColor = Color.FromArgb(45, 45, 90);
-                    }
-                    else if (i == 6)
-                    {
-                        History61.Text = "";
-                        History62.Text = "";
-                        History63.Text = "";
-                        History60.BackColor = Color.FromArgb(45, 45, 90);
-                    }
-                USGS6.Text = $"{UpdateTime_}更新\n{LastCheckTime}取得\n地図データ:NationalEarth";
-                USGS6.Location = new Point(400 - USGS6.Width, 500 - USGS6.Height);
-                ExeLog($"ログ保持数:{Histories.Count}");
-                if (SoundLevel == 1)
-                    Sound("M45u.wav");
-                else if (SoundLevel == 2)
-                    Sound("M45.wav");
-                else if (SoundLevel == 3)
-                    Sound("M60u.wav");
-                else if (SoundLevel == 4)
-                    Sound("M60.wav");
-                else if (SoundLevel == 5)
-                    Sound("M80u.wav");
-                else if (SoundLevel == 6)
-                    Sound("M80.wav");
+                    if (i == 0)
+                        LatestEMSCText = LogText;
+                    if (Mag >= Settings.Default.Bouyomichan_LowerMagnitudeLimit)
+                        Bouyomichan(BouyomiText);
+                    if (Mag >= Settings.Default.Tweet_LowerMagnitudeLimit)
+                        Tweet(LogText, "EMSC", id);
+                }
+                else
+                    ExeLog($"[EMSC][{i}] 内容更新なし");
+                switch (SoundLevel)
+                {
+                    case 1:
+                        Sound("M45u.wav");
+                        break;
+                    case 2:
+                        Sound("M45.wav");
+                        break;
+                    case 3:
+                        Sound("M60u.wav");
+                        break;
+                    case 4:
+                        Sound("M60.wav");
+                        break;
+                    case 5:
+                        Sound("M80u.wav");
+                        break;
+                    case 6:
+                        Sound("M80.wav");
+                        break;
+                }
+                ErrorText.Text = "[EMSC]描画中…";
+                ExeLog($"[EMSC]描画開始");
+                Graphics g = Graphics.FromImage(bitmap);
+                g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 0, 0, 800, 1000);
+
+                int locX = Lon > 0 ? (int)Math.Round((Lon + 90d) * 10d, MidpointRounding.AwayFromZero) : (int)Math.Round((Lon + 450d) * 10d, MidpointRounding.AwayFromZero);
+                int locY = (int)Math.Round((90d - Lat) * 10d, MidpointRounding.AwayFromZero);
+                int locX_image = 400 - locX;
+                int locY_image = Math.Min(200, Math.Max(-800, 600 - locY));
+                g.FillRectangle(new SolidBrush(Color.FromArgb(60, 60, 90)), 0, 200, 800, 800);
+                ImageCheck("map.png");
+                g.DrawImage(Image.FromFile("Image\\map.png"), locX_image, locY_image, 5400, 1800);
+                ColorMap[] ColorChange = new ColorMap[]
+                {
+                    new ColorMap()
+                };
+                ColorChange[0].OldColor = Color.Black;
+                ColorChange[0].NewColor = Color.Transparent;
+                ImageAttributes ia = new ImageAttributes();
+                ia.SetRemapTable(ColorChange);
+                ImageCheck("hypo.png");
+                g.DrawImage(Image.FromFile("Image\\hypo.png"), new Rectangle(360, locY + locY_image - 40, 80, 80), 0, 0, 80, 80, GraphicsUnit.Pixel, ia);
+
+                g.FillRectangle(new SolidBrush(Color.FromArgb(128, 0, 0, 30)), 480, 950, 320, 50);
+                g.DrawString("地図データ:Natural Earth", new Font(font, 19), Brushes.White, 490, 956);
+
+                g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 0, 0, 800, 200);
+                g.FillRectangle(new SolidBrush(Color.FromArgb(30, 30, 60)), 4, 30, 792, 166);
+                Brush color = Mag2Brush(Mag);
+                g.DrawString($"EMSC地震情報(M5.0+)                                {TimeSt}", new Font(font, 17), Brushes.White, 0, 0);
+                g.DrawString($"{hypoJP}\n({hypoEN})\n{LatDisplay}, {LonDisplay}   深さ:{DepthSt}\nID:{id}  ソース:{source}", new Font(font, 21), color, 4, 32);
+                g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 796, 0, 4, 200);
+                g.DrawString(MagTypeWithSpace, new Font(font, 20), color, 590, 160);
+                g.DrawString(MagSt, new Font(font, 50), color, 670, 100);
+                g.DrawImage(bitmap_USGS, 800, 0, 800, 1000);
+                if (!NoFirst && WaitEMSCDraw)//初回
+                {
+                    g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 800, 0, 800, 1000);
+                    g.DrawRectangle(new Pen(Color.FromArgb(200, 200, 200)), 800, 0, 800, 1000);
+                    WaitEMSCDraw = false;
+                }
+                ExeLog($"[EMSC]描画完了");
+
+                g.Dispose();
+                MainImage.BackgroundImage = null;
+                MainImage.BackgroundImage = bitmap;
+                wc.Dispose();
             }
             catch (WebException ex)
             {
-                ErrorText.Text = $"ネットワークエラーが発生しました。内容:" + ex.Message;
+                ErrorText.Text = $"[EMSC]ネットワークエラーが発生しました。内容:{ex.Message}";
             }
             catch (Exception ex)
             {
-                ErrorText.Text = $"エラーが発生しました。エラーログの内容を報告してください。内容:" + ex.Message;
                 LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main Version:{Version}\n{ex}");
+                ErrorText.Text = $"[EMSC]エラーが発生しました。エラーログの内容を報告してください。内容:{ex.Message}";
             }
             if (!ErrorText.Text.Contains("エラー"))
                 ErrorText.Text = "";
             NoFirst = true;
-            ExeLog("処理終了");
-            /*//フォント変更がうまくいかない
-            if (ErrorText.Font != F12)
+            ExeLog("[EMSC]処理終了");
+        }
+
+        private async void USGSget_Tick(object sender, EventArgs e)
+        {
+            ExeLog($"[USGS]取得開始");
+            //次の15/45秒までの時間を計算
+            DateTime now = DateTime.Now;
+            DateTime Next15Second = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 15);
+            DateTime Next45Second = Next15Second.AddSeconds(30);
+            if (now.Second >= 14)//早いと14秒になるため
+                Next15Second = Next15Second.AddMinutes(1);
+            if (now.Second >= 44)//早いと44秒になるため
+                Next45Second = Next45Second.AddMinutes(1);
+            USGSget.Interval = (int)Math.Max(10000, Math.Min((Next15Second - now).TotalMilliseconds, (Next45Second - now).TotalMilliseconds));
+            ExeLog($"[USGS]次回実行まであと{USGSget.Interval}ms");
+            try
             {
-                if (F12 == null)
-                    try
+                ErrorText.Text = "[USGS]取得中…";
+                WebClient wc = new WebClient();
+                string json_ = await wc.DownloadStringTaskAsync(new Uri("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson"));
+                wc.Dispose();
+                ExeLog($"[USGS]処理開始");
+                AccessedUSGS++;
+                JObject json = JObject.Parse(json_);
+                json_ = "";//早く処分(多分効果ほぼない) 
+                int SoundLevel = 0;//音声判別用 初報ほど,M大きいほど高い
+                int DatasCount = Math.Min(Settings.Default.Update_USGS_MaxCount, (int)json.SelectToken("metadata.count"));
+                string[] IDs = new string[6];
+                for (int i = DatasCount - 1; i >= 0; i--)//送信の都合上古い順に
+                {
+                    JToken features = json.SelectToken($"features[{i}]");
+                    bool New = false;//音声判別用
+                    string ID = (string)features.SelectToken("id");
+                    ExeLog($"[USGS]処理[{i}]:{ID}");
+                    if (i < 6)
+                        IDs[i] = ID;
+                    JToken propertie = features.SelectToken("properties");
+                    long Updated = (long)propertie.SelectToken("updated");
+                    DateTimeOffset Update = DateTimeOffset.FromUnixTimeMilliseconds(Updated).ToLocalTime();
+                    string UpdateTime = $"{Update:yyyy/MM/dd HH:mm:ss}";
+                    long LastUpdated = USGSHist.ContainsKey(ID) ? USGSHist[ID].Update : 0;
+                    ErrorText.Text = $"処理中…[{DatasCount - i}/{DatasCount}]";
+                    if (Updated != LastUpdated)//新規か更新
                     {
-                        Console.WriteLine("Font=null");
-                        PrivateFontCollection pfc = new PrivateFontCollection();
-                        pfc.AddFontFile("Font\\Koruri-Regular.ttf");
-                        F9 = new Font(pfc.Families[0], 9F);
-                        F9_5 = new Font(pfc.Families[0], 9.5F);
-                        F10 = new Font(pfc.Families[0], 10F);
-                        F11 = new Font(pfc.Families[0], 11F);
-                        F12 = new Font(pfc.Families[0], 12F);
-                        F20 = new Font(pfc.Families[0], 20F);
-                        F22 = new Font(pfc.Families[0], 22F);
-                        pfc.Dispose();
+                        ExeLog($"[USGS][{i}] 更新時刻変化検知({LastUpdated}->{Updated})");
+                        double? MMI = (double?)propertie.SelectToken("mmi");
+                        string MMISt = $"({MMI})".Replace("()", "-");//(1.2)/-
+                        string MaxInt = MMI < 1.5 ? "I" : MMI < 2.5 ? "II" : MMI < 3.5 ? "III" : MMI < 4.5 ? "IV" : MMI < 5.5 ? "V" : MMI < 6.5 ? "VI" : MMI < 7.5 ? "VII" : MMI < 8.5 ? "VIII" : MMI < 9.5 ? "IX" : MMI < 10.5 ? "X" : MMI < 11.5 ? "XI" : MMI >= 11.5 ? "XII" : "-";
+                        long Time = (long)propertie.SelectToken("time");
+                        DateTimeOffset DataTimeOff = DateTimeOffset.FromUnixTimeMilliseconds(Time).ToLocalTime();
+                        string TimeSt = Convert.ToString(DataTimeOff).Replace("+0", " UTC +0").Replace("+1", " UTC +1").Replace("-0", " UTC -0").Replace("+1", " UTC -1");
+                        string TimeJP = DataTimeOff.DateTime.ToString("d日HH時mm分ss秒");
+                        double Mag = (double)propertie.SelectToken("mag");
+                        string MagSt = Mag.ToString("0.0#");
+                        string MagType = (string)propertie.SelectToken("magType");
+                        double Lat = (double)features.SelectToken("geometry.coordinates[1]");
+                        double Lon = (double)features.SelectToken("geometry.coordinates[0]");
+                        Lat2String(Lat, out string LatStLongJP, out string LatDisplay);
+                        Lon2String(Lon, out string LonStLongJP, out string LonDisplay);
+                        string Alert = (string)propertie.SelectToken("alert");
+                        string AlertJP = Alert == null ? "アラート:-" : $"アラート:{Alert.Replace("green", "緑").Replace("yellow", "黄").Replace("orange", "オレンジ").Replace("red", "赤").Replace("pending", "保留中")}";
+                        double Depth = (double)features.SelectToken("geometry.coordinates[2]");
+                        string DepthSt = Depth == (int)Depth ? $"(深さ:{Depth}km?)" : $"深さ:約{(int)Math.Round(Depth, MidpointRounding.AwayFromZero)}km";
+                        string DepthLong = Depth == (int)Depth ? DepthSt : $"深さ:{Depth}km";
+                        string HypoJP = LL2FERCode.Name_JP(LL2FERCode.Code(Lat, Lon));
+                        string HypoEN = $"({(string)propertie.SelectToken("place")})";
+                        string URL = (string)propertie.SelectToken("url");
+                        LatestUSGSURL = URL;
+                        string LogText = $"USGS地震情報【{MagType}{MagSt}】{TimeSt}\n{HypoJP}{HypoEN}\n{LatDisplay},{LonDisplay}　{Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}　{AlertJP.Replace("アラート:-", "")}\n{URL}";
+                        string BouyomiText = $"USGS地震情報。{TimeJP}発生、マグニチュード{MagSt}、震源、{HypoJP.Replace(" ", "、").Replace("/", "、")}、{LatStLongJP}、{LonStLongJP}、深さ{DepthLong.Replace("深さ:", "")}。{$"推定最大改正メルカリ震度階級{MMISt.Replace("(", "").Replace(")", "")}。".Replace("推定最大改正メルカリ震度階級-。", "")}{AlertJP.Replace("アラート:-", "")}";
+                        string MagTypeWithSpace = MagType.Length == 3 ? MagType : MagType.Length == 2 ? "   " + MagType : "      " + MagType;
+                        History history = new History
+                        {
+                            URL = URL,
+                            Update = Updated,
+                            TweetID = 0,//更新の場合は上書き前に変更するから0でおｋ
+
+                            Display1 = $"{TimeSt} 発生  ID:{ID}\n{HypoJP}\n{LatDisplay}, {LonDisplay}   {DepthLong}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}",
+                            Display2 = $"{MagTypeWithSpace}",
+                            Display3 = $"{MagSt}",
+
+                            Time = Time,
+                            HypoJP = HypoJP,
+                            HypoEN = HypoEN,//()付く
+                            Lat = Lat,
+                            Lon = Lon,
+                            Depth = Depth,
+                            MagType = MagType,
+                            Mag = Mag,
+                            MMI = MMI,
+                            Alert = Alert
+                        };
+                        bool NewUpdt = false;
+                        if (!USGSHist.ContainsKey(ID))//Keyないと探したときエラーになるから別化
+                            NewUpdt = true;
+                        else
+                        {
+                            if (Settings.Default.Update_USGS_Time)
+                                if (USGSHist[ID].Time != history.Time)
+                                {
+                                    NewUpdt = true;
+                                    ExeLog($"[USGS]Time:{USGSHist[ID].Time}->{history.Time}");
+                                }
+                            if (Settings.Default.Update_USGS_HypoJP)
+                                if (USGSHist[ID].HypoJP != history.HypoJP)
+                                {
+                                    NewUpdt = true;
+                                    ExeLog($"[USGS]HypoJP:{USGSHist[ID].HypoJP}->{history.HypoJP}");
+                                }
+                            if (Settings.Default.Update_USGS_HypoEN)
+                                if (USGSHist[ID].HypoEN != history.HypoEN)
+                                {
+                                    NewUpdt = true;
+                                    ExeLog($"[USGS]HypoEN:{USGSHist[ID].HypoEN}->{history.HypoEN}");
+                                }
+                            if (Settings.Default.Update_USGS_LatLon)
+                                if (USGSHist[ID].Lat != history.Lat || USGSHist[ID].Lon != history.Lon)
+                                {
+                                    NewUpdt = true;
+                                    ExeLog($"[USGS]Lat:{USGSHist[ID].Lat}->{history.Lat}, Lon:{USGSHist[ID].Lon}->{history.Lon}");
+                                }
+                            if (Settings.Default.Update_USGS_Depth)
+                                if (USGSHist[ID].Depth != history.Depth)
+                                {
+                                    NewUpdt = true;
+                                    ExeLog($"[USGS]Depth:{USGSHist[ID].Depth}->{history.Depth}");
+                                }
+                            if (Settings.Default.Update_USGS_MagType)
+                                if (USGSHist[ID].MagType != history.MagType)
+                                {
+                                    NewUpdt = true;
+                                    ExeLog($"[USGS]MagType:{USGSHist[ID].MagType}->{history.MagType}");
+                                }
+                            if (Settings.Default.Update_USGS_Mag)
+                                if (USGSHist[ID].Mag != history.Mag)
+                                {
+                                    NewUpdt = true;
+                                    ExeLog($"[USGS]Mag:{USGSHist[ID].Mag}->{history.Mag}");
+                                }
+                            if (Settings.Default.Update_USGS_MMI)
+                                if (USGSHist[ID].MMI != history.MMI)
+                                {
+                                    NewUpdt = true;
+                                    ExeLog($"[USGS]MMI:{USGSHist[ID].MMI}->{history.MMI}");
+                                }
+                            if (Settings.Default.Update_USGS_Alert)
+                                if (USGSHist[ID].Alert != history.Alert)
+                                {
+                                    NewUpdt = true;
+                                    ExeLog($"[USGS]Alert:{USGSHist[ID].Alert}->{history.Alert}");
+                                }
+                            LogText = LogText.Replace("USGS地震情報", "USGS地震情報(更新)");
+                            BouyomiText = BouyomiText.Replace("USGS地震情報", "USGS地震情報、更新");
+                        }
+                        if (NewUpdt)
+                        {
+                            if (USGSHist.ContainsKey(ID))//更新
+                            {
+
+                                ExeLog($"[USGS]{ID}更新検知");
+                                history.TweetID = USGSHist[ID].TweetID;
+                                USGSHist[ID] = history;
+                            }
+                            else//new
+                            {
+                                ExeLog($"[USGS]{ID}初回");
+                                New = true;
+                                USGSHist.Add(ID, history);
+                            }
+                            LogSave("Log\\USGS\\M4.5+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", ID);
+                            SendSocket(LogText);
+                            if (SoundLevel < 1 && Settings.Default.Sound_45_Enable)//SoundLevel上昇+M4.5以上有効
+                                SoundLevel = New ? 2 : 1;
+                            if (Mag >= 6)
+                            {
+                                LogSave("Log\\USGS\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", ID);
+
+                                if (SoundLevel < 3 && Settings.Default.Sound_60_Enable)
+                                    SoundLevel = New ? 4 : 3;
+                                if (Mag >= 8)
+                                {
+                                    LogSave("Log\\USGS\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", ID);
+                                    if (SoundLevel < 5 && Settings.Default.Sound_80_Enable)
+                                        SoundLevel = New ? 6 : 5;
+                                }
+                            }
+                            if (i == 0)
+                                LatestUSGSText = LogText;
+                            if (Mag >= Settings.Default.Bouyomichan_LowerMagnitudeLimit || MMI >= Settings.Default.Bouyomichan_LowerMMILimit)
+                                Bouyomichan(BouyomiText);
+                            if (Mag >= Settings.Default.Tweet_LowerMagnitudeLimit || MMI >= Settings.Default.Tweet_LowerMMILimit)
+                                Tweet(LogText, "USGS", ID);
+                        }
+                        else
+                            ExeLog($"[USGS][{i}] 内容更新なし(更新:{UpdateTime})");
                     }
-                    catch (Exception ex)
+                }
+                switch (SoundLevel)
+                {
+                    case 1:
+                        Sound("M45u.wav");
+                        break;
+                    case 2:
+                        Sound("M45.wav");
+                        break;
+                    case 3:
+                        Sound("M60u.wav");
+                        break;
+                    case 4:
+                        Sound("M60.wav");
+                        break;
+                    case 5:
+                        Sound("M80u.wav");
+                        break;
+                    case 6:
+                        Sound("M80.wav");
+                        break;
+                }
+                while (WaitEMSCDraw)//初回のEMSCの描画を待機
+                    await Task.Delay(50);//小さすぎるとデッドロックみたいに動かなくなる
+                ErrorText.Text = "[USGS]描画中…";
+                Graphics g = Graphics.FromImage(bitmap_USGS);
+                g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 0, 0, 800, 1000);
+                g.DrawRectangle(new Pen(Color.FromArgb(200, 200, 200)), 0, 0, 800, 1000);
+                g.DrawString($"USGS地震情報(M4.5+)                                              Version:{Version}", new Font(font, 20), Brushes.White, 2, 2);
+                for (int i = 0; i < 6; i++)
+                {
+                    if (USGSHist.Count > i)//データ不足対処
                     {
-                        Console.WriteLine(ex);
+                        History hist = USGSHist[IDs[i]];
+                        Brush color = Mag2Brush(hist.Mag);
+                        g.FillRectangle(new SolidBrush(Alert2Color(hist.Alert)), 4, 40 + 160 * i, 792, 156);
+                        g.FillRectangle(new SolidBrush(Color.FromArgb(45, 45, 90)), 8, 44 + 160 * i, 784, 148);
+                        g.DrawString(hist.Display1, new Font(font, 19), color, 8, 44 + 160 * i);
+                        g.DrawString(hist.Display2, new Font(font, 19), color, 570, 154 + 160 * i);
+                        g.DrawString(hist.Display3, new Font(font, 50), color, 640, 110 + 160 * i);
                     }
-                Console.WriteLine(ErrorText.Font);
-                Console.WriteLine(F12);
-                Console.WriteLine(F9);
-                Font = F10;
-                USGS0.Font = F9;
-                USGS1.Font = F11;
-                USGS2.Font = F11;
-                USGS3.Font = F20;
-                USGS4.Font = F11;
-                USGS5.Font = F20;
-                USGS6.Font = F9;
-                ErrorText.Font = F12;
-                HistoryBack.Font = F10;
-                History11.Font = F9_5;
-                History12.Font = F10;
-                History13.Font = F22;
-                History21.Font = F9_5;
-                History22.Font = F10;
-                History23.Font = F22;
-                History31.Font = F9_5;
-                History32.Font = F10;
-                History33.Font = F22;
-                History41.Font = F9_5;
-                History42.Font = F10;
-                History43.Font = F22;
-                History51.Font = F9_5;
-                History52.Font = F10;
-                History53.Font = F22;
-                History61.Font = F9_5;
-                History62.Font = F10;
-                History63.Font = F22;
-                Console.WriteLine(ErrorText.Font);
-            }*/
+                    else
+                        g.FillRectangle(new SolidBrush(Color.FromArgb(45, 45, 90)), 4, 40 + 160 * i, 792, 156);
+                }
+                g = null;
+                g = Graphics.FromImage(bitmap);
+                g.DrawImage(bitmap_USGS, 800, 0, 800, 1000);
+                MainImage.BackgroundImage = null;
+                MainImage.BackgroundImage = bitmap;
+                g.Dispose();
+                ExeLog($"[USGS]ログ保持数:{USGSHist.Count}");
+                wc.Dispose();
+            }
+            catch (WebException ex)
+            {
+                ErrorText.Text = $"[USGS]ネットワークエラーが発生しました。内容:{ex.Message}";
+            }
+            catch (Exception ex)
+            {
+                LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main Version:{Version}\n{ex}");
+                ErrorText.Text = $"[USGS]エラーが発生しました。エラーログの内容を報告してください。内容:{ex.Message}";
+            }
+            if (!ErrorText.Text.Contains("エラー"))
+                ErrorText.Text = "";
+            NoFirst = true;
+            ExeLog("[USGS]処理終了");
         }
 
         /// <summary>
@@ -888,46 +619,66 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
         /// <param name="ID">地震ログ保存時用地震ID。</param>
         public static void LogSave(string SaveDirectory, string SaveText, string ID = "unknown")
         {
-            DateTime NowTime = DateTime.Now;
-            if (Directory.Exists("Log") == false)
-                Directory.CreateDirectory("Log");
-            if (!Directory.Exists(SaveDirectory))
-                Directory.CreateDirectory(SaveDirectory);
-            if (SaveDirectory == "Log")
-                File.WriteAllText($"Log\\log.txt", SaveText);
-            else if (SaveDirectory == "Log\\ErrorLog")
+            if (Settings.Default.Log_Enable)
             {
-                if (File.Exists($"Log\\ErrorLog\\{NowTime:yyyyMM}.txt"))
-                    SaveText += "\n--------------------------------------------------\n" + File.ReadAllText($"Log\\ErrorLog\\{NowTime:yyyyMM}.txt");
-                File.WriteAllText($"Log\\ErrorLog\\{NowTime:yyyyMM}.txt", SaveText);
-            }
-            else if (SaveDirectory.Contains("Log\\M"))
-            {
-                if (!Directory.Exists($"{SaveDirectory}\\{NowTime:yyyyMM}"))
-                    Directory.CreateDirectory($"{SaveDirectory}\\{NowTime:yyyyMM}");
-                if (!Directory.Exists($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:dd}"))
-                    Directory.CreateDirectory($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:dd}");
-                if (File.Exists($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:dd}\\{NowTime:yyyyMMdd}_{ID}.txt"))
-                    SaveText = File.ReadAllText($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:dd}\\{NowTime:yyyyMMdd}_{ID}.txt") + "\n--------------------------------------------------\n" + SaveText;
-                File.WriteAllText($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:dd}\\{NowTime:yyyyMMdd}_{ID}.txt", SaveText);
-            }
-            else
-            {
-                if (!Directory.Exists($"{SaveDirectory}\\{NowTime:yyyyMM}"))
-                    Directory.CreateDirectory($"{SaveDirectory}\\{NowTime:yyyyMM}");
-                if (File.Exists($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:yyyyMMdd}.txt"))
-                    SaveText = File.ReadAllText($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:yyyyMMdd}.txt") + "\n--------------------------------------------------\n" + SaveText;
-                File.WriteAllText($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:yyyyMMdd}.txt", SaveText);
+                try
+                {
+                    ExeLog($"[LogSave]ログ保存中…");
+                    DateTime NowTime = DateTime.Now;
+                    if (!Directory.Exists("Log"))
+                        Directory.CreateDirectory("Log");
+                    if (SaveDirectory.StartsWith("Log\\EMSC"))
+                        if (!Directory.Exists("Log\\EMSC"))
+                            Directory.CreateDirectory("Log\\EMSC");
+                    if (SaveDirectory.StartsWith("Log\\USGS"))
+                        if (!Directory.Exists("Log\\USGS"))
+                            Directory.CreateDirectory("Log\\USGS");
+                    if (!Directory.Exists(SaveDirectory))
+                        Directory.CreateDirectory(SaveDirectory);
+                    if (SaveDirectory == "Log")
+                        File.WriteAllText($"Log\\log.txt", SaveText);
+                    else if (SaveDirectory == "Log\\ErrorLog")
+                    {
+                        if (File.Exists($"Log\\ErrorLog\\{NowTime:yyyyMM}.txt"))
+                            SaveText += "\n--------------------------------------------------\n" + File.ReadAllText($"Log\\ErrorLog\\{NowTime:yyyyMM}.txt");
+                        File.WriteAllText($"Log\\ErrorLog\\{NowTime:yyyyMM}.txt", SaveText);
+                    }
+                    else if (SaveDirectory.StartsWith("Log\\USGS") || SaveDirectory.StartsWith("Log\\EMSC"))
+                    {
+                        if (!Directory.Exists($"{SaveDirectory}\\{NowTime:yyyyMM}"))
+                            Directory.CreateDirectory($"{SaveDirectory}\\{NowTime:yyyyMM}");
+                        if (!Directory.Exists($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:dd}"))
+                            Directory.CreateDirectory($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:dd}");
+                        if (File.Exists($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:dd}\\{NowTime:yyyyMMdd}_{ID}.txt"))
+                            SaveText = File.ReadAllText($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:dd}\\{NowTime:yyyyMMdd}_{ID}.txt") + "\n--------------------------------------------------\n" + SaveText;
+                        File.WriteAllText($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:dd}\\{NowTime:yyyyMMdd}_{ID}.txt", SaveText);
+                    }
+                    else
+                    {
+                        if (!Directory.Exists($"{SaveDirectory}\\{NowTime:yyyyMM}"))
+                            Directory.CreateDirectory($"{SaveDirectory}\\{NowTime:yyyyMM}");
+                        if (File.Exists($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:yyyyMMdd}.txt"))
+                            SaveText = File.ReadAllText($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:yyyyMMdd}.txt") + "\n--------------------------------------------------\n" + SaveText;
+                        File.WriteAllText($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:yyyyMMdd}.txt", SaveText);
+                    }
+                    ExeLog($"[LogSave]ログ保存成功");
+                }
+                catch (Exception ex)
+                {
+                    ExeLog($"[LogSave]ログ保存でエラーが発生:{ex.Message}");
+                }
             }
         }
+
         /// <summary>
         /// ツイートします。
         /// </summary>
         /// <param name="Text">ツイートするテキスト。</param>
-        /// <param name="ID">リプライ判別用ID。</param>
-        public async void Tweet(string Text, string ID)
+        /// <param name="source">データ元</param>
+        /// <param name="ID">リプライ判別用地震ID。</param>
+        public async void Tweet(string Text, string source, string ID)
         {
-            if (NoFirst)
+            if (NoFirst && Settings.Default.Tweet_Enable)
                 try
                 {
                     ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
@@ -941,41 +692,66 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                         throw new Exception("Tokenが正しくありません。");
                     }
                     Status status = new Status();
-                    if (Histories[ID].TweetID != 0)
-                        try
+
+                    if (source == "EMSC")
+                    {
+                        if (EMSCHist.TweetID != 0)
+                            try
+                            {
+                                ExeLog($"[Tweet]ツイート(リプライ)中…(ID:{EMSCHist.TweetID})");
+                                status = await tokens.Statuses.UpdateAsync(new { status = Text, in_reply_to_status_id = EMSCHist.TweetID });
+                            }
+                            catch
+                            {
+                                ExeLog($"[Tweet]ツイート(リプライ)失敗、リトライ中…");
+                                status = await tokens.Statuses.UpdateAsync(new { status = Text });
+                            }
+                        else
                         {
-                            ExeLog($"ツイート(リプライ)中…(ID:{Histories[ID].TweetID})");
-                            status = await tokens.Statuses.UpdateAsync(new { status = Text, in_reply_to_status_id = Histories[ID].TweetID });
-                        }
-                        catch
-                        {
-                            ExeLog($"ツイート(リプライ)失敗、リトライ中…");
+                            ExeLog($"[Tweet]ツイート中…");
                             status = await tokens.Statuses.UpdateAsync(new { status = Text });
                         }
-                    else
-                    {
-                        ExeLog($"ツイート中…");
-                        status = await tokens.Statuses.UpdateAsync(new { status = Text });
+                        EMSCHist.TweetID = status.Id;
                     }
-                    Histories[ID].TweetID = status.Id;
-                    ExeLog($"ツイート成功(ID:{status.Id})");
+                    else if (source == "USGS")
+                    {
+                        if (USGSHist[ID].TweetID != 0)
+                            try
+                            {
+                                ExeLog($"[Tweet]ツイート(リプライ)中…(ID:{USGSHist[ID].TweetID})");
+                                status = await tokens.Statuses.UpdateAsync(new { status = Text, in_reply_to_status_id = USGSHist[ID].TweetID });
+                            }
+                            catch
+                            {
+                                ExeLog($"[Tweet]ツイート(リプライ)失敗、リトライ中…");
+                                status = await tokens.Statuses.UpdateAsync(new { status = Text });
+                            }
+                        else
+                        {
+                            ExeLog($"[Tweet]ツイート中…");
+                            status = await tokens.Statuses.UpdateAsync(new { status = Text });
+                        }
+                        USGSHist[ID].TweetID = status.Id;
+                    }
+                    ExeLog($"[Tweet]ツイート成功(ID:{status.Id})");
                 }
                 catch (Exception ex)
                 {
-                    ErrorText.Text = $"ツイートに失敗しました。わからない場合エラーログの内容を報告してください。内容:" + ex.Message;
+                    ErrorText.Text = $"ツイートに失敗しました。わからない場合エラーログの内容を報告してください。内容:{ex.Message}";
                     LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Tweet Version:{Version}\n{ex}");
                 }
         }
+
         /// <summary>
         /// Socket通信で送信します。
         /// </summary>
         /// <param name="Text">送信する文。</param>
         public void SendSocket(string Text)
         {
-            if (NoFirst)
+            if (NoFirst && Settings.Default.Socket_Enable)
                 try
                 {
-                    ExeLog($"Socket送信中…({Settings.Default.Socket_Host}:{Settings.Default.Socket_Port})");
+                    ExeLog($"[SendSocket]Socket送信中…({Settings.Default.Socket_Host}:{Settings.Default.Socket_Port})");
                     IPEndPoint iPEndPoint = new IPEndPoint(IPAddress.Parse(Settings.Default.Socket_Host), Settings.Default.Socket_Port);
                     using (TcpClient tcpClient = new TcpClient())
                     {
@@ -987,24 +763,25 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                             networkStream.Write(Bytes, 0, Bytes.Length);
                         }
                     }
-                    ExeLog($"Socket送信成功");
+                    ExeLog($"[SendSocket]Socket送信成功");
                 }
                 catch (Exception ex)
                 {
-                    ErrorText.Text = $"Socket送信に失敗しました。わからない場合エラーログの内容を報告してください。内容:" + ex.Message;
+                    ErrorText.Text = $"Socket送信に失敗しました。わからない場合エラーログの内容を報告してください。内容:{ex.Message}";
                     LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Socket Version:{Version}\n{ex}");
                 }
         }
+
         /// <summary>
         /// 棒読みちゃんに読み上げ指令を送ります。
         /// </summary>
         /// <param name="Text">読み上げさせる文。</param>
         public void Bouyomichan(string Text)
         {
-            if (NoFirst)
+            if (NoFirst && Settings.Default.Bouyomichan_Enable)
                 try
                 {
-                    ExeLog($"棒読みちゃん送信中…");
+                    ExeLog($"[Bouyomichan]棒読みちゃん送信中…");
                     byte[] Message = Encoding.UTF8.GetBytes(Text);
                     int Length = Message.Length;
                     byte Code = 0;
@@ -1026,14 +803,42 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                         BinaryWriter.Write(Length);
                         BinaryWriter.Write(Message);
                     }
-                    ExeLog($"棒読みちゃん送信成功");
+                    ExeLog($"[Bouyomichan]棒読みちゃん送信成功");
                 }
                 catch (Exception ex)
                 {
-                    ErrorText.Text = $"棒読みちゃんへの送信に失敗しました。わからない場合エラーログの内容を報告してください。内容:" + ex.Message;
+                    ErrorText.Text = $"棒読みちゃんへの送信に失敗しました。わからない場合エラーログの内容を報告してください。内容:{ex.Message}";
                     LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Bouyomichan Version:{Version}\n{ex}");
                 }
         }
+
+        /// <summary>
+        /// WebHookを送信します。
+        /// </summary>
+        /// <param name="Text">送信するテキスト。</param>
+        public async void WebHook(string Text)
+        {
+            if (NoFirst && Settings.Default.WebHook_Enable)
+                try
+                {
+                    ExeLog($"[WebHook]WebHook送信中…");
+                    HttpClient hc = new HttpClient();
+                    Dictionary<string, string> strs = new Dictionary<string, string>()
+                    {
+                        { "content", Text }
+                    };
+                    Settings.Default.WebHook_URL = "";
+                    await hc.PostAsync(Settings.Default.WebHook_URL, new FormUrlEncodedContent(strs));
+                    hc.Dispose();
+                    ExeLog($"[WebHook]WebHook送信成功");
+                }
+                catch (Exception ex)
+                {
+                    ErrorText.Text = $"WebHookの送信に失敗しました。わからない場合エラーログの内容を報告してください。内容:{ex.Message}";
+                    LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,WebHook Version:{Version}\n{ex}");
+                }
+        }
+
         /// <summary>
         /// 実行ログを保存・表示します。
         /// </summary>
@@ -1045,17 +850,17 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 ExeLogs += $"{DateTime.Now:HH:mm:ss.ffff} {Text}\n";
             Console.WriteLine(Text);
         }
+
         /// <summary>
         /// 設定を読み込みます。
         /// </summary>
         /// <remarks>即時サイズ変更を行います。</remarks>
         public void SettingReload()
         {
-            ExeLog($"設定読み込み開始");
+            ExeLog($"[SettingReload]設定読み込み開始");
             Settings.Default.Reload();
-            Configuration Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
-            if (File.Exists(Config.FilePath))
-                File.Copy(Config.FilePath, "UserSetting.xml", true);
+            if (File.Exists(config.FilePath))
+                File.Copy(config.FilePath, "UserSetting.xml", true);
             if (Settings.Default.Display_HideHistory)
                 if (Settings.Default.Display_HideHistoryMap)
                     ClientSize = new Size(400, 100);
@@ -1064,9 +869,9 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             else
                 ClientSize = new Size(800, 500);
             ExeLogAutoDelete.Interval = Settings.Default.Log_DeleteTime * 1000;
-            ExeLog($"設定読み込み終了");
+            ExeLog($"[SettingReload]設定読み込み終了");
         }
-        public static SoundPlayer Player = null;
+
         /// <summary>
         /// 音声を再生します。
         /// </summary>
@@ -1076,7 +881,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             if (NoFirst)
                 try
                 {
-                    ExeLog($"音声再生開始(Sound\\{SoundFile})");
+                    ExeLog($"[Sound]音声再生開始(Sound\\{SoundFile})");
                     if (Player != null)
                     {
                         Player.Stop();
@@ -1085,86 +890,115 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                     }
                     Player = new SoundPlayer($"Sound\\{SoundFile}");
                     Player.Play();
-                    ExeLog($"音声再生成功");
+                    ExeLog($"[Sound]音声再生成功");
                 }
                 catch (Exception ex)
                 {
                     LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Sound Version:{Version}\n{ex}");
                 }
         }
+
         private void RCsetting_Click(object sender, EventArgs e)
         {
-            ExeLog($"設定form表示");
+            ExeLog($"[RC]設定表示");
             SettingsForm Settings = new SettingsForm();
             Settings.FormClosed += SettingForm_FormClosed;//閉じたとき呼び出し
             Settings.Show();
         }
+
         private void SettingForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            ExeLog($"設定form終了");
+            ExeLog($"[RC]設定終了");
             SettingReload();
             NoFirst = false;//処理量増加時用
             ErrorText.Text = "設定を再読み込みしました。一部の設定は情報受信または再起動が必要です。";
         }
+
         private void RCusgsmap_Click(object sender, EventArgs e)
         {
             Process.Start("https://earthquake.usgs.gov/earthquakes/map/");
         }
+
         private void RCusgsthis_Click(object sender, EventArgs e)
         {
-            Process.Start(LatestURL);
+            Process.Start(LatestUSGSURL);
         }
+
         private void RCreboot_Click(object sender, EventArgs e)
         {
             Application.Restart();
         }
+
         private void RCexit_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
+
         private void RCgithub_Click(object sender, EventArgs e)
         {
             Process.Start("https://github.com/Ichihai1415/WorldQuakeViewer");
         }
+
         private void RCtwitter_Click(object sender, EventArgs e)
         {
             Process.Start("https://twitter.com/ProjectS31415_1");
         }
+
         private void RCtsunami_Click(object sender, EventArgs e)
         {
             Process.Start("https://www.tsunami.gov/");
         }
+
         private void RCinfopage_Click(object sender, EventArgs e)
         {
             Process.Start("https://Ichihai1415.github.io/programs/released/WQV");
         }
+
         private void RCMapEWSC_Click(object sender, EventArgs e)
         {
-            Process.Start("https://www.emsc-csem.org/#2w");
+            Process.Start("https://www.emsc-csem.org");
         }
+
         private void RCEarlyEst_Click(object sender, EventArgs e)
         {
             Process.Start("http://early-est.rm.ingv.it/warning.html");
         }
+
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            ExeLog($"実行終了");
+            ExeLog($"[Main]実行終了");
             LogSave("Log", ExeLogs);
         }
+
         private void RC1CacheClear_Click(object sender, EventArgs e)
         {
             DialogResult allow = MessageBox.Show("動作ログ、地震ログを消去してよろしいですか？消去した場合処理は起動時と同じようになります。", "確認", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
             if (allow == DialogResult.Cancel)
                 return;
             ExeLogs = "";
-            Histories = new Dictionary<string, History>();
+            USGSHist = new Dictionary<string, History>();
             NoFirst = false;
         }
 
         private void RC1ExeLogOpen_Click(object sender, EventArgs e)
         {
-            LogSave("Log", ExeLogs);
-            Process.Start("notepad.exe", "Log\\log.txt");
+            if (Settings.Default.Log_Enable)
+            {
+                LogSave("Log", ExeLogs);
+                Process.Start("notepad.exe", "Log\\log.txt");
+            }
+            else
+            {
+                DialogResult dr = MessageBox.Show("動作ログの保存がオフになっています。有効にしますか？", "確認", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+                if (dr == DialogResult.OK)
+                {
+                    Settings.Default.Log_Enable = true;
+                    Settings.Default.Save();
+                    Configuration Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
+                    File.Copy(Config.FilePath, "UserSetting.xml", true);
+                    ExeLog($"[RC]動作ログの保存をオンにしました");
+                }
+            }
         }
 
         private void ExeLogAutoDelete_Tick(object sender, EventArgs e)//規定は3600000ms(1h)
@@ -1180,7 +1014,147 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
 
         private void RC1TextCopy_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(LatestText);
+            Clipboard.SetText(LatestUSGSText);
+        }
+
+        public static Brush Mag2Brush(double Mag)
+        {
+            if (Mag < 6)
+                return Brushes.White;
+            else if (Mag < 8)
+                return Brushes.Yellow;
+            else
+                return Brushes.Red;
+        }
+
+        public static Color Alert2Color(string Alert)
+        {
+            switch (Alert)
+            {
+                case "green":
+                    return Color.Green;
+                case "yellow":
+                    return Color.Yellow;
+                case "orange":
+                    return Color.Orange;
+                case "red":
+                    return Color.Red;
+                case "pending":
+                    return Color.DimGray;
+                default:
+                    return Color.FromArgb(45, 45, 90);
+            }
+        }
+
+        /// <summary>
+        /// 緯度を様々なフォーマットに変換します。
+        /// </summary>
+        /// <remarks>指定ミスに注意してください。</remarks>
+        /// <param name="Lat">経度</param>
+        /// <param name="LatStLongJP">(string) 設定により 北緯{###.##…}度 または 北緯{##}度{##}分{##}秒 </param>
+        /// <param name="LatDisplay">(string) 設定により {###.00}°N または {###}ﾟ{##}'{##}"N </param>
+        public static void Lat2String(double Lat, out string LatStLongJP, out string LatDisplay)
+        {
+            double LatShort = Math.Round(Lat, 2, MidpointRounding.AwayFromZero);
+            string LatStDecimal = Lat > 0 ? $"{LatShort}°N" : $"{-LatShort}°S";
+            TimeSpan LatTime = TimeSpan.FromHours(Lat);
+            string LatStShort = Lat > 0 ? $"{(int)Lat}ﾟ{LatTime.Minutes}'N" : $"{(int)-Lat}ﾟ{-LatTime.Minutes}'S";
+            LatStLongJP = Settings.Default.Text_LatLonDecimal ? Lat > 0 ? $"北緯{Lat}度" : $"南緯{-Lat}度" : Lat > 0 ? $"北緯{(int)Lat}度{LatTime.Minutes}分{LatTime.Seconds}秒" : $"南緯{(int)-Lat}度{-LatTime.Minutes}分{-LatTime.Seconds}秒";
+            LatDisplay = Settings.Default.Text_LatLonDecimal ? LatStDecimal : LatStShort;
+        }
+
+        /// <summary>
+        /// 緯度を様々なフォーマットに変換します。
+        /// </summary>
+        /// <remarks>指定ミスに注意してください。</remarks>
+        /// <param name="Lat">経度</param>
+        /// <param name="LatShort">(double) ###.00</param>
+        /// <param name="LatStDecimal">(string) {###.00}°N</param>
+        /// <param name="LatStShort">(string) {###}ﾟ{##}'N</param>
+        /// <param name="LatStLong">(string) {###}ﾟ{##}'{##}"N</param>
+        /// <param name="LatStLongJP">(string) 設定により 北緯{###.##…}度 または 北緯{##}度{##}分{##}秒 </param>
+        /// <param name="LatDisplay">(string) 設定により<paramref name="LatStDecimal"/>または<paramref name="LatStShort"/></param>
+        public static void Lat2String(double Lat, out double LatShort, out string LatStDecimal, out string LatStShort, out string LatStLong, out string LatStLongJP, out string LatDisplay)
+        {
+            //Lat2String(Lat, out double LatShort, out string LatStDecimal, out string LatStShort, out string LatStLong, out string LatStLongJP, out string LatDisplay);
+            LatShort = Math.Round(Lat, 2, MidpointRounding.AwayFromZero);
+            LatStDecimal = Lat > 0 ? $"{LatShort}°N" : $"{-LatShort}°S";
+            TimeSpan LatTime = TimeSpan.FromHours(Lat);
+            LatStShort = Lat > 0 ? $"{(int)Lat}ﾟ{LatTime.Minutes}'N" : $"{(int)-Lat}ﾟ{-LatTime.Minutes}'S";
+            LatStLong = Lat > 0 ? $"{(int)Lat}ﾟ{LatTime.Minutes}'{LatTime.Seconds}\"N" : $"{(int)-Lat} ﾟ {-LatTime.Minutes} '";
+            LatStLongJP = Settings.Default.Text_LatLonDecimal ? Lat > 0 ? $"北緯{Lat}度" : $"南緯{-Lat}度" : Lat > 0 ? $"北緯{(int)Lat}度{LatTime.Minutes}分{LatTime.Seconds}秒" : $"南緯{(int)-Lat}度{-LatTime.Minutes}分{-LatTime.Seconds}秒";
+            LatDisplay = Settings.Default.Text_LatLonDecimal ? LatStDecimal : LatStShort;
+        }
+
+        /// <summary>
+        /// 経度を様々なフォーマットに変換します。
+        /// </summary>
+        /// <remarks>指定ミスに注意してください。</remarks>
+        /// <param name="Lon">経度</param>
+        /// <param name="LonStLongJP">(string) 設定により 東経{###.##…}度 または 東経{##}度{##}分{##}秒 </param>
+        /// <param name="LonDisplay">(string) 設定により {###.00}°E または {###}ﾟ{##}'{##}"E</param>
+        public static void Lon2String(double Lon, out string LonStLongJP, out string LonDisplay)
+        {
+            double LonShort = Math.Round(Lon, 2, MidpointRounding.AwayFromZero);
+            string LonStDecimal = Lon > 0 ? $"{LonShort}°E" : $"{-LonShort}°W";
+            TimeSpan LonTime = TimeSpan.FromHours(Lon);
+            string LonStShort = Lon > 0 ? $"{(int)Lon}ﾟ{LonTime.Minutes}'E" : $"{(int)-Lon}ﾟ{-LonTime.Minutes}'W";
+            LonStLongJP = Settings.Default.Text_LatLonDecimal ? Lon > 0 ? $"東経{Lon}度" : $"西経{-Lon}度" : Lon > 0 ? $"東経{(int)Lon}度{LonTime.Minutes}分{LonTime.Seconds}秒" : $"西経{(int)-Lon}度{-LonTime.Minutes}分{-LonTime.Seconds}秒";
+            LonDisplay = Settings.Default.Text_LatLonDecimal ? LonStDecimal : LonStShort;
+        }
+
+        /// <summary>
+        /// 経度を様々なフォーマットに変換します。
+        /// </summary>
+        /// <remarks>指定ミスに注意してください。</remarks>
+        /// <param name="Lon">経度</param>
+        /// <param name="LonShort">(double) ###.00</param>
+        /// <param name="LonStDecimal">(string) {###.00}°E</param>
+        /// <param name="LonStShort">(string) {###}ﾟ{##}'E</param>
+        /// <param name="LonStLong">(string) {###}ﾟ{##}'{##}"E</param>
+        /// <param name="LonStLongJP">(string) 設定により 東経{###.##…}度 または 東経{##}度{##}分{##}秒 </param>
+        /// <param name="LonDisplay">(string) 設定により<paramref name="LonStDecimal"/>または<paramref name="LonStShort"/></param>
+        public static void Lon2String(double Lon, out double LonShort, out string LonStDecimal, out string LonStShort, out string LonStLong, out string LonStLongJP, out string LonDisplay)
+        {
+            //Lon2String(Lon, out double LonShort, out string LonStDecimal, out string LonStShort, out string LonStLong, out string LonStLongJP, out string LonDisplay);
+            LonShort = Math.Round(Lon, 2, MidpointRounding.AwayFromZero);
+            LonStDecimal = Lon > 0 ? $"{LonShort}°E" : $"{-LonShort}°W";
+            TimeSpan LonTime = TimeSpan.FromHours(Lon);
+            LonStShort = Lon > 0 ? $"{(int)Lon}ﾟ{LonTime.Minutes}'E" : $"{(int)-Lon}ﾟ{-LonTime.Minutes}'W";
+            LonStLong = Lon > 0 ? $"{(int)Lon}ﾟ{LonTime.Minutes}'{LonTime.Seconds}\"E" : $"{(int)-Lon} ﾟ {-LonTime.Minutes} '";
+            LonStLongJP = Settings.Default.Text_LatLonDecimal ? Lon > 0 ? $"東経{Lon}度" : $"西経{-Lon}度" : Lon > 0 ? $"東経{(int)Lon}度{LonTime.Minutes}分{LonTime.Seconds}秒" : $"西経{(int)-Lon}度{-LonTime.Minutes}分{-LonTime.Seconds}秒";
+            LonDisplay = Settings.Default.Text_LatLonDecimal ? LonStDecimal : LonStShort;
+        }
+
+        /// <summary>
+        /// 画像ファイルがない場合リソースからコピーします。
+        /// </summary>
+        /// <param name="FileName">ファイル名。</param>
+        /// <exception cref="Exception">画像指定が間違っている場合。</exception>
+        public static void ImageCheck(string FileName)
+        {
+            if (!Directory.Exists("Image"))
+            {
+                Directory.CreateDirectory("Image");
+                ExeLog($"[ImageCheck]Imageフォルダを作成しました");
+            }
+            if (!File.Exists($"Image\\{FileName}"))
+            {
+                Bitmap image;
+                switch (FileName)
+                {
+                    case "map.png":
+                        image = Resources.map;
+                        break;
+                    case "hypo.png":
+                        image = Resources.hypo;
+                        break;
+                    default:
+                        throw new Exception("画像のコピーに失敗しました。", new ArgumentException($"指定された画像({FileName})はResourcesにありません。"));
+                }
+                image.Save($"Image\\{FileName}", ImageFormat.Png);
+                ExeLog($"[ImageCheck]画像(\"Image\\{FileName}\")をコピーしました");
+            }
         }
     }
 }
