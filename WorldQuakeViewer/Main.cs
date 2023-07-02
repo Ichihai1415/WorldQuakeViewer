@@ -292,7 +292,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 g.DrawString(MagTypeWithSpace, new Font(font, 20), color, 590, 160);
                 g.DrawString(MagSt, new Font(font, 50), color, 670, 100);
                 g.DrawImage(bitmap_USGS, 800, 0, 800, 1000);
-                if (!NoFirst)//初回
+                if (!NoFirst && WaitEMSCDraw)//初回
                 {
                     g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 800, 0, 800, 1000);
                     g.DrawRectangle(new Pen(Color.FromArgb(200, 200, 200)), 800, 0, 800, 1000);
