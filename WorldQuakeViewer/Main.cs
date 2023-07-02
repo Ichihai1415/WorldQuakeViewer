@@ -14,6 +14,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using WorldQuakeViewer.Properties;
 
@@ -27,6 +28,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
         public static int AccessedUSGS = 0;
         public string LatestURL = "";
         public static bool NoFirst = false;//最初はツイートとかしない
+        public static bool WaitEMSCDraw = true;//最初の描画を待機(USGS用)
         public static string ExeLogs = "";
         public static History EMSCHist = new History();
         public static Dictionary<string, History> USGSHist = new Dictionary<string, History>();//EQID,Data
@@ -85,6 +87,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             ErrorText.Text = "設定の読み込みが完了しました。";
             ExeLog($"[Main]設定読み込み完了");
             EMSCget.Enabled = true;
+            USGSget.Enabled = true;
         }
 
         private async void EMSCget_Tick(object sender, EventArgs e)//TODO:処理を複数にするか？(処理自体は最新のだけでいい)
@@ -92,11 +95,13 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             ExeLog($"[EMSC]取得開始");
             //次の0/30秒までの時間を計算
             DateTime now = DateTime.Now;
-            DateTime Next15Second = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0).AddMinutes(1);
-            DateTime Next45Second = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 30);
-            if (now.Second >= 29)//念のため29にしとく
-                Next45Second = Next45Second.AddMinutes(1);
-            EMSCget.Interval = (int)Math.Max(10000, Math.Min((Next15Second - now).TotalMilliseconds, (Next45Second - now).TotalMilliseconds));
+            DateTime Next0Second = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0).AddMinutes(1);
+            DateTime Next30Second = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 30);
+            if (now.Second >= 59)//早いと59秒になるため
+                Next0Second = Next0Second.AddMinutes(1);
+            if (now.Second >= 29)//早いと29秒になるため
+                Next30Second = Next30Second.AddMinutes(1);
+            EMSCget.Interval = (int)Math.Max(-1, Math.Min((Next0Second - now).TotalMilliseconds, (Next30Second - now).TotalMilliseconds));
             ExeLog($"[EMSC]次回実行まであと{EMSCget.Interval}ms");
             try
             {
@@ -146,6 +151,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 {
                     URL = URL,
                     TweetID = 0,//更新の場合は上書き前に変更するから0でおｋ
+                    ID = id,
 
                     Time = Time_long,
                     HypoJP = hypoJP,
@@ -286,10 +292,11 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 g.DrawString(MagTypeWithSpace, new Font(font, 20), color, 590, 160);
                 g.DrawString(MagSt, new Font(font, 50), color, 670, 100);
                 g.DrawImage(bitmap_USGS, 800, 0, 800, 1000);
-                if (!NoFirst)
+                if (!NoFirst)//初回
                 {
                     g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 800, 0, 800, 1000);
                     g.DrawRectangle(new Pen(Color.FromArgb(200, 200, 200)), 800, 0, 800, 1000);
+                    WaitEMSCDraw = false;
                 }
                 ExeLog($"[EMSC]描画完了");
 
@@ -310,7 +317,6 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             if (!ErrorText.Text.Contains("エラー"))
                 ErrorText.Text = "";
             NoFirst = true;
-            USGSget.Enabled = true;
             ExeLog("[EMSC]処理終了");
         }
 
@@ -321,9 +327,9 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             DateTime now = DateTime.Now;
             DateTime Next15Second = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 15);
             DateTime Next45Second = Next15Second.AddSeconds(30);
-            if (now.Second >= 14)//念のため14にしとく
+            if (now.Second >= 14)//早いと14秒になるため
                 Next15Second = Next15Second.AddMinutes(1);
-            if (now.Second >= 44)//念のため44にしとく
+            if (now.Second >= 44)//早いと44秒になるため
                 Next45Second = Next45Second.AddMinutes(1);
             USGSget.Interval = (int)Math.Max(10000, Math.Min((Next15Second - now).TotalMilliseconds, (Next45Second - now).TotalMilliseconds));
             ExeLog($"[USGS]次回実行まであと{USGSget.Interval}ms");
@@ -510,6 +516,8 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                             ExeLog($"[USGS][{i}] 内容更新なし(更新:{UpdateTime})");
                     }
                 }
+                while (WaitEMSCDraw)//初回のEMSCの描画を待機
+                    await Task.Delay(50);//小さすぎるとデッドロックみたいに動かなくなる
                 ErrorText.Text = "[USGS]描画中…";
                 Graphics g = Graphics.FromImage(bitmap_USGS);
                 g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 0, 0, 800, 1000);
