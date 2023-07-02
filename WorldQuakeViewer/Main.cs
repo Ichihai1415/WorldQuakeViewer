@@ -19,9 +19,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WorldQuakeViewer.Properties;
 
-namespace WorldQuakeViewer
+namespace WorldQuakeViewer//TODO:設定Formの作り直し
 {
-    public partial class MainForm : Form
+    public partial class MainForm : Form//TODO:設定の分割(USGSとEMSC)
     {
         public static readonly string Version = "1.1.0α6";//こことアセンブリを変える
         public static DateTime StartTime = new DateTime();
@@ -49,7 +49,7 @@ namespace WorldQuakeViewer
 
         private void MainForm_Load(object sender, EventArgs e)//ExeLog($"");
         {
-            ExeLog($"[Main]起動処理開始");
+            ExeLog($"[Main]起動処理開始");//TODO:Soundとともにリソースにできたらする
             StartTime = DateTime.Now;
             ErrorText.Text = "フォント読み込み中…";
             try
@@ -97,7 +97,7 @@ namespace WorldQuakeViewer
             USGSget.Enabled = true;
         }
 
-        private async void EMSCget_Tick(object sender, EventArgs e)//TODO:処理を複数にするか？(処理自体は最新のだけでいい)
+        private async void EMSCget_Tick(object sender, EventArgs e)//TODO:取得頻度を2/1mだけでなく1/1mでもにする？
         {
             ExeLog($"[EMSC]取得開始");
             //次の0/30秒までの時間を計算
@@ -124,7 +124,7 @@ namespace WorldQuakeViewer
                 wc.Dispose();
                 ExeLog($"[EMSC]処理開始");
                 AccessedEMSC++;
-                string[] texts = text.Split('\n')[1].Split('|');
+                string[] texts = text.Split('\n')[1].Split('|');//TODO:処理を複数にするか？(処理自体は最新のだけでいい)
                 string time = texts[1];
                 DateTime Time = DateTime.Parse(time);
                 long Time_long = Time.Ticks;
