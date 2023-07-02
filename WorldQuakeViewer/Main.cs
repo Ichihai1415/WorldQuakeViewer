@@ -345,7 +345,6 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
             }
             if (!ErrorText.Text.Contains("エラー"))
                 ErrorText.Text = "";
-            NoFirst = true;
             ExeLog("[EMSC]処理終了");
         }
 
@@ -827,7 +826,8 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                     {
                         { "content", Text }
                     };
-                    Settings.Default.WebHook_URL = "";
+                    if (File.Exists("WebHookURL.txt"))//仮
+                        Settings.Default.WebHook_URL = File.ReadAllText("WebHookURL.txt");
                     await hc.PostAsync(Settings.Default.WebHook_URL, new FormUrlEncodedContent(strs));
                     hc.Dispose();
                     ExeLog($"[WebHook]WebHook送信成功");
