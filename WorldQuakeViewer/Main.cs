@@ -11,6 +11,7 @@ using System.Drawing.Text;
 using System.IO;
 using System.Media;
 using System.Net;
+using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -231,8 +232,10 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 {
                     EMSCHist = history;
                     LogSave("Log\\EMSC\\M4.5+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", id);
-                    if (Settings.Default.Socket_Enable)
-                        SendSocket(LogText);
+                    SendSocket(LogText);
+
+                    WebHook(LogText);
+
                     if (SoundLevel < 1 && Settings.Default.Sound_45_Enable)//SoundLevel上昇+M4.5以上有効
                         SoundLevel = New ? 2 : 1;
                     if (Mag >= 6)
@@ -251,11 +254,9 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                     if (i == 0)
                         LatestEMSCText = LogText;
                     if (Mag >= Settings.Default.Bouyomichan_LowerMagnitudeLimit)
-                        if (Settings.Default.Bouyomichan_Enable)
-                            Bouyomichan(BouyomiText);
+                        Bouyomichan(BouyomiText);
                     if (Mag >= Settings.Default.Tweet_LowerMagnitudeLimit)
-                        if (Settings.Default.Tweet_Enable)
-                            Tweet(LogText, "EMSC", id);
+                        Tweet(LogText, "EMSC", id);
                 }
                 else
                     ExeLog($"[EMSC][{i}] 内容更新なし");
@@ -489,8 +490,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                                 USGSHist.Add(ID, history);
                             }
                             LogSave("Log\\USGS\\M4.5+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", ID);
-                            if (Settings.Default.Socket_Enable)
-                                SendSocket(LogText);
+                            SendSocket(LogText);
                             if (SoundLevel < 1 && Settings.Default.Sound_45_Enable)//SoundLevel上昇+M4.5以上有効
                                 SoundLevel = New ? 2 : 1;
                             if (Mag >= 6)
@@ -509,11 +509,9 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                             if (i == 0)
                                 LatestUSGSText = LogText;
                             if (Mag >= Settings.Default.Bouyomichan_LowerMagnitudeLimit || MMI >= Settings.Default.Bouyomichan_LowerMMILimit)
-                                if (Settings.Default.Bouyomichan_Enable)
-                                    Bouyomichan(BouyomiText);
+                                Bouyomichan(BouyomiText);
                             if (Mag >= Settings.Default.Tweet_LowerMagnitudeLimit || MMI >= Settings.Default.Tweet_LowerMMILimit)
-                                if (Settings.Default.Tweet_Enable)
-                                    Tweet(LogText, "USGS", ID);
+                                Tweet(LogText, "USGS", ID);
                         }
                         else
                             ExeLog($"[USGS][{i}] 内容更新なし(更新:{UpdateTime})");
@@ -586,42 +584,54 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
         /// <param name="ID">地震ログ保存時用地震ID。</param>
         public static void LogSave(string SaveDirectory, string SaveText, string ID = "unknown")
         {
-            DateTime NowTime = DateTime.Now;
-            if (!Directory.Exists("Log"))
-                Directory.CreateDirectory("Log");
-            if (SaveDirectory.StartsWith("Log\\EMSC"))
-                if (!Directory.Exists("Log\\EMSC"))
-                    Directory.CreateDirectory("Log\\EMSC");
-            if (SaveDirectory.StartsWith("Log\\USGS"))
-                if (!Directory.Exists("Log\\USGS"))
-                    Directory.CreateDirectory("Log\\USGS");
-            if (!Directory.Exists(SaveDirectory))
-                Directory.CreateDirectory(SaveDirectory);
-            if (SaveDirectory == "Log")
-                File.WriteAllText($"Log\\log.txt", SaveText);
-            else if (SaveDirectory == "Log\\ErrorLog")
+            if (Settings.Default.Log_Enable)
             {
-                if (File.Exists($"Log\\ErrorLog\\{NowTime:yyyyMM}.txt"))
-                    SaveText += "\n--------------------------------------------------\n" + File.ReadAllText($"Log\\ErrorLog\\{NowTime:yyyyMM}.txt");
-                File.WriteAllText($"Log\\ErrorLog\\{NowTime:yyyyMM}.txt", SaveText);
-            }
-            else if (SaveDirectory.StartsWith("Log\\USGS") || SaveDirectory.StartsWith("Log\\EMSC"))
-            {
-                if (!Directory.Exists($"{SaveDirectory}\\{NowTime:yyyyMM}"))
-                    Directory.CreateDirectory($"{SaveDirectory}\\{NowTime:yyyyMM}");
-                if (!Directory.Exists($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:dd}"))
-                    Directory.CreateDirectory($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:dd}");
-                if (File.Exists($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:dd}\\{NowTime:yyyyMMdd}_{ID}.txt"))
-                    SaveText = File.ReadAllText($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:dd}\\{NowTime:yyyyMMdd}_{ID}.txt") + "\n--------------------------------------------------\n" + SaveText;
-                File.WriteAllText($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:dd}\\{NowTime:yyyyMMdd}_{ID}.txt", SaveText);
-            }
-            else
-            {
-                if (!Directory.Exists($"{SaveDirectory}\\{NowTime:yyyyMM}"))
-                    Directory.CreateDirectory($"{SaveDirectory}\\{NowTime:yyyyMM}");
-                if (File.Exists($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:yyyyMMdd}.txt"))
-                    SaveText = File.ReadAllText($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:yyyyMMdd}.txt") + "\n--------------------------------------------------\n" + SaveText;
-                File.WriteAllText($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:yyyyMMdd}.txt", SaveText);
+                try
+                {
+                    ExeLog($"[LogSave]ログ保存中…");
+                    DateTime NowTime = DateTime.Now;
+                    if (!Directory.Exists("Log"))
+                        Directory.CreateDirectory("Log");
+                    if (SaveDirectory.StartsWith("Log\\EMSC"))
+                        if (!Directory.Exists("Log\\EMSC"))
+                            Directory.CreateDirectory("Log\\EMSC");
+                    if (SaveDirectory.StartsWith("Log\\USGS"))
+                        if (!Directory.Exists("Log\\USGS"))
+                            Directory.CreateDirectory("Log\\USGS");
+                    if (!Directory.Exists(SaveDirectory))
+                        Directory.CreateDirectory(SaveDirectory);
+                    if (SaveDirectory == "Log")
+                        File.WriteAllText($"Log\\log.txt", SaveText);
+                    else if (SaveDirectory == "Log\\ErrorLog")
+                    {
+                        if (File.Exists($"Log\\ErrorLog\\{NowTime:yyyyMM}.txt"))
+                            SaveText += "\n--------------------------------------------------\n" + File.ReadAllText($"Log\\ErrorLog\\{NowTime:yyyyMM}.txt");
+                        File.WriteAllText($"Log\\ErrorLog\\{NowTime:yyyyMM}.txt", SaveText);
+                    }
+                    else if (SaveDirectory.StartsWith("Log\\USGS") || SaveDirectory.StartsWith("Log\\EMSC"))
+                    {
+                        if (!Directory.Exists($"{SaveDirectory}\\{NowTime:yyyyMM}"))
+                            Directory.CreateDirectory($"{SaveDirectory}\\{NowTime:yyyyMM}");
+                        if (!Directory.Exists($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:dd}"))
+                            Directory.CreateDirectory($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:dd}");
+                        if (File.Exists($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:dd}\\{NowTime:yyyyMMdd}_{ID}.txt"))
+                            SaveText = File.ReadAllText($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:dd}\\{NowTime:yyyyMMdd}_{ID}.txt") + "\n--------------------------------------------------\n" + SaveText;
+                        File.WriteAllText($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:dd}\\{NowTime:yyyyMMdd}_{ID}.txt", SaveText);
+                    }
+                    else
+                    {
+                        if (!Directory.Exists($"{SaveDirectory}\\{NowTime:yyyyMM}"))
+                            Directory.CreateDirectory($"{SaveDirectory}\\{NowTime:yyyyMM}");
+                        if (File.Exists($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:yyyyMMdd}.txt"))
+                            SaveText = File.ReadAllText($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:yyyyMMdd}.txt") + "\n--------------------------------------------------\n" + SaveText;
+                        File.WriteAllText($"{SaveDirectory}\\{NowTime:yyyyMM}\\{NowTime:yyyyMMdd}.txt", SaveText);
+                    }
+                    ExeLog($"[LogSave]ログ保存成功");
+                }
+                catch (Exception ex)
+                {
+                    ExeLog($"[LogSave]ログ保存でエラーが発生:{ex.Message}");
+                }
             }
         }
 
@@ -633,7 +643,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
         /// <param name="ID">リプライ判別用地震ID。</param>
         public async void Tweet(string Text, string source, string ID)
         {
-            if (NoFirst)
+            if (NoFirst && Settings.Default.Tweet_Enable)
                 try
                 {
                     ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
@@ -703,7 +713,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
         /// <param name="Text">送信する文。</param>
         public void SendSocket(string Text)
         {
-            if (NoFirst)
+            if (NoFirst && Settings.Default.Socket_Enable)
                 try
                 {
                     ExeLog($"[SendSocket]Socket送信中…({Settings.Default.Socket_Host}:{Settings.Default.Socket_Port})");
@@ -733,7 +743,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
         /// <param name="Text">読み上げさせる文。</param>
         public void Bouyomichan(string Text)
         {
-            if (NoFirst)
+            if (NoFirst && Settings.Default.Bouyomichan_Enable)
                 try
                 {
                     ExeLog($"[Bouyomichan]棒読みちゃん送信中…");
@@ -764,6 +774,29 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 {
                     ErrorText.Text = $"棒読みちゃんへの送信に失敗しました。わからない場合エラーログの内容を報告してください。内容:{ex.Message}";
                     LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Bouyomichan Version:{Version}\n{ex}");
+                }
+        }
+
+        public async void WebHook(string Text)
+        {
+            if (NoFirst && Settings.Default.WebHook_Enable)
+                try
+                {
+                    ExeLog($"[WebHook]WebHook送信中…");
+                    HttpClient httpClient = new HttpClient();
+                    Dictionary<string, string> strs = new Dictionary<string, string>()
+                    {
+                        { "content", Text }
+                    };
+                    Settings.Default.WebHook_URL = "https://discord.com/api/webhooks/1124968281632149554/yEz7RTkGM0Lvx2TqtaVemagr6czmHjcIZEuQEsU7ut4Hd2LKlpkAUEl2PnhPtaDGO_SD";
+                    await httpClient.PostAsync(Settings.Default.WebHook_URL, new FormUrlEncodedContent(strs));
+                    httpClient.Dispose();
+                    ExeLog($"[WebHook]WebHook送信成功");
+                }
+                catch (Exception ex)
+                {
+                    ErrorText.Text = $"WebHookの送信に失敗しました。わからない場合エラーログの内容を報告してください。内容:{ex.Message}";
+                    LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,WebHook Version:{Version}\n{ex}");
                 }
         }
 

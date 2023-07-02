@@ -598,5 +598,29 @@ namespace WorldQuakeViewer.Properties {
                 this["Update_EMSC_Mag"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool WebHook_Enable {
+            get {
+                return ((bool)(this["WebHook_Enable"]));
+            }
+            set {
+                this["WebHook_Enable"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string WebHook_URL {
+            get {
+                return ((string)(this["WebHook_URL"]));
+            }
+            set {
+                this["WebHook_URL"] = value;
+            }
+        }
     }
 }
