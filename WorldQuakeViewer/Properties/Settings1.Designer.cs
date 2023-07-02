@@ -12,7 +12,7 @@ namespace WorldQuakeViewer.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.5.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.6.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -397,121 +397,205 @@ namespace WorldQuakeViewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool Update_Time {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Update_USGS_Time {
             get {
-                return ((bool)(this["Update_Time"]));
+                return ((bool)(this["Update_USGS_Time"]));
             }
             set {
-                this["Update_Time"] = value;
+                this["Update_USGS_Time"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool Update_HypoJP {
+        public bool Update_USGS_HypoJP {
             get {
-                return ((bool)(this["Update_HypoJP"]));
+                return ((bool)(this["Update_USGS_HypoJP"]));
             }
             set {
-                this["Update_HypoJP"] = value;
+                this["Update_USGS_HypoJP"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool Update_HypoEN {
+        public bool Update_USGS_HypoEN {
             get {
-                return ((bool)(this["Update_HypoEN"]));
+                return ((bool)(this["Update_USGS_HypoEN"]));
             }
             set {
-                this["Update_HypoEN"] = value;
+                this["Update_USGS_HypoEN"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Update_USGS_LatLon {
+            get {
+                return ((bool)(this["Update_USGS_LatLon"]));
+            }
+            set {
+                this["Update_USGS_LatLon"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool Update_LatLon {
+        public bool Update_USGS_Depth {
             get {
-                return ((bool)(this["Update_LatLon"]));
+                return ((bool)(this["Update_USGS_Depth"]));
             }
             set {
-                this["Update_LatLon"] = value;
+                this["Update_USGS_Depth"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool Update_Depth {
+        public bool Update_USGS_MagType {
             get {
-                return ((bool)(this["Update_Depth"]));
+                return ((bool)(this["Update_USGS_MagType"]));
             }
             set {
-                this["Update_Depth"] = value;
+                this["Update_USGS_MagType"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool Update_MagType {
+        public bool Update_USGS_Mag {
             get {
-                return ((bool)(this["Update_MagType"]));
+                return ((bool)(this["Update_USGS_Mag"]));
             }
             set {
-                this["Update_MagType"] = value;
+                this["Update_USGS_Mag"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool Update_Mag {
+        public bool Update_USGS_MMI {
             get {
-                return ((bool)(this["Update_Mag"]));
+                return ((bool)(this["Update_USGS_MMI"]));
             }
             set {
-                this["Update_Mag"] = value;
+                this["Update_USGS_MMI"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool Update_MMI {
+        public bool Update_USGS_Alert {
             get {
-                return ((bool)(this["Update_MMI"]));
+                return ((bool)(this["Update_USGS_Alert"]));
             }
             set {
-                this["Update_MMI"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool Update_Alert {
-            get {
-                return ((bool)(this["Update_Alert"]));
-            }
-            set {
-                this["Update_Alert"] = value;
+                this["Update_USGS_Alert"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("10")]
-        public int Update_MaxCount {
+        public int Update_USGS_MaxCount {
             get {
-                return ((int)(this["Update_MaxCount"]));
+                return ((int)(this["Update_USGS_MaxCount"]));
             }
             set {
-                this["Update_MaxCount"] = value;
+                this["Update_USGS_MaxCount"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Update_EMSC_Time {
+            get {
+                return ((bool)(this["Update_EMSC_Time"]));
+            }
+            set {
+                this["Update_EMSC_Time"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Update_EMSC_HypoJP {
+            get {
+                return ((bool)(this["Update_EMSC_HypoJP"]));
+            }
+            set {
+                this["Update_EMSC_HypoJP"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Update_EMSC_HypoEN {
+            get {
+                return ((bool)(this["Update_EMSC_HypoEN"]));
+            }
+            set {
+                this["Update_EMSC_HypoEN"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Update_EMSC_LatLon {
+            get {
+                return ((bool)(this["Update_EMSC_LatLon"]));
+            }
+            set {
+                this["Update_EMSC_LatLon"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Update_EMSC_Depth {
+            get {
+                return ((bool)(this["Update_EMSC_Depth"]));
+            }
+            set {
+                this["Update_EMSC_Depth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Update_EMSC_MagType {
+            get {
+                return ((bool)(this["Update_EMSC_MagType"]));
+            }
+            set {
+                this["Update_EMSC_MagType"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Update_EMSC_Mag {
+            get {
+                return ((bool)(this["Update_EMSC_Mag"]));
+            }
+            set {
+                this["Update_EMSC_Mag"] = value;
             }
         }
     }

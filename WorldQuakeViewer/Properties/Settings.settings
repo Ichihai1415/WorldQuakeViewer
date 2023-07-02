@@ -95,35 +95,56 @@
     <Setting Name="Log_DeleteTime" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">3600</Value>
     </Setting>
-    <Setting Name="Update_Time" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="Update_HypoJP" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="Update_HypoEN" Type="System.Boolean" Scope="User">
+    <Setting Name="Update_USGS_Time" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="Update_LatLon" Type="System.Boolean" Scope="User">
+    <Setting Name="Update_USGS_HypoJP" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="Update_Depth" Type="System.Boolean" Scope="User">
+    <Setting Name="Update_USGS_HypoEN" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Update_USGS_LatLon" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Update_USGS_Depth" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="Update_MagType" Type="System.Boolean" Scope="User">
+    <Setting Name="Update_USGS_MagType" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="Update_Mag" Type="System.Boolean" Scope="User">
+    <Setting Name="Update_USGS_Mag" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="Update_MMI" Type="System.Boolean" Scope="User">
+    <Setting Name="Update_USGS_MMI" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="Update_Alert" Type="System.Boolean" Scope="User">
+    <Setting Name="Update_USGS_Alert" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="Update_MaxCount" Type="System.Int32" Scope="User">
+    <Setting Name="Update_USGS_MaxCount" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="Update_EMSC_Time" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Update_EMSC_HypoJP" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Update_EMSC_HypoEN" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Update_EMSC_LatLon" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Update_EMSC_Depth" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Update_EMSC_MagType" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Update_EMSC_Mag" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

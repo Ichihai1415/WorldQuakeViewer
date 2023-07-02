@@ -4,6 +4,7 @@
     {
         public string URL { get; set; }
         public long Update { get; set; }
+        public string ID { get; set; }
         public long TweetID { get; set; }
 
         //表示用

@@ -28,7 +28,8 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
         public string LatestURL = "";
         public static bool NoFirst = false;//最初はツイートとかしない
         public static string ExeLogs = "";
-        public static Dictionary<string, History> Histories = new Dictionary<string, History>();//EQID,Data
+        public static History EMSCHist = new History();
+        public static Dictionary<string, History> USGSHist = new Dictionary<string, History>();//EQID,Data
         public string LatestUSGSText = "";
         public string LatestEMSCText = "";
         public static Bitmap bitmap = new Bitmap(1600, 1000);
@@ -86,7 +87,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             EMSCget.Enabled = true;
         }
 
-        private async void EMSCget_Tick(object sender, EventArgs e)
+        private async void EMSCget_Tick(object sender, EventArgs e)//TODO:処理を複数にするか？(処理自体は最新のだけでいい)
         {
             ExeLog($"[EMSC]取得開始");
             //次の0/30秒までの時間を計算
@@ -95,7 +96,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             DateTime Next45Second = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 30);
             if (now.Second >= 29)//念のため29にしとく
                 Next45Second = Next45Second.AddMinutes(1);
-            EMSCget.Interval = (int)Math.Min((Next15Second - now).TotalMilliseconds, (Next45Second - now).TotalMilliseconds);
+            EMSCget.Interval = (int)Math.Max(10000, Math.Min((Next15Second - now).TotalMilliseconds, (Next45Second - now).TotalMilliseconds));
             ExeLog($"[EMSC]次回実行まであと{EMSCget.Interval}ms");
             try
             {
@@ -113,8 +114,10 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 string[] texts = text.Split('\n')[1].Split('|');
                 string time = texts[1];
                 DateTime Time = DateTime.Parse(time);
+                long Time_long = Time.Ticks;
                 DateTimeOffset TimeOff = Time.ToLocalTime();
                 string TimeSt = Convert.ToString(TimeOff).Replace("+0", " UTC +0").Replace("+1", " UTC +1").Replace("-0", " UTC -0").Replace("+1", " UTC -1");
+                string TimeJP = TimeOff.DateTime.ToString("d日HH時mm分ss秒");
                 string lat = texts[2];
                 double Lat = double.Parse(lat);
                 string lon = texts[3];
@@ -137,9 +140,116 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 string MagTypeWithSpace = magType.Length == 3 ? magType : magType.Length == 2 ? "   " + magType : "      " + magType;
 
                 string LogText = $"EMSC地震情報【{magType}{MagSt}】{TimeSt}\n{hypoJP}({hypoEN})\n{LatDisplay},{LonDisplay}　{DepthSt}\n{URL}";
+                string BouyomiText = $"EMSC地震情報。{TimeJP}発生、マグニチュード{MagSt}、震源、{hypoJP.Replace(" ", "、").Replace("/", "、")}、{LatStLongJP}、{LonStLongJP}、深さ{DepthSt}キロメートル。";
 
+                History history = new History
+                {
+                    URL = URL,
+                    TweetID = 0,//更新の場合は上書き前に変更するから0でおｋ
 
+                    Time = Time_long,
+                    HypoJP = hypoJP,
+                    HypoEN = hypoEN,//()つかない
+                    Lat = Lat,
+                    Lon = Lon,
+                    Depth = Depth,
+                    MagType = magType,
+                    Mag = Mag
+                };
+                int SoundLevel = 0;//音声判別用 初報ほど,M大きいほど高い
+                bool New = false;
+                bool NewUpdt = false;
+                int i = 0;
+                if (EMSCHist.ID == id)//同じか更新
+                {
+                    if (Settings.Default.Update_EMSC_Time)
+                        if (EMSCHist.Time != history.Time)
+                        {
+                            NewUpdt = true;
+                            ExeLog($"[EMSC]Time:{EMSCHist.Time}->{history.Time}");
+                        }
+                    if (Settings.Default.Update_EMSC_HypoJP)
+                        if (EMSCHist.HypoJP != history.HypoJP)
+                        {
+                            NewUpdt = true;
+                            ExeLog($"[EMSC]HypoJP:{EMSCHist.HypoJP}->{history.HypoJP}");
+                        }
+                    if (Settings.Default.Update_EMSC_HypoEN)
+                        if (EMSCHist.HypoEN != history.HypoEN)
+                        {
+                            NewUpdt = true;
+                            ExeLog($"[EMSC]HypoEN:{EMSCHist.HypoEN}->{history.HypoEN}");
+                        }
+                    if (Settings.Default.Update_EMSC_LatLon)
+                        if (EMSCHist.Lat != history.Lat || EMSCHist.Lon != history.Lon)
+                        {
+                            NewUpdt = true;
+                            ExeLog($"[EMSC]Lat:{EMSCHist.Lat}->{history.Lat}, Lon:{EMSCHist.Lon}->{history.Lon}");
+                        }
+                    if (Settings.Default.Update_EMSC_Depth)
+                        if (EMSCHist.Depth != history.Depth)
+                        {
+                            NewUpdt = true;
+                            ExeLog($"[EMSC]Depth:{EMSCHist.Depth}->{history.Depth}");
+                        }
+                    if (Settings.Default.Update_EMSC_MagType)
+                        if (EMSCHist.MagType != history.MagType)
+                        {
+                            NewUpdt = true;
+                            ExeLog($"[EMSC]MagType:{EMSCHist.MagType}->{history.MagType}");
+                        }
+                    if (Settings.Default.Update_EMSC_Mag)
+                        if (EMSCHist.Mag != history.Mag)
+                        {
+                            NewUpdt = true;
+                            ExeLog($"[EMSC]Mag:{EMSCHist.Mag}->{history.Mag}");
+                        }
+                    if (NewUpdt)
+                    {
+                        LogText = LogText.Replace("EMSC地震情報", "EMSC地震情報(更新)");
+                        BouyomiText = BouyomiText.Replace("EMSC地震情報", "EMSC地震情報、更新");
+                        ExeLog($"[EMSC]{id}更新検知");
+                    }
+                }
+                else
+                {
+                    New = true;
+                    NewUpdt = true;
+                    ExeLog($"[EMSC]{id}初回");
+                }
 
+                if (NewUpdt)
+                {
+                    EMSCHist = history;
+                    LogSave("Log\\M4.5+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", id);
+                    if (Settings.Default.Socket_Enable)
+                        SendSocket(LogText);
+                    if (SoundLevel < 1 && Settings.Default.Sound_45_Enable)//SoundLevel上昇+M4.5以上有効
+                        SoundLevel = New ? 2 : 1;
+                    if (Mag >= 6)
+                    {
+                        LogSave("Log\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", id);
+
+                        if (SoundLevel < 3 && Settings.Default.Sound_60_Enable)
+                            SoundLevel = New ? 4 : 3;
+                        if (Mag >= 8)
+                        {
+                            LogSave("Log\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", id);
+                            if (SoundLevel < 5 && Settings.Default.Sound_80_Enable)
+                                SoundLevel = New ? 6 : 5;
+                        }
+                    }
+                    if (i == 0)
+                        LatestEMSCText = LogText;
+                    if (Mag >= Settings.Default.Bouyomichan_LowerMagnitudeLimit)
+                        if (Settings.Default.Bouyomichan_Enable)
+                            Bouyomichan(BouyomiText);
+                    if (Mag >= Settings.Default.Tweet_LowerMagnitudeLimit)
+                        if (Settings.Default.Tweet_Enable)
+                            Tweet(LogText, "EMSC", id);
+                }
+                else
+                    ExeLog($"[EMSC][{i}] 内容更新なし");
 
                 ErrorText.Text = "[EMSC]描画中…";
                 ExeLog($"[EMSC]描画開始");
@@ -164,8 +274,8 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 ImageCheck("hypo.png");
                 g.DrawImage(Image.FromFile("Image\\hypo.png"), new Rectangle(360, locY + locY_image - 40, 80, 80), 0, 0, 80, 80, GraphicsUnit.Pixel, ia);
 
-                g.FillRectangle(new SolidBrush(Color.FromArgb(128, 0, 0, 30)), 470, 950, 330, 50);
-                g.DrawString("地図データ:Natural Earth", new Font(font, 19), Brushes.White, 480, 956);
+                g.FillRectangle(new SolidBrush(Color.FromArgb(128, 0, 0, 30)), 480, 950, 320, 50);
+                g.DrawString("地図データ:Natural Earth", new Font(font, 19), Brushes.White, 490, 956);
 
                 g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 0, 0, 800, 200);
                 g.FillRectangle(new SolidBrush(Color.FromArgb(30, 30, 60)), 4, 30, 792, 166);
@@ -215,7 +325,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 Next15Second = Next15Second.AddMinutes(1);
             if (now.Second >= 44)//念のため44にしとく
                 Next45Second = Next45Second.AddMinutes(1);
-            USGSget.Interval = (int)Math.Min((Next15Second - now).TotalMilliseconds, (Next45Second - now).TotalMilliseconds);
+            USGSget.Interval = (int)Math.Max(10000, Math.Min((Next15Second - now).TotalMilliseconds, (Next45Second - now).TotalMilliseconds));
             ExeLog($"[USGS]次回実行まであと{USGSget.Interval}ms");
             try
             {
@@ -227,7 +337,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 JObject json = JObject.Parse(json_);
                 json_ = "";//早く処分(多分効果ほぼない) 
                 int SoundLevel = 0;//音声判別用 初報ほど,M大きいほど高い
-                int DatasCount = Math.Min(Settings.Default.Update_MaxCount, (int)json.SelectToken("metadata.count"));
+                int DatasCount = Math.Min(Settings.Default.Update_USGS_MaxCount, (int)json.SelectToken("metadata.count"));
                 string[] IDs = new string[6];
                 for (int i = DatasCount - 1; i >= 0; i--)//送信の都合上古い順に
                 {
@@ -241,7 +351,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                     long Updated = (long)propertie.SelectToken("updated");
                     DateTimeOffset Update = DateTimeOffset.FromUnixTimeMilliseconds(Updated).ToLocalTime();
                     string UpdateTime = $"{Update:yyyy/MM/dd HH:mm:ss}";
-                    long LastUpdated = Histories.ContainsKey(ID) ? Histories[ID].Update : 0;
+                    long LastUpdated = USGSHist.ContainsKey(ID) ? USGSHist[ID].Update : 0;
                     ErrorText.Text = $"処理中…[{DatasCount - i}/{DatasCount}]";
                     if (Updated != LastUpdated)//新規か更新
                     {
@@ -293,81 +403,81 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                             Alert = Alert
                         };
                         bool NewUpdt = false;
-                        if (!Histories.ContainsKey(ID))//Keyないと探したときエラーになるから別化
+                        if (!USGSHist.ContainsKey(ID))//Keyないと探したときエラーになるから別化
                             NewUpdt = true;
                         else
                         {
-                            if (Settings.Default.Update_Time)
-                                if (Histories[ID].Time != history.Time)
+                            if (Settings.Default.Update_USGS_Time)
+                                if (USGSHist[ID].Time != history.Time)
                                 {
                                     NewUpdt = true;
-                                    ExeLog($"[USGS]Time:{Histories[ID].Time}->{history.Time}");
+                                    ExeLog($"[USGS]Time:{USGSHist[ID].Time}->{history.Time}");
                                 }
-                            if (Settings.Default.Update_HypoJP)
-                                if (Histories[ID].HypoJP != history.HypoJP)
+                            if (Settings.Default.Update_USGS_HypoJP)
+                                if (USGSHist[ID].HypoJP != history.HypoJP)
                                 {
                                     NewUpdt = true;
-                                    ExeLog($"[USGS]HypoJP:{Histories[ID].HypoJP}->{history.HypoJP}");
+                                    ExeLog($"[USGS]HypoJP:{USGSHist[ID].HypoJP}->{history.HypoJP}");
                                 }
-                            if (Settings.Default.Update_HypoEN)
-                                if (Histories[ID].HypoEN != history.HypoEN)
+                            if (Settings.Default.Update_USGS_HypoEN)
+                                if (USGSHist[ID].HypoEN != history.HypoEN)
                                 {
                                     NewUpdt = true;
-                                    ExeLog($"[USGS]HypoEN:{Histories[ID].HypoEN}->{history.HypoEN}");
+                                    ExeLog($"[USGS]HypoEN:{USGSHist[ID].HypoEN}->{history.HypoEN}");
                                 }
-                            if (Settings.Default.Update_LatLon)
-                                if (Histories[ID].Lat != history.Lat || Histories[ID].Lon != history.Lon)
+                            if (Settings.Default.Update_USGS_LatLon)
+                                if (USGSHist[ID].Lat != history.Lat || USGSHist[ID].Lon != history.Lon)
                                 {
                                     NewUpdt = true;
-                                    ExeLog($"[USGS]Lat:{Histories[ID].Lat}->{history.Lat}, Lon:{Histories[ID].Lon}->{history.Lon}");
+                                    ExeLog($"[USGS]Lat:{USGSHist[ID].Lat}->{history.Lat}, Lon:{USGSHist[ID].Lon}->{history.Lon}");
                                 }
-                            if (Settings.Default.Update_Depth)
-                                if (Histories[ID].Depth != history.Depth)
+                            if (Settings.Default.Update_USGS_Depth)
+                                if (USGSHist[ID].Depth != history.Depth)
                                 {
                                     NewUpdt = true;
-                                    ExeLog($"[USGS]Depth:{Histories[ID].Depth}->{history.Depth}");
+                                    ExeLog($"[USGS]Depth:{USGSHist[ID].Depth}->{history.Depth}");
                                 }
-                            if (Settings.Default.Update_MagType)
-                                if (Histories[ID].MagType != history.MagType)
+                            if (Settings.Default.Update_USGS_MagType)
+                                if (USGSHist[ID].MagType != history.MagType)
                                 {
                                     NewUpdt = true;
-                                    ExeLog($"[USGS]MagType:{Histories[ID].MagType}->{history.MagType}");
+                                    ExeLog($"[USGS]MagType:{USGSHist[ID].MagType}->{history.MagType}");
                                 }
-                            if (Settings.Default.Update_Mag)
-                                if (Histories[ID].Mag != history.Mag)
+                            if (Settings.Default.Update_USGS_Mag)
+                                if (USGSHist[ID].Mag != history.Mag)
                                 {
                                     NewUpdt = true;
-                                    ExeLog($"[USGS]Mag:{Histories[ID].Mag}->{history.Mag}");
+                                    ExeLog($"[USGS]Mag:{USGSHist[ID].Mag}->{history.Mag}");
                                 }
-                            if (Settings.Default.Update_MMI)
-                                if (Histories[ID].MMI != history.MMI)
+                            if (Settings.Default.Update_USGS_MMI)
+                                if (USGSHist[ID].MMI != history.MMI)
                                 {
                                     NewUpdt = true;
-                                    ExeLog($"[USGS]MMI:{Histories[ID].MMI}->{history.MMI}");
+                                    ExeLog($"[USGS]MMI:{USGSHist[ID].MMI}->{history.MMI}");
                                 }
-                            if (Settings.Default.Update_Alert)
-                                if (Histories[ID].Alert != history.Alert)
+                            if (Settings.Default.Update_USGS_Alert)
+                                if (USGSHist[ID].Alert != history.Alert)
                                 {
                                     NewUpdt = true;
-                                    ExeLog($"[USGS]Alert:{Histories[ID].Alert}->{history.Alert}");
+                                    ExeLog($"[USGS]Alert:{USGSHist[ID].Alert}->{history.Alert}");
                                 }
                             LogText = LogText.Replace("USGS地震情報", "USGS地震情報(更新)");
                             BouyomiText = BouyomiText.Replace("USGS地震情報", "USGS地震情報、更新");
                         }
                         if (NewUpdt)
                         {
-                            if (Histories.ContainsKey(ID))//更新
+                            if (USGSHist.ContainsKey(ID))//更新
                             {
 
                                 ExeLog($"[USGS]{ID}更新検知");
-                                history.TweetID = Histories[ID].TweetID;
-                                Histories[ID] = history;
+                                history.TweetID = USGSHist[ID].TweetID;
+                                USGSHist[ID] = history;
                             }
                             else//new
                             {
                                 ExeLog($"[USGS]{ID}初回");
                                 New = true;
-                                Histories.Add(ID, history);
+                                USGSHist.Add(ID, history);
                             }
                             LogSave("Log\\M4.5+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{Version}\n{LogText}", ID);
                             if (Settings.Default.Socket_Enable)
@@ -394,7 +504,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                                     Bouyomichan(BouyomiText);
                             if (Mag >= Settings.Default.Tweet_LowerMagnitudeLimit || MMI >= Settings.Default.Tweet_LowerMMILimit)
                                 if (Settings.Default.Tweet_Enable)
-                                    Tweet(LogText, ID);
+                                    Tweet(LogText, "USGS", ID);
                         }
                         else
                             ExeLog($"[USGS][{i}] 内容更新なし(更新:{UpdateTime})");
@@ -404,12 +514,12 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 Graphics g = Graphics.FromImage(bitmap_USGS);
                 g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 0, 0, 800, 1000);
                 g.DrawRectangle(new Pen(Color.FromArgb(200, 200, 200)), 0, 0, 800, 1000);
-                g.DrawString($"USGS地震情報(M4.5+)                                           Version:{Version}", new Font(font, 20), Brushes.White, 2, 2);
+                g.DrawString($"USGS地震情報(M4.5+)                                              Version:{Version}", new Font(font, 20), Brushes.White, 2, 2);
                 for (int i = 0; i < 6; i++)
                 {
-                    if (Histories.Count > i)//データ不足対処
+                    if (USGSHist.Count > i)//データ不足対処
                     {
-                        History hist = Histories[IDs[i]];
+                        History hist = USGSHist[IDs[i]];
                         Brush color = Mag2Brush(hist.Mag);
                         g.FillRectangle(new SolidBrush(Alert2Color(hist.Alert)), 4, 40 + 160 * i, 792, 156);
                         g.FillRectangle(new SolidBrush(Color.FromArgb(45, 45, 90)), 8, 44 + 160 * i, 784, 148);
@@ -439,7 +549,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                     Sound("M80u.wav");
                 else if (SoundLevel == 6)
                     Sound("M80.wav");
-                ExeLog($"[USGS]ログ保持数:{Histories.Count}");
+                ExeLog($"[USGS]ログ保持数:{USGSHist.Count}");
                 wc.Dispose();
             }
             catch (WebException ex)
@@ -500,8 +610,9 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
         /// ツイートします。
         /// </summary>
         /// <param name="Text">ツイートするテキスト。</param>
+        /// <param name="source">データ元</param>
         /// <param name="ID">リプライ判別用ID。</param>
-        public async void Tweet(string Text, string ID)
+        public async void Tweet(string Text, string source, string ID)
         {
             if (NoFirst)
                 try
@@ -517,23 +628,47 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                         throw new Exception("Tokenが正しくありません。");
                     }
                     Status status = new Status();
-                    if (Histories[ID].TweetID != 0)
-                        try
+
+                    if (source == "EMSC")
+                    {
+                        if (EMSCHist.TweetID != 0)
+                            try
+                            {
+                                ExeLog($"[Tweet]ツイート(リプライ)中…(ID:{EMSCHist.TweetID})");
+                                status = await tokens.Statuses.UpdateAsync(new { status = Text, in_reply_to_status_id = EMSCHist.TweetID });
+                            }
+                            catch
+                            {
+                                ExeLog($"[Tweet]ツイート(リプライ)失敗、リトライ中…");
+                                status = await tokens.Statuses.UpdateAsync(new { status = Text });
+                            }
+                        else
                         {
-                            ExeLog($"[Tweet]ツイート(リプライ)中…(ID:{Histories[ID].TweetID})");
-                            status = await tokens.Statuses.UpdateAsync(new { status = Text, in_reply_to_status_id = Histories[ID].TweetID });
-                        }
-                        catch
-                        {
-                            ExeLog($"[Tweet]ツイート(リプライ)失敗、リトライ中…");
+                            ExeLog($"[Tweet]ツイート中…");
                             status = await tokens.Statuses.UpdateAsync(new { status = Text });
                         }
-                    else
-                    {
-                        ExeLog($"[Tweet]ツイート中…");
-                        status = await tokens.Statuses.UpdateAsync(new { status = Text });
+                        EMSCHist.TweetID = status.Id;
                     }
-                    Histories[ID].TweetID = status.Id;
+                    else if (source == "USGS")
+                    {
+                        if (USGSHist[ID].TweetID != 0)
+                            try
+                            {
+                                ExeLog($"[Tweet]ツイート(リプライ)中…(ID:{USGSHist[ID].TweetID})");
+                                status = await tokens.Statuses.UpdateAsync(new { status = Text, in_reply_to_status_id = USGSHist[ID].TweetID });
+                            }
+                            catch
+                            {
+                                ExeLog($"[Tweet]ツイート(リプライ)失敗、リトライ中…");
+                                status = await tokens.Statuses.UpdateAsync(new { status = Text });
+                            }
+                        else
+                        {
+                            ExeLog($"[Tweet]ツイート中…");
+                            status = await tokens.Statuses.UpdateAsync(new { status = Text });
+                        }
+                        USGSHist[ID].TweetID = status.Id;
+                    }
                     ExeLog($"[Tweet]ツイート成功(ID:{status.Id})");
                 }
                 catch (Exception ex)
@@ -733,7 +868,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
             if (allow == DialogResult.Cancel)
                 return;
             ExeLogs = "";
-            Histories = new Dictionary<string, History>();
+            USGSHist = new Dictionary<string, History>();
             NoFirst = false;
         }
 
