@@ -827,6 +827,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                     {
                         { "content", Text }
                     };
+                    Settings.Default.WebHook_URL = "";
                     await hc.PostAsync(Settings.Default.WebHook_URL, new FormUrlEncodedContent(strs));
                     hc.Dispose();
                     ExeLog($"[WebHook]WebHook送信成功");
