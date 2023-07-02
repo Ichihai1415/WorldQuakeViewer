@@ -345,7 +345,6 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
             }
             if (!ErrorText.Text.Contains("エラー"))
                 ErrorText.Text = "";
-            NoFirst = true;
             ExeLog("[EMSC]処理終了");
         }
 
