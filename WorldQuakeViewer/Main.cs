@@ -154,7 +154,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 string MagTypeWithSpace = magType.Length == 3 ? magType : magType.Length == 2 ? "   " + magType : "      " + magType;
 
                 string LogText = $"EMSC地震情報【{magType}{MagSt}】{TimeSt}\n{hypoJP}({hypoEN})\n{LatDisplay},{LonDisplay}　{DepthSt}\n{URL}";
-                string BouyomiText = $"EMSC地震情報。{TimeJP}発生、マグニチュード{MagSt}、震源、{hypoJP.Replace(" ", "、").Replace("/", "、")}、{LatStLongJP}、{LonStLongJP}、深さ{DepthSt}キロメートル。";
+                string BouyomiText = $"EMSC地震情報。{TimeJP}発生、マグニチュード{MagSt}、震源、{hypoJP.Replace(" ", "、").Replace("/", "、")}、{LatStLongJP}、{LonStLongJP}、深さ{DepthSt.Replace("km", "キロメートル")}。";
 
                 History history = new History
                 {
@@ -818,7 +818,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
         /// <param name="Text">送信するテキスト。</param>
         public async void WebHook(string Text)
         {
-            if (NoFirst && Settings.Default.WebHook_Enable)
+            if (NoFirst/* && Settings.Default.WebHook_Enable*/)
                 try
                 {
                     ExeLog($"[WebHook]WebHook送信中…");
@@ -829,6 +829,8 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                     };
                     if (File.Exists("WebHookURL.txt"))//仮
                         Settings.Default.WebHook_URL = File.ReadAllText("WebHookURL.txt");
+                    else
+                        return;//ここまで仮
                     await hc.PostAsync(Settings.Default.WebHook_URL, new FormUrlEncodedContent(strs));
                     hc.Dispose();
                     ExeLog($"[WebHook]WebHook送信成功");
