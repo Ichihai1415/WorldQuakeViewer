@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WorldQuakeViewer.Properties;
 
-namespace WorldQuakeViewer//todo:discordに送るやつを追加
+namespace WorldQuakeViewer
 {
     public partial class MainForm : Form
     {
@@ -27,14 +27,15 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
         public static DateTime StartTime = new DateTime();
         public static int AccessedEMSC = 0;
         public static int AccessedUSGS = 0;
-        public string LatestURL = "";
+        public static string LatestUSGSURL = "";
+        public static string LatestEMSCURL = "";
         public static bool NoFirst = false;//最初はツイートとかしない
         public static bool WaitEMSCDraw = true;//最初の描画を待機(USGS用)
         public static string ExeLogs = "";
         public static History EMSCHist = new History();
         public static Dictionary<string, History> USGSHist = new Dictionary<string, History>();//EQID,Data
-        public string LatestUSGSText = "";
-        public string LatestEMSCText = "";
+        public static string LatestUSGSText = "";
+        public static string LatestEMSCText = "";
         public static Bitmap bitmap = new Bitmap(1600, 1000);
         public static Bitmap bitmap_USGS = new Bitmap(800, 1000);
         public static FontFamily font;
@@ -139,6 +140,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                 string source = texts[5];
                 string id = texts[8];
                 string URL = "https://www.emsc-csem.org/Earthquake/earthquake.php?id=" + id;
+                LatestEMSCURL = URL;
                 string magType = texts[9];
                 string mag = texts[10];
                 double Mag = double.Parse(mag);
@@ -388,6 +390,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
                         string HypoJP = LL2FERCode.Name_JP(LL2FERCode.Code(Lat, Lon));
                         string HypoEN = $"({(string)propertie.SelectToken("place")})";
                         string URL = (string)propertie.SelectToken("url");
+                        LatestUSGSURL = URL;
                         string LogText = $"USGS地震情報【{MagType}{MagSt}】{TimeSt}\n{HypoJP}{HypoEN}\n{LatDisplay},{LonDisplay}　{Depth}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}　{AlertJP.Replace("アラート:-", "")}\n{URL}";
                         string BouyomiText = $"USGS地震情報。{TimeJP}発生、マグニチュード{MagSt}、震源、{HypoJP.Replace(" ", "、").Replace("/", "、")}、{LatStLongJP}、{LonStLongJP}、深さ{DepthLong.Replace("深さ:", "")}。{$"推定最大改正メルカリ震度階級{MMISt.Replace("(", "").Replace(")", "")}。".Replace("推定最大改正メルカリ震度階級-。", "")}{AlertJP.Replace("アラート:-", "")}";
                         string MagTypeWithSpace = MagType.Length == 3 ? MagType : MagType.Length == 2 ? "   " + MagType : "      " + MagType;
@@ -883,7 +886,7 @@ namespace WorldQuakeViewer//todo:discordに送るやつを追加
 
         private void RCusgsthis_Click(object sender, EventArgs e)
         {
-            Process.Start(LatestURL);
+            Process.Start(LatestUSGSURL);
         }
 
         private void RCreboot_Click(object sender, EventArgs e)
