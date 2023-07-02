@@ -25,6 +25,7 @@ namespace WorldQuakeViewer
     {
         public static readonly string Version = "1.1.0α6";//こことアセンブリを変える
         public static DateTime StartTime = new DateTime();
+        public static readonly Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
         public static int AccessedEMSC = 0;
         public static int AccessedUSGS = 0;
         public static string LatestUSGSURL = "";
@@ -80,14 +81,15 @@ namespace WorldQuakeViewer
                 ExeLog($"[Main]フォント確認に失敗");
             }
             ErrorText.Text = "設定読み込み中…";
-            Configuration Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
             if (File.Exists("UserSetting.xml"))//AppDataに保存
             {
-                if (!Directory.Exists(Config.FilePath.Replace("\\user.config", "")))//実質更新時
-                    Directory.CreateDirectory(Config.FilePath.Replace("\\user.config", ""));
-                File.Copy("UserSetting.xml", Config.FilePath, true);
+                if (!Directory.Exists(config.FilePath.Replace("\\user.config", "")))//実質更新時
+                    Directory.CreateDirectory(config.FilePath.Replace("\\user.config", ""));
+                File.Copy("UserSetting.xml", config.FilePath, true);
                 ExeLog($"[Main]設定ファイルをAppDataにコピー");
             }
+            if (!File.Exists("AppDataPath.txt"))
+                File.WriteAllText("AppDataPath.txt", config.FilePath);
             SettingReload();
             ErrorText.Text = "設定の読み込みが完了しました。";
             ExeLog($"[Main]設定読み込み完了");
@@ -119,6 +121,7 @@ namespace WorldQuakeViewer
                 WebClient wc = new WebClient();
                 ErrorText.Text = "[EMSC]取得中…";
                 string text = await wc.DownloadStringTaskAsync(new Uri("https://www.seismicportal.eu/fdsnws/event/1/query?limit=1&format=text&minmag=5.0"));
+                wc.Dispose();
                 ExeLog($"[EMSC]処理開始");
                 AccessedEMSC++;
                 string[] texts = text.Split('\n')[1].Split('|');
@@ -262,7 +265,27 @@ namespace WorldQuakeViewer
                 }
                 else
                     ExeLog($"[EMSC][{i}] 内容更新なし");
-
+                switch (SoundLevel)
+                {
+                    case 1:
+                        Sound("M45u.wav");
+                        break;
+                    case 2:
+                        Sound("M45.wav");
+                        break;
+                    case 3:
+                        Sound("M60u.wav");
+                        break;
+                    case 4:
+                        Sound("M60.wav");
+                        break;
+                    case 5:
+                        Sound("M80u.wav");
+                        break;
+                    case 6:
+                        Sound("M80.wav");
+                        break;
+                }
                 ErrorText.Text = "[EMSC]描画中…";
                 ExeLog($"[EMSC]描画開始");
                 Graphics g = Graphics.FromImage(bitmap);
@@ -344,6 +367,7 @@ namespace WorldQuakeViewer
                 ErrorText.Text = "[USGS]取得中…";
                 WebClient wc = new WebClient();
                 string json_ = await wc.DownloadStringTaskAsync(new Uri("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson"));
+                wc.Dispose();
                 ExeLog($"[USGS]処理開始");
                 AccessedUSGS++;
                 JObject json = JObject.Parse(json_);
@@ -520,6 +544,27 @@ namespace WorldQuakeViewer
                             ExeLog($"[USGS][{i}] 内容更新なし(更新:{UpdateTime})");
                     }
                 }
+                switch (SoundLevel)
+                {
+                    case 1:
+                        Sound("M45u.wav");
+                        break;
+                    case 2:
+                        Sound("M45.wav");
+                        break;
+                    case 3:
+                        Sound("M60u.wav");
+                        break;
+                    case 4:
+                        Sound("M60.wav");
+                        break;
+                    case 5:
+                        Sound("M80u.wav");
+                        break;
+                    case 6:
+                        Sound("M80.wav");
+                        break;
+                }
                 while (WaitEMSCDraw)//初回のEMSCの描画を待機
                     await Task.Delay(50);//小さすぎるとデッドロックみたいに動かなくなる
                 ErrorText.Text = "[USGS]描画中…";
@@ -548,19 +593,6 @@ namespace WorldQuakeViewer
                 MainImage.BackgroundImage = null;
                 MainImage.BackgroundImage = bitmap;
                 g.Dispose();
-
-                if (SoundLevel == 1)
-                    Sound("M45u.wav");
-                else if (SoundLevel == 2)
-                    Sound("M45.wav");
-                else if (SoundLevel == 3)
-                    Sound("M60u.wav");
-                else if (SoundLevel == 4)
-                    Sound("M60.wav");
-                else if (SoundLevel == 5)
-                    Sound("M80u.wav");
-                else if (SoundLevel == 6)
-                    Sound("M80.wav");
                 ExeLog($"[USGS]ログ保持数:{USGSHist.Count}");
                 wc.Dispose();
             }
@@ -780,20 +812,24 @@ namespace WorldQuakeViewer
                 }
         }
 
+        /// <summary>
+        /// WebHookを送信します。
+        /// </summary>
+        /// <param name="Text">送信するテキスト。</param>
         public async void WebHook(string Text)
         {
             if (NoFirst && Settings.Default.WebHook_Enable)
                 try
                 {
                     ExeLog($"[WebHook]WebHook送信中…");
-                    HttpClient httpClient = new HttpClient();
+                    HttpClient hc = new HttpClient();
                     Dictionary<string, string> strs = new Dictionary<string, string>()
                     {
                         { "content", Text }
                     };
                     Settings.Default.WebHook_URL = "https://discord.com/api/webhooks/1124968281632149554/yEz7RTkGM0Lvx2TqtaVemagr6czmHjcIZEuQEsU7ut4Hd2LKlpkAUEl2PnhPtaDGO_SD";
-                    await httpClient.PostAsync(Settings.Default.WebHook_URL, new FormUrlEncodedContent(strs));
-                    httpClient.Dispose();
+                    await hc.PostAsync(Settings.Default.WebHook_URL, new FormUrlEncodedContent(strs));
+                    hc.Dispose();
                     ExeLog($"[WebHook]WebHook送信成功");
                 }
                 catch (Exception ex)
@@ -823,9 +859,8 @@ namespace WorldQuakeViewer
         {
             ExeLog($"[SettingReload]設定読み込み開始");
             Settings.Default.Reload();
-            Configuration Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
-            if (File.Exists(Config.FilePath))
-                File.Copy(Config.FilePath, "UserSetting.xml", true);
+            if (File.Exists(config.FilePath))
+                File.Copy(config.FilePath, "UserSetting.xml", true);
             if (Settings.Default.Display_HideHistory)
                 if (Settings.Default.Display_HideHistoryMap)
                     ClientSize = new Size(400, 100);
