@@ -827,7 +827,6 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                     {
                         { "content", Text }
                     };
-                    Settings.Default.WebHook_URL = "https://discord.com/api/webhooks/1124968281632149554/yEz7RTkGM0Lvx2TqtaVemagr6czmHjcIZEuQEsU7ut4Hd2LKlpkAUEl2PnhPtaDGO_SD";
                     await hc.PostAsync(Settings.Default.WebHook_URL, new FormUrlEncodedContent(strs));
                     hc.Dispose();
                     ExeLog($"[WebHook]WebHook送信成功");
