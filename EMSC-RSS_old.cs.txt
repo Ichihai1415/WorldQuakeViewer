@@ -1,0 +1,33 @@
+﻿//2023年06月末ごろEMSCのRSSがなくなったのでアーカイブ
+
+XmlDocument xml = new XmlDocument();
+xml.Load($"https://www.emsc-csem.org/service/rss/rss.php?typ=emsc&magmin=5.0");//.0にしないと出ないものがある？
+XmlNamespaceManager nsmgr = new XmlNamespaceManager(xml.NameTable);
+nsmgr.AddNamespace("geo", "http://www.w3.org/2003/01/geo/");
+nsmgr.AddNamespace("emsc", "https://www.emsc-csem.org");
+XmlNode item = xml.SelectSingleNode("/rss/channel/item", nsmgr);//最新のみ
+string title = item.SelectSingleNode("title", nsmgr).InnerText;
+string link = item.SelectSingleNode("link", nsmgr).InnerText;
+string id = link.Replace("https://www.emsc-csem.org/Earthquake/earthquake.php?id=", "");
+string lat = item.SelectSingleNode("geo:lat", nsmgr).InnerText;
+double Lat = double.Parse(lat);
+string lon = item.SelectSingleNode("geo:long", nsmgr).InnerText;
+double Lon = double.Parse(lon);
+Lat2String(Lat, out _, out _, out _, out _, out _, out string LatDisplay);//草
+Lon2String(Lon, out _, out _, out _, out _, out _, out string LonDisplay);
+string depth = item.SelectSingleNode("emsc:depth", nsmgr).InnerText.Replace("f", "").Replace(" ", "") + "km";//10fは10km以下っぽい
+string mag = item.SelectSingleNode("emsc:magnitude", nsmgr).InnerText;
+string[] mag_ = mag.Split(' ');
+string magType = mag_[0];
+string MagSt = mag_[mag_.Length - 1];
+double Mag = double.Parse(MagSt);
+string time = item.SelectSingleNode("emsc:time", nsmgr).InnerText.Replace(" UTC", "");
+DateTime Time = DateTime.Parse(time);
+DateTimeOffset TimeOff = Time.ToLocalTime();
+string TimeSt = Convert.ToString(TimeOff).Replace("+0", " UTC +0").Replace("+1", " UTC +1").Replace("-0", " UTC -0").Replace("+1", " UTC -1");
+string status = item.SelectSingleNode("status", nsmgr).InnerText;
+string StatusJP = status.Replace("AUTOMATIC", "自動処理").Replace("REVIEWED", "レビュー済み");
+int hypoCode = LL2FERCode.Code(Lat, Lon);
+string hypoJP = LL2FERCode.Name_JP(hypoCode);
+string hypoEN = title.Replace(mag + "  ", "");
+string MagTypeWithSpace = magType.Length == 3 ? magType : magType.Length == 2 ? "   " + magType : "      " + magType;

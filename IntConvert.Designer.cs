@@ -60,7 +60,7 @@
             this.Text1.Location = new System.Drawing.Point(14, 9);
             this.Text1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.Text1.Name = "Text1";
-            this.Text1.Size = new System.Drawing.Size(285, 38);
+            this.Text1.Size = new System.Drawing.Size(342, 46);
             this.Text1.TabIndex = 1;
             this.Text1.Text = "改正メルカリ　　最大速度　　　　気象庁\r\n　震度階級　　　  (cm/s) 　　　　震度階級\r\n";
             // 
@@ -70,7 +70,7 @@
             this.ExampleSite.Location = new System.Drawing.Point(214, 84);
             this.ExampleSite.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.ExampleSite.Name = "ExampleSite";
-            this.ExampleSite.Size = new System.Drawing.Size(93, 19);
+            this.ExampleSite.Size = new System.Drawing.Size(112, 23);
             this.ExampleSite.TabIndex = 2;
             this.ExampleSite.TabStop = true;
             this.ExampleSite.Text = "式の導出・例";
@@ -81,12 +81,12 @@
             this.MMIv.DecimalPlaces = 3;
             this.MMIv.Location = new System.Drawing.Point(17, 50);
             this.MMIv.Maximum = new decimal(new int[] {
-            15,
+            12,
             0,
             0,
             0});
             this.MMIv.Name = "MMIv";
-            this.MMIv.Size = new System.Drawing.Size(59, 27);
+            this.MMIv.Size = new System.Drawing.Size(59, 32);
             this.MMIv.TabIndex = 3;
             this.MMIv.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
@@ -100,7 +100,7 @@
             0,
             131072});
             this.PGVv.Name = "PGVv";
-            this.PGVv.Size = new System.Drawing.Size(59, 27);
+            this.PGVv.Size = new System.Drawing.Size(59, 32);
             this.PGVv.TabIndex = 4;
             this.PGVv.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
@@ -109,17 +109,17 @@
             this.JIv.DecimalPlaces = 3;
             this.JIv.Location = new System.Drawing.Point(245, 50);
             this.JIv.Maximum = new decimal(new int[] {
-            999,
+            8,
             0,
             0,
-            131072});
+            0});
             this.JIv.Minimum = new decimal(new int[] {
-            999,
+            5,
             0,
             0,
-            -2147352576});
+            -2147483648});
             this.JIv.Name = "JIv";
-            this.JIv.Size = new System.Drawing.Size(59, 27);
+            this.JIv.Size = new System.Drawing.Size(59, 32);
             this.JIv.TabIndex = 5;
             this.JIv.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
@@ -161,13 +161,13 @@
             this.Text2.AutoSize = true;
             this.Text2.Location = new System.Drawing.Point(7, 84);
             this.Text2.Name = "Text2";
-            this.Text2.Size = new System.Drawing.Size(294, 57);
+            this.Text2.Size = new System.Drawing.Size(358, 69);
             this.Text2.TabIndex = 9;
             this.Text2.Text = "※参考程度に利用してください。\r\n最大速度と気象庁震度階級との変換は\r\n藤本･翠川(2005)の換算式を利用しています。";
             // 
             // IntConvert
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(320, 150);
             this.Controls.Add(this.JIv);
