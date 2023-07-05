@@ -42,7 +42,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
         public static FontFamily font;
         public static SoundPlayer Player = null;
 
-        public MainForm()
+        public MainForm()//TODO:settingにバージョン保存していろいろやりたい
         {
             InitializeComponent();
         }
@@ -177,43 +177,43 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 int i = 0;
                 if (EMSCHist.ID == id)//同じか更新
                 {
-                    if (Settings.Default.Update_EMSC_Time)
+                    if (Settings.Default.EMSC_Update_Time)
                         if (EMSCHist.Time != history.Time)
                         {
                             NewUpdt = true;
                             ExeLog($"[EMSC]Time:{EMSCHist.Time}->{history.Time}");
                         }
-                    if (Settings.Default.Update_EMSC_HypoJP)
+                    if (Settings.Default.EMSC_Update_HypoJP)
                         if (EMSCHist.HypoJP != history.HypoJP)
                         {
                             NewUpdt = true;
                             ExeLog($"[EMSC]HypoJP:{EMSCHist.HypoJP}->{history.HypoJP}");
                         }
-                    if (Settings.Default.Update_EMSC_HypoEN)
+                    if (Settings.Default.EMSC_Update_HypoEN)
                         if (EMSCHist.HypoEN != history.HypoEN)
                         {
                             NewUpdt = true;
                             ExeLog($"[EMSC]HypoEN:{EMSCHist.HypoEN}->{history.HypoEN}");
                         }
-                    if (Settings.Default.Update_EMSC_LatLon)
+                    if (Settings.Default.EMSC_Update_LatLon)
                         if (EMSCHist.Lat != history.Lat || EMSCHist.Lon != history.Lon)
                         {
                             NewUpdt = true;
                             ExeLog($"[EMSC]Lat:{EMSCHist.Lat}->{history.Lat}, Lon:{EMSCHist.Lon}->{history.Lon}");
                         }
-                    if (Settings.Default.Update_EMSC_Depth)
+                    if (Settings.Default.EMSC_Update_Depth)
                         if (EMSCHist.Depth != history.Depth)
                         {
                             NewUpdt = true;
                             ExeLog($"[EMSC]Depth:{EMSCHist.Depth}->{history.Depth}");
                         }
-                    if (Settings.Default.Update_EMSC_MagType)
+                    if (Settings.Default.EMSC_Update_MagType)
                         if (EMSCHist.MagType != history.MagType)
                         {
                             NewUpdt = true;
                             ExeLog($"[EMSC]MagType:{EMSCHist.MagType}->{history.MagType}");
                         }
-                    if (Settings.Default.Update_EMSC_Mag)
+                    if (Settings.Default.EMSC_Update_Mag)
                         if (EMSCHist.Mag != history.Mag)
                         {
                             NewUpdt = true;
@@ -372,7 +372,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 JObject json = JObject.Parse(json_);
                 json_ = "";//早く処分(多分効果ほぼない) 
                 int SoundLevel = 0;//音声判別用 初報ほど,M大きいほど高い
-                int DatasCount = Math.Min(Settings.Default.Update_USGS_MaxCount, (int)json.SelectToken("metadata.count"));
+                int DatasCount = Math.Min(Settings.Default.USGS_Update_MaxCount, (int)json.SelectToken("metadata.count"));
                 string[] IDs = new string[6];
                 for (int i = DatasCount - 1; i >= 0; i--)//送信の都合上古い順に
                 {
@@ -445,55 +445,55 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                             NewUpdt = true;
                         else
                         {
-                            if (Settings.Default.Update_USGS_Time)
+                            if (Settings.Default.USGS_Update_Time)
                                 if (USGSHist[ID].Time != history.Time)
                                 {
                                     NewUpdt = true;
                                     ExeLog($"[USGS]Time:{USGSHist[ID].Time}->{history.Time}");
                                 }
-                            if (Settings.Default.Update_USGS_HypoJP)
+                            if (Settings.Default.USGS_Update_HypoJP)
                                 if (USGSHist[ID].HypoJP != history.HypoJP)
                                 {
                                     NewUpdt = true;
                                     ExeLog($"[USGS]HypoJP:{USGSHist[ID].HypoJP}->{history.HypoJP}");
                                 }
-                            if (Settings.Default.Update_USGS_HypoEN)
+                            if (Settings.Default.USGS_Update_HypoEN)
                                 if (USGSHist[ID].HypoEN != history.HypoEN)
                                 {
                                     NewUpdt = true;
                                     ExeLog($"[USGS]HypoEN:{USGSHist[ID].HypoEN}->{history.HypoEN}");
                                 }
-                            if (Settings.Default.Update_USGS_LatLon)
+                            if (Settings.Default.USGS_Update_LatLon)
                                 if (USGSHist[ID].Lat != history.Lat || USGSHist[ID].Lon != history.Lon)
                                 {
                                     NewUpdt = true;
                                     ExeLog($"[USGS]Lat:{USGSHist[ID].Lat}->{history.Lat}, Lon:{USGSHist[ID].Lon}->{history.Lon}");
                                 }
-                            if (Settings.Default.Update_USGS_Depth)
+                            if (Settings.Default.USGS_Update_Depth)
                                 if (USGSHist[ID].Depth != history.Depth)
                                 {
                                     NewUpdt = true;
                                     ExeLog($"[USGS]Depth:{USGSHist[ID].Depth}->{history.Depth}");
                                 }
-                            if (Settings.Default.Update_USGS_MagType)
+                            if (Settings.Default.USGS_Update_MagType)
                                 if (USGSHist[ID].MagType != history.MagType)
                                 {
                                     NewUpdt = true;
                                     ExeLog($"[USGS]MagType:{USGSHist[ID].MagType}->{history.MagType}");
                                 }
-                            if (Settings.Default.Update_USGS_Mag)
+                            if (Settings.Default.USGS_Update_Mag)
                                 if (USGSHist[ID].Mag != history.Mag)
                                 {
                                     NewUpdt = true;
                                     ExeLog($"[USGS]Mag:{USGSHist[ID].Mag}->{history.Mag}");
                                 }
-                            if (Settings.Default.Update_USGS_MMI)
+                            if (Settings.Default.USGS_Update_MMI)
                                 if (USGSHist[ID].MMI != history.MMI)
                                 {
                                     NewUpdt = true;
                                     ExeLog($"[USGS]MMI:{USGSHist[ID].MMI}->{history.MMI}");
                                 }
-                            if (Settings.Default.Update_USGS_Alert)
+                            if (Settings.Default.USGS_Update_Alert)
                                 if (USGSHist[ID].Alert != history.Alert)
                                 {
                                     NewUpdt = true;
