@@ -9,12 +9,12 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
+using System.IO.Compression;
 using System.Media;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WorldQuakeViewer.Properties;
@@ -49,36 +49,35 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
 
         private void MainForm_Load(object sender, EventArgs e)//ExeLog($"");
         {
-            ExeLog($"[Main]起動処理開始");//TODO:Soundとともにリソースにできたらする
+            ExeLog($"[Main]起動処理開始");
             StartTime = DateTime.Now;
-            ErrorText.Text = "フォント読み込み中…";
-            try
+            ErrorText.Text = "リソース確認中…";
+            if (!Directory.Exists("Font"))
             {
-                while (!File.Exists("Font\\Koruri-Regular.ttf"))
-                {
-                    if (!Directory.Exists("Font"))
-                        Directory.CreateDirectory("Font");
-                    Process.Start("https://koruri.github.io/");
-                    Process.Start("explorer.exe", "Font");
-                    DialogResult Result = MessageBox.Show($"フォントファイルが見つかりません。ダウンロードサイトとFontフォルダを開きます。\"Koruri-Regular.ttf\"をFontフォルダにコピーしてください。", "WQV_FontCheck", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Exclamation);
-                    if (Result == DialogResult.Ignore)
-                        break;
-                    if (Result != DialogResult.Retry)
-                    {
-                        Application.Exit();
-                        break;//これないとプロセス無限起動される
-                    }
-                    Thread.Sleep(1000);//念のため
-                }
-                ExeLog($"[Main]フォントファイルOK");
-                PrivateFontCollection pfc = new PrivateFontCollection();
-                pfc.AddFontFile("Font\\Koruri-Regular.ttf");
-                font = pfc.Families[0];
-                ExeLog($"[Main]フォントOK");
+                Directory.CreateDirectory("Font");
+                ExeLog($"[Main]Fontフォルダを作成しました");
             }
-            catch
+            if (!File.Exists("Font\\Koruri-Regular.ttf"))
             {
-                ExeLog($"[Main]フォント確認に失敗");
+                File.WriteAllBytes("Font\\Koruri-Regular.ttf", Resources.Koruri_Regular);
+                ExeLog($"[Main]フォントファイル(\"Font\\Koruri-Regular.ttf\")をコピーしました");
+            }
+            if (!File.Exists("Font\\LICENSE"))
+            {
+                File.WriteAllText("Font\\LICENSE", Resources.Koruri_LICENSE);
+                ExeLog($"[Main]ライセンスファイル(\"Font\\LICENSE\")をコピーしました");
+            }
+            PrivateFontCollection pfc = new PrivateFontCollection();
+            pfc.AddFontFile("Font\\Koruri-Regular.ttf");
+            font = pfc.Families[0];
+            ExeLog($"[Main]フォントOK");
+            if (!Directory.Exists("Sound"))
+            {
+                File.WriteAllBytes("Sound.zip", Resources.Sound);
+                ExeLog($"[Main]音声ファイル(\"Sound.zip\")をコピーしました");
+                ZipFile.ExtractToDirectory("Sound.zip", ".");
+                ExeLog($"[Main]音声ファイル(\"Sound.zip\")を解凍しました(\"Sound\\*\")");
+                File.Delete("Sound.zip");
             }
             ErrorText.Text = "設定読み込み中…";
             if (File.Exists("UserSetting.xml"))//AppDataに保存
@@ -88,6 +87,10 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 File.Copy("UserSetting.xml", config.FilePath, true);
                 ExeLog($"[Main]設定ファイルをAppDataにコピー");
             }
+            ExeLog($"[Main]音声OK");
+            ImageCheck("map.png");
+            ImageCheck("hypo.png");
+            ExeLog($"[Main]画像OK");
             if (!File.Exists("AppDataPath.txt"))
                 File.WriteAllText("AppDataPath.txt", config.FilePath);
             SettingReload();
@@ -893,6 +896,11 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                         Player.Dispose();
                         Player = null;
                     }
+                    if (!File.Exists($"Sound\\{SoundFile}"))
+                    {
+                        ExeLog($"[Sound]音声ファイル(Sound\\{SoundFile})が見つかりませんでした。");
+                        return;
+                    }
                     Player = new SoundPlayer($"Sound\\{SoundFile}");
                     Player.Play();
                     ExeLog($"[Sound]音声再生成功");
@@ -1166,5 +1174,29 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 ExeLog($"[ImageCheck]画像(\"Image\\{FileName}\")をコピーしました");
             }
         }
+    }
+    public class History
+    {
+        public string URL { get; set; }
+        public long Update { get; set; }
+        public string ID { get; set; }
+        public long TweetID { get; set; }
+
+        //表示用
+        public string Display1 { get; set; }
+        public string Display2 { get; set; }
+        public string Display3 { get; set; }
+
+        //更新検知用
+        public long Time { get; set; }
+        public string HypoJP { get; set; }
+        public string HypoEN { get; set; }
+        public double Lat { get; set; }
+        public double Lon { get; set; }
+        public double Depth { get; set; }
+        public string MagType { get; set; }
+        public double Mag { get; set; }
+        public double? MMI { get; set; }
+        public string Alert { get; set; }
     }
 }
