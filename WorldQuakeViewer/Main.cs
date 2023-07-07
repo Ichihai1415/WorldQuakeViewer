@@ -129,7 +129,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 DateTime Time = DateTime.Parse(time);
                 long Time_long = Time.Ticks;
                 DateTimeOffset TimeOff = Time.ToLocalTime();
-                string TimeSt = Convert.ToString(TimeOff).Replace("+0", " UTC +0").Replace("+1", " UTC +1").Replace("-0", " UTC -0").Replace("+1", " UTC -1");
+                string TimeSt = TimeOff.ToString("yyyy/MM/dd HH:mm:ss zzz").Replace("+", " UTC+").Replace("-", " UTC-");
                 string TimeJP = TimeOff.DateTime.ToString("d日HH時mm分ss秒");
                 string lat = texts[2];
                 double Lat = double.Parse(lat);
@@ -309,14 +309,14 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 ImageCheck("hypo.png");
                 g.DrawImage(Image.FromFile("Image\\hypo.png"), new Rectangle(360, locY + locY_image - 40, 80, 80), 0, 0, 80, 80, GraphicsUnit.Pixel, ia);
 
-                g.FillRectangle(new SolidBrush(Color.FromArgb(128, 0, 0, 30)), 480, 950, 320, 50);//TODO:"EMSC地震情報"の文字を大きく
+                g.FillRectangle(new SolidBrush(Color.FromArgb(128, 0, 0, 30)), 480, 950, 320, 50);
                 g.DrawString("地図データ:Natural Earth", new Font(font, 19), Brushes.White, 490, 956);
 
                 g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 0, 0, 800, 200);
-                g.FillRectangle(new SolidBrush(Color.FromArgb(30, 30, 60)), 4, 30, 792, 166);
+                g.FillRectangle(new SolidBrush(Color.FromArgb(30, 30, 60)), 4, 40, 792, 156);
                 Brush color = Mag2Brush(Mag);
-                g.DrawString($"EMSC地震情報(M5.0+)                                {TimeSt}", new Font(font, 17), Brushes.White, 0, 0);
-                g.DrawString($"{hypoJP}\n({hypoEN})\n{LatDisplay}, {LonDisplay}   深さ:{DepthSt}\nID:{id}  ソース:{source}", new Font(font, 21), color, 4, 32);
+                g.DrawString($"EMSC地震情報(M5.0+)                 {TimeSt}", new Font(font, 20), Brushes.White, 0, 0);
+                g.DrawString($"{hypoJP}\n({hypoEN})\n{LatDisplay}, {LonDisplay}   深さ:{DepthSt}\nID:{id}  ソース:{source}", new Font(font, 20), color, 4, 42);
                 g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 796, 0, 4, 200);
                 g.DrawString(MagTypeWithSpace, new Font(font, 20), color, 590, 160);
                 g.DrawString(MagSt, new Font(font, 50), color, 670, 100);
@@ -396,7 +396,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                         string MaxInt = MMI < 1.5 ? "I" : MMI < 2.5 ? "II" : MMI < 3.5 ? "III" : MMI < 4.5 ? "IV" : MMI < 5.5 ? "V" : MMI < 6.5 ? "VI" : MMI < 7.5 ? "VII" : MMI < 8.5 ? "VIII" : MMI < 9.5 ? "IX" : MMI < 10.5 ? "X" : MMI < 11.5 ? "XI" : MMI >= 11.5 ? "XII" : "-";
                         long Time = (long)propertie.SelectToken("time");
                         DateTimeOffset DataTimeOff = DateTimeOffset.FromUnixTimeMilliseconds(Time).ToLocalTime();
-                        string TimeSt = Convert.ToString(DataTimeOff).Replace("+0", " UTC +0").Replace("+1", " UTC +1").Replace("-0", " UTC -0").Replace("+1", " UTC -1");
+                        string TimeSt = Convert.ToString(DataTimeOff).Replace("+", " UTC+").Replace("-", " UTC-");
                         string TimeJP = DataTimeOff.DateTime.ToString("d日HH時mm分ss秒");
                         double Mag = (double)propertie.SelectToken("mag");
                         string MagSt = Mag.ToString("0.0#");
@@ -1051,21 +1051,22 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
             }
         }
 
+        //##とか00はフォーマットのやつ
         /// <summary>
         /// 緯度を様々なフォーマットに変換します。
         /// </summary>
         /// <remarks>指定ミスに注意してください。</remarks>
-        /// <param name="Lat">経度</param>
-        /// <param name="LatStLong">(string) 設定により {###.##…}ﾟN または {###}ﾟ{##}'{##}"N</param>
+        /// <param name="Lat">緯度</param>
+        /// <param name="LatStLong">(string) 設定により {###.##…}ﾟN または {###}ﾟ{##}'{##}\"N</param>
         /// <param name="LatStLongJP">(string) 設定により 北緯{###.##…}度 または 北緯{##}度{##}分{##}秒 </param>
-        /// <param name="LatDisplay">(string) 設定により {###.00}°N または {###}ﾟ{##}'{##}"N </param>
+        /// <param name="LatDisplay">(string) 設定により {###.00}ºN または {###}ﾟ{##}'{##}\"N </param>
         public static void Lat2String(double Lat, out string LatStLong, out string LatStLongJP, out string LatDisplay)//ここら辺は雑なので気が向いたら調整
         {
             double LatShort = Math.Round(Lat, 2, MidpointRounding.AwayFromZero);
-            string LatStDecimal = Lat > 0 ? $"{LatShort}°N" : $"{-LatShort}°S";
+            string LatStDecimal = Lat > 0 ? $"{LatShort}ºN" : $"{-LatShort}ºS";
             TimeSpan LatTime = TimeSpan.FromHours(Lat);
             string LatStShort = Lat > 0 ? $"{(int)Lat}ﾟ{LatTime.Minutes}'N" : $"{(int)-Lat}ﾟ{-LatTime.Minutes}'S";
-            LatStLong = Settings.Default.Text_LatLonDecimal ? Lat > 0 ? $"{Lat}°N" : $"{-Lat}°S" : Lat > 0 ? $"{(int)Lat}ﾟ{LatTime.Minutes}'{LatTime.Seconds}\"N" : $"{(int)-Lat} ﾟ {-LatTime.Minutes} '{-LatTime.Seconds}\"S";
+            LatStLong = Settings.Default.Text_LatLonDecimal ? Lat > 0 ? $"{Lat}ºN" : $"{-Lat}ºS" : Lat > 0 ? $"{(int)Lat}ﾟ{LatTime.Minutes}'{LatTime.Seconds}\"N" : $"{(int)-Lat}ﾟ{-LatTime.Minutes}'{-LatTime.Seconds}\"S";
             LatStLongJP = Settings.Default.Text_LatLonDecimal ? Lat > 0 ? $"北緯{Lat}度" : $"南緯{-Lat}度" : Lat > 0 ? $"北緯{(int)Lat}度{LatTime.Minutes}分{LatTime.Seconds}秒" : $"南緯{(int)-Lat}度{-LatTime.Minutes}分{-LatTime.Seconds}秒";
             LatDisplay = Settings.Default.Text_LatLonDecimal ? LatStDecimal : LatStShort;
         }
@@ -1074,21 +1075,21 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
         /// 緯度を様々なフォーマットに変換します。
         /// </summary>
         /// <remarks>指定ミスに注意してください。</remarks>
-        /// <param name="Lat">経度</param>
+        /// <param name="Lat">緯度</param>
         /// <param name="LatShort">(double) ###.00</param>
         /// <param name="LatStDecimal">(string) {###.00}°N</param>
         /// <param name="LatStShort">(string) {###}ﾟ{##}'N</param>
-        /// <param name="LatStLong">(string) 設定により {###.##…}ﾟN または {###}ﾟ{##}'{##}"N</param>
+        /// <param name="LatStLong">(string) 設定により {###.##…}ﾟN または {###}ﾟ{##}'{##}\"N</param>
         /// <param name="LatStLongJP">(string) 設定により 北緯{###.##…}度 または 北緯{##}度{##}分{##}秒 </param>
         /// <param name="LatDisplay">(string) 設定により<paramref name="LatStDecimal"/>または<paramref name="LatStShort"/></param>
         public static void Lat2String(double Lat, out double LatShort, out string LatStDecimal, out string LatStShort, out string LatStLong, out string LatStLongJP, out string LatDisplay)
         {
             //Lat2String(Lat, out double LatShort, out string LatStDecimal, out string LatStShort, out string LatStLong, out string LatStLongJP, out string LatDisplay);
             LatShort = Math.Round(Lat, 2, MidpointRounding.AwayFromZero);
-            LatStDecimal = Lat > 0 ? $"{LatShort}°N" : $"{-LatShort}°S";
+            LatStDecimal = Lat > 0 ? $"{LatShort}ºN" : $"{-LatShort}ºS";
             TimeSpan LatTime = TimeSpan.FromHours(Lat);
             LatStShort = Lat > 0 ? $"{(int)Lat}ﾟ{LatTime.Minutes}'N" : $"{(int)-Lat}ﾟ{-LatTime.Minutes}'S";
-            LatStLong = Settings.Default.Text_LatLonDecimal ? Lat > 0 ? $"{Lat}°N" : $"{-Lat}°S" : Lat > 0 ? $"{(int)Lat}ﾟ{LatTime.Minutes}'{LatTime.Seconds}\"N" : $"{(int)-Lat} ﾟ {-LatTime.Minutes} '{-LatTime.Seconds}\"S";
+            LatStLong = Settings.Default.Text_LatLonDecimal ? Lat > 0 ? $"{Lat}ºN" : $"{-Lat}ºS" : Lat > 0 ? $"{(int)Lat}ﾟ{LatTime.Minutes}'{LatTime.Seconds}\"N" : $"{(int)-Lat}ﾟ{-LatTime.Minutes}'{-LatTime.Seconds}\"S";
             LatStLongJP = Settings.Default.Text_LatLonDecimal ? Lat > 0 ? $"北緯{Lat}度" : $"南緯{-Lat}度" : Lat > 0 ? $"北緯{(int)Lat}度{LatTime.Minutes}分{LatTime.Seconds}秒" : $"南緯{(int)-Lat}度{-LatTime.Minutes}分{-LatTime.Seconds}秒";
             LatDisplay = Settings.Default.Text_LatLonDecimal ? LatStDecimal : LatStShort;
         }
@@ -1098,16 +1099,16 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
         /// </summary>
         /// <remarks>指定ミスに注意してください。</remarks>
         /// <param name="Lon">経度</param>
-        /// <param name="LonStLong">(string) 設定により {###.##…}ﾟE または {###}ﾟ{##}'{##}"E</param>
+        /// <param name="LonStLong">(string) 設定により {###.##…}ﾟE または {###}ﾟ{##}'{##}\"E</param>
         /// <param name="LonStLongJP">(string) 設定により 東経{###.##…}度 または 東経{##}度{##}分{##}秒 </param>
-        /// <param name="LonDisplay">(string) 設定により {###.00}°E または {###}ﾟ{##}'{##}"E</param>
+        /// <param name="LonDisplay">(string) 設定により {###.00}ºE または {###}ﾟ{##}'{##}\"E</param>
         public static void Lon2String(double Lon, out string LonStLong, out string LonStLongJP, out string LonDisplay)
         {
             double LonShort = Math.Round(Lon, 2, MidpointRounding.AwayFromZero);
-            string LonStDecimal = Lon > 0 ? $"{LonShort}°E" : $"{-LonShort}°W";
+            string LonStDecimal = Lon > 0 ? $"{LonShort}ºE" : $"{-LonShort}ºW";
             TimeSpan LonTime = TimeSpan.FromHours(Lon);
             string LonStShort = Lon > 0 ? $"{(int)Lon}ﾟ{LonTime.Minutes}'E" : $"{(int)-Lon}ﾟ{-LonTime.Minutes}'W";
-            LonStLong = Settings.Default.Text_LatLonDecimal ? Lon > 0 ? $"{Lon}°E" : $"{-Lon}°W" : Lon > 0 ? $"{(int)Lon}ﾟ{LonTime.Minutes}'{LonTime.Seconds}\"E" : $"{(int)-Lon} ﾟ {-LonTime.Minutes} '{-LonTime.Seconds}\"W";
+            LonStLong = Settings.Default.Text_LatLonDecimal ? Lon > 0 ? $"{Lon}ºE" : $"{-Lon}ºW" : Lon > 0 ? $"{(int)Lon}ﾟ{LonTime.Minutes}'{LonTime.Seconds}\"E" : $"{(int)-Lon}ﾟ{-LonTime.Minutes}'{-LonTime.Seconds}\"W";
             LonStLongJP = Settings.Default.Text_LatLonDecimal ? Lon > 0 ? $"東経{Lon}度" : $"西経{-Lon}度" : Lon > 0 ? $"東経{(int)Lon}度{LonTime.Minutes}分{LonTime.Seconds}秒" : $"西経{(int)-Lon}度{-LonTime.Minutes}分{-LonTime.Seconds}秒";
             LonDisplay = Settings.Default.Text_LatLonDecimal ? LonStDecimal : LonStShort;
         }
@@ -1118,19 +1119,19 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
         /// <remarks>指定ミスに注意してください。</remarks>
         /// <param name="Lon">経度</param>
         /// <param name="LonShort">(double) ###.00</param>
-        /// <param name="LonStDecimal">(string) {###.00}°E</param>
+        /// <param name="LonStDecimal">(string) {###.00}ºE</param>
         /// <param name="LonStShort">(string) {###}ﾟ{##}'E</param>
-        /// <param name="LonStLong">(string) 設定により {###.##…}ﾟE または {###}ﾟ{##}'{##}"E</param>
+        /// <param name="LonStLong">(string) 設定により {###.##…}ﾟE または {###}ﾟ{##}'{##}\"E</param>
         /// <param name="LonStLongJP">(string) 設定により 東経{###.##…}度 または 東経{##}度{##}分{##}秒 </param>
         /// <param name="LonDisplay">(string) 設定により<paramref name="LonStDecimal"/>または<paramref name="LonStShort"/></param>
         public static void Lon2String(double Lon, out double LonShort, out string LonStDecimal, out string LonStShort, out string LonStLong, out string LonStLongJP, out string LonDisplay)
         {
             //Lon2String(Lon, out double LonShort, out string LonStDecimal, out string LonStShort, out string LonStLong, out string LonStLongJP, out string LonDisplay);
             LonShort = Math.Round(Lon, 2, MidpointRounding.AwayFromZero);
-            LonStDecimal = Lon > 0 ? $"{LonShort}°E" : $"{-LonShort}°W";
+            LonStDecimal = Lon > 0 ? $"{LonShort}ºE" : $"{-LonShort}ºW";
             TimeSpan LonTime = TimeSpan.FromHours(Lon);
             LonStShort = Lon > 0 ? $"{(int)Lon}ﾟ{LonTime.Minutes}'E" : $"{(int)-Lon}ﾟ{-LonTime.Minutes}'W";
-            LonStLong = Settings.Default.Text_LatLonDecimal ? Lon > 0 ? $"{Lon}°E" : $"{-Lon}°W" : Lon > 0 ? $"{(int)Lon}ﾟ{LonTime.Minutes}'{LonTime.Seconds}\"E" : $"{(int)-Lon} ﾟ {-LonTime.Minutes} '{-LonTime.Seconds}\"W";
+            LonStLong = Settings.Default.Text_LatLonDecimal ? Lon > 0 ? $"{Lon}ºE" : $"{-Lon}ºW" : Lon > 0 ? $"{(int)Lon}ﾟ{LonTime.Minutes}'{LonTime.Seconds}\"E" : $"{(int)-Lon}ﾟ{-LonTime.Minutes}'{-LonTime.Seconds}\"W";
             LonStLongJP = Settings.Default.Text_LatLonDecimal ? Lon > 0 ? $"東経{Lon}度" : $"西経{-Lon}度" : Lon > 0 ? $"東経{(int)Lon}度{LonTime.Minutes}分{LonTime.Seconds}秒" : $"西経{(int)-Lon}度{-LonTime.Minutes}分{-LonTime.Seconds}秒";
             LonDisplay = Settings.Default.Text_LatLonDecimal ? LonStDecimal : LonStShort;
         }
