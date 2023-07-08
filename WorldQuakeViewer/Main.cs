@@ -328,7 +328,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 g.DrawRectangle(new Pen(Color.FromArgb(200, 200, 200)), 0, 200, 799, 799);
                 g.DrawImage(bitmap_USGS, 800, 0, 800, 1000);
                 if (!NoFirst && WaitEMSCDraw)//初回
-                g.DrawImage(Resources.Back_USGS, 800, 0);
+                    g.DrawImage(Resources.Back_USGS, 800, 0);
                 ExeLog($"[EMSC]描画完了");
 
                 g.Dispose();
@@ -1160,7 +1160,8 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
 
         private void RC1MapGenerator_Click(object sender, EventArgs e)
         {
-
+            MapGenerate mapGenerate = new MapGenerate();
+            mapGenerate.Show();
         }
 
         private void RCTextCopyEMSC_Click(object sender, EventArgs e)
