@@ -63,6 +63,26 @@ namespace WorldQuakeViewer.Properties {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
+        internal static System.Drawing.Bitmap Back {
+            get {
+                object obj = ResourceManager.GetObject("Back", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
+        internal static System.Drawing.Bitmap Back_USGS {
+            get {
+                object obj = ResourceManager.GetObject("Back_USGS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
         internal static System.Drawing.Bitmap hypo {
             get {
                 object obj = ResourceManager.GetObject("hypo", resourceCulture);
@@ -110,6 +130,45 @@ namespace WorldQuakeViewer.Properties {
             get {
                 object obj = ResourceManager.GetObject("map", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Name,Alpha,Red,Green,Blue
+        ///ocean,255,30,30,60
+        ///land,255,100,100,150
+        ///land-line,50,255,255,255
+        ///plate-convergent,255,150,0,0
+        ///plate-transform,255,0,150,0
+        ///plate-divergent,255,0,0,150
+        ///graticules-normal,100,255,255,255
+        ///graticules-lat,200,255,0,0
+        ///graticules-lon1,200,0,0,255
+        ///graticules-lon2,200,0,0,255 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string map_color {
+            get {
+                return ResourceManager.GetString("map_color", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   {&quot;type&quot;:&quot;GeometryCollection&quot;, &quot;geometries&quot;: [
+        ///{&quot;type&quot;:&quot;Polygon&quot;,&quot;coordinates&quot;:[[[179.99921875,-16.168554687500006],[180,-16.152929687500006],[179.84814453125,-16.21425781250001],[179.78886718750005,-16.221484375000003],[179.7150390625,-16.207617187500006],[179.63525390625,-16.223242187500006],[179.5517578125,-16.24990234375001],[179.47509765625,-16.29414062500001],[179.35917968750005,-16.3798828125],[179.29355468750003,-16.39863281250001],[179.224609375,-16.40517578125001],[179.09140625000003,-16.4375],[178 [残りの文字列は切り詰められました]&quot;; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string ne_50m_land {
+            get {
+                return ResourceManager.GetString("ne_50m_land", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   {&quot;type&quot;:&quot;FeatureCollection&quot;, &quot;features&quot;: [
+        ///{&quot;type&quot;:&quot;Feature&quot;,&quot;geometry&quot;:{&quot;type&quot;:&quot;LineString&quot;,&quot;coordinates&quot;:[[-0.438,-54.852],[-0.425858,-54.846716],[-0.41372,-54.841432],[-0.401585,-54.836145],[-0.389453,-54.830858],[-0.377324,-54.82557],[-0.365198,-54.82028],[-0.353076,-54.814989],[-0.340956,-54.809697],[-0.32884,-54.804404],[-0.316727,-54.799109],[-0.304617,-54.793813],[-0.292511,-54.788516],[-0.280407,-54.783218],[-0.268307,-54.777919],[-0.25621,-54.772618],[-0.244115,-54.767316],[-0.232025,-54.762013],[ [残りの文字列は切り詰められました]&quot;; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string PB2002_steps {
+            get {
+                return ResourceManager.GetString("PB2002_steps", resourceCulture);
             }
         }
         

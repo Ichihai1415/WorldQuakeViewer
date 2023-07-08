@@ -117,6 +117,12 @@
     <Compile Include="IntConvert.Designer.cs">
       <DependentUpon>IntConvert.cs</DependentUpon>
     </Compile>
+    <Compile Include="MapGenerate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MapGenerate.Designer.cs">
+      <DependentUpon>MapGenerate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -140,6 +146,9 @@
     <EmbeddedResource Include="IntConvert.resx">
       <DependentUpon>IntConvert.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MapGenerate.resx">
+      <DependentUpon>MapGenerate.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
@@ -160,12 +169,16 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\ColorSettingList.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings1.Designer.cs</LastGenOutput>
     </None>
     <None Include="Resources\Koruri-LICENSE" />
     <None Include="Resources\Koruri-Regular.ttf" />
+    <None Include="Resources\map-color.csv" />
+    <None Include="Resources\ne_50m_land.json" />
+    <None Include="Resources\PB2002_steps.json" />
     <None Include="Resources\Sound.zip" />
     <None Include="UserSetting.readme.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -192,6 +205,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Back_USGS.png" />
+    <None Include="Resources\Back.png" />
     <None Include="Resources\WQV.ico" />
     <None Include="Resources\hypo.png" />
     <None Include="Resources\map.png" />
