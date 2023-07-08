@@ -47,11 +47,12 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
             InitializeComponent();
         }
 
-        private void MainForm_Load(object sender, EventArgs e)//ExeLog($"");
+        private async void MainForm_Load(object sender, EventArgs e)//ExeLog($"");
         {
             ExeLog($"[Main]起動処理開始");
             StartTime = DateTime.Now;
             ErrorText.Text = "リソース確認中…";
+            await Task.Delay(1);//これがあると文字がちゃんと変わる
             if (!Directory.Exists("Font"))
             {
                 Directory.CreateDirectory("Font");
@@ -80,6 +81,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 File.Delete("Sound.zip");
             }
             ErrorText.Text = "設定読み込み中…";
+            await Task.Delay(1);
             if (File.Exists("UserSetting.xml"))//AppDataに保存
             {
                 if (!Directory.Exists(config.FilePath.Replace("\\user.config", "")))//実質更新時
@@ -95,6 +97,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 File.WriteAllText("AppDataPath.txt", config.FilePath);
             SettingReload();
             ErrorText.Text = "設定の読み込みが完了しました。";
+            await Task.Delay(1);
             ExeLog($"[Main]設定読み込み完了");
             EMSCget.Enabled = true;
             USGSget.Enabled = true;
@@ -123,6 +126,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 //?               |                        |        |         |        |ソース|全部同? |ソース     |ID           |       |         |ソース   |
                 WebClient wc = new WebClient();
                 ErrorText.Text = "[EMSC]取得中…";
+                await Task.Delay(1);
                 string text = await wc.DownloadStringTaskAsync(new Uri("https://www.seismicportal.eu/fdsnws/event/1/query?limit=1&format=text&minmag=5.0"));
                 wc.Dispose();
                 ExeLog($"[EMSC]処理開始");
@@ -290,6 +294,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                         break;
                 }
                 ErrorText.Text = "[EMSC]描画中…";
+                await Task.Delay(1);
                 ExeLog($"[EMSC]描画開始");
                 bitmap = new Bitmap(1600, 1000);
                 Graphics g = Graphics.FromImage(bitmap);
@@ -348,6 +353,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
             if (!ErrorText.Text.Contains("エラー"))
                 ErrorText.Text = "";
             ExeLog("[EMSC]処理終了");
+            await Task.Delay(1);
         }
 
         private async void USGSget_Tick(object sender, EventArgs e)
@@ -366,6 +372,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
             try
             {
                 ErrorText.Text = "[USGS]取得中…";
+                await Task.Delay(1);
                 WebClient wc = new WebClient();
                 string json_ = await wc.DownloadStringTaskAsync(new Uri("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson"));
                 wc.Dispose();
@@ -390,6 +397,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                     string UpdateTime = $"{Update:yyyy/MM/dd HH:mm:ss}";
                     long LastUpdated = USGSHist.ContainsKey(ID) ? USGSHist[ID].Update : 0;
                     ErrorText.Text = $"処理中…[{DatasCount - i}/{DatasCount}]";
+                    await Task.Delay(1);
                     if (Updated != LastUpdated)//新規か更新
                     {
                         ExeLog($"[USGS][{i}] 更新時刻変化検知({LastUpdated}->{Updated})");
@@ -572,6 +580,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 while (WaitEMSCDraw)//初回のEMSCの描画を待機
                     await Task.Delay(50);//小さすぎるとデッドロックみたいに動かなくなる
                 ErrorText.Text = "[USGS]描画中…";
+                await Task.Delay(1);
                 bitmap_USGS = new Bitmap(800, 1000);
                 Graphics g = Graphics.FromImage(bitmap_USGS);
                 g.DrawImage(Resources.Back_USGS, 0, 0);
@@ -612,6 +621,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 ErrorText.Text = "";
             NoFirst = true;
             ExeLog("[USGS]処理終了");
+            await Task.Delay(1);
         }
 
         /// <summary>
