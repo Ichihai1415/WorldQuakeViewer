@@ -192,6 +192,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Back_USGS.png" />
+    <None Include="Resources\Back.png" />
     <None Include="Resources\WQV.ico" />
     <None Include="Resources\hypo.png" />
     <None Include="Resources\map.png" />

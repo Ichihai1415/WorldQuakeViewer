@@ -291,8 +291,9 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 }
                 ErrorText.Text = "[EMSC]描画中…";
                 ExeLog($"[EMSC]描画開始");
+                bitmap = new Bitmap(1600, 1000);
                 Graphics g = Graphics.FromImage(bitmap);
-                g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 0, 0, 800, 1000);
+                g.DrawImage(Resources.Back, 0, 0);
 
                 int locX = Lon > 0 ? (int)Math.Round((Lon + 90d) * 10d, MidpointRounding.AwayFromZero) : (int)Math.Round((Lon + 450d) * 10d, MidpointRounding.AwayFromZero);
                 int locY = (int)Math.Round((90d - Lat) * 10d, MidpointRounding.AwayFromZero);
@@ -315,25 +316,23 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 g.FillRectangle(new SolidBrush(Color.FromArgb(128, 0, 0, 30)), 480, 950, 320, 50);
                 g.DrawString("地図データ:Natural Earth", new Font(font, 19), Brushes.White, 490, 956);
 
+                Brush color = Mag2Brush(Mag);
                 g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 0, 0, 800, 200);
                 g.FillRectangle(new SolidBrush(Color.FromArgb(30, 30, 60)), 4, 40, 792, 156);
-                Brush color = Mag2Brush(Mag);
                 g.DrawString($"EMSC地震情報(M5.0+)                 {TimeSt}", new Font(font, 20), Brushes.White, 0, 0);
                 g.DrawString($"{hypoJP}\n({hypoEN})\n{LatDisplay}, {LonDisplay}   深さ:{DepthSt}\nID:{id}  ソース:{source}", new Font(font, 20), color, 4, 42);
                 g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 796, 0, 4, 200);
-                g.DrawString(MagTypeWithSpace, new Font(font, 20), color, 590, 160);
-                g.DrawString(MagSt, new Font(font, 50), color, 670, 100);
+                g.DrawString(MagTypeWithSpace, new Font(font, 20), color, 590, 154);
+                g.DrawString(MagSt, new Font(font, 50), color, 670, 110);
+                g.DrawRectangle(new Pen(Color.FromArgb(200, 200, 200)), 0, 0, 799, 199);
+                g.DrawRectangle(new Pen(Color.FromArgb(200, 200, 200)), 0, 200, 799, 799);
                 g.DrawImage(bitmap_USGS, 800, 0, 800, 1000);
                 if (!NoFirst && WaitEMSCDraw)//初回
-                {
-                    g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 800, 0, 800, 1000);//TODO:USGSの情報がない状態(文字なし)の背景画像的なものを作る
-                    g.DrawRectangle(new Pen(Color.FromArgb(200, 200, 200)), 800, 0, 800, 1000);//↑はUSGS描画のベース画像にもする
-                }
+                g.DrawImage(Resources.Back_USGS, 800, 0);
                 ExeLog($"[EMSC]描画完了");
 
                 g.Dispose();
-                MainImage.BackgroundImage = null;//nullしないと変わらなかったはず
-                MainImage.BackgroundImage = bitmap;
+                MainImage.Image = bitmap;
                 wc.Dispose();
             }
             catch (WebException ex)
@@ -573,9 +572,9 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 while (WaitEMSCDraw)//初回のEMSCの描画を待機
                     await Task.Delay(50);//小さすぎるとデッドロックみたいに動かなくなる
                 ErrorText.Text = "[USGS]描画中…";
+                bitmap_USGS = new Bitmap(800, 1000);
                 Graphics g = Graphics.FromImage(bitmap_USGS);
-                g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 0, 0, 800, 1000);
-                g.DrawRectangle(new Pen(Color.FromArgb(200, 200, 200)), 0, 0, 800, 1000);
+                g.DrawImage(Resources.Back_USGS, 0, 0);
                 g.DrawString($"USGS地震情報(M4.5+)                                              Version:{Version}", new Font(font, 20), Brushes.White, 2, 2);
                 for (int i = 0; i < 6; i++)
                 {
@@ -595,8 +594,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 g = null;
                 g = Graphics.FromImage(bitmap);
                 g.DrawImage(bitmap_USGS, 800, 0, 800, 1000);
-                MainImage.BackgroundImage = null;
-                MainImage.BackgroundImage = bitmap;
+                MainImage.Image = bitmap;
                 g.Dispose();
                 ExeLog($"[USGS]ログ保持数:{USGSHist.Count}");
                 wc.Dispose();
@@ -937,16 +935,6 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
             Process.Start(LatestUSGSURL);
         }
 
-        private void RCreboot_Click(object sender, EventArgs e)
-        {
-            Application.Restart();
-        }
-
-        private void RCexit_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
         private void RCgithub_Click(object sender, EventArgs e)
         {
             Process.Start("https://github.com/Ichihai1415/WorldQuakeViewer");
@@ -957,7 +945,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
             Process.Start("https://twitter.com/ProjectS31415_1");
         }
 
-        private void RCtsunami_Click(object sender, EventArgs e)
+        private void RCPTWC_Click(object sender, EventArgs e)
         {
             Process.Start("https://www.tsunami.gov/");
         }
@@ -1023,11 +1011,6 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
         {
             IntConvert intConverter = new IntConvert();
             intConverter.Show();
-        }
-
-        private void RC1TextCopy_Click(object sender, EventArgs e)
-        {
-            Clipboard.SetText(LatestUSGSText);
         }
 
         public static Brush Mag2Brush(double Mag)
@@ -1174,7 +1157,38 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 ExeLog($"[ImageCheck]画像(\"Image\\{FileName}\")をコピーしました");
             }
         }
+
+        private void RC1MapGenerator_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void RCTextCopyEMSC_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(LatestEMSCText);
+        }
+
+        private void RCTextCopyUSGS_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(LatestUSGSText);
+        }
+
+        private void RC1Reboot_Click(object sender, EventArgs e)
+        {
+            Application.Restart();
+        }
+
+        private void RCSoftDiscord_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://discord.gg/7dBFWKjgGa");
+        }
+
+        private void RCThisEMSC_Click(object sender, EventArgs e)
+        {
+            Process.Start(LatestEMSCURL);
+        }
     }
+
     public class History
     {
         public string URL { get; set; }
