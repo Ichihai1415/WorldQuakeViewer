@@ -137,7 +137,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 long Time_long = Time.Ticks;
                 DateTimeOffset TimeOff = Time.ToLocalTime();
                 string TimeSt = TimeOff.ToString("yyyy/MM/dd HH:mm:ss zzz").Replace("+", " UTC+").Replace("-", " UTC-");
-                string TimeJP = TimeOff.DateTime.ToString("d日HH時mm分ss秒");
+                string TimeJP = TimeOff.DateTime.ToString("d日H時m分s秒");
                 string lat = texts[2];
                 double Lat = double.Parse(lat);
                 string lon = texts[3];
@@ -394,6 +394,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                     JToken propertie = features.SelectToken("properties");
                     long Updated = (long)propertie.SelectToken("updated");
                     DateTimeOffset Update = DateTimeOffset.FromUnixTimeMilliseconds(Updated).ToLocalTime();
+
                     string UpdateTime = $"{Update:yyyy/MM/dd HH:mm:ss}";
                     long LastUpdated = USGSHist.ContainsKey(ID) ? USGSHist[ID].Update : 0;
                     ErrorText.Text = $"処理中…[{DatasCount - i}/{DatasCount}]";
@@ -405,9 +406,9 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                         string MMISt = $"({MMI})".Replace("()", "-");//(1.2)/-
                         string MaxInt = MMI < 1.5 ? "I" : MMI < 2.5 ? "II" : MMI < 3.5 ? "III" : MMI < 4.5 ? "IV" : MMI < 5.5 ? "V" : MMI < 6.5 ? "VI" : MMI < 7.5 ? "VII" : MMI < 8.5 ? "VIII" : MMI < 9.5 ? "IX" : MMI < 10.5 ? "X" : MMI < 11.5 ? "XI" : MMI >= 11.5 ? "XII" : "-";
                         long Time = (long)propertie.SelectToken("time");
-                        DateTimeOffset DataTimeOff = DateTimeOffset.FromUnixTimeMilliseconds(Time).ToLocalTime();
-                        string TimeSt = Convert.ToString(DataTimeOff).Replace("+", " UTC+").Replace("-", " UTC-");
-                        string TimeJP = DataTimeOff.DateTime.ToString("d日HH時mm分ss秒");
+                        DateTimeOffset TimeOff = DateTimeOffset.FromUnixTimeMilliseconds(Time).ToLocalTime();
+                        string TimeSt = TimeOff.ToString("yyyy/MM/dd HH:mm:ss zzz").Replace("+", " UTC+").Replace("-", " UTC-");
+                        string TimeJP = TimeOff.DateTime.ToString("d日H時m分s秒");
                         double Mag = (double)propertie.SelectToken("mag");
                         string MagSt = Mag.ToString("0.0#");
                         string MagType = (string)propertie.SelectToken("magType");
