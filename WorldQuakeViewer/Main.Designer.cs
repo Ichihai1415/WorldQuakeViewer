@@ -48,7 +48,7 @@
             this.RCNOAA = new System.Windows.Forms.ToolStripMenuItem();
             this.RCEarlyEst = new System.Windows.Forms.ToolStripMenuItem();
             this.RC1DevInfo = new System.Windows.Forms.ToolStripMenuItem();
-            this.RCTwitter = new System.Windows.Forms.ToolStripMenuItem();
+            this.RCXTwitter = new System.Windows.Forms.ToolStripMenuItem();
             this.RCiInfoPage = new System.Windows.Forms.ToolStripMenuItem();
             this.RCGitHub = new System.Windows.Forms.ToolStripMenuItem();
             this.RCSoftDiscord = new System.Windows.Forms.ToolStripMenuItem();
@@ -91,7 +91,7 @@
             this.RC1Reboot});
             this.RightClick.Name = "RightClick";
             this.RightClick.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.RightClick.Size = new System.Drawing.Size(225, 226);
+            this.RightClick.Size = new System.Drawing.Size(225, 248);
             this.RightClick.TabStop = true;
             this.RightClick.Text = "メニュー";
             // 
@@ -206,7 +206,7 @@
             // 
             this.RC1DevInfo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.RC1DevInfo.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.RCTwitter,
+            this.RCXTwitter,
             this.RCiInfoPage,
             this.RCGitHub,
             this.RCSoftDiscord});
@@ -214,32 +214,32 @@
             this.RC1DevInfo.Size = new System.Drawing.Size(224, 22);
             this.RC1DevInfo.Text = "制作者ページ/解説ページ等";
             // 
-            // RCTwitter
+            // RCXTwitter
             // 
-            this.RCTwitter.Name = "RCTwitter";
-            this.RCTwitter.Size = new System.Drawing.Size(183, 22);
-            this.RCTwitter.Text = "Twitter";
-            this.RCTwitter.Click += new System.EventHandler(this.RCtwitter_Click);
+            this.RCXTwitter.Name = "RCXTwitter";
+            this.RCXTwitter.Size = new System.Drawing.Size(227, 22);
+            this.RCXTwitter.Text = "X(旧Twitter)";
+            this.RCXTwitter.Click += new System.EventHandler(this.RCXtwitter_Click);
             // 
             // RCiInfoPage
             // 
             this.RCiInfoPage.Name = "RCiInfoPage";
-            this.RCiInfoPage.Size = new System.Drawing.Size(183, 22);
+            this.RCiInfoPage.Size = new System.Drawing.Size(227, 22);
             this.RCiInfoPage.Text = "解説ページ";
             this.RCiInfoPage.Click += new System.EventHandler(this.RCinfopage_Click);
             // 
             // RCGitHub
             // 
             this.RCGitHub.Name = "RCGitHub";
-            this.RCGitHub.Size = new System.Drawing.Size(183, 22);
-            this.RCGitHub.Text = "GitHub(リポジトリ)";
+            this.RCGitHub.Size = new System.Drawing.Size(227, 22);
+            this.RCGitHub.Text = "GitHubレポジトリ";
             this.RCGitHub.Click += new System.EventHandler(this.RCgithub_Click);
             // 
             // RCSoftDiscord
             // 
             this.RCSoftDiscord.Name = "RCSoftDiscord";
-            this.RCSoftDiscord.Size = new System.Drawing.Size(183, 22);
-            this.RCSoftDiscord.Text = "ソフト情報Discord";
+            this.RCSoftDiscord.Size = new System.Drawing.Size(227, 22);
+            this.RCSoftDiscord.Text = "ソフト情報Discordサーバー";
             this.RCSoftDiscord.Click += new System.EventHandler(this.RCSoftDiscord_Click);
             // 
             // RC1TextCopy
@@ -254,14 +254,14 @@
             // RCTextCopyEMSC
             // 
             this.RCTextCopyEMSC.Name = "RCTextCopyEMSC";
-            this.RCTextCopyEMSC.Size = new System.Drawing.Size(109, 22);
+            this.RCTextCopyEMSC.Size = new System.Drawing.Size(180, 22);
             this.RCTextCopyEMSC.Text = "EMSC";
             this.RCTextCopyEMSC.Click += new System.EventHandler(this.RCTextCopyEMSC_Click);
             // 
             // RCTextCopyUSGS
             // 
             this.RCTextCopyUSGS.Name = "RCTextCopyUSGS";
-            this.RCTextCopyUSGS.Size = new System.Drawing.Size(109, 22);
+            this.RCTextCopyUSGS.Size = new System.Drawing.Size(180, 22);
             this.RCTextCopyUSGS.Text = "USGS";
             this.RCTextCopyUSGS.Click += new System.EventHandler(this.RCTextCopyUSGS_Click);
             // 
@@ -361,7 +361,7 @@
         private System.Windows.Forms.ToolStripMenuItem RCThisUSGS;
         private System.Windows.Forms.Label ErrorText;
         private System.Windows.Forms.ToolStripMenuItem RCGitHub;
-        private System.Windows.Forms.ToolStripMenuItem RCTwitter;
+        private System.Windows.Forms.ToolStripMenuItem RCXTwitter;
         private System.Windows.Forms.ToolStripMenuItem RCNOAA;
         private System.Windows.Forms.ToolStripMenuItem RCiInfoPage;
         private System.Windows.Forms.ToolStripSeparator RC1Bar3;
