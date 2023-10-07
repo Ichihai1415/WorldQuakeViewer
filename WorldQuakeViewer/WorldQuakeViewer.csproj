@@ -91,11 +91,8 @@
     <ApplicationIcon>Resources\WQV.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CoreTweet, Version=1.0.0.483, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CoreTweet.1.0.0.483\lib\net45\CoreTweet.dll</HintPath>
-    </Reference>
-    <Reference Include="LL2FERC, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LL2FERC.1.1.0\lib\netstandard2.0\LL2FERC.dll</HintPath>
+    <Reference Include="LL2FERC, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LL2FERC.1.1.1\lib\netstandard2.0\LL2FERC.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -116,12 +113,6 @@
     </Compile>
     <Compile Include="IntConvert.Designer.cs">
       <DependentUpon>IntConvert.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MapGenerate.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MapGenerate.Designer.cs">
-      <DependentUpon>MapGenerate.cs</DependentUpon>
     </Compile>
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
@@ -145,9 +136,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="IntConvert.resx">
       <DependentUpon>IntConvert.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MapGenerate.resx">
-      <DependentUpon>MapGenerate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
@@ -176,9 +164,6 @@
     </None>
     <None Include="Resources\Koruri-LICENSE" />
     <None Include="Resources\Koruri-Regular.ttf" />
-    <None Include="Resources\map-color.csv" />
-    <None Include="Resources\ne_50m_land.json" />
-    <None Include="Resources\PB2002_steps.json" />
     <None Include="Resources\Sound.zip" />
     <None Include="UserSetting.readme.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -210,7 +195,6 @@
     <None Include="Resources\WQV.ico" />
     <None Include="Resources\hypo.png" />
     <None Include="Resources\map.png" />
-    <Content Include="EMSC-RSS_old.cs.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
