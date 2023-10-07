@@ -1,5 +1,4 @@
-﻿using CoreTweet;
-using LL2FERC;
+﻿using LL2FERC;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -156,7 +155,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 double Mag = double.Parse(mag);
                 string MagSt = Mag.ToString("0.0");
                 int hypoCode = LL2FERCode.Code(Lat, Lon);
-                string hypoJP = LL2FERCode.Name_JP(hypoCode);
+                string hypoJP = LL2FERCode.NameJP(hypoCode);
                 string hypoEN = texts[12];
                 string MagTypeWithSpace = magType.Length == 3 ? magType : magType.Length == 2 ? "   " + magType : "      " + magType;
 
@@ -423,7 +422,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                         //string DepthSt = Depth == (int)Depth ? $"(深さ:{Depth}km?)" : $"深さ:約{(int)Math.Round(Depth, MidpointRounding.AwayFromZero)}km";
                         //string DepthLong = Depth == (int)Depth ? DepthSt : $"深さ:{Depth}km";
                         string DepthLong = Depth == (int)Depth ? $"(深さ:{Depth}km?)" : $"深さ:{Depth}km";
-                        string HypoJP = LL2FERCode.Name_JP(LL2FERCode.Code(Lat, Lon));
+                        string HypoJP = LL2FERCode.NameJP(LL2FERCode.Code(Lat, Lon));
                         string HypoEN = $"({(string)properties.SelectToken("place")})";
                         string URL = (string)properties.SelectToken("url");
                         LatestUSGSURL = URL;

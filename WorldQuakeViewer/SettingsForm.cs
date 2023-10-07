@@ -1,5 +1,4 @@
-﻿using CoreTweet;
-using System;
+﻿using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
@@ -209,6 +208,7 @@ namespace WorldQuakeViewer
 
         private void Tab_Tweet_Test_Click(object sender, EventArgs e)
         {
+            /*
             Tab_Tweet_Test.Enabled = false;
             try
             {
@@ -221,7 +221,7 @@ namespace WorldQuakeViewer
                 MessageBox.Show($"ツイートの送信に失敗しました。({ex.Message})", "WQV - setting", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 MainForm.LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Setting,Tweet Version:{MainForm.Version}\n{ex}");
             }
-            Tab_Tweet_Test.Enabled = true;
+            Tab_Tweet_Test.Enabled = true;*/
         }
         private void Tab_Socket_Test_Click(object sender, EventArgs e)
         {
