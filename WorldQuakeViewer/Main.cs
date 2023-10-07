@@ -23,7 +23,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
 {
     public partial class MainForm : Form//TODO:設定の分割(USGSとEMSC)
     {
-        public static readonly string Version = "1.1.0α6";//こことアセンブリを変える
+        public static readonly string Version = "1.1.0α7";//こことアセンブリを変える
         public static DateTime StartTime = new DateTime();
         public static readonly Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
         public static int AccessedEMSC = 0;
@@ -136,7 +136,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 DateTime Time = DateTime.Parse(time);
                 long Time_long = Time.Ticks;
                 DateTimeOffset TimeOff = Time.ToLocalTime();
-                string TimeSt = TimeOff.ToString("yyyy/MM/dd HH:mm:ss zzz").Replace("+", " UTC+").Replace("-", " UTC-");
+                string TimeSt = TimeOff.ToString("yyyy/MM/dd HH:mm:ss  UTCzzz");
                 string TimeJP = TimeOff.DateTime.ToString("d日H時m分s秒");
                 string lat = texts[2];
                 double Lat = double.Parse(lat);
@@ -391,32 +391,32 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                     ExeLog($"[USGS]処理[{i}]:{ID}");
                     if (i < 6)
                         IDs[i] = ID;
-                    JToken propertie = features.SelectToken("properties");
-                    long Updated = (long)propertie.SelectToken("updated");
+                    JToken properties = features.SelectToken("properties");
+                    long Updated = (long)properties.SelectToken("updated");
                     DateTimeOffset Update = DateTimeOffset.FromUnixTimeMilliseconds(Updated).ToLocalTime();
 
                     string UpdateTime = $"{Update:yyyy/MM/dd HH:mm:ss}";
                     long LastUpdated = USGSHist.ContainsKey(ID) ? USGSHist[ID].Update : 0;
                     ErrorText.Text = $"処理中…[{DatasCount - i}/{DatasCount}]";
-                    await Task.Delay(1);
+                    await Task.Delay(1);//todo:たまに待つようにする
                     if (Updated != LastUpdated)//新規か更新
                     {
                         ExeLog($"[USGS][{i}] 更新時刻変化検知({LastUpdated}->{Updated})");
-                        double? MMI = (double?)propertie.SelectToken("mmi");
+                        double? MMI = (double?)properties.SelectToken("mmi");
                         string MMISt = $"({MMI})".Replace("()", "-");//(1.2)/-
                         string MaxInt = MMI < 1.5 ? "I" : MMI < 2.5 ? "II" : MMI < 3.5 ? "III" : MMI < 4.5 ? "IV" : MMI < 5.5 ? "V" : MMI < 6.5 ? "VI" : MMI < 7.5 ? "VII" : MMI < 8.5 ? "VIII" : MMI < 9.5 ? "IX" : MMI < 10.5 ? "X" : MMI < 11.5 ? "XI" : MMI >= 11.5 ? "XII" : "-";
-                        long Time = (long)propertie.SelectToken("time");
+                        long Time = (long)properties.SelectToken("time");
                         DateTimeOffset TimeOff = DateTimeOffset.FromUnixTimeMilliseconds(Time).ToLocalTime();
-                        string TimeSt = TimeOff.ToString("yyyy/MM/dd HH:mm:ss zzz").Replace("+", " UTC+").Replace("-", " UTC-");
+                        string TimeSt = TimeOff.ToString("yyyy/MM/dd HH:mm:ss  UTCzzz");
                         string TimeJP = TimeOff.DateTime.ToString("d日H時m分s秒");
-                        double Mag = (double)propertie.SelectToken("mag");
+                        double Mag = (double)properties.SelectToken("mag");
                         string MagSt = Mag.ToString("0.0#");
-                        string MagType = (string)propertie.SelectToken("magType");
+                        string MagType = (string)properties.SelectToken("magType");
                         double Lat = (double)features.SelectToken("geometry.coordinates[1]");
                         double Lon = (double)features.SelectToken("geometry.coordinates[0]");
                         Lat2String(Lat, out string LatStLong, out string LatStLongJP, out string LatDisplay);
                         Lon2String(Lon, out string LonStLong, out string LonStLongJP, out string LonDisplay);
-                        string Alert = (string)propertie.SelectToken("alert");
+                        string Alert = (string)properties.SelectToken("alert");
                         string AlertJP = Alert == null ? "アラート:-" : $"アラート:{Alert.Replace("green", "緑").Replace("yellow", "黄").Replace("orange", "オレンジ").Replace("red", "赤").Replace("pending", "保留中")}";
                         double Depth = (double)features.SelectToken("geometry.coordinates[2]");
                         //使うかも
@@ -424,8 +424,8 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                         //string DepthLong = Depth == (int)Depth ? DepthSt : $"深さ:{Depth}km";
                         string DepthLong = Depth == (int)Depth ? $"(深さ:{Depth}km?)" : $"深さ:{Depth}km";
                         string HypoJP = LL2FERCode.Name_JP(LL2FERCode.Code(Lat, Lon));
-                        string HypoEN = $"({(string)propertie.SelectToken("place")})";
-                        string URL = (string)propertie.SelectToken("url");
+                        string HypoEN = $"({(string)properties.SelectToken("place")})";
+                        string URL = (string)properties.SelectToken("url");
                         LatestUSGSURL = URL;
                         string LogText = $"USGS地震情報【{MagType}{MagSt}】{TimeSt}\n{HypoJP}{HypoEN}\n{LatStLong},{LonStLong}　{DepthLong}\n推定最大改正メルカリ震度階級:{MaxInt}{MMISt.Replace("-", "")}　{AlertJP.Replace("アラート:-", "")}\n{URL}";
                         string BouyomiText = $"USGS地震情報。{TimeJP}発生、マグニチュード{MagSt}、震源、{HypoJP.Replace(" ", "、").Replace("/", "、")}、{LatStLongJP}、{LonStLongJP}、深さ{DepthLong.Replace("深さ:", "")}。{$"推定最大改正メルカリ震度階級{MMISt.Replace("(", "").Replace(")", "")}。".Replace("推定最大改正メルカリ震度階級-。", "")}{AlertJP.Replace("アラート:-", "")}";
@@ -553,8 +553,6 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                                 Tweet(LogText, "USGS", ID);
                             WebHook(LogText);
                         }
-                        else
-                            ExeLog($"[USGS][{i}] 内容更新なし(更新:{UpdateTime})");
                     }
                 }
                 switch (SoundLevel)//ifより行増えたけどこっちのほうが速い(かも)
@@ -687,73 +685,13 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
         /// <summary>
         /// ツイートします。
         /// </summary>
+        /// <remarks>ツイートできる遮断ができるまで廃止</remarks>
         /// <param name="Text">ツイートするテキスト。</param>
         /// <param name="source">データ元</param>
         /// <param name="ID">リプライ判別用地震ID。</param>
         public async void Tweet(string Text, string source, string ID)
         {
-            if (NoFirst && Settings.Default.Tweet_Enable)
-                try
-                {
-                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-                    Tokens tokens;
-                    try
-                    {
-                        tokens = Tokens.Create(Settings.Default.Tweet_ConsumerKey, Settings.Default.Tweet_ConsumerSecret, Settings.Default.Tweet_AccessToken, Settings.Default.Tweet_AccessSecret);
-                    }
-                    catch
-                    {
-                        throw new Exception("Tokenが正しくありません。");
-                    }
-                    Status status = new Status();
-
-                    if (source == "EMSC")
-                    {
-                        if (EMSCHist.TweetID != 0)
-                            try
-                            {
-                                ExeLog($"[Tweet]ツイート(リプライ)中…(ID:{EMSCHist.TweetID})");
-                                status = await tokens.Statuses.UpdateAsync(new { status = Text, in_reply_to_status_id = EMSCHist.TweetID });
-                            }
-                            catch
-                            {
-                                ExeLog($"[Tweet]ツイート(リプライ)失敗、リトライ中…");
-                                status = await tokens.Statuses.UpdateAsync(new { status = Text });
-                            }
-                        else
-                        {
-                            ExeLog($"[Tweet]ツイート中…");
-                            status = await tokens.Statuses.UpdateAsync(new { status = Text });
-                        }
-                        EMSCHist.TweetID = status.Id;
-                    }
-                    else if (source == "USGS")
-                    {
-                        if (USGSHist[ID].TweetID != 0)
-                            try
-                            {
-                                ExeLog($"[Tweet]ツイート(リプライ)中…(ID:{USGSHist[ID].TweetID})");
-                                status = await tokens.Statuses.UpdateAsync(new { status = Text, in_reply_to_status_id = USGSHist[ID].TweetID });
-                            }
-                            catch
-                            {
-                                ExeLog($"[Tweet]ツイート(リプライ)失敗、リトライ中…");
-                                status = await tokens.Statuses.UpdateAsync(new { status = Text });
-                            }
-                        else
-                        {
-                            ExeLog($"[Tweet]ツイート中…");
-                            status = await tokens.Statuses.UpdateAsync(new { status = Text });
-                        }
-                        USGSHist[ID].TweetID = status.Id;
-                    }
-                    ExeLog($"[Tweet]ツイート成功(ID:{status.Id})");
-                }
-                catch (Exception ex)
-                {
-                    ErrorText.Text = $"ツイートに失敗しました。わからない場合エラーログの内容を報告してください。内容:{ex.Message}";
-                    LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Tweet Version:{Version}\n{ex}");
-                }
+            
         }
 
         /// <summary>
@@ -956,7 +894,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
             Process.Start("https://twitter.com/ProjectS31415_1");
         }
 
-        private void RCPTWC_Click(object sender, EventArgs e)
+        private void RCNOAA_Click(object sender, EventArgs e)
         {
             Process.Start("https://www.tsunami.gov/");
         }
@@ -1061,14 +999,14 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
         /// <param name="Lat">緯度</param>
         /// <param name="LatStLong">(string) 設定により {###.##…}ﾟN または {###}ﾟ{##}'{##}\"N</param>
         /// <param name="LatStLongJP">(string) 設定により 北緯{###.##…}度 または 北緯{##}度{##}分{##}秒 </param>
-        /// <param name="LatDisplay">(string) 設定により {###.00}ºN または {###}ﾟ{##}'{##}\"N </param>
+        /// <param name="LatDisplay">(string) 設定により {###.00}ﾟN または {###}ﾟ{##}'{##}\"N </param>
         public static void Lat2String(double Lat, out string LatStLong, out string LatStLongJP, out string LatDisplay)//ここら辺は雑なので気が向いたら調整
         {
             double LatShort = Math.Round(Lat, 2, MidpointRounding.AwayFromZero);
-            string LatStDecimal = Lat > 0 ? $"{LatShort}ºN" : $"{-LatShort}ºS";
+            string LatStDecimal = Lat > 0 ? $"{LatShort}ﾟN" : $"{-LatShort}ﾟS";
             TimeSpan LatTime = TimeSpan.FromHours(Lat);
             string LatStShort = Lat > 0 ? $"{(int)Lat}ﾟ{LatTime.Minutes}'N" : $"{(int)-Lat}ﾟ{-LatTime.Minutes}'S";
-            LatStLong = Settings.Default.Text_LatLonDecimal ? Lat > 0 ? $"{Lat}ºN" : $"{-Lat}ºS" : Lat > 0 ? $"{(int)Lat}ﾟ{LatTime.Minutes}'{LatTime.Seconds}\"N" : $"{(int)-Lat}ﾟ{-LatTime.Minutes}'{-LatTime.Seconds}\"S";
+            LatStLong = Settings.Default.Text_LatLonDecimal ? Lat > 0 ? $"{Lat}ﾟN" : $"{-Lat}ﾟS" : Lat > 0 ? $"{(int)Lat}ﾟ{LatTime.Minutes}'{LatTime.Seconds}\"N" : $"{(int)-Lat}ﾟ{-LatTime.Minutes}'{-LatTime.Seconds}\"S";
             LatStLongJP = Settings.Default.Text_LatLonDecimal ? Lat > 0 ? $"北緯{Lat}度" : $"南緯{-Lat}度" : Lat > 0 ? $"北緯{(int)Lat}度{LatTime.Minutes}分{LatTime.Seconds}秒" : $"南緯{(int)-Lat}度{-LatTime.Minutes}分{-LatTime.Seconds}秒";
             LatDisplay = Settings.Default.Text_LatLonDecimal ? LatStDecimal : LatStShort;
         }
@@ -1088,10 +1026,10 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
         {
             //Lat2String(Lat, out double LatShort, out string LatStDecimal, out string LatStShort, out string LatStLong, out string LatStLongJP, out string LatDisplay);
             LatShort = Math.Round(Lat, 2, MidpointRounding.AwayFromZero);
-            LatStDecimal = Lat > 0 ? $"{LatShort}ºN" : $"{-LatShort}ºS";
+            LatStDecimal = Lat > 0 ? $"{LatShort}ﾟN" : $"{-LatShort}ﾟS";
             TimeSpan LatTime = TimeSpan.FromHours(Lat);
             LatStShort = Lat > 0 ? $"{(int)Lat}ﾟ{LatTime.Minutes}'N" : $"{(int)-Lat}ﾟ{-LatTime.Minutes}'S";
-            LatStLong = Settings.Default.Text_LatLonDecimal ? Lat > 0 ? $"{Lat}ºN" : $"{-Lat}ºS" : Lat > 0 ? $"{(int)Lat}ﾟ{LatTime.Minutes}'{LatTime.Seconds}\"N" : $"{(int)-Lat}ﾟ{-LatTime.Minutes}'{-LatTime.Seconds}\"S";
+            LatStLong = Settings.Default.Text_LatLonDecimal ? Lat > 0 ? $"{Lat}ﾟN" : $"{-Lat}ﾟS" : Lat > 0 ? $"{(int)Lat}ﾟ{LatTime.Minutes}'{LatTime.Seconds}\"N" : $"{(int)-Lat}ﾟ{-LatTime.Minutes}'{-LatTime.Seconds}\"S";
             LatStLongJP = Settings.Default.Text_LatLonDecimal ? Lat > 0 ? $"北緯{Lat}度" : $"南緯{-Lat}度" : Lat > 0 ? $"北緯{(int)Lat}度{LatTime.Minutes}分{LatTime.Seconds}秒" : $"南緯{(int)-Lat}度{-LatTime.Minutes}分{-LatTime.Seconds}秒";
             LatDisplay = Settings.Default.Text_LatLonDecimal ? LatStDecimal : LatStShort;
         }
@@ -1103,14 +1041,14 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
         /// <param name="Lon">経度</param>
         /// <param name="LonStLong">(string) 設定により {###.##…}ﾟE または {###}ﾟ{##}'{##}\"E</param>
         /// <param name="LonStLongJP">(string) 設定により 東経{###.##…}度 または 東経{##}度{##}分{##}秒 </param>
-        /// <param name="LonDisplay">(string) 設定により {###.00}ºE または {###}ﾟ{##}'{##}\"E</param>
+        /// <param name="LonDisplay">(string) 設定により {###.00}ﾟE または {###}ﾟ{##}'{##}\"E</param>
         public static void Lon2String(double Lon, out string LonStLong, out string LonStLongJP, out string LonDisplay)
         {
             double LonShort = Math.Round(Lon, 2, MidpointRounding.AwayFromZero);
-            string LonStDecimal = Lon > 0 ? $"{LonShort}ºE" : $"{-LonShort}ºW";
+            string LonStDecimal = Lon > 0 ? $"{LonShort}ﾟE" : $"{-LonShort}ﾟW";
             TimeSpan LonTime = TimeSpan.FromHours(Lon);
             string LonStShort = Lon > 0 ? $"{(int)Lon}ﾟ{LonTime.Minutes}'E" : $"{(int)-Lon}ﾟ{-LonTime.Minutes}'W";
-            LonStLong = Settings.Default.Text_LatLonDecimal ? Lon > 0 ? $"{Lon}ºE" : $"{-Lon}ºW" : Lon > 0 ? $"{(int)Lon}ﾟ{LonTime.Minutes}'{LonTime.Seconds}\"E" : $"{(int)-Lon}ﾟ{-LonTime.Minutes}'{-LonTime.Seconds}\"W";
+            LonStLong = Settings.Default.Text_LatLonDecimal ? Lon > 0 ? $"{Lon}ﾟE" : $"{-Lon}ﾟW" : Lon > 0 ? $"{(int)Lon}ﾟ{LonTime.Minutes}'{LonTime.Seconds}\"E" : $"{(int)-Lon}ﾟ{-LonTime.Minutes}'{-LonTime.Seconds}\"W";
             LonStLongJP = Settings.Default.Text_LatLonDecimal ? Lon > 0 ? $"東経{Lon}度" : $"西経{-Lon}度" : Lon > 0 ? $"東経{(int)Lon}度{LonTime.Minutes}分{LonTime.Seconds}秒" : $"西経{(int)-Lon}度{-LonTime.Minutes}分{-LonTime.Seconds}秒";
             LonDisplay = Settings.Default.Text_LatLonDecimal ? LonStDecimal : LonStShort;
         }
@@ -1121,7 +1059,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
         /// <remarks>指定ミスに注意してください。</remarks>
         /// <param name="Lon">経度</param>
         /// <param name="LonShort">(double) ###.00</param>
-        /// <param name="LonStDecimal">(string) {###.00}ºE</param>
+        /// <param name="LonStDecimal">(string) {###.00}ﾟE</param>
         /// <param name="LonStShort">(string) {###}ﾟ{##}'E</param>
         /// <param name="LonStLong">(string) 設定により {###.##…}ﾟE または {###}ﾟ{##}'{##}\"E</param>
         /// <param name="LonStLongJP">(string) 設定により 東経{###.##…}度 または 東経{##}度{##}分{##}秒 </param>
@@ -1130,10 +1068,10 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
         {
             //Lon2String(Lon, out double LonShort, out string LonStDecimal, out string LonStShort, out string LonStLong, out string LonStLongJP, out string LonDisplay);
             LonShort = Math.Round(Lon, 2, MidpointRounding.AwayFromZero);
-            LonStDecimal = Lon > 0 ? $"{LonShort}ºE" : $"{-LonShort}ºW";
+            LonStDecimal = Lon > 0 ? $"{LonShort}ﾟE" : $"{-LonShort}ﾟW";
             TimeSpan LonTime = TimeSpan.FromHours(Lon);
             LonStShort = Lon > 0 ? $"{(int)Lon}ﾟ{LonTime.Minutes}'E" : $"{(int)-Lon}ﾟ{-LonTime.Minutes}'W";
-            LonStLong = Settings.Default.Text_LatLonDecimal ? Lon > 0 ? $"{Lon}ºE" : $"{-Lon}ºW" : Lon > 0 ? $"{(int)Lon}ﾟ{LonTime.Minutes}'{LonTime.Seconds}\"E" : $"{(int)-Lon}ﾟ{-LonTime.Minutes}'{-LonTime.Seconds}\"W";
+            LonStLong = Settings.Default.Text_LatLonDecimal ? Lon > 0 ? $"{Lon}ﾟE" : $"{-Lon}ﾟW" : Lon > 0 ? $"{(int)Lon}ﾟ{LonTime.Minutes}'{LonTime.Seconds}\"E" : $"{(int)-Lon}ﾟ{-LonTime.Minutes}'{-LonTime.Seconds}\"W";
             LonStLongJP = Settings.Default.Text_LatLonDecimal ? Lon > 0 ? $"東経{Lon}度" : $"西経{-Lon}度" : Lon > 0 ? $"東経{(int)Lon}度{LonTime.Minutes}分{LonTime.Seconds}秒" : $"西経{(int)-Lon}度{-LonTime.Minutes}分{-LonTime.Seconds}秒";
             LonDisplay = Settings.Default.Text_LatLonDecimal ? LonStDecimal : LonStShort;
         }
@@ -1171,8 +1109,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
 
         private void RC1MapGenerator_Click(object sender, EventArgs e)
         {
-            MapGenerate mapGenerate = new MapGenerate();
-            mapGenerate.Show();
+            //別ソフトに移行
         }
 
         private void RCTextCopyEMSC_Click(object sender, EventArgs e)
