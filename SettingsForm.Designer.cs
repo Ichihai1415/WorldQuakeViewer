@@ -50,6 +50,7 @@
             this.Tab_View_HideMap = new System.Windows.Forms.CheckBox();
             this.Tab_View_HideHist = new System.Windows.Forms.CheckBox();
             this.Tab_Update = new System.Windows.Forms.TabPage();
+            this.Tab_Update_MaxCount = new System.Windows.Forms.NumericUpDown();
             this.Tab_Update_Time = new System.Windows.Forms.CheckBox();
             this.Tab_Update_Alert = new System.Windows.Forms.CheckBox();
             this.Tab_Update_MMI = new System.Windows.Forms.CheckBox();
@@ -87,21 +88,6 @@
             this.Tab_Yomi_Speed = new System.Windows.Forms.NumericUpDown();
             this.Tab_Yomi_Enable = new System.Windows.Forms.CheckBox();
             this.Tab_Yomi_Text = new System.Windows.Forms.Label();
-            this.Tab_Tweet = new System.Windows.Forms.TabPage();
-            this.Tab_Tweet_Test = new System.Windows.Forms.Button();
-            this.Tab_Tweet_Text2 = new System.Windows.Forms.Label();
-            this.Tab_Tweet_ViewToken = new System.Windows.Forms.CheckBox();
-            this.Tab_Tweet_LowerMMI = new System.Windows.Forms.NumericUpDown();
-            this.Tab_Tweet_LowerMag = new System.Windows.Forms.NumericUpDown();
-            this.Tab_Tweet_LowerAnd = new System.Windows.Forms.RadioButton();
-            this.Tab_Tweet_LowerOr = new System.Windows.Forms.RadioButton();
-            this.Tab_Tweet_Text3 = new System.Windows.Forms.Label();
-            this.Tab_Tweet_AccSec = new System.Windows.Forms.TextBox();
-            this.Tab_Tweet_AccTok = new System.Windows.Forms.TextBox();
-            this.Tab_Tweet_ConSec = new System.Windows.Forms.TextBox();
-            this.Tab_Tweet_ConKey = new System.Windows.Forms.TextBox();
-            this.Tab_Tweet_Enable = new System.Windows.Forms.CheckBox();
-            this.Tab_Tweet_Text = new System.Windows.Forms.Label();
             this.Tab_Socket = new System.Windows.Forms.TabPage();
             this.Tab_Socket_Test = new System.Windows.Forms.Button();
             this.Tab_Socket_Enable = new System.Windows.Forms.CheckBox();
@@ -112,12 +98,12 @@
             this.Tab_ProInfo = new System.Windows.Forms.TabPage();
             this.Tab_ProInfo_Text = new System.Windows.Forms.Label();
             this.ProInfoChange = new System.Windows.Forms.Timer(this.components);
-            this.Tab_Update_MaxCount = new System.Windows.Forms.NumericUpDown();
             this.Tabs.SuspendLayout();
             this.Tab_Info.SuspendLayout();
             this.Tab_View.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Tab_View_LogTime)).BeginInit();
             this.Tab_Update.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Tab_Update_MaxCount)).BeginInit();
             this.Tab_Sound.SuspendLayout();
             this.Tab_Yomi.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Tab_Yomi_Voice)).BeginInit();
@@ -127,13 +113,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.Tab_Yomi_Volume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Tab_Yomi_Tone)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Tab_Yomi_Speed)).BeginInit();
-            this.Tab_Tweet.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Tab_Tweet_LowerMMI)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Tab_Tweet_LowerMag)).BeginInit();
             this.Tab_Socket.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Tab_Socket_Port)).BeginInit();
             this.Tab_ProInfo.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Tab_Update_MaxCount)).BeginInit();
             this.SuspendLayout();
             // 
             // SettingSave
@@ -165,7 +147,6 @@
             this.Tabs.Controls.Add(this.Tab_Update);
             this.Tabs.Controls.Add(this.Tab_Sound);
             this.Tabs.Controls.Add(this.Tab_Yomi);
-            this.Tabs.Controls.Add(this.Tab_Tweet);
             this.Tabs.Controls.Add(this.Tab_Socket);
             this.Tabs.Controls.Add(this.Tab_ProInfo);
             this.Tabs.Location = new System.Drawing.Point(0, 0);
@@ -197,7 +178,7 @@
             this.LinkMap.AutoSize = true;
             this.LinkMap.Location = new System.Drawing.Point(2, 207);
             this.LinkMap.Name = "LinkMap";
-            this.LinkMap.Size = new System.Drawing.Size(278, 22);
+            this.LinkMap.Size = new System.Drawing.Size(279, 22);
             this.LinkMap.TabIndex = 7;
             this.LinkMap.TabStop = true;
             this.LinkMap.Text = "https://www.naturalearthdata.com/";
@@ -386,6 +367,28 @@
             this.Tab_Update.Text = "更新検知";
             this.Tab_Update.UseVisualStyleBackColor = true;
             // 
+            // Tab_Update_MaxCount
+            // 
+            this.Tab_Update_MaxCount.Location = new System.Drawing.Point(579, 3);
+            this.Tab_Update_MaxCount.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
+            this.Tab_Update_MaxCount.Minimum = new decimal(new int[] {
+            7,
+            0,
+            0,
+            0});
+            this.Tab_Update_MaxCount.Name = "Tab_Update_MaxCount";
+            this.Tab_Update_MaxCount.Size = new System.Drawing.Size(50, 31);
+            this.Tab_Update_MaxCount.TabIndex = 10;
+            this.Tab_Update_MaxCount.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
             // Tab_Update_Time
             // 
             this.Tab_Update_Time.AutoSize = true;
@@ -401,7 +404,7 @@
             this.Tab_Update_Alert.AutoSize = true;
             this.Tab_Update_Alert.Location = new System.Drawing.Point(313, 207);
             this.Tab_Update_Alert.Name = "Tab_Update_Alert";
-            this.Tab_Update_Alert.Size = new System.Drawing.Size(153, 26);
+            this.Tab_Update_Alert.Size = new System.Drawing.Size(154, 26);
             this.Tab_Update_Alert.TabIndex = 8;
             this.Tab_Update_Alert.Text = "アラート(PAGER)";
             this.Tab_Update_Alert.UseVisualStyleBackColor = true;
@@ -571,7 +574,7 @@
             this.Tab_Sound_Updt.AutoSize = true;
             this.Tab_Sound_Updt.Location = new System.Drawing.Point(12, 134);
             this.Tab_Sound_Updt.Name = "Tab_Sound_Updt";
-            this.Tab_Sound_Updt.Size = new System.Drawing.Size(318, 26);
+            this.Tab_Sound_Updt.Size = new System.Drawing.Size(320, 26);
             this.Tab_Sound_Updt.TabIndex = 8;
             this.Tab_Sound_Updt.Text = "更新時(M45u.wav,M60u.wav,M80u.wav)";
             this.Tab_Sound_Updt.UseVisualStyleBackColor = true;
@@ -833,192 +836,6 @@
             this.Tab_Yomi_Text.TabIndex = 13;
             this.Tab_Yomi_Text.Text = resources.GetString("Tab_Yomi_Text.Text");
             // 
-            // Tab_Tweet
-            // 
-            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_Test);
-            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_Text2);
-            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_ViewToken);
-            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_LowerMMI);
-            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_LowerMag);
-            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_LowerAnd);
-            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_LowerOr);
-            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_Text3);
-            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_AccSec);
-            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_AccTok);
-            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_ConSec);
-            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_ConKey);
-            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_Enable);
-            this.Tab_Tweet.Controls.Add(this.Tab_Tweet_Text);
-            this.Tab_Tweet.Location = new System.Drawing.Point(4, 31);
-            this.Tab_Tweet.Name = "Tab_Tweet";
-            this.Tab_Tweet.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_Tweet.Size = new System.Drawing.Size(632, 275);
-            this.Tab_Tweet.TabIndex = 2;
-            this.Tab_Tweet.Text = "自動ツイート";
-            this.Tab_Tweet.UseVisualStyleBackColor = true;
-            // 
-            // Tab_Tweet_Test
-            // 
-            this.Tab_Tweet_Test.Location = new System.Drawing.Point(518, 218);
-            this.Tab_Tweet_Test.Name = "Tab_Tweet_Test";
-            this.Tab_Tweet_Test.Size = new System.Drawing.Size(98, 32);
-            this.Tab_Tweet_Test.TabIndex = 31;
-            this.Tab_Tweet_Test.Text = "送信テスト";
-            this.Tab_Tweet_Test.UseVisualStyleBackColor = true;
-            this.Tab_Tweet_Test.Click += new System.EventHandler(this.Tab_Tweet_Test_Click);
-            // 
-            // Tab_Tweet_Text2
-            // 
-            this.Tab_Tweet_Text2.AutoSize = true;
-            this.Tab_Tweet_Text2.Font = new System.Drawing.Font("Koruri Regular", 8F);
-            this.Tab_Tweet_Text2.Location = new System.Drawing.Point(25, 33);
-            this.Tab_Tweet_Text2.Name = "Tab_Tweet_Text2";
-            this.Tab_Tweet_Text2.Size = new System.Drawing.Size(151, 16);
-            this.Tab_Tweet_Text2.TabIndex = 30;
-            this.Tab_Tweet_Text2.Text = "※Twitter API申請が必要です";
-            // 
-            // Tab_Tweet_ViewToken
-            // 
-            this.Tab_Tweet_ViewToken.AutoSize = true;
-            this.Tab_Tweet_ViewToken.Location = new System.Drawing.Point(16, 219);
-            this.Tab_Tweet_ViewToken.Name = "Tab_Tweet_ViewToken";
-            this.Tab_Tweet_ViewToken.Size = new System.Drawing.Size(93, 48);
-            this.Tab_Tweet_ViewToken.TabIndex = 29;
-            this.Tab_Tweet_ViewToken.Text = "tokenを\r\n表示する";
-            this.Tab_Tweet_ViewToken.UseVisualStyleBackColor = true;
-            this.Tab_Tweet_ViewToken.CheckedChanged += new System.EventHandler(this.Tab_Tweet_ViewToken_CheckedChanged);
-            // 
-            // Tab_Tweet_LowerMMI
-            // 
-            this.Tab_Tweet_LowerMMI.DecimalPlaces = 1;
-            this.Tab_Tweet_LowerMMI.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.Tab_Tweet_LowerMMI.Location = new System.Drawing.Point(541, 6);
-            this.Tab_Tweet_LowerMMI.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.Tab_Tweet_LowerMMI.Name = "Tab_Tweet_LowerMMI";
-            this.Tab_Tweet_LowerMMI.Size = new System.Drawing.Size(51, 31);
-            this.Tab_Tweet_LowerMMI.TabIndex = 28;
-            this.Tab_Tweet_LowerMMI.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            // 
-            // Tab_Tweet_LowerMag
-            // 
-            this.Tab_Tweet_LowerMag.DecimalPlaces = 2;
-            this.Tab_Tweet_LowerMag.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.Tab_Tweet_LowerMag.Location = new System.Drawing.Point(277, 7);
-            this.Tab_Tweet_LowerMag.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.Tab_Tweet_LowerMag.Name = "Tab_Tweet_LowerMag";
-            this.Tab_Tweet_LowerMag.Size = new System.Drawing.Size(51, 31);
-            this.Tab_Tweet_LowerMag.TabIndex = 27;
-            this.Tab_Tweet_LowerMag.Value = new decimal(new int[] {
-            6,
-            0,
-            0,
-            0});
-            // 
-            // Tab_Tweet_LowerAnd
-            // 
-            this.Tab_Tweet_LowerAnd.AutoSize = true;
-            this.Tab_Tweet_LowerAnd.Location = new System.Drawing.Point(365, 20);
-            this.Tab_Tweet_LowerAnd.Name = "Tab_Tweet_LowerAnd";
-            this.Tab_Tweet_LowerAnd.Size = new System.Drawing.Size(60, 26);
-            this.Tab_Tweet_LowerAnd.TabIndex = 26;
-            this.Tab_Tweet_LowerAnd.Text = "かつ";
-            this.Tab_Tweet_LowerAnd.UseVisualStyleBackColor = true;
-            // 
-            // Tab_Tweet_LowerOr
-            // 
-            this.Tab_Tweet_LowerOr.AutoSize = true;
-            this.Tab_Tweet_LowerOr.Checked = true;
-            this.Tab_Tweet_LowerOr.Location = new System.Drawing.Point(365, 0);
-            this.Tab_Tweet_LowerOr.Name = "Tab_Tweet_LowerOr";
-            this.Tab_Tweet_LowerOr.Size = new System.Drawing.Size(76, 26);
-            this.Tab_Tweet_LowerOr.TabIndex = 25;
-            this.Tab_Tweet_LowerOr.TabStop = true;
-            this.Tab_Tweet_LowerOr.Text = "または";
-            this.Tab_Tweet_LowerOr.UseVisualStyleBackColor = true;
-            // 
-            // Tab_Tweet_Text3
-            // 
-            this.Tab_Tweet_Text3.AutoSize = true;
-            this.Tab_Tweet_Text3.ForeColor = System.Drawing.Color.Red;
-            this.Tab_Tweet_Text3.Location = new System.Drawing.Point(141, 223);
-            this.Tab_Tweet_Text3.Name = "Tab_Tweet_Text3";
-            this.Tab_Tweet_Text3.Size = new System.Drawing.Size(484, 44);
-            this.Tab_Tweet_Text3.TabIndex = 13;
-            this.Tab_Tweet_Text3.Text = "!注意 tokenはそのまま保存されます。\r\n          心配な場合Socketで他ソフトに送信して処理してください。";
-            // 
-            // Tab_Tweet_AccSec
-            // 
-            this.Tab_Tweet_AccSec.Location = new System.Drawing.Point(151, 183);
-            this.Tab_Tweet_AccSec.Name = "Tab_Tweet_AccSec";
-            this.Tab_Tweet_AccSec.PasswordChar = '*';
-            this.Tab_Tweet_AccSec.Size = new System.Drawing.Size(465, 31);
-            this.Tab_Tweet_AccSec.TabIndex = 12;
-            // 
-            // Tab_Tweet_AccTok
-            // 
-            this.Tab_Tweet_AccTok.Location = new System.Drawing.Point(151, 139);
-            this.Tab_Tweet_AccTok.Name = "Tab_Tweet_AccTok";
-            this.Tab_Tweet_AccTok.PasswordChar = '*';
-            this.Tab_Tweet_AccTok.Size = new System.Drawing.Size(465, 31);
-            this.Tab_Tweet_AccTok.TabIndex = 11;
-            // 
-            // Tab_Tweet_ConSec
-            // 
-            this.Tab_Tweet_ConSec.Location = new System.Drawing.Point(151, 95);
-            this.Tab_Tweet_ConSec.Name = "Tab_Tweet_ConSec";
-            this.Tab_Tweet_ConSec.PasswordChar = '*';
-            this.Tab_Tweet_ConSec.Size = new System.Drawing.Size(465, 31);
-            this.Tab_Tweet_ConSec.TabIndex = 10;
-            // 
-            // Tab_Tweet_ConKey
-            // 
-            this.Tab_Tweet_ConKey.Location = new System.Drawing.Point(151, 51);
-            this.Tab_Tweet_ConKey.Name = "Tab_Tweet_ConKey";
-            this.Tab_Tweet_ConKey.PasswordChar = '*';
-            this.Tab_Tweet_ConKey.Size = new System.Drawing.Size(465, 31);
-            this.Tab_Tweet_ConKey.TabIndex = 9;
-            // 
-            // Tab_Tweet_Enable
-            // 
-            this.Tab_Tweet_Enable.AutoSize = true;
-            this.Tab_Tweet_Enable.Location = new System.Drawing.Point(8, 10);
-            this.Tab_Tweet_Enable.Name = "Tab_Tweet_Enable";
-            this.Tab_Tweet_Enable.Size = new System.Drawing.Size(221, 26);
-            this.Tab_Tweet_Enable.TabIndex = 7;
-            this.Tab_Tweet_Enable.Text = "自動ツイートを有効にする";
-            this.Tab_Tweet_Enable.UseVisualStyleBackColor = true;
-            // 
-            // Tab_Tweet_Text
-            // 
-            this.Tab_Tweet_Text.AutoSize = true;
-            this.Tab_Tweet_Text.Location = new System.Drawing.Point(12, 10);
-            this.Tab_Tweet_Text.Name = "Tab_Tweet_Text";
-            this.Tab_Tweet_Text.Size = new System.Drawing.Size(620, 198);
-            this.Tab_Tweet_Text.TabIndex = 8;
-            this.Tab_Tweet_Text.Text = "                                                             M              以上   " +
-    "                 メルカリ震度              以上\r\n\r\nConsumerKey:\r\n\r\nConsumerSecret:\r\n\r\nAc" +
-    "cessToken:\r\n\r\nAccessSecret:";
-            // 
             // Tab_Socket
             // 
             this.Tab_Socket.Controls.Add(this.Tab_Socket_Test);
@@ -1088,7 +905,7 @@
             this.Tab_Socket_Text.AutoSize = true;
             this.Tab_Socket_Text.Location = new System.Drawing.Point(3, 3);
             this.Tab_Socket_Text.Name = "Tab_Socket_Text";
-            this.Tab_Socket_Text.Size = new System.Drawing.Size(311, 110);
+            this.Tab_Socket_Text.Size = new System.Drawing.Size(312, 110);
             this.Tab_Socket_Text.TabIndex = 19;
             this.Tab_Socket_Text.Text = "\r\n\r\nホスト,ポート:\r\n\r\nテキスト:  　置換: {Text}:本文(ログと同じ)";
             // 
@@ -1118,28 +935,6 @@
             this.ProInfoChange.Interval = 1000;
             this.ProInfoChange.Tick += new System.EventHandler(this.ProInfoChange_Tick);
             // 
-            // Tab_Update_MaxCount
-            // 
-            this.Tab_Update_MaxCount.Location = new System.Drawing.Point(579, 3);
-            this.Tab_Update_MaxCount.Maximum = new decimal(new int[] {
-            999,
-            0,
-            0,
-            0});
-            this.Tab_Update_MaxCount.Minimum = new decimal(new int[] {
-            7,
-            0,
-            0,
-            0});
-            this.Tab_Update_MaxCount.Name = "Tab_Update_MaxCount";
-            this.Tab_Update_MaxCount.Size = new System.Drawing.Size(50, 31);
-            this.Tab_Update_MaxCount.TabIndex = 10;
-            this.Tab_Update_MaxCount.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 22F);
@@ -1168,6 +963,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.Tab_View_LogTime)).EndInit();
             this.Tab_Update.ResumeLayout(false);
             this.Tab_Update.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Tab_Update_MaxCount)).EndInit();
             this.Tab_Sound.ResumeLayout(false);
             this.Tab_Sound.PerformLayout();
             this.Tab_Yomi.ResumeLayout(false);
@@ -1179,16 +975,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.Tab_Yomi_Volume)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Tab_Yomi_Tone)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Tab_Yomi_Speed)).EndInit();
-            this.Tab_Tweet.ResumeLayout(false);
-            this.Tab_Tweet.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Tab_Tweet_LowerMMI)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Tab_Tweet_LowerMag)).EndInit();
             this.Tab_Socket.ResumeLayout(false);
             this.Tab_Socket.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Tab_Socket_Port)).EndInit();
             this.Tab_ProInfo.ResumeLayout(false);
             this.Tab_ProInfo.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Tab_Update_MaxCount)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1208,7 +999,6 @@
         private System.Windows.Forms.LinkLabel LinkOtoLogic;
         private System.Windows.Forms.LinkLabel LinkKoruri;
         private System.Windows.Forms.LinkLabel LinkMap;
-        private System.Windows.Forms.TabPage Tab_Tweet;
         private System.Windows.Forms.TabPage Tab_View;
         private System.Windows.Forms.TabPage Tab_Sound;
         private System.Windows.Forms.TabPage Tab_Socket;
@@ -1221,13 +1011,6 @@
         private System.Windows.Forms.CheckBox Tab_Sound_M80;
         private System.Windows.Forms.CheckBox Tab_Sound_M60;
         private System.Windows.Forms.CheckBox Tab_Sound_M45;
-        private System.Windows.Forms.Label Tab_Tweet_Text3;
-        private System.Windows.Forms.TextBox Tab_Tweet_AccSec;
-        private System.Windows.Forms.TextBox Tab_Tweet_AccTok;
-        private System.Windows.Forms.TextBox Tab_Tweet_ConSec;
-        private System.Windows.Forms.TextBox Tab_Tweet_ConKey;
-        private System.Windows.Forms.CheckBox Tab_Tweet_Enable;
-        private System.Windows.Forms.Label Tab_Tweet_Text;
         private System.Windows.Forms.NumericUpDown Tab_Yomi_LowerMMI;
         private System.Windows.Forms.NumericUpDown Tab_Yomi_LowerMag;
         private System.Windows.Forms.NumericUpDown Tab_Yomi_Port;
@@ -1240,18 +1023,11 @@
         private System.Windows.Forms.Label Tab_Yomi_Text;
         private System.Windows.Forms.RadioButton Tab_Yomi_LowerAnd;
         private System.Windows.Forms.RadioButton Tab_Yomi_LowerOr;
-        private System.Windows.Forms.RadioButton Tab_Tweet_LowerOr;
-        private System.Windows.Forms.RadioButton Tab_Tweet_LowerAnd;
-        private System.Windows.Forms.NumericUpDown Tab_Tweet_LowerMag;
-        private System.Windows.Forms.NumericUpDown Tab_Tweet_LowerMMI;
-        private System.Windows.Forms.CheckBox Tab_Tweet_ViewToken;
-        private System.Windows.Forms.Label Tab_Tweet_Text2;
         private System.Windows.Forms.NumericUpDown Tab_Yomi_Voice;
         private System.Windows.Forms.Label Tab_Yomi_Text2;
         private System.Windows.Forms.NumericUpDown Tab_Socket_Port;
         private System.Windows.Forms.TextBox Tab_Socket_Host;
         private System.Windows.Forms.Label Tab_Socket_Text;
-        private System.Windows.Forms.Button Tab_Tweet_Test;
         private System.Windows.Forms.TextBox Tab_Socket_TextFormat;
         private System.Windows.Forms.Button Tab_Sound_Test_M45;
         private System.Windows.Forms.Button Tab_Sound_Test_M80u;

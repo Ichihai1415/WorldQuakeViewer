@@ -1,5 +1,4 @@
-﻿using CoreTweet;
-using System;
+﻿using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
@@ -33,7 +32,7 @@ namespace WorldQuakeViewer
         }
         private void SettingsForm_Load(object sender, EventArgs e)
         {
-            Version.Text = "WorldQuakeViewer v" + MainForm.Version;
+            Version.Text = "WorldQuakeViewer v" + MainForm.version;
             Tab_View_HideHist.Checked = Settings.Default.Display_HideHistory;
             Tab_View_HideMap.Checked = Settings.Default.Display_HideHistoryMap;
             Tab_View_LatLonDecimal.Checked = Settings.Default.Text_LatLonDecimal;
@@ -63,14 +62,6 @@ namespace WorldQuakeViewer
             Tab_Yomi_Speed.Value = Settings.Default.Bouyomichan_Speed;
             Tab_Yomi_Tone.Value = Settings.Default.Bouyomichan_Tone;
             Tab_Yomi_Volume.Value = Settings.Default.Bouyomichan_Volume;
-            Tab_Tweet_Enable.Checked = Settings.Default.Tweet_Enable;
-            Tab_Tweet_LowerMag.Value = (decimal)Settings.Default.Tweet_LowerMagnitudeLimit;
-            Tab_Tweet_LowerMMI.Value = (decimal)Settings.Default.Tweet_LowerMMILimit;
-            Tab_Tweet_LowerAnd.Checked = Settings.Default.Tweet_Lower_And;
-            Tab_Tweet_ConKey.Text = Settings.Default.Tweet_ConsumerKey;
-            Tab_Tweet_ConSec.Text = Settings.Default.Tweet_ConsumerSecret;
-            Tab_Tweet_AccTok.Text = Settings.Default.Tweet_AccessToken;
-            Tab_Tweet_AccSec.Text = Settings.Default.Tweet_AccessSecret;
             Tab_Socket_Enable.Checked = Settings.Default.Socket_Enable;
             Tab_Socket_Host.Text = Settings.Default.Socket_Host;
             Tab_Socket_Port.Value = Settings.Default.Socket_Port;
@@ -107,14 +98,6 @@ namespace WorldQuakeViewer
             Settings.Default.Bouyomichan_Speed = (short)Tab_Yomi_Speed.Value;
             Settings.Default.Bouyomichan_Tone = (short)Tab_Yomi_Tone.Value;
             Settings.Default.Bouyomichan_Volume = (short)Tab_Yomi_Volume.Value;
-            Settings.Default.Tweet_Enable = Tab_Tweet_Enable.Checked;
-            Settings.Default.Tweet_LowerMagnitudeLimit = (double)Tab_Tweet_LowerMag.Value;
-            Settings.Default.Tweet_LowerMMILimit = (double)Tab_Tweet_LowerMMI.Value;
-            Settings.Default.Tweet_Lower_And = Tab_Tweet_LowerAnd.Checked;
-            Settings.Default.Tweet_ConsumerKey = Tab_Tweet_ConKey.Text;
-            Settings.Default.Tweet_ConsumerSecret = Tab_Tweet_ConSec.Text;
-            Settings.Default.Tweet_AccessToken = Tab_Tweet_AccTok.Text;
-            Settings.Default.Tweet_AccessSecret = Tab_Tweet_AccSec.Text;
             Settings.Default.Socket_Enable = Tab_Socket_Enable.Checked;
             Settings.Default.Socket_Host = Tab_Socket_Host.Text;
             Settings.Default.Socket_Port = (int)Tab_Socket_Port.Value;
@@ -202,27 +185,11 @@ namespace WorldQuakeViewer
             catch (Exception ex)
             {
                 MessageBox.Show($"読み上げ指令の送信に失敗しました。({ex.Message})", "WQV - setting", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                MainForm.LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Setting,Bouyomichan Version:{MainForm.Version}\n{ex}");
+                MainForm.LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Setting,Bouyomichan Version:{MainForm.version}\n{ex}");
             }
             Tab_Yomi_Test.Enabled = true;
         }
 
-        private void Tab_Tweet_Test_Click(object sender, EventArgs e)
-        {
-            Tab_Tweet_Test.Enabled = false;
-            try
-            {
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-                Tokens tokens = Tokens.Create(Tab_Tweet_ConKey.Text, Tab_Tweet_ConSec.Text, Tab_Tweet_AccTok.Text, Tab_Tweet_AccSec.Text);
-                tokens.Statuses.UpdateAsync(new { status = "WorldQuakeViewer ツイート送信テスト" });
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"ツイートの送信に失敗しました。({ex.Message})", "WQV - setting", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                MainForm.LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Setting,Tweet Version:{MainForm.Version}\n{ex}");
-            }
-            Tab_Tweet_Test.Enabled = true;
-        }
         private void Tab_Socket_Test_Click(object sender, EventArgs e)
         {
             Tab_Socket_Test.Enabled = false;
@@ -243,7 +210,7 @@ namespace WorldQuakeViewer
             catch (Exception ex)
             {
                 MessageBox.Show($"Socket送信に失敗しました。({ex.Message})", "WQV - setting", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                MainForm.LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Setting,Socket Version:{MainForm.Version}\n{ex}");
+                MainForm.LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Setting,Socket Version:{MainForm.version}\n{ex}");
             }
             Tab_Socket_Test.Enabled = true;
         }
@@ -252,8 +219,8 @@ namespace WorldQuakeViewer
         {
             try
             {
-                TimeSpan ProTime = DateTime.Now - MainForm.StartTime;
-                Tab_ProInfo_Text.Text = $"起動時間:{(int)ProTime.TotalDays}d{ProTime:hh}:{ProTime:mm}:{ProTime:ss}\nUSGS Feed アクセス回数:{MainForm.AccessedUSGS}回\nログ保持数:{MainForm.USGSHist.Count}";
+                TimeSpan ProTime = DateTime.Now - MainForm.startTime;
+                Tab_ProInfo_Text.Text = $"起動時間:{(int)ProTime.TotalDays}d{ProTime:hh}:{ProTime:mm}:{ProTime:ss}\nUSGS Feed アクセス回数:{MainForm.accesseCountUSGS}回\nログ保持数:{MainForm.USGSHist.Count}";
             }
             catch (Exception ex)
             {
@@ -289,24 +256,6 @@ namespace WorldQuakeViewer
         private void LinkOtoLogic_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("https://otologic.jp");
-        }
-
-        private void Tab_Tweet_ViewToken_CheckedChanged(object sender, EventArgs e)
-        {
-            if (Tab_Tweet_ViewToken.Checked)
-            {
-                Tab_Tweet_ConKey.PasswordChar = (char)0;
-                Tab_Tweet_ConSec.PasswordChar = (char)0;
-                Tab_Tweet_AccTok.PasswordChar = (char)0;
-                Tab_Tweet_AccSec.PasswordChar = (char)0;
-            }
-            else
-            {
-                Tab_Tweet_ConKey.PasswordChar = '*';
-                Tab_Tweet_ConSec.PasswordChar = '*';
-                Tab_Tweet_AccTok.PasswordChar = '*';
-                Tab_Tweet_AccSec.PasswordChar = '*';
-            }
         }
     }
 }
