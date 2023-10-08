@@ -35,12 +35,15 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
         public static string exeLogs = "";
         public static History_ EMSCHist = new History_();
         public static Dictionary<string, History_> USGSHist = new Dictionary<string, History_>();//EQID,Data
+        public static Dictionary<string, History> EarlyEstHist = new Dictionary<string, History>();//EQID,Data
+        public static Dictionary<string, History> AllHist = new Dictionary<string, History>();//EQID,Data
         public static string latestTextUSGS = "";
         public static string latestTextEMSC = "";
         public static Bitmap bitmap = new Bitmap(1600, 1000);
         public static Bitmap bitmap_USGS = new Bitmap(800, 1000);
         public static FontFamily font;
         public static SoundPlayer player = null;
+
 
         public MainForm()//TODO:settingにバージョン保存していろいろやりたい
         {
@@ -651,51 +654,49 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 ns.AddNamespace("qrt", "http://quakeml.org/xmlns/quakeml-rt/1.2");
                 ns.AddNamespace("ee", "http://net.alomax/earlyest/xmlns/ee");
 
-                DateTime creationTime = DateTime.Parse(xml.SelectSingleNode("/q:quakeml/qml:eventParameters/qml:creationInfo/qml:creationTime", ns).InnerText).ToLocalTime();
-                //Console.WriteLine("agencyID:" + xml.SelectSingleNode("/q:quakeml/qml:eventParameters/qml:creationInfo/qml:agencyID", ns).InnerText);//alomax.net_BETA
-                //Console.WriteLine("version:" + xml.SelectSingleNode("/q:quakeml/qml:eventParameters/qml:creationInfo/qml:version", ns).InnerText);//Early-est 1.2.8 (2023.04.14)
+                DateTime creationTime = DateTime.Parse(xml.SelectSingleNode("q:quakeml/qml:eventParameters/qml:creationInfo/qml:creationTime", ns).InnerText).ToLocalTime();
+                //Console.WriteLine("agencyID:" + xml.SelectSingleNode("q:quakeml/qml:eventParameters/qml:creationInfo/qml:agencyID", ns).InnerText);//alomax.net_BETA
+                //Console.WriteLine("version:" + xml.SelectSingleNode("q:quakeml/qml:eventParameters/qml:creationInfo/qml:version", ns).InnerText);//Early-est 1.2.8 (2023.04.14)
 
                 if (xml.SelectNodes("q:quakeml/qml:eventParameters/qml:event", ns) != null)
                     foreach (XmlNode infos in xml.SelectNodes("q:quakeml/qml:eventParameters/qml:event", ns))
                     {
                         XmlNode origin = infos.SelectSingleNode("qml:origin", ns);
-
                         string id = infos.Attributes[0].Value.Split('/')[3];
-                        DateTime timeUpdt = DateTime.Parse(infos.SelectSingleNode("qml:creationInfo/qml:creationTime", ns).InnerText).ToLocalTime();
-                        DateTimeOffset timeUpdtOff = timeUpdt;
-                        string type = infos.SelectSingleNode("qml:type", ns).InnerText;
-                        DateTime time = DateTime.Parse(origin.SelectSingleNode("qml:time/qml:value", ns).InnerText);
-                        DateTimeOffset timeOff = time;
-                        string timeSt = timeOff.ToString("yyyy/MM/dd HH:mm:ss  UTCzzz");
-                        string latSt = origin.SelectSingleNode("qml:latitude/qml:value", ns).InnerText;
-                        double lat = double.Parse(latSt);
-                        string lonSt = origin.SelectSingleNode("qml:longitude/qml:value", ns).InnerText;
-                        double lon = double.Parse(lonSt);
-                        Lat2String(lat, out string latStLong, out string latStLongJP, out string latDisplay);
-                        Lon2String(lon, out string lonStLong, out string lonStLongJP, out string lonDisplay);
+                        string url = $"http://early-est.rm.ingv.it/events/hypo.{id}.html";
+                        DateTimeOffset timeUpdtOff = DateTimeOffset.Parse(infos.SelectSingleNode("qml:creationInfo/qml:creationTime", ns).InnerText).ToLocalTime();
+                        DateTimeOffset timeOff = DateTimeOffset.Parse(origin.SelectSingleNode("qml:time/qml:value", ns).InnerText);
+                        double lat = double.Parse(origin.SelectSingleNode("qml:latitude/qml:value", ns).InnerText);
+                        double lon = double.Parse(origin.SelectSingleNode("qml:longitude/qml:value", ns).InnerText);
                         string hypoJP = NameJP(lat, lon);
                         string hypoEN = origin.SelectSingleNode("qml:region", ns).InnerText;
+                        double depth = double.Parse(origin.SelectSingleNode("qml:depth/qml:value", ns).InnerText) / 1000d;
 
-                        string depth_ = origin.SelectSingleNode("qml:depth/qml:value", ns).InnerText;
-                        double depth = double.Parse(depth_)/1000d;
+                        Dictionary<string, double> mags = EarlyEstHist.ContainsKey(id) ? new Dictionary<string, double>(EarlyEstHist[id].Mags) : new Dictionary<string, double>();
+                        foreach (XmlNode mag_ in infos.SelectNodes("qml:magnitude", ns))
+                            mags[mag_.SelectSingleNode("qml:type", ns).InnerText] = double.Parse(mag_.SelectSingleNode("qml:mag/qml:value", ns).InnerText);
 
-                        Dictionary<string, double> Mags = new Dictionary<string, double>();
-                        foreach (XmlNode mags in infos.SelectNodes("qml:magnitude", ns))
+                        History hist = new History
                         {
-                            Mags.Add(mags.SelectSingleNode("qml:type", ns).InnerText, double.Parse(mags.SelectSingleNode("qml:mag/qml:value", ns).InnerText));
-                        }
+                            Author = "Early-est",
+                            ID = id,
+                            Update = timeUpdtOff,
+                            URL = url,
 
+                            Time = timeOff,
+                            HypoJP = hypoJP,
+                            HypoEN = hypoEN,
+                            Lat = lat,
+                            Lon = lon,
+                            Depth = depth,
+                            Mags = mags,
 
-
+                            MMI = null,
+                            Alert = null,
+                            Source = null
+                        };
+                        EarlyEstHist[id] = hist;
                     }
-
-
-
-
-
-
-
-
 
 
 
@@ -1230,20 +1231,22 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
 
     public class History
     {
-        public string Author { get; set; }
+        //パラメータ
+        public string Author { get; set; }//USGS/EMSC/Early-est
         public string ID { get; set; }
-        public long Update { get; set; }
+        public DateTimeOffset Update { get; set; }
         public string URL { get; set; }
 
-
-        public long Time { get; set; }
+        //各情報
+        public DateTimeOffset Time { get; set; }
         public string HypoJP { get; set; }
         public string HypoEN { get; set; }
         public double Lat { get; set; }
         public double Lon { get; set; }
         public double Depth { get; set; }
-        public string MagType1 { get; set; }
-        Dictionary<string, double> Mags = new Dictionary<string, double>();
+        public Dictionary<string, double> Mags { get; set; }
+
+        //USGS用
         public double? MMI { get; set; }
         public string Alert { get; set; }
         public string Source { get; set; }
