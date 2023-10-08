@@ -63,6 +63,7 @@
             this.ExeLogAutoDelete = new System.Windows.Forms.Timer(this.components);
             this.EMSCget = new System.Windows.Forms.Timer(this.components);
             this.MainImage = new System.Windows.Forms.PictureBox();
+            this.EarlyEstGet = new System.Windows.Forms.Timer(this.components);
             this.RightClick.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MainImage)).BeginInit();
             this.SuspendLayout();
@@ -116,6 +117,7 @@
             // 
             // RC1MapGenerator
             // 
+            this.RC1MapGenerator.Enabled = false;
             this.RC1MapGenerator.Name = "RC1MapGenerator";
             this.RC1MapGenerator.Size = new System.Drawing.Size(224, 22);
             this.RC1MapGenerator.Text = "マップ生成ツール";
@@ -254,14 +256,14 @@
             // RCTextCopyEMSC
             // 
             this.RCTextCopyEMSC.Name = "RCTextCopyEMSC";
-            this.RCTextCopyEMSC.Size = new System.Drawing.Size(180, 22);
+            this.RCTextCopyEMSC.Size = new System.Drawing.Size(109, 22);
             this.RCTextCopyEMSC.Text = "EMSC";
             this.RCTextCopyEMSC.Click += new System.EventHandler(this.RCTextCopyEMSC_Click);
             // 
             // RCTextCopyUSGS
             // 
             this.RCTextCopyUSGS.Name = "RCTextCopyUSGS";
-            this.RCTextCopyUSGS.Size = new System.Drawing.Size(180, 22);
+            this.RCTextCopyUSGS.Size = new System.Drawing.Size(109, 22);
             this.RCTextCopyUSGS.Text = "USGS";
             this.RCTextCopyUSGS.Click += new System.EventHandler(this.RCTextCopyUSGS_Click);
             // 
@@ -319,6 +321,10 @@
             this.MainImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.MainImage.TabIndex = 16;
             this.MainImage.TabStop = false;
+            // 
+            // EarlyEstGet
+            // 
+            this.EarlyEstGet.Tick += new System.EventHandler(this.EarlyEstGet_Tick);
             // 
             // MainForm
             // 
@@ -382,6 +388,7 @@
         private System.Windows.Forms.ToolStripMenuItem RC1MapGenerator;
         private System.Windows.Forms.ToolStripMenuItem RCSoftDiscord;
         private System.Windows.Forms.ToolStripMenuItem RCThisEMSC;
+        private System.Windows.Forms.Timer EarlyEstGet;
     }
 }
 

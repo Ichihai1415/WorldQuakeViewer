@@ -22,7 +22,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
 {
     public partial class MainForm : Form//TODO:設定の分割(USGSとEMSC)
     {
-        public static readonly string version = "1.1.0α7";//こことアセンブリを変える
+        public static readonly string version = "1.1.0";//こことアセンブリを変える
         public static DateTime startTime = new DateTime();
         public static readonly Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
         public static int accesseCountEMSC = 0;
@@ -345,7 +345,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
             }
             catch (Exception ex)
             {
-                LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main Version:{version}\n{ex}");
+                LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,EMSCget_Tick Version:{version}\n{ex}");
                 ErrorText.Text = $"[EMSC]エラーが発生しました。エラーログの内容を報告してください。内容:{ex.Message}";
             }
             waitEMSCDraw = false;//初回時の例外時にこれができないとUSGSも動かないからここ
@@ -612,7 +612,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
             }
             catch (Exception ex)
             {
-                LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main Version:{version}\n{ex}");
+                LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,USGSget_Tick Version:{version}\n{ex}");
                 ErrorText.Text = $"[USGS]エラーが発生しました。エラーログの内容を報告してください。内容:{ex.Message}";
             }
             if (!ErrorText.Text.Contains("エラー"))
@@ -620,6 +620,12 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
             noFirst = true;
             ExeLog("[USGS]処理終了");
             await Task.Delay(1);
+        }
+
+        private async void EarlyEstGet_Tick(object sender, EventArgs e)
+        {
+
+
         }
 
         /// <summary>
@@ -684,7 +690,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
         /// <summary>
         /// ツイートします。
         /// </summary>
-        /// <remarks>ツイートできる遮断ができるまで廃止</remarks>
+        /// <remarks>ツイートできる手段ができるまで廃止</remarks>
         /// <param name="text">ツイートするテキスト。</param>
         /// <param name="source">データ元</param>
         /// <param name="id">リプライ判別用地震ID。</param>
