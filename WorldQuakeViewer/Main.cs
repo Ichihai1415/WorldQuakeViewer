@@ -1,5 +1,4 @@
-﻿using LL2FERC;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -16,13 +15,15 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 using WorldQuakeViewer.Properties;
+using static LL2FERC.LL2FERC;
 
 namespace WorldQuakeViewer//TODO:設定Formの作り直し
 {
     public partial class MainForm : Form//TODO:設定の分割(USGSとEMSC)
     {
-        public static readonly string version = "1.1.0";//こことアセンブリを変える
+        public static readonly string version = "1.2.0α1";//こことアセンブリを変える
         public static DateTime startTime = new DateTime();
         public static readonly Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
         public static int accesseCountEMSC = 0;
@@ -32,14 +33,17 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
         public static bool noFirst = false;//最初はツイートとかしない
         public static bool waitEMSCDraw = true;//最初の描画を待機(USGS用)
         public static string exeLogs = "";
-        public static History EMSCHist = new History();
-        public static Dictionary<string, History> USGSHist = new Dictionary<string, History>();//EQID,Data
+        public static History_ EMSCHist = new History_();
+        public static Dictionary<string, History_> USGSHist = new Dictionary<string, History_>();//EQID,Data
+        public static Dictionary<string, History> EarlyEstHist = new Dictionary<string, History>();//EQID,Data
+        public static Dictionary<string, History> AllHist = new Dictionary<string, History>();//EQID,Data
         public static string latestTextUSGS = "";
         public static string latestTextEMSC = "";
         public static Bitmap bitmap = new Bitmap(1600, 1000);
         public static Bitmap bitmap_USGS = new Bitmap(800, 1000);
         public static FontFamily font;
         public static SoundPlayer player = null;
+
 
         public MainForm()//TODO:settingにバージョン保存していろいろやりたい
         {
@@ -98,8 +102,9 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
             ErrorText.Text = "設定の読み込みが完了しました。";
             await Task.Delay(1);
             ExeLog($"[Main]設定読み込み完了");
-            EMSCget.Enabled = true;
-            USGSget.Enabled = true;
+            //EMSCget.Enabled = true;
+            //USGSget.Enabled = true;
+            EarlyEstGet.Enabled = true;
         }
 
         private async void EMSCget_Tick(object sender, EventArgs e)//TODO:取得頻度を2/1mだけでなく1/1mでもにする？
@@ -154,15 +159,14 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 string mag_ = texts[10];
                 double mag = double.Parse(mag_);
                 string magSt = mag.ToString("0.0");
-                int hypoCode = LL2FERCode.Code(lat, lon);
-                string hypoJP = LL2FERCode.NameJP(hypoCode);
+                string hypoJP = NameJP(lat, lon);
                 string hypoEN = texts[12];
                 string magTypeWithSpace = magType.Length == 3 ? magType : magType.Length == 2 ? "   " + magType : "      " + magType;
 
                 string logText = $"EMSC地震情報【{magType}{magSt}】{timeSt}\n{hypoJP}({hypoEN})\n{latStLong},{lonStLong}　深さ:{depthSt}\n{url}";
                 string bouyomiText = $"EMSC地震情報。{timeJP}発生、マグニチュード{magSt}、震源、{hypoJP.Replace(" ", "、").Replace("/", "、")}、{latStLongJP}、{lonStLongJP}、深さ{depthSt.Replace("km", "キロメートル")}。";
 
-                History history = new History
+                History_ history = new History_
                 {
                     URL = url,
                     TweetID = 0,//更新の場合は上書き前に変更するから0でおｋ
@@ -422,14 +426,14 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                         //string depthSt = depth == (int)depth ? $"(深さ:{depth}km?)" : $"深さ:約{(int)Math.Round(depth, MidpointRounding.AwayFromZero)}km";
                         //string depthLong = depth == (int)depth ? depthSt : $"深さ:{depth}km";
                         string depthLong = depth == (int)depth ? $"(深さ:{depth}km?)" : $"深さ:{depth}km";
-                        string hypoJP = LL2FERCode.NameJP(LL2FERCode.Code(lat, lon));
+                        string hypoJP = NameJP(lat, lon);
                         string hypoEN = $"({(string)properties.SelectToken("place")})";
                         string url = (string)properties.SelectToken("url");
                         latestURLUSGS = url;
                         string logText = $"USGS地震情報【{magType}{magSt}】{timeSt}\n{hypoJP}{hypoEN}\n{latStLong},{lonStLong}　{depthLong}\n推定最大改正メルカリ震度階級:{maxInt}{mmiSt.Replace("-", "")}　{alertJP.Replace("アラート:-", "")}\n{url}";
                         string bouyomiText = $"USGS地震情報。{timeJP}発生、マグニチュード{magSt}、震源、{hypoJP.Replace(" ", "、").Replace("/", "、")}、{latStLongJP}、{lonStLongJP}、深さ{depthLong.Replace("深さ:", "")}。{$"推定最大改正メルカリ震度階級{mmiSt.Replace("(", "").Replace(")", "")}。".Replace("推定最大改正メルカリ震度階級-。", "")}{alertJP.Replace("アラート:-", "")}";
                         string magTypeWithSpace = magType.Length == 3 ? magType : magType.Length == 2 ? "   " + magType : "      " + magType;
-                        History history = new History
+                        History_ history = new History_
                         {
                             URL = url,
                             Update = update_,
@@ -587,7 +591,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 {
                     if (USGSHist.Count > i)//データ不足対処
                     {
-                        History hist = USGSHist[ids[i]];
+                        History_ hist = USGSHist[ids[i]];
                         Brush color = Mag2Brush(hist.Mag);
                         g.FillRectangle(new SolidBrush(Alert2Color(hist.Alert)), 4, 40 + 160 * i, 792, 156);
                         g.FillRectangle(new SolidBrush(Color.FromArgb(45, 45, 90)), 8, 44 + 160 * i, 784, 148);
@@ -624,8 +628,92 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
 
         private async void EarlyEstGet_Tick(object sender, EventArgs e)
         {
+            ExeLog($"[EarlyEst]取得開始");
+            //次の15秒までの時間を計算
+            DateTime now = DateTime.Now;
+            DateTime next15Second = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 15);
+            if (now.Second >= 14)//早いと14秒になるため
+                next15Second = next15Second.AddMinutes(1);
+            EarlyEstGet.Interval = (int)(next15Second - now).TotalMilliseconds;
+            ExeLog($"[EarlyEst]次回実行まであと{EarlyEstGet.Interval}ms");
+            //try
+            {
+                XmlDocument xml = new XmlDocument();
+                ErrorText.Text = "[EarlyEst]取得中…";
+                await Task.Delay(1);
+                /*
+                using (HttpClient client = new HttpClient())
+                {
+                    string xmlString = await client.GetStringAsync("http://early-est.rm.ingv.it/monitor.xml");
+                    xml.LoadXml(xmlString);
+                }*/
+                xml.Load("C:\\Ichihai1415\\source\\vs\\EarlyEst-xml-handler\\EarlyEst-xml-handler\\bin\\Debug\\35.xml");
+                XmlNamespaceManager ns = new XmlNamespaceManager(xml.NameTable);
+                ns.AddNamespace("qml", "http://quakeml.org/xmlns/bed/1.2");
+                ns.AddNamespace("q", "http://quakeml.org/xmlns/quakeml/1.2");
+                ns.AddNamespace("qrt", "http://quakeml.org/xmlns/quakeml-rt/1.2");
+                ns.AddNamespace("ee", "http://net.alomax/earlyest/xmlns/ee");
+
+                DateTime creationTime = DateTime.Parse(xml.SelectSingleNode("q:quakeml/qml:eventParameters/qml:creationInfo/qml:creationTime", ns).InnerText).ToLocalTime();
+                //Console.WriteLine("agencyID:" + xml.SelectSingleNode("q:quakeml/qml:eventParameters/qml:creationInfo/qml:agencyID", ns).InnerText);//alomax.net_BETA
+                //Console.WriteLine("version:" + xml.SelectSingleNode("q:quakeml/qml:eventParameters/qml:creationInfo/qml:version", ns).InnerText);//Early-est 1.2.8 (2023.04.14)
+
+                if (xml.SelectNodes("q:quakeml/qml:eventParameters/qml:event", ns) != null)
+                    foreach (XmlNode infos in xml.SelectNodes("q:quakeml/qml:eventParameters/qml:event", ns))
+                    {
+                        XmlNode origin = infos.SelectSingleNode("qml:origin", ns);
+                        string id = infos.Attributes[0].Value.Split('/')[3];
+                        string url = $"http://early-est.rm.ingv.it/events/hypo.{id}.html";
+                        DateTimeOffset timeUpdtOff = DateTimeOffset.Parse(infos.SelectSingleNode("qml:creationInfo/qml:creationTime", ns).InnerText).ToLocalTime();
+                        DateTimeOffset timeOff = DateTimeOffset.Parse(origin.SelectSingleNode("qml:time/qml:value", ns).InnerText);
+                        double lat = double.Parse(origin.SelectSingleNode("qml:latitude/qml:value", ns).InnerText);
+                        double lon = double.Parse(origin.SelectSingleNode("qml:longitude/qml:value", ns).InnerText);
+                        string hypoJP = NameJP(lat, lon);
+                        string hypoEN = origin.SelectSingleNode("qml:region", ns).InnerText;
+                        double depth = double.Parse(origin.SelectSingleNode("qml:depth/qml:value", ns).InnerText) / 1000d;
+
+                        Dictionary<string, double> mags = EarlyEstHist.ContainsKey(id) ? new Dictionary<string, double>(EarlyEstHist[id].Mags) : new Dictionary<string, double>();
+                        foreach (XmlNode mag_ in infos.SelectNodes("qml:magnitude", ns))
+                            mags[mag_.SelectSingleNode("qml:type", ns).InnerText] = double.Parse(mag_.SelectSingleNode("qml:mag/qml:value", ns).InnerText);
+
+                        History hist = new History
+                        {
+                            Author = "Early-est",
+                            ID = id,
+                            Update = timeUpdtOff,
+                            URL = url,
+
+                            Time = timeOff,
+                            HypoJP = hypoJP,
+                            HypoEN = hypoEN,
+                            Lat = lat,
+                            Lon = lon,
+                            Depth = depth,
+                            Mags = mags,
+
+                            MMI = null,
+                            Alert = null,
+                            Source = null
+                        };
+                        EarlyEstHist[id] = hist;
+                    }
 
 
+
+            }/*
+            catch (WebException ex)
+            {
+                ErrorText.Text = $"[EarlyEst]ネットワークエラーが発生しました。内容:{ex.Message}";
+            }
+            catch (Exception ex)
+            {
+                LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,EarlyEstGet_Tick Version:{version}\n{ex}");
+                ErrorText.Text = $"[EarlyEst]エラーが発生しました。エラーログの内容を報告してください。内容:{ex.Message}";
+            }*/
+            if (!ErrorText.Text.Contains("エラー"))
+                ErrorText.Text = "";
+            ExeLog("[EarlyEst]処理終了");
+            await Task.Delay(1);
         }
 
         /// <summary>
@@ -931,7 +1019,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
             if (allow == DialogResult.Cancel)
                 return;
             exeLogs = "";
-            USGSHist = new Dictionary<string, History>();
+            USGSHist = new Dictionary<string, History_>();
             noFirst = false;
         }
 
@@ -1142,6 +1230,30 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
     }
 
     public class History
+    {
+        //パラメータ
+        public string Author { get; set; }//USGS/EMSC/Early-est
+        public string ID { get; set; }
+        public DateTimeOffset Update { get; set; }
+        public string URL { get; set; }
+
+        //各情報
+        public DateTimeOffset Time { get; set; }
+        public string HypoJP { get; set; }
+        public string HypoEN { get; set; }
+        public double Lat { get; set; }
+        public double Lon { get; set; }
+        public double Depth { get; set; }
+        public Dictionary<string, double> Mags { get; set; }
+
+        //USGS用
+        public double? MMI { get; set; }
+        public string Alert { get; set; }
+        public string Source { get; set; }
+    }
+
+
+    public class History_
     {
         public string URL { get; set; }
         public long Update { get; set; }
