@@ -385,7 +385,7 @@ namespace WorldQuakeViewer
     }
 
     /// <summary>
-    /// データ元
+    /// データ元判別用(USGS/EMSC/EarlyEst)
     /// </summary>
     public enum DataAuthor
     {
@@ -396,7 +396,7 @@ namespace WorldQuakeViewer
     };
 
     /// <summary>
-    /// データ元判別
+    /// データ元判別用
     /// </summary>
     public enum ViewData
     {
@@ -417,28 +417,69 @@ namespace WorldQuakeViewer
     /// </summary>
     public class History
     {
-        //パラメータ
+        /// <summary>
+        /// データ元(USGS/EMSC/EarlyEst)
+        /// </summary>
         public DataAuthor Author { get; set; }
+        /// <summary>
+        /// 地震ID(データ元間で互換性なし)
+        /// </summary>
         public string ID { get; set; }
+        /// <summary>
+        /// 更新時刻
+        /// </summary>
         public DateTimeOffset Update { get; set; }
+        /// <summary>
+        /// 詳細ページのURL
+        /// </summary>
         public string URL { get; set; }
 
-        //各情報
+        /// <summary>
+        /// 発生時刻
+        /// </summary>
         public DateTimeOffset Time { get; set; }
+        /// <summary>
+        /// 日本語震源名
+        /// </summary>
         public string HypoJP { get; set; }
+        /// <summary>
+        /// 英語震源名
+        /// </summary>
         public string HypoEN { get; set; }
+        /// <summary>
+        /// 緯度
+        /// </summary>
         public double Lat { get; set; }
+        /// <summary>
+        /// 経度
+        /// </summary>
         public double Lon { get; set; }
+        /// <summary>
+        /// 深さ
+        /// </summary>
         public double Depth { get; set; }
+        /// <summary>
+        /// マグニチュードのリスト[magType, mag]
+        /// </summary>
         public Dictionary<string, double> Mags { get; set; }
 
-        //USGS用
+        /// <summary>
+        /// [USGS用]MMI
+        /// </summary>
         public double? MMI { get; set; }
+        /// <summary>
+        /// [USGS用]アラート
+        /// </summary>
         public string Alert { get; set; }
+        /// <summary>
+        /// [EMSC用]データのソース
+        /// </summary>
         public string Source { get; set; }
     }
 
-
+    /// <summary>
+    /// 過去のクラス
+    /// </summary>
     public class History_
     {
         public string URL { get; set; }
