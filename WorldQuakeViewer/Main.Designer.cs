@@ -92,7 +92,7 @@
             this.RC1Reboot});
             this.RightClick.Name = "RightClick";
             this.RightClick.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.RightClick.Size = new System.Drawing.Size(225, 248);
+            this.RightClick.Size = new System.Drawing.Size(225, 226);
             this.RightClick.TabStop = true;
             this.RightClick.Text = "メニュー";
             // 
@@ -340,8 +340,6 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(816, 539);
-            this.MinimumSize = new System.Drawing.Size(416, 139);
             this.Name = "MainForm";
             this.Text = "WorldQuakeViewer";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);

@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Windows.Forms;
 using WorldQuakeViewer.Properties;
+using static WorldQuakeViewer.Util;
 
 namespace WorldQuakeViewer
 {
@@ -127,32 +128,32 @@ namespace WorldQuakeViewer
 
         private void Tab_Sound_Test_M45_Click(object sender, EventArgs e)
         {
-            MainForm.Sound("M45.wav");
+            Sound("M45.wav");
         }
 
         private void Tab_Sound_Test_M60_Click(object sender, EventArgs e)
         {
-            MainForm.Sound("M60.wav");
+            Sound("M60.wav");
         }
 
         private void Tab_Sound_Test_M80_Click(object sender, EventArgs e)
         {
-            MainForm.Sound("M80.wav");
+            Sound("M80.wav");
         }
 
         private void Tab_Sound_Test_M45u_Click(object sender, EventArgs e)
         {
-            MainForm.Sound("M45u.wav");
+            Sound("M45u.wav");
         }
 
         private void Tab_Sound_Test_M60u_Click(object sender, EventArgs e)
         {
-            MainForm.Sound("M60u.wav");
+            Sound("M60u.wav");
         }
 
         private void Tab_Sound_Test_M80u_Click(object sender, EventArgs e)
         {
-            MainForm.Sound("M80u.wav");
+            Sound("M80u.wav");
         }
 
         private void Tab_Yomi_Test_Click(object sender, EventArgs e)
@@ -185,7 +186,7 @@ namespace WorldQuakeViewer
             catch (Exception ex)
             {
                 MessageBox.Show($"読み上げ指令の送信に失敗しました。({ex.Message})", "WQV - setting", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                MainForm.LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Setting,Bouyomichan Version:{MainForm.version}\n{ex}");
+                LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Setting,Bouyomichan Version:{MainForm.version}\n{ex}");
             }
             Tab_Yomi_Test.Enabled = true;
         }
@@ -210,7 +211,7 @@ namespace WorldQuakeViewer
             catch (Exception ex)
             {
                 MessageBox.Show($"Socket送信に失敗しました。({ex.Message})", "WQV - setting", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                MainForm.LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Setting,Socket Version:{MainForm.version}\n{ex}");
+                LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Setting,Socket Version:{MainForm.version}\n{ex}");
             }
             Tab_Socket_Test.Enabled = true;
         }

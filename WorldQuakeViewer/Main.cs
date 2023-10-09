@@ -18,6 +18,7 @@ using System.Windows.Forms;
 using System.Xml;
 using WorldQuakeViewer.Properties;
 using static LL2FERC.LL2FERC;
+using static WorldQuakeViewer.Util;
 
 namespace WorldQuakeViewer//TODO:設定Formの作り直し
 {
@@ -52,6 +53,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
 
         private async void MainForm_Load(object sender, EventArgs e)//ExeLog($"");
         {
+            Bouyomichan("ds");
             ExeLog($"[Main]起動処理開始");
             startTime = DateTime.Now;
             ErrorText.Text = "リソース確認中…";
@@ -98,13 +100,19 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
             ExeLog($"[Main]画像OK");
             if (!File.Exists("AppDataPath.txt"))
                 File.WriteAllText("AppDataPath.txt", config.FilePath);
-            SettingReload();
+            //SettingReload();
             ErrorText.Text = "設定の読み込みが完了しました。";
             await Task.Delay(1);
             ExeLog($"[Main]設定読み込み完了");
             //EMSCget.Enabled = true;
             //USGSget.Enabled = true;
             EarlyEstGet.Enabled = true;
+
+            await Task.Delay(1000);
+
+            DataView d = new DataView(ViewData.Null);
+            d.Show();
+
         }
 
         private async void EMSCget_Tick(object sender, EventArgs e)//TODO:取得頻度を2/1mだけでなく1/1mでもにする？
@@ -357,6 +365,9 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 ErrorText.Text = "";
             ExeLog("[EMSC]処理終了");
             await Task.Delay(1);
+
+
+
         }
 
         private async void USGSget_Tick(object sender, EventArgs e)
@@ -654,7 +665,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 ns.AddNamespace("qrt", "http://quakeml.org/xmlns/quakeml-rt/1.2");
                 ns.AddNamespace("ee", "http://net.alomax/earlyest/xmlns/ee");
 
-                DateTime creationTime = DateTime.Parse(xml.SelectSingleNode("q:quakeml/qml:eventParameters/qml:creationInfo/qml:creationTime", ns).InnerText).ToLocalTime();
+                //DateTime creationTime = DateTime.Parse(xml.SelectSingleNode("q:quakeml/qml:eventParameters/qml:creationInfo/qml:creationTime", ns).InnerText).ToLocalTime();
                 //Console.WriteLine("agencyID:" + xml.SelectSingleNode("q:quakeml/qml:eventParameters/qml:creationInfo/qml:agencyID", ns).InnerText);//alomax.net_BETA
                 //Console.WriteLine("version:" + xml.SelectSingleNode("q:quakeml/qml:eventParameters/qml:creationInfo/qml:version", ns).InnerText);//Early-est 1.2.8 (2023.04.14)
 
@@ -678,7 +689,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
 
                         History hist = new History
                         {
-                            Author = "Early-est",
+                            Author = DataAuthor.EarlyEst,
                             ID = id,
                             Update = timeUpdtOff,
                             URL = url,
@@ -716,241 +727,6 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
             await Task.Delay(1);
         }
 
-        /// <summary>
-        /// ログを保存します。
-        /// </summary>
-        /// <param name="directory">保存するディレクトリ。</param>
-        /// <param name="text">保存するテキスト。</param>
-        /// <param name="id">地震ログ保存時用地震ID。</param>
-        public static void LogSave(string directory, string text, string id = "unknown")//同じ参照({xxx}\\{yyy}\\{zzz})が多いのでstringにそれぞれまとめる?
-        {
-            if (Settings.Default.Log_Enable)
-            {
-                try
-                {
-                    ExeLog($"[LogSave]ログ保存中…");
-                    DateTime nowTime = DateTime.Now;
-                    if (!Directory.Exists("Log"))
-                        Directory.CreateDirectory("Log");
-                    if (directory.StartsWith("Log\\EMSC"))
-                        if (!Directory.Exists("Log\\EMSC"))
-                            Directory.CreateDirectory("Log\\EMSC");
-                    if (directory.StartsWith("Log\\USGS"))
-                        if (!Directory.Exists("Log\\USGS"))
-                            Directory.CreateDirectory("Log\\USGS");
-                    if (!Directory.Exists(directory))
-                        Directory.CreateDirectory(directory);
-                    if (directory == "Log")
-                        File.WriteAllText($"Log\\log.txt", text);
-                    else if (directory == "Log\\ErrorLog")
-                    {
-                        if (File.Exists($"Log\\ErrorLog\\{nowTime:yyyyMM}.txt"))
-                            text += "\n--------------------------------------------------\n" + File.ReadAllText($"Log\\ErrorLog\\{nowTime:yyyyMM}.txt");
-                        File.WriteAllText($"Log\\ErrorLog\\{nowTime:yyyyMM}.txt", text);
-                    }
-                    else if (directory.StartsWith("Log\\USGS") || directory.StartsWith("Log\\EMSC"))
-                    {
-                        if (!Directory.Exists($"{directory}\\{nowTime:yyyyMM}"))
-                            Directory.CreateDirectory($"{directory}\\{nowTime:yyyyMM}");
-                        if (!Directory.Exists($"{directory}\\{nowTime:yyyyMM}\\{nowTime:dd}"))
-                            Directory.CreateDirectory($"{directory}\\{nowTime:yyyyMM}\\{nowTime:dd}");
-                        if (noFirst && File.Exists($"{directory}\\{nowTime:yyyyMM}\\{nowTime:dd}\\{nowTime:yyyyMMdd}_{id}.txt"))
-                            text = File.ReadAllText($"{directory}\\{nowTime:yyyyMM}\\{nowTime:dd}\\{nowTime:yyyyMMdd}_{id}.txt") + "\n--------------------------------------------------\n" + text;
-                        File.WriteAllText($"{directory}\\{nowTime:yyyyMM}\\{nowTime:dd}\\{nowTime:yyyyMMdd}_{id}.txt", text);
-                    }
-                    else
-                    {
-                        if (!Directory.Exists($"{directory}\\{nowTime:yyyyMM}"))
-                            Directory.CreateDirectory($"{directory}\\{nowTime:yyyyMM}");
-                        if (File.Exists($"{directory}\\{nowTime:yyyyMM}\\{nowTime:yyyyMMdd}.txt"))
-                            text = File.ReadAllText($"{directory}\\{nowTime:yyyyMM}\\{nowTime:yyyyMMdd}.txt") + "\n--------------------------------------------------\n" + text;
-                        File.WriteAllText($"{directory}\\{nowTime:yyyyMM}\\{nowTime:yyyyMMdd}.txt", text);
-                    }
-                    ExeLog($"[LogSave]ログ保存成功");
-                }
-                catch (Exception ex)
-                {
-                    ExeLog($"[LogSave]ログ保存でエラーが発生:{ex.Message}");
-                }
-            }
-        }
-
-        /// <summary>
-        /// ツイートします。
-        /// </summary>
-        /// <remarks>ツイートできる手段ができるまで廃止</remarks>
-        /// <param name="text">ツイートするテキスト。</param>
-        /// <param name="source">データ元</param>
-        /// <param name="id">リプライ判別用地震ID。</param>
-        public async void Tweet(string text, string source, string id)
-        {
-
-        }
-
-        /// <summary>
-        /// Socket通信で送信します。
-        /// </summary>
-        /// <param name="Text">送信する文。</param>
-        public void SendSocket(string text)
-        {
-            if (noFirst && Settings.Default.Socket_Enable)
-                try
-                {
-                    ExeLog($"[SendSocket]Socket送信中…({Settings.Default.Socket_Host}:{Settings.Default.Socket_Port})");
-                    IPEndPoint iPEndPoint = new IPEndPoint(IPAddress.Parse(Settings.Default.Socket_Host), Settings.Default.Socket_Port);
-                    using (TcpClient tcpClient = new TcpClient())
-                    {
-                        tcpClient.Connect(iPEndPoint);
-                        using (NetworkStream networkStream = tcpClient.GetStream())
-                        {
-                            byte[] bytes = new byte[4096];
-                            bytes = Encoding.UTF8.GetBytes(text);
-                            networkStream.Write(bytes, 0, bytes.Length);
-                        }
-                    }
-                    ExeLog($"[SendSocket]Socket送信成功");
-                }
-                catch (Exception ex)
-                {
-                    ErrorText.Text = $"Socket送信に失敗しました。わからない場合エラーログの内容を報告してください。内容:{ex.Message}";
-                    LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Socket Version:{version}\n{ex}");
-                }
-        }
-
-        /// <summary>
-        /// 棒読みちゃんに読み上げ指令を送ります。
-        /// </summary>
-        /// <param name="text">読み上げさせる文。</param>
-        public void Bouyomichan(string text)
-        {
-            if (noFirst && Settings.Default.Bouyomichan_Enable)
-                try
-                {
-                    ExeLog($"[Bouyomichan]棒読みちゃん送信中…");
-                    byte[] message = Encoding.UTF8.GetBytes(text);
-                    int length = message.Length;
-                    byte code = 0;
-                    short command = 0x0001;
-                    short speed = Settings.Default.Bouyomichan_Speed;
-                    short tone = Settings.Default.Bouyomichan_Tone;
-                    short volume = Settings.Default.Bouyomichan_Volume;
-                    short voice = Settings.Default.Bouyomichan_Voice;
-                    using (TcpClient tcpClient = new TcpClient(Settings.Default.Bouyomichan_Host, Settings.Default.Bouyomichan_Port))
-                    using (NetworkStream networkStream = tcpClient.GetStream())
-                    using (BinaryWriter binaryWriter = new BinaryWriter(networkStream))
-                    {
-                        binaryWriter.Write(command);
-                        binaryWriter.Write(speed);
-                        binaryWriter.Write(tone);
-                        binaryWriter.Write(volume);
-                        binaryWriter.Write(voice);
-                        binaryWriter.Write(code);
-                        binaryWriter.Write(length);
-                        binaryWriter.Write(message);
-                    }
-                    ExeLog($"[Bouyomichan]棒読みちゃん送信成功");
-                }
-                catch (Exception ex)
-                {
-                    ErrorText.Text = $"棒読みちゃんへの送信に失敗しました。わからない場合エラーログの内容を報告してください。内容:{ex.Message}";
-                    LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Bouyomichan Version:{version}\n{ex}");
-                }
-        }
-
-        /// <summary>
-        /// WebHookを送信します。
-        /// </summary>
-        /// <param name="text">送信するテキスト。</param>
-        public async void WebHook(string text)
-        {
-            if (noFirst/* && Settings.Default.WebHook_Enable*/)
-                try
-                {
-                    ExeLog($"[WebHook]WebHook送信中…");
-                    HttpClient hc = new HttpClient();
-                    Dictionary<string, string> strs = new Dictionary<string, string>()
-                    {
-                        { "content", text }
-                    };
-                    if (File.Exists("WebHookURL.txt"))//仮
-                        Settings.Default.WebHook_URL = File.ReadAllText("WebHookURL.txt");
-                    else
-                        return;//ここまで仮
-                    await hc.PostAsync(Settings.Default.WebHook_URL, new FormUrlEncodedContent(strs));
-                    hc.Dispose();
-                    ExeLog($"[WebHook]WebHook送信成功");
-                }
-                catch (Exception ex)
-                {
-                    ErrorText.Text = $"WebHookの送信に失敗しました。わからない場合エラーログの内容を報告してください。内容:{ex.Message}";
-                    LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,WebHook Version:{version}\n{ex}");
-                }
-        }
-
-        /// <summary>
-        /// 実行ログを保存・表示します。
-        /// </summary>
-        /// <param name="text">保存するテキスト。</param>
-        /// <remarks>タイムスタンプは自動で追加されます。</remarks>
-        public static void ExeLog(string text)
-        {
-            if (Settings.Default.Log_Enable)
-                exeLogs += $"{DateTime.Now:HH:mm:ss.ffff} {text}\n";
-            Console.WriteLine(text);
-        }
-
-        /// <summary>
-        /// 設定を読み込みます。
-        /// </summary>
-        /// <remarks>即時サイズ変更を行います。</remarks>
-        public void SettingReload()
-        {
-            ExeLog($"[SettingReload]設定読み込み開始");
-            Settings.Default.Reload();
-            if (File.Exists(config.FilePath))
-                File.Copy(config.FilePath, "UserSetting.xml", true);
-            if (Settings.Default.Display_HideHistory)
-                if (Settings.Default.Display_HideHistoryMap)
-                    ClientSize = new Size(400, 100);
-                else
-                    ClientSize = new Size(400, 500);
-            else
-                ClientSize = new Size(800, 500);
-            ExeLogAutoDelete.Interval = Settings.Default.Log_DeleteTime * 1000;
-            ExeLog($"[SettingReload]設定読み込み終了");
-        }
-
-        /// <summary>
-        /// 音声を再生します。
-        /// </summary>
-        /// <param name="soundFile">再生するSoundフォルダの中の音声ファイル。</param>
-        public static void Sound(string soundFile)
-        {
-            if (noFirst)
-                try
-                {
-                    ExeLog($"[Sound]音声再生開始(Sound\\{soundFile})");
-                    if (player != null)
-                    {
-                        player.Stop();
-                        player.Dispose();
-                        player = null;
-                    }
-                    if (!File.Exists($"Sound\\{soundFile}"))
-                    {
-                        ExeLog($"[Sound]音声ファイル(Sound\\{soundFile})が見つかりませんでした。");
-                        return;
-                    }
-                    player = new SoundPlayer($"Sound\\{soundFile}");
-                    player.Play();
-                    ExeLog($"[Sound]音声再生成功");
-                }
-                catch (Exception ex)
-                {
-                    LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Sound Version:{version}\n{ex}");
-                }
-        }
-
         private void RCsetting_Click(object sender, EventArgs e)
         {
             ExeLog($"[RC]設定表示");
@@ -962,7 +738,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
         private void SettingForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             ExeLog($"[RC]設定終了");
-            SettingReload();
+            //SettingReload();
             noFirst = false;//処理量増加時用
             ErrorText.Text = "設定を再読み込みしました。一部の設定は情報受信または再起動が必要です。";
         }
@@ -1055,148 +831,9 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
             intConverter.Show();
         }
 
-        public static Brush Mag2Brush(double mag)
-        {
-            if (mag < 6)
-                return Brushes.White;
-            else if (mag < 8)
-                return Brushes.Yellow;
-            else
-                return Brushes.Red;
-        }
 
-        public static Color Alert2Color(string alert)
-        {
-            switch (alert)
-            {
-                case "green":
-                    return Color.Green;
-                case "yellow":
-                    return Color.Yellow;
-                case "orange":
-                    return Color.Orange;
-                case "red":
-                    return Color.Red;
-                case "pending":
-                    return Color.DimGray;
-                default:
-                    return Color.FromArgb(45, 45, 90);
-            }
-        }
 
-        //##とか00はフォーマットのやつ
-        /// <summary>
-        /// 緯度を様々なフォーマットに変換します。
-        /// </summary>
-        /// <remarks>指定ミスに注意してください。</remarks>
-        /// <param name="lat">緯度</param>
-        /// <param name="latStLong">(string) 設定により {###.##…}ﾟN または {###}ﾟ{##}'{##}\"N</param>
-        /// <param name="latStLongJP">(string) 設定により 北緯{###.##…}度 または 北緯{##}度{##}分{##}秒 </param>
-        /// <param name="latDisplay">(string) 設定により {###.00}ﾟN または {###}ﾟ{##}'{##}\"N </param>
-        public static void Lat2String(double lat, out string latStLong, out string latStLongJP, out string latDisplay)//ここら辺は雑なので気が向いたら調整
-        {
-            double latShort = Math.Round(lat, 2, MidpointRounding.AwayFromZero);
-            string latStDecimal = lat > 0 ? $"{latShort}ﾟN" : $"{-latShort}ﾟS";
-            TimeSpan latTime = TimeSpan.FromHours(lat);
-            string latStShort = lat > 0 ? $"{(int)lat}ﾟ{latTime.Minutes}'N" : $"{(int)-lat}ﾟ{-latTime.Minutes}'S";
-            latStLong = Settings.Default.Text_LatLonDecimal ? lat > 0 ? $"{lat}ﾟN" : $"{-lat}ﾟS" : lat > 0 ? $"{(int)lat}ﾟ{latTime.Minutes}'{latTime.Seconds}\"N" : $"{(int)-lat}ﾟ{-latTime.Minutes}'{-latTime.Seconds}\"S";
-            latStLongJP = Settings.Default.Text_LatLonDecimal ? lat > 0 ? $"北緯{lat}度" : $"南緯{-lat}度" : lat > 0 ? $"北緯{(int)lat}度{latTime.Minutes}分{latTime.Seconds}秒" : $"南緯{(int)-lat}度{-latTime.Minutes}分{-latTime.Seconds}秒";
-            latDisplay = Settings.Default.Text_LatLonDecimal ? latStDecimal : latStShort;
-        }
 
-        /// <summary>
-        /// 緯度を様々なフォーマットに変換します。
-        /// </summary>
-        /// <remarks>指定ミスに注意してください。</remarks>
-        /// <param name="lat">緯度</param>
-        /// <param name="latShort">(double) ###.00</param>
-        /// <param name="latStDecimal">(string) {###.00}°N</param>
-        /// <param name="latStShort">(string) {###}ﾟ{##}'N</param>
-        /// <param name="latStLong">(string) 設定により {###.##…}ﾟN または {###}ﾟ{##}'{##}\"N</param>
-        /// <param name="latStLongJP">(string) 設定により 北緯{###.##…}度 または 北緯{##}度{##}分{##}秒 </param>
-        /// <param name="latDisplay">(string) 設定により<paramref name="latStDecimal"/>または<paramref name="latStShort"/></param>
-        public static void Lat2String(double lat, out double latShort, out string latStDecimal, out string latStShort, out string latStLong, out string latStLongJP, out string latDisplay)
-        {
-            latShort = Math.Round(lat, 2, MidpointRounding.AwayFromZero);
-            latStDecimal = lat > 0 ? $"{latShort}ﾟN" : $"{-latShort}ﾟS";
-            TimeSpan latTime = TimeSpan.FromHours(lat);
-            latStShort = lat > 0 ? $"{(int)lat}ﾟ{latTime.Minutes}'N" : $"{(int)-lat}ﾟ{-latTime.Minutes}'S";
-            latStLong = Settings.Default.Text_LatLonDecimal ? lat > 0 ? $"{lat}ﾟN" : $"{-lat}ﾟS" : lat > 0 ? $"{(int)lat}ﾟ{latTime.Minutes}'{latTime.Seconds}\"N" : $"{(int)-lat}ﾟ{-latTime.Minutes}'{-latTime.Seconds}\"S";
-            latStLongJP = Settings.Default.Text_LatLonDecimal ? lat > 0 ? $"北緯{lat}度" : $"南緯{-lat}度" : lat > 0 ? $"北緯{(int)lat}度{latTime.Minutes}分{latTime.Seconds}秒" : $"南緯{(int)-lat}度{-latTime.Minutes}分{-latTime.Seconds}秒";
-            latDisplay = Settings.Default.Text_LatLonDecimal ? latStDecimal : latStShort;
-        }
-
-        /// <summary>
-        /// 経度を様々なフォーマットに変換します。
-        /// </summary>
-        /// <remarks>指定ミスに注意してください。</remarks>
-        /// <param name="lon">経度</param>
-        /// <param name="lonStLong">(string) 設定により {###.##…}ﾟE または {###}ﾟ{##}'{##}\"E</param>
-        /// <param name="lonStLongJP">(string) 設定により 東経{###.##…}度 または 東経{##}度{##}分{##}秒 </param>
-        /// <param name="lonDisplay">(string) 設定により {###.00}ﾟE または {###}ﾟ{##}'{##}\"E</param>
-        public static void Lon2String(double lon, out string lonStLong, out string lonStLongJP, out string lonDisplay)
-        {
-            double lonShort = Math.Round(lon, 2, MidpointRounding.AwayFromZero);
-            string lonStDecimal = lon > 0 ? $"{lonShort}ﾟE" : $"{-lonShort}ﾟW";
-            TimeSpan lonTime = TimeSpan.FromHours(lon);
-            string lonStShort = lon > 0 ? $"{(int)lon}ﾟ{lonTime.Minutes}'E" : $"{(int)-lon}ﾟ{-lonTime.Minutes}'W";
-            lonStLong = Settings.Default.Text_LatLonDecimal ? lon > 0 ? $"{lon}ﾟE" : $"{-lon}ﾟW" : lon > 0 ? $"{(int)lon}ﾟ{lonTime.Minutes}'{lonTime.Seconds}\"E" : $"{(int)-lon}ﾟ{-lonTime.Minutes}'{-lonTime.Seconds}\"W";
-            lonStLongJP = Settings.Default.Text_LatLonDecimal ? lon > 0 ? $"東経{lon}度" : $"西経{-lon}度" : lon > 0 ? $"東経{(int)lon}度{lonTime.Minutes}分{lonTime.Seconds}秒" : $"西経{(int)-lon}度{-lonTime.Minutes}分{-lonTime.Seconds}秒";
-            lonDisplay = Settings.Default.Text_LatLonDecimal ? lonStDecimal : lonStShort;
-        }
-
-        /// <summary>
-        /// 経度を様々なフォーマットに変換します。
-        /// </summary>
-        /// <remarks>指定ミスに注意してください。</remarks>
-        /// <param name="lon">経度</param>
-        /// <param name="lonShort">(double) ###.00</param>
-        /// <param name="lonStDecimal">(string) {###.00}ﾟE</param>
-        /// <param name="lonStShort">(string) {###}ﾟ{##}'E</param>
-        /// <param name="lonStLong">(string) 設定により {###.##…}ﾟE または {###}ﾟ{##}'{##}\"E</param>
-        /// <param name="lonStLongJP">(string) 設定により 東経{###.##…}度 または 東経{##}度{##}分{##}秒 </param>
-        /// <param name="lonDisplay">(string) 設定により<paramref name="lonStDecimal"/>または<paramref name="lonStShort"/></param>
-        public static void Lon2String(double lon, out double lonShort, out string lonStDecimal, out string lonStShort, out string lonStLong, out string lonStLongJP, out string lonDisplay)
-        {
-            lonShort = Math.Round(lon, 2, MidpointRounding.AwayFromZero);
-            lonStDecimal = lon > 0 ? $"{lonShort}ﾟE" : $"{-lonShort}ﾟW";
-            TimeSpan lonTime = TimeSpan.FromHours(lon);
-            lonStShort = lon > 0 ? $"{(int)lon}ﾟ{lonTime.Minutes}'E" : $"{(int)-lon}ﾟ{-lonTime.Minutes}'W";
-            lonStLong = Settings.Default.Text_LatLonDecimal ? lon > 0 ? $"{lon}ﾟE" : $"{-lon}ﾟW" : lon > 0 ? $"{(int)lon}ﾟ{lonTime.Minutes}'{lonTime.Seconds}\"E" : $"{(int)-lon}ﾟ{-lonTime.Minutes}'{-lonTime.Seconds}\"W";
-            lonStLongJP = Settings.Default.Text_LatLonDecimal ? lon > 0 ? $"東経{lon}度" : $"西経{-lon}度" : lon > 0 ? $"東経{(int)lon}度{lonTime.Minutes}分{lonTime.Seconds}秒" : $"西経{(int)-lon}度{-lonTime.Minutes}分{-lonTime.Seconds}秒";
-            lonDisplay = Settings.Default.Text_LatLonDecimal ? lonStDecimal : lonStShort;
-        }
-
-        /// <summary>
-        /// 画像ファイルがない場合リソースからコピーします。
-        /// </summary>
-        /// <param name="fileName">ファイル名。</param>
-        /// <exception cref="Exception">画像指定が間違っている場合。</exception>
-        public static void ImageCheck(string fileName)
-        {
-            if (!Directory.Exists("Image"))
-            {
-                Directory.CreateDirectory("Image");
-                ExeLog($"[ImageCheck]Imageフォルダを作成しました");
-            }
-            if (!File.Exists($"Image\\{fileName}"))
-            {
-                Bitmap image;
-                switch (fileName)
-                {
-                    case "map.png":
-                        image = Resources.map;
-                        break;
-                    case "hypo.png":
-                        image = Resources.hypo;
-                        break;
-                    default:
-                        throw new Exception("画像のコピーに失敗しました。", new ArgumentException($"指定された画像({fileName})はResourcesにありません。"));
-                }
-                image.Save($"Image\\{fileName}", ImageFormat.Png);
-                ExeLog($"[ImageCheck]画像(\"Image\\{fileName}\")をコピーしました");
-            }
-        }
 
         private void RC1MapGenerator_Click(object sender, EventArgs e)
         {
@@ -1229,52 +866,5 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
         }
     }
 
-    public class History
-    {
-        //パラメータ
-        public string Author { get; set; }//USGS/EMSC/Early-est
-        public string ID { get; set; }
-        public DateTimeOffset Update { get; set; }
-        public string URL { get; set; }
 
-        //各情報
-        public DateTimeOffset Time { get; set; }
-        public string HypoJP { get; set; }
-        public string HypoEN { get; set; }
-        public double Lat { get; set; }
-        public double Lon { get; set; }
-        public double Depth { get; set; }
-        public Dictionary<string, double> Mags { get; set; }
-
-        //USGS用
-        public double? MMI { get; set; }
-        public string Alert { get; set; }
-        public string Source { get; set; }
-    }
-
-
-    public class History_
-    {
-        public string URL { get; set; }
-        public long Update { get; set; }
-        public string ID { get; set; }
-        public long TweetID { get; set; }
-
-        //表示用
-        public string Display1 { get; set; }
-        public string Display2 { get; set; }
-        public string Display3 { get; set; }
-
-        //更新検知用
-        public long Time { get; set; }
-        public string HypoJP { get; set; }
-        public string HypoEN { get; set; }
-        public double Lat { get; set; }
-        public double Lon { get; set; }
-        public double Depth { get; set; }
-        public string MagType { get; set; }
-        public double Mag { get; set; }
-        public double? MMI { get; set; }
-        public string Alert { get; set; }
-    }
 }
