@@ -11,9 +11,9 @@ using static WorldQuakeViewer.Util;
 
 namespace WorldQuakeViewer
 {
-    public partial class SettingsForm : Form
+    public partial class SettingsForm_old : Form
     {
-        public SettingsForm()
+        public SettingsForm_old()
         {
             InitializeComponent();
             /*フォントはパス
@@ -115,7 +115,7 @@ namespace WorldQuakeViewer
             if (Result == DialogResult.Yes)
             {
                 Settings.Default.Reset();
-                SettingsForm Setting = new SettingsForm();
+                SettingsForm_old Setting = new SettingsForm_old();
                 Configuration Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
                 if (File.Exists("UserSetting.xml"))
                     File.Delete("UserSetting.xml");

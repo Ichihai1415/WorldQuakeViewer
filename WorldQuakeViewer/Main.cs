@@ -730,7 +730,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
         private void RCsetting_Click(object sender, EventArgs e)
         {
             ExeLog($"[RC]設定表示");
-            SettingsForm Settings = new SettingsForm();
+            SettingsForm_old Settings = new SettingsForm_old();
             Settings.FormClosed += SettingForm_FormClosed;//閉じたとき呼び出し
             Settings.Show();
         }
