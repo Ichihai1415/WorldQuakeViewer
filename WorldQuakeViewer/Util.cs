@@ -166,9 +166,9 @@ namespace WorldQuakeViewer
         /// </summary>
         /// <remarks>指定ミスに注意してください。</remarks>
         /// <param name="lat">緯度</param>
-        /// <param name="latStLong">(string) 設定により {###.##…}ﾟN または {###}ﾟ{##}'{##}\"N</param>
+        /// <param name="latStLong">(string) 設定により {###.##…}ﾟN または {###}ﾟ{##}'{##}"N</param>
         /// <param name="latStLongJP">(string) 設定により 北緯{###.##…}度 または 北緯{##}度{##}分{##}秒 </param>
-        /// <param name="latDisplay">(string) 設定により {###.00}ﾟN または {###}ﾟ{##}'{##}\"N </param>
+        /// <param name="latDisplay">(string) 設定により {###.00}ﾟN または {###}ﾟ{##}'{##}"N </param>
         public static void Lat2String(double lat, out string latStLong, out string latStLongJP, out string latDisplay)//ここら辺は雑なので気が向いたら調整
         {
             double latShort = Math.Round(lat, 2, MidpointRounding.AwayFromZero);
@@ -188,7 +188,7 @@ namespace WorldQuakeViewer
         /// <param name="latShort">(double) ###.00</param>
         /// <param name="latStDecimal">(string) {###.00}°N</param>
         /// <param name="latStShort">(string) {###}ﾟ{##}'N</param>
-        /// <param name="latStLong">(string) 設定により {###.##…}ﾟN または {###}ﾟ{##}'{##}\"N</param>
+        /// <param name="latStLong">(string) 設定により {###.##…}ﾟN または {###}ﾟ{##}'{##}"N</param>
         /// <param name="latStLongJP">(string) 設定により 北緯{###.##…}度 または 北緯{##}度{##}分{##}秒 </param>
         /// <param name="latDisplay">(string) 設定により<paramref name="latStDecimal"/>または<paramref name="latStShort"/></param>
         public static void Lat2String(double lat, out double latShort, out string latStDecimal, out string latStShort, out string latStLong, out string latStLongJP, out string latDisplay)
@@ -207,9 +207,9 @@ namespace WorldQuakeViewer
         /// </summary>
         /// <remarks>指定ミスに注意してください。</remarks>
         /// <param name="lon">経度</param>
-        /// <param name="lonStLong">(string) 設定により {###.##…}ﾟE または {###}ﾟ{##}'{##}\"E</param>
+        /// <param name="lonStLong">(string) 設定により {###.##…}ﾟE または {###}ﾟ{##}'{##}"E</param>
         /// <param name="lonStLongJP">(string) 設定により 東経{###.##…}度 または 東経{##}度{##}分{##}秒 </param>
-        /// <param name="lonDisplay">(string) 設定により {###.00}ﾟE または {###}ﾟ{##}'{##}\"E</param>
+        /// <param name="lonDisplay">(string) 設定により {###.00}ﾟE または {###}ﾟ{##}'{##}"E</param>
         public static void Lon2String(double lon, out string lonStLong, out string lonStLongJP, out string lonDisplay)
         {
             double lonShort = Math.Round(lon, 2, MidpointRounding.AwayFromZero);
@@ -229,7 +229,7 @@ namespace WorldQuakeViewer
         /// <param name="lonShort">(double) ###.00</param>
         /// <param name="lonStDecimal">(string) {###.00}ﾟE</param>
         /// <param name="lonStShort">(string) {###}ﾟ{##}'E</param>
-        /// <param name="lonStLong">(string) 設定により {###.##…}ﾟE または {###}ﾟ{##}'{##}\"E</param>
+        /// <param name="lonStLong">(string) 設定により {###.##…}ﾟE または {###}ﾟ{##}'{##}"E</param>
         /// <param name="lonStLongJP">(string) 設定により 東経{###.##…}度 または 東経{##}度{##}分{##}秒 </param>
         /// <param name="lonDisplay">(string) 設定により<paramref name="lonStDecimal"/>または<paramref name="lonStShort"/></param>
         public static void Lon2String(double lon, out double lonShort, out string lonStDecimal, out string lonStShort, out string lonStLong, out string lonStLongJP, out string lonDisplay)
@@ -393,23 +393,30 @@ namespace WorldQuakeViewer
         USGS = 1,
         EMSC = 2,
         EarlyEst = 3,
+        GFZ = 4
     };
 
     /// <summary>
-    /// データ元判別用
+    /// 表示データ元判別用
     /// </summary>
     public enum ViewData
     {
         Null = 0,
-        USGS_Simple = 11,
-        USGS_SimpleMap = 12,
-        USGS_MapHistory = 13,
-        EMSC_Simple = 21,
-        EMSC_SimpleMap = 22,
-        EMSC_MapHistory = 23,
-        EarlyEst_Simple = 31,
-        EarlyEst_SimpleMap = 32,
-        EarlyEst_MapHistory = 33
+        USGS_Latest = 11,
+        USGS_History = 12,
+        USGS_LatestHistory = 13,
+        EMSC_Latest = 21,
+        EMSC_History = 22,
+        EMSC_LatestHistory = 23,
+        EarlyEst_Latest = 31,
+        EarlyEst_History = 32,
+        EarlyEst_LatestHistory = 33,
+        GFZ_Latest = 41,
+        GFZ_History = 42,
+        GFZ_LatestHistory = 43,
+        All_Latest = 91,
+        All_History = 92,
+        All_LatestHistory = 93
     };
 
     /// <summary>

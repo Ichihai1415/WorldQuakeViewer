@@ -109,6 +109,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigStruct.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="DataView.cs">
       <SubType>Form</SubType>
