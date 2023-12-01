@@ -52,27 +52,27 @@ namespace WorldQuakeViewer
             public bool Normal_AutoSave { get; set; } = false;
 
             /// <summary>
-            /// M0.0~M4.5の情報の保存をするか
+            /// M4.5未満の情報を有効か
             /// </summary>
             public bool EQ_L1_Enable { get; set; } = false;
 
             /// <summary>
-            /// M4.5~M6.0の情報の保存をするか
+            /// M4.5以上M6.0未満の情報を有効か
             /// </summary>
             public bool EQ_L2_Enable { get; set; } = false;
 
             /// <summary>
-            /// M6.0~M7.0の情報の保存をするか
+            /// M6.0以上M7.0未満の情報を有効か
             /// </summary>
             public bool EQ_L3_Enable { get; set; } = false;
 
             /// <summary>
-            /// M7.0~M8.0の情報の保存をするか
+            /// M7.0以上M8.0未満の情報を有効か
             /// </summary>
             public bool EQ_L4_Enable { get; set; } = false;
 
             /// <summary>
-            /// M8.0~の情報の保存をするか
+            /// M8.0以上の情報を有効か
             /// </summary>
             public bool EQ_L5_Enable { get; set; } = false;
 
@@ -206,19 +206,55 @@ namespace WorldQuakeViewer
             public class Sound
             {
                 /// <summary>
-                /// M6未満 有効か
+                /// M4.5未満を有効か
                 /// </summary>
                 public bool L1_Enable { get; set; } = true;
 
                 /// <summary>
-                /// M6以上M8未満 有効か
+                /// M4.5以上M6.0未満を有効か
                 /// </summary>
                 public bool L2_Enable { get; set; } = true;
 
                 /// <summary>
-                /// M8以上 有効か
+                /// M6.0以上M7.0未満を有効か
                 /// </summary>
                 public bool L3_Enable { get; set; } = true;
+
+                /// <summary>
+                /// M7.0以上M8.0未満を有効か
+                /// </summary>
+                public bool L4_Enable { get; set; } = true;
+
+                /// <summary>
+                /// M8.0以上を有効か
+                /// </summary>
+                public bool L5_Enable { get; set; } = true;
+
+                /// <summary>
+                /// M4.5未満の音声ファイルのパス
+                /// </summary>
+                public string L1_Path { get; set; } = "sound\\L1.wav";
+
+                /// <summary>
+                /// M4.5以上M6.0未満の音声ファイルのパス
+                /// </summary>
+                public string L2_Path { get; set; } = "sound\\L2.wav";
+
+                /// <summary>
+                /// M6.0以上M7.0未満の音声ファイルのパス
+                /// </summary>
+                public string L3_Path { get; set; } = "sound\\L3.wav";
+
+                /// <summary>
+                /// M7.0以上M8.0未満の音声ファイルのパス
+                /// </summary>
+                public string L4_Path { get; set; } = "sound\\L4.wav";
+
+                /// <summary>
+                /// M8.0以上の音声ファイルのパス
+                /// </summary>
+                public string L5_Path { get; set; } = "sound\\L5.wav";
+
             }
 
             /// <summary>
@@ -277,27 +313,6 @@ namespace WorldQuakeViewer
                 /// </summary>
                 public string Format { get; set; } = "フォーマットを入力してください";
             }
-
-            /// <summary>
-            /// データ出力
-            /// </summary>
-            public class Output
-            {
-                /// <summary>
-                /// 有効か
-                /// </summary>
-                public bool Enable { get; set; } = false;
-
-                /// <summary>
-                /// 出力する最小マグニチュード
-                /// </summary>
-                public double LowerMagLimit { get; set; } = 0;
-
-                /// <summary>
-                /// 出力する文のフォーマット
-                /// </summary>
-                public string Format { get; set; } = "フォーマットを入力してください";
-            }
         }
 
         /// <summary>
@@ -334,6 +349,7 @@ namespace WorldQuakeViewer
             /// <summary>
             /// 描画色
             /// </summary>
+            /// <remarks>マップはWorldQuakeViewer.MapGenerator</remarks>
             public class Colors
             {
                 /// <summary>
