@@ -11,7 +11,6 @@ using System.Text;
 using System.Threading.Tasks;
 using WorldQuakeViewer.Properties;
 using static WorldQuakeViewer.MainForm;
-using static WorldQuakeViewer.Util_Class;
 
 namespace WorldQuakeViewer
 {
