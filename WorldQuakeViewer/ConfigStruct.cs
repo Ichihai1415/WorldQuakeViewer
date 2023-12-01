@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using static WorldQuakeViewer.Util_Class;
 
 namespace WorldQuakeViewer
 {
@@ -12,6 +13,7 @@ namespace WorldQuakeViewer
         /// <summary>
         /// 設定バージョン
         /// </summary>
+        /// <remarks>getonly</remarks>
         public string Version { get; } = MainForm.version;
 
         /// <summary>
@@ -23,7 +25,6 @@ namespace WorldQuakeViewer
         /// 画面ごとの表示処理
         /// </summary>
         public List<View> Views { get; set; }
-
 
         /// <summary>
         /// ログ出力関連
@@ -49,6 +50,36 @@ namespace WorldQuakeViewer
             /// 動作ログ消去時に自動保存するか
             /// </summary>
             public bool Normal_AutoSave { get; set; } = false;
+
+            /// <summary>
+            /// M0.0~M4.5の情報の保存をするか
+            /// </summary>
+            public bool EQ_L1_Enable { get; set; } = false;
+
+            /// <summary>
+            /// M4.5~M6.0の情報の保存をするか
+            /// </summary>
+            public bool EQ_L2_Enable { get; set; } = false;
+
+            /// <summary>
+            /// M6.0~M7.0の情報の保存をするか
+            /// </summary>
+            public bool EQ_L3_Enable { get; set; } = false;
+
+            /// <summary>
+            /// M7.0~M8.0の情報の保存をするか
+            /// </summary>
+            public bool EQ_L4_Enable { get; set; } = false;
+
+            /// <summary>
+            /// M8.0~の情報の保存をするか
+            /// </summary>
+            public bool EQ_L5_Enable { get; set; } = false;
+
+            /// <summary>
+            /// 情報保存の文のフォーマット
+            /// </summary>
+            public string EQ_Format { get; set; } = "フォーマットを入力してください";
         }
 
         //以下上記配列のクラス
@@ -57,6 +88,11 @@ namespace WorldQuakeViewer
         /// </summary>
         public class Data
         {
+            /// <summary>
+            /// 取得時間(毎分x秒)
+            /// </summary>
+            public int[] GetTimes { get; set; }
+
             /// <summary>
             /// 更新検知対象
             /// </summary>

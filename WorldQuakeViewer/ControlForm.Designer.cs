@@ -1,6 +1,6 @@
 ﻿namespace WorldQuakeViewer
 {
-    partial class Ctrl
+    partial class CtrlForm
     {
         /// <summary>
         /// Required designer variable.

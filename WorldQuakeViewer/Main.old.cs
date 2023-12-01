@@ -18,7 +18,7 @@ using System.Windows.Forms;
 using System.Xml;
 using WorldQuakeViewer.Properties;
 using static LL2FERC.LL2FERC;
-using static WorldQuakeViewer.Util;
+using static WorldQuakeViewer.Util_Func;
 
 namespace WorldQuakeViewer//TODO:設定Formの作り直し
 {

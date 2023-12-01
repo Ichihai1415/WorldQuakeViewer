@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace WorldQuakeViewer
 {
-    public partial class Ctrl : Form
+    public partial class CtrlForm : Form
     {
-        public Ctrl()
+        public CtrlForm()
         {
             InitializeComponent();
         }

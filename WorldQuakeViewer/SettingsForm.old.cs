@@ -7,7 +7,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Windows.Forms;
 using WorldQuakeViewer.Properties;
-using static WorldQuakeViewer.Util;
+using static WorldQuakeViewer.Util_Func;
 
 namespace WorldQuakeViewer
 {

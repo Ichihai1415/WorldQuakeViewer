@@ -116,7 +116,12 @@
     <Compile Include="ControlForm.Designer.cs">
       <DependentUpon>ControlForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Util.cs" />
+    <Compile Include="Data.EarlyEst.cs" />
+    <Compile Include="Data.GFZ.cs" />
+    <Compile Include="Data.EMSC.cs" />
+    <Compile Include="Data.USGS.cs" />
+    <Compile Include="Util.Class.cs" />
+    <Compile Include="Util.Func.cs" />
     <Compile Include="DataView.cs">
       <SubType>Form</SubType>
     </Compile>
