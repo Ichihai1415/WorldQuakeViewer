@@ -27,7 +27,7 @@ namespace WorldQuakeViewer
         public List<View> Views { get; set; }
 
         /// <summary>
-        /// ログ出力関連
+        /// ログ出力関連(地震除く)
         /// </summary>
         public class Log
         {
@@ -50,36 +50,6 @@ namespace WorldQuakeViewer
             /// 動作ログ消去時に自動保存するか
             /// </summary>
             public bool Normal_AutoSave { get; set; } = false;
-
-            /// <summary>
-            /// M4.5未満の情報を有効か
-            /// </summary>
-            public bool EQ_L1_Enable { get; set; } = false;
-
-            /// <summary>
-            /// M4.5以上M6.0未満の情報を有効か
-            /// </summary>
-            public bool EQ_L2_Enable { get; set; } = false;
-
-            /// <summary>
-            /// M6.0以上M7.0未満の情報を有効か
-            /// </summary>
-            public bool EQ_L3_Enable { get; set; } = false;
-
-            /// <summary>
-            /// M7.0以上M8.0未満の情報を有効か
-            /// </summary>
-            public bool EQ_L4_Enable { get; set; } = false;
-
-            /// <summary>
-            /// M8.0以上の情報を有効か
-            /// </summary>
-            public bool EQ_L5_Enable { get; set; } = false;
-
-            /// <summary>
-            /// 情報保存の文のフォーマット
-            /// </summary>
-            public string EQ_Format { get; set; } = "フォーマットを入力してください";
         }
 
         //以下上記配列のクラス
@@ -311,6 +281,43 @@ namespace WorldQuakeViewer
                 /// <summary>
                 /// 送信する文のフォーマット
                 /// </summary>
+                public string Format { get; set; } = "フォーマットを入力してください";
+            }
+
+            /// <summary>
+            /// ログ出力関連(地震のみ)
+            /// </summary>
+            public class Log
+            {
+                /// <summary>
+                /// M4.5未満を有効か
+                /// </summary>
+                public bool L1_Enable { get; set; } = false;
+
+                /// <summary>
+                /// M4.5以上M6.0未満を有効か
+                /// </summary>
+                public bool L2_Enable { get; set; } = false;
+
+                /// <summary>
+                /// M6.0以上M7.0未満を有効か
+                /// </summary>
+                public bool L3_Enable { get; set; } = false;
+
+                /// <summary>
+                /// M7.0以上M8.0未満を有効か
+                /// </summary>
+                public bool L4_Enable { get; set; } = false;
+
+                /// <summary>
+                /// M8.0以上を有効か
+                /// </summary>
+                public bool L5_Enable { get; set; } = false;
+
+                /// <summary>
+                /// 保存する文のフォーマット
+                /// </summary>
+                /// <remarks>情報の間にソフト情報等が入ります</remarks>
                 public string Format { get; set; } = "フォーマットを入力してください";
             }
         }
