@@ -10,6 +10,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using WorldQuakeViewer.Properties;
+using static WorldQuakeViewer.Util_Class;
 using static WorldQuakeViewer.MainForm;
 
 namespace WorldQuakeViewer

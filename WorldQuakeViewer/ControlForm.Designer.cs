@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CtrlForm));
             this.TabCtrl_Main = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.LogTextBox = new System.Windows.Forms.TextBox();
@@ -37,12 +38,13 @@
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.DGV_pro = new System.Windows.Forms.DataGridView();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
             this.GDV_pro_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.GDV_pro_USGS = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.GDV_pro_EMSC = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.GDV_pro_EarlyEst = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.GDV_pro_GFZ = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.GDV_pro_EarlyEst = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.GDV_pro_Other = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TabCtrl_Main.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -140,20 +142,32 @@
             // 
             this.DGV_pro.AllowUserToAddRows = false;
             this.DGV_pro.AllowUserToDeleteRows = false;
+            this.DGV_pro.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.DGV_pro.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DGV_pro.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.GDV_pro_Name,
             this.GDV_pro_USGS,
             this.GDV_pro_EMSC,
+            this.GDV_pro_GFZ,
             this.GDV_pro_EarlyEst,
-            this.GDV_pro_GFZ});
+            this.GDV_pro_Other});
             this.DGV_pro.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DGV_pro.Location = new System.Drawing.Point(3, 3);
             this.DGV_pro.Name = "DGV_pro";
             this.DGV_pro.RowHeadersVisible = false;
             this.DGV_pro.RowTemplate.Height = 21;
+            this.DGV_pro.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.DGV_pro.Size = new System.Drawing.Size(478, 432);
             this.DGV_pro.TabIndex = 1;
+            // 
+            // tabPage6
+            // 
+            this.tabPage6.Location = new System.Drawing.Point(4, 22);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Size = new System.Drawing.Size(484, 443);
+            this.tabPage6.TabIndex = 2;
+            this.tabPage6.Text = "表示";
+            this.tabPage6.UseVisualStyleBackColor = true;
             // 
             // GDV_pro_Name
             // 
@@ -172,24 +186,20 @@
             this.GDV_pro_EMSC.HeaderText = "EMSC";
             this.GDV_pro_EMSC.Name = "GDV_pro_EMSC";
             // 
-            // GDV_pro_EarlyEst
-            // 
-            this.GDV_pro_EarlyEst.HeaderText = "Early-est";
-            this.GDV_pro_EarlyEst.Name = "GDV_pro_EarlyEst";
-            // 
             // GDV_pro_GFZ
             // 
             this.GDV_pro_GFZ.HeaderText = "GFZ";
             this.GDV_pro_GFZ.Name = "GDV_pro_GFZ";
             // 
-            // tabPage6
+            // GDV_pro_EarlyEst
             // 
-            this.tabPage6.Location = new System.Drawing.Point(4, 22);
-            this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Size = new System.Drawing.Size(484, 443);
-            this.tabPage6.TabIndex = 2;
-            this.tabPage6.Text = "表示";
-            this.tabPage6.UseVisualStyleBackColor = true;
+            this.GDV_pro_EarlyEst.HeaderText = "Early-est";
+            this.GDV_pro_EarlyEst.Name = "GDV_pro_EarlyEst";
+            // 
+            // GDV_pro_Other
+            // 
+            this.GDV_pro_Other.HeaderText = "その他";
+            this.GDV_pro_Other.Name = "GDV_pro_Other";
             // 
             // CtrlForm
             // 
@@ -197,9 +207,11 @@
             this.ClientSize = new System.Drawing.Size(500, 500);
             this.Controls.Add(this.TabCtrl_Main);
             this.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "CtrlForm";
             this.Text = "ControlForm";
+            this.Load += new System.EventHandler(this.CtrlForm_Load);
             this.TabCtrl_Main.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
@@ -226,7 +238,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn GDV_pro_Name;
         private System.Windows.Forms.DataGridViewTextBoxColumn GDV_pro_USGS;
         private System.Windows.Forms.DataGridViewTextBoxColumn GDV_pro_EMSC;
-        private System.Windows.Forms.DataGridViewTextBoxColumn GDV_pro_EarlyEst;
         private System.Windows.Forms.DataGridViewTextBoxColumn GDV_pro_GFZ;
+        private System.Windows.Forms.DataGridViewTextBoxColumn GDV_pro_EarlyEst;
+        private System.Windows.Forms.DataGridViewTextBoxColumn GDV_pro_Other;
     }
 }

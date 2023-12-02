@@ -25,7 +25,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
 {
     public partial class MainForm : Form//TODO:設定の分割(USGSとEMSC)
     {
-        public static readonly string version = "1.2.0α1";//こことアセンブリを変える
+        public static readonly string version_ = "1.2.0α1";//こことアセンブリを変える
         public static DateTime startTime = new DateTime();
         public static readonly Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
         public static int accesseCountEMSC = 0;
