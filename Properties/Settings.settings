@@ -125,25 +125,25 @@
     <Setting Name="USGS_Update_MaxCount" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">10</Value>
     </Setting>
-    <Setting Name="EMSC_Update_Time" Type="System.Boolean" Scope="User">
+    <Setting Name="GFZ_Update_Time" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="EMSC_Update_HypoJP" Type="System.Boolean" Scope="User">
+    <Setting Name="GFZ_Update_HypoJP" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="EMSC_Update_HypoEN" Type="System.Boolean" Scope="User">
+    <Setting Name="GFZ_Update_HypoEN" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="EMSC_Update_LatLon" Type="System.Boolean" Scope="User">
+    <Setting Name="GFZ_Update_LatLon" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="EMSC_Update_Depth" Type="System.Boolean" Scope="User">
+    <Setting Name="GFZ_Update_Depth" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="EMSC_Update_MagType" Type="System.Boolean" Scope="User">
+    <Setting Name="GFZ_Update_MagType" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="EMSC_Update_Mag" Type="System.Boolean" Scope="User">
+    <Setting Name="GFZ_Update_Mag" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="WebHook_Enable" Type="System.Boolean" Scope="User">

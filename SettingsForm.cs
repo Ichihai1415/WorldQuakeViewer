@@ -84,6 +84,13 @@ namespace WorldQuakeViewer
             Settings.Default.USGS_Update_Mag = Tab_Update_Mag.Checked;
             Settings.Default.USGS_Update_MMI = Tab_Update_MMI.Checked;
             Settings.Default.USGS_Update_Alert = Tab_Update_Alert.Checked;
+            Settings.Default.GFZ_Update_Time = Tab_Update_Time.Checked;
+            Settings.Default.GFZ_Update_HypoJP = Tab_Update_HypoJP.Checked;
+            Settings.Default.GFZ_Update_HypoEN = Tab_Update_HypoEN.Checked;
+            Settings.Default.GFZ_Update_LatLon = Tab_Update_LatLon.Checked;
+            Settings.Default.GFZ_Update_Depth = Tab_Update_Depth.Checked;
+            Settings.Default.GFZ_Update_MagType = Tab_Update_MagType.Checked;
+            Settings.Default.GFZ_Update_Mag = Tab_Update_Mag.Checked;
             Settings.Default.Sound_45_Enable = Tab_Sound_M45.Checked;
             Settings.Default.Sound_60_Enable = Tab_Sound_M60.Checked;
             Settings.Default.Sound_80_Enable = Tab_Sound_M80.Checked;

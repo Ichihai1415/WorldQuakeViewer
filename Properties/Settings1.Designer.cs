@@ -12,7 +12,7 @@ namespace WorldQuakeViewer.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.6.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.8.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -518,84 +518,84 @@ namespace WorldQuakeViewer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool EMSC_Update_Time {
+        public bool GFZ_Update_Time {
             get {
-                return ((bool)(this["EMSC_Update_Time"]));
+                return ((bool)(this["GFZ_Update_Time"]));
             }
             set {
-                this["EMSC_Update_Time"] = value;
+                this["GFZ_Update_Time"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool EMSC_Update_HypoJP {
+        public bool GFZ_Update_HypoJP {
             get {
-                return ((bool)(this["EMSC_Update_HypoJP"]));
+                return ((bool)(this["GFZ_Update_HypoJP"]));
             }
             set {
-                this["EMSC_Update_HypoJP"] = value;
+                this["GFZ_Update_HypoJP"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool EMSC_Update_HypoEN {
+        public bool GFZ_Update_HypoEN {
             get {
-                return ((bool)(this["EMSC_Update_HypoEN"]));
+                return ((bool)(this["GFZ_Update_HypoEN"]));
             }
             set {
-                this["EMSC_Update_HypoEN"] = value;
+                this["GFZ_Update_HypoEN"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool EMSC_Update_LatLon {
+        public bool GFZ_Update_LatLon {
             get {
-                return ((bool)(this["EMSC_Update_LatLon"]));
+                return ((bool)(this["GFZ_Update_LatLon"]));
             }
             set {
-                this["EMSC_Update_LatLon"] = value;
+                this["GFZ_Update_LatLon"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool EMSC_Update_Depth {
+        public bool GFZ_Update_Depth {
             get {
-                return ((bool)(this["EMSC_Update_Depth"]));
+                return ((bool)(this["GFZ_Update_Depth"]));
             }
             set {
-                this["EMSC_Update_Depth"] = value;
+                this["GFZ_Update_Depth"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool EMSC_Update_MagType {
+        public bool GFZ_Update_MagType {
             get {
-                return ((bool)(this["EMSC_Update_MagType"]));
+                return ((bool)(this["GFZ_Update_MagType"]));
             }
             set {
-                this["EMSC_Update_MagType"] = value;
+                this["GFZ_Update_MagType"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool EMSC_Update_Mag {
+        public bool GFZ_Update_Mag {
             get {
-                return ((bool)(this["EMSC_Update_Mag"]));
+                return ((bool)(this["GFZ_Update_Mag"]));
             }
             set {
-                this["EMSC_Update_Mag"] = value;
+                this["GFZ_Update_Mag"] = value;
             }
         }
         

@@ -41,9 +41,9 @@
             this.RC1ExeLogOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.RC1Bar3 = new System.Windows.Forms.ToolStripSeparator();
             this.RC1Sites = new System.Windows.Forms.ToolStripMenuItem();
-            this.RCThisEMSC = new System.Windows.Forms.ToolStripMenuItem();
+            this.RCThisGFZ = new System.Windows.Forms.ToolStripMenuItem();
             this.RCThisUSGS = new System.Windows.Forms.ToolStripMenuItem();
-            this.RCMapEWSC = new System.Windows.Forms.ToolStripMenuItem();
+            this.RCMapGFZ = new System.Windows.Forms.ToolStripMenuItem();
             this.RCMapUSGS = new System.Windows.Forms.ToolStripMenuItem();
             this.RCNOAA = new System.Windows.Forms.ToolStripMenuItem();
             this.RCEarlyEst = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,7 +53,7 @@
             this.RCGitHub = new System.Windows.Forms.ToolStripMenuItem();
             this.RCSoftDiscord = new System.Windows.Forms.ToolStripMenuItem();
             this.RC1TextCopy = new System.Windows.Forms.ToolStripMenuItem();
-            this.RCTextCopyEMSC = new System.Windows.Forms.ToolStripMenuItem();
+            this.RCTextCopyGFZ = new System.Windows.Forms.ToolStripMenuItem();
             this.RCTextCopyUSGS = new System.Windows.Forms.ToolStripMenuItem();
             this.RC1Bar4 = new System.Windows.Forms.ToolStripSeparator();
             this.RC1Reboot = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,7 +61,7 @@
             this.RCbar3 = new System.Windows.Forms.ToolStripSeparator();
             this.RCbar5 = new System.Windows.Forms.ToolStripSeparator();
             this.ExeLogAutoDelete = new System.Windows.Forms.Timer(this.components);
-            this.EMSCget = new System.Windows.Forms.Timer(this.components);
+            this.GFZget = new System.Windows.Forms.Timer(this.components);
             this.MainImage = new System.Windows.Forms.PictureBox();
             this.EarlyEstGet = new System.Windows.Forms.Timer(this.components);
             this.RightClick.SuspendLayout();
@@ -151,9 +151,9 @@
             // 
             this.RC1Sites.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.RC1Sites.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.RCThisEMSC,
+            this.RCThisGFZ,
             this.RCThisUSGS,
-            this.RCMapEWSC,
+            this.RCMapGFZ,
             this.RCMapUSGS,
             this.RCNOAA,
             this.RCEarlyEst});
@@ -161,12 +161,12 @@
             this.RC1Sites.Size = new System.Drawing.Size(224, 22);
             this.RC1Sites.Text = "各サイト";
             // 
-            // RCThisEMSC
+            // RCThisGFZ
             // 
-            this.RCThisEMSC.Name = "RCThisEMSC";
-            this.RCThisEMSC.Size = new System.Drawing.Size(213, 22);
-            this.RCThisEMSC.Text = "最新の地震の詳細(EMSC)";
-            this.RCThisEMSC.Click += new System.EventHandler(this.RCThisEMSC_Click);
+            this.RCThisGFZ.Name = "RCThisGFZ";
+            this.RCThisGFZ.Size = new System.Drawing.Size(213, 22);
+            this.RCThisGFZ.Text = "最新の地震の詳細(GFZ)";
+            this.RCThisGFZ.Click += new System.EventHandler(this.RCThisGFZ_Click);
             // 
             // RCThisUSGS
             // 
@@ -175,12 +175,12 @@
             this.RCThisUSGS.Text = "最新の地震の詳細(USGS)";
             this.RCThisUSGS.Click += new System.EventHandler(this.RCusgsthis_Click);
             // 
-            // RCMapEWSC
+            // RCMapGFZ
             // 
-            this.RCMapEWSC.Name = "RCMapEWSC";
-            this.RCMapEWSC.Size = new System.Drawing.Size(213, 22);
-            this.RCMapEWSC.Text = "EMSC";
-            this.RCMapEWSC.Click += new System.EventHandler(this.RCMapEWSC_Click);
+            this.RCMapGFZ.Name = "RCMapGFZ";
+            this.RCMapGFZ.Size = new System.Drawing.Size(213, 22);
+            this.RCMapGFZ.Text = "GFZ";
+            this.RCMapGFZ.Click += new System.EventHandler(this.RCMapEWSC_Click);
             // 
             // RCMapUSGS
             // 
@@ -247,18 +247,18 @@
             // RC1TextCopy
             // 
             this.RC1TextCopy.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.RCTextCopyEMSC,
+            this.RCTextCopyGFZ,
             this.RCTextCopyUSGS});
             this.RC1TextCopy.Name = "RC1TextCopy";
             this.RC1TextCopy.Size = new System.Drawing.Size(224, 22);
             this.RC1TextCopy.Text = "最新の情報をコピー";
             // 
-            // RCTextCopyEMSC
+            // RCTextCopyGFZ
             // 
-            this.RCTextCopyEMSC.Name = "RCTextCopyEMSC";
-            this.RCTextCopyEMSC.Size = new System.Drawing.Size(109, 22);
-            this.RCTextCopyEMSC.Text = "EMSC";
-            this.RCTextCopyEMSC.Click += new System.EventHandler(this.RCTextCopyEMSC_Click);
+            this.RCTextCopyGFZ.Name = "RCTextCopyGFZ";
+            this.RCTextCopyGFZ.Size = new System.Drawing.Size(109, 22);
+            this.RCTextCopyGFZ.Text = "GFZ";
+            this.RCTextCopyGFZ.Click += new System.EventHandler(this.RCTextCopyGFZ_Click);
             // 
             // RCTextCopyUSGS
             // 
@@ -307,9 +307,9 @@
             this.ExeLogAutoDelete.Interval = 3600000;
             this.ExeLogAutoDelete.Tick += new System.EventHandler(this.ExeLogAutoDelete_Tick);
             // 
-            // EMSCget
+            // GFZget
             // 
-            this.EMSCget.Tick += new System.EventHandler(this.EMSCget_Tick);
+            this.GFZget.Tick += new System.EventHandler(this.GFZget_Tick);
             // 
             // MainImage
             // 
@@ -373,21 +373,21 @@
         private System.Windows.Forms.ToolStripSeparator RC1Bar3;
         private System.Windows.Forms.ToolStripSeparator RCbar3;
         private System.Windows.Forms.ToolStripSeparator RCbar5;
-        private System.Windows.Forms.ToolStripMenuItem RCMapEWSC;
+        private System.Windows.Forms.ToolStripMenuItem RCMapGFZ;
         private System.Windows.Forms.ToolStripMenuItem RCEarlyEst;
         private System.Windows.Forms.ToolStripMenuItem RC1CacheClear;
         private System.Windows.Forms.ToolStripMenuItem RC1ExeLogOpen;
         private System.Windows.Forms.Timer ExeLogAutoDelete;
         private System.Windows.Forms.ToolStripMenuItem RC1IntConvert;
         private System.Windows.Forms.ToolStripMenuItem RC1TextCopy;
-        private System.Windows.Forms.Timer EMSCget;
+        private System.Windows.Forms.Timer GFZget;
         private System.Windows.Forms.PictureBox MainImage;
-        private System.Windows.Forms.ToolStripMenuItem RCTextCopyEMSC;
+        private System.Windows.Forms.ToolStripMenuItem RCTextCopyGFZ;
         private System.Windows.Forms.ToolStripMenuItem RCTextCopyUSGS;
         private System.Windows.Forms.ToolStripSeparator RC1Bar4;
         private System.Windows.Forms.ToolStripMenuItem RC1MapGenerator;
         private System.Windows.Forms.ToolStripMenuItem RCSoftDiscord;
-        private System.Windows.Forms.ToolStripMenuItem RCThisEMSC;
+        private System.Windows.Forms.ToolStripMenuItem RCThisGFZ;
         private System.Windows.Forms.Timer EarlyEstGet;
     }
 }

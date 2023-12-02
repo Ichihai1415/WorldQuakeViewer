@@ -4,14 +4,9 @@
 ![GitHub issues](https://img.shields.io/github/issues/Ichihai1415/WorldQuakeViewer)
 ![GitHub all releases](https://img.shields.io/github/downloads/Ichihai1415/WorldQuakeViewer/total)
 
-main:
 ![GitHub Release Date](https://img.shields.io/github/release-date/Ichihai1415/WorldQuakeViewer)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/Ichihai1415/WorldQuakeViewer)
 ![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/Ichihai1415/WorldQuakeViewer/latest)
-<!--臨時-->
-pre:
-![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/Ichihai1415/WorldQuakeViewer)
-![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/Ichihai1415/WorldQuakeViewer?include_prereleases)
 
 <div display="flex">
   <img alt="v1.0.0" src="https://github.com/Ichihai1415/WorldQuakeViewer/blob/main/image/WQV_20221224_v1.0.0.png" width="49%" />
@@ -26,6 +21,18 @@ pre:
 [詳細(現在制作中)](https://Ichihai1415.github.io/programs/released/wqv/)
 
 # 更新履歴
+# v1.1.1
+2023/11/29
+
+**v1.1.0と同じく、まだ完全ではありません。(臨時対応版です)**
+
+EMSCからの取得をGFZに変更
+
+EMSCの更新検知対象が変わらなかった?問題を修正(GFZ対応済み)
+
+---
+<details><summary>過去のバージョン</summary><div>
+
 ## v1.1.0
 2023/10/08
 
@@ -36,9 +43,6 @@ pre:
 処理・表示等調整
 
 自動ツイート機能廃止
-
----
-<details><summary>過去のバージョン</summary><div>
 
 ## v1.1.0α6(内部バージョン1.0.10)
 2023/07/05

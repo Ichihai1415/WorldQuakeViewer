@@ -20,22 +20,22 @@ using WorldQuakeViewer.Properties;
 
 namespace WorldQuakeViewer//TODO:設定Formの作り直し
 {
-    public partial class MainForm : Form//TODO:設定の分割(USGSとEMSC)
+    public partial class MainForm : Form//TODO:設定の分割(USGSとGFZ)
     {
-        public static readonly string version = "1.1.0";//こことアセンブリを変える
+        public static readonly string version = "1.1.1";//こことアセンブリを変える
         public static DateTime startTime = new DateTime();
         public static readonly Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
-        public static int accesseCountEMSC = 0;
+        public static int accesseCountGFZ = 0;
         public static int accesseCountUSGS = 0;
         public static string latestURLUSGS = "";
-        public static string latestURLEMSC = "";
+        public static string latestURLGFZ = "";
         public static bool noFirst = false;//最初はツイートとかしない
-        public static bool waitEMSCDraw = true;//最初の描画を待機(USGS用)
+        public static bool waitGFZDraw = true;//最初の描画を待機(USGS用)
         public static string exeLogs = "";
-        public static History EMSCHist = new History();
+        public static History GFZHist = new History();
         public static Dictionary<string, History> USGSHist = new Dictionary<string, History>();//EQID,Data
         public static string latestTextUSGS = "";
-        public static string latestTextEMSC = "";
+        public static string latestTextGFZ = "";
         public static Bitmap bitmap = new Bitmap(1600, 1000);
         public static Bitmap bitmap_USGS = new Bitmap(800, 1000);
         public static FontFamily font;
@@ -98,13 +98,13 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
             ErrorText.Text = "設定の読み込みが完了しました。";
             await Task.Delay(1);
             ExeLog($"[Main]設定読み込み完了");
-            EMSCget.Enabled = true;
+            GFZget.Enabled = true;
             USGSget.Enabled = true;
         }
 
-        private async void EMSCget_Tick(object sender, EventArgs e)//TODO:取得頻度を2/1mだけでなく1/1mでもにする？
+        private async void GFZget_Tick(object sender, EventArgs e)//TODO:取得頻度を2/1mだけでなく1/1mでもにする？
         {
-            ExeLog($"[EMSC]取得開始");
+            ExeLog($"[GFZ]取得開始");//1回/1mでいいかも
             //次の0/30秒までの時間を計算
             DateTime now = DateTime.Now;
             DateTime next0Second = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0).AddMinutes(1);
@@ -113,23 +113,17 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 next0Second = next0Second.AddMinutes(1);
             if (now.Second >= 29)//早いと29秒になるため
                 next30Second = next30Second.AddMinutes(1);
-            EMSCget.Interval = (int)Math.Max(-1, Math.Min((next0Second - now).TotalMilliseconds, (next30Second - now).TotalMilliseconds));
-            ExeLog($"[EMSC]次回実行まであと{EMSCget.Interval}ms");
+            GFZget.Interval = (int)Math.Max(-1, Math.Min((next0Second - now).TotalMilliseconds, (next30Second - now).TotalMilliseconds));
+            ExeLog($"[GFZ]次回実行まであと{GFZget.Interval}ms");
             try
             {
-                //https://www.emsc-csem.org/Earthquake/earthquake.php?id=
-                //https://www.seismicportal.eu/fdsnws/event/1/query?limit=1&format=text&minmag=5.0
-                //#EventID        |Time                    |Latitude|Longitude|Depth/km|Author|Catalog |Contributor|ContributorID|MagType|Magnitude|MagAuthor|EventLocationName
-                //20230701_0000038|2023-07-01T03:29:25.534Z|-31.7703|-68.7812 |30.3    |NEIC  |EMSC-RTS|NEIC       |1522821      |mb     |5.3      |NEIC     |SAN JUAN, ARGENTINA
-                // 0              | 1                      | 2      | 3       | 4      | 5    | 6      | 7         | 8           | 9     | 10      | 11      | 12
-                //?               |                        |        |         |        |ソース|全部同? |ソース     |ID           |       |         |ソース   |
                 WebClient wc = new WebClient();
-                ErrorText.Text = "[EMSC]取得中…";
+                ErrorText.Text = "[GFZ]取得中…";
                 await Task.Delay(1);
-                string text = await wc.DownloadStringTaskAsync(new Uri("https://www.seismicportal.eu/fdsnws/event/1/query?limit=1&format=text&minmag=5.0"));
+                string text = await wc.DownloadStringTaskAsync(new Uri("http://geofon.gfz-potsdam.de/fdsnws/event/1/query?end=3000-01-01&minmagnitude=5.0&limit=1&format=text"));//end=しないと遅い
                 wc.Dispose();
-                ExeLog($"[EMSC]処理開始");
-                accesseCountEMSC++;
+                ExeLog($"[GFZ]処理開始");
+                accesseCountGFZ++;
                 string[] texts = text.Split('\n')[1].Split('|');//TODO:処理を複数にするか？(処理自体は最新のだけでいい)
                 string time_ = texts[1];
                 DateTime time = DateTime.Parse(time_);
@@ -146,10 +140,9 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 string depth_ = texts[4];
                 double depth = double.Parse(depth_);
                 string depthSt = depth_ + "km";
-                string source = texts[5];
                 string id = texts[8];
-                string url = "https://www.emsc-csem.org/Earthquake_information/earthquake.php?id=" + id;
-                latestURLEMSC = url;
+                string url = "https://geofon.gfz-potsdam.de/eqinfo/event.php?id=" + id;
+                latestURLGFZ = url;
                 string magType = texts[9];
                 string mag_ = texts[10];
                 double mag = double.Parse(mag_);
@@ -159,8 +152,8 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 string hypoEN = texts[12];
                 string magTypeWithSpace = magType.Length == 3 ? magType : magType.Length == 2 ? "   " + magType : "      " + magType;
 
-                string logText = $"EMSC地震情報【{magType}{magSt}】{timeSt}\n{hypoJP}({hypoEN})\n{latStLong},{lonStLong}　深さ:{depthSt}\n{url}";
-                string bouyomiText = $"EMSC地震情報。{timeJP}発生、マグニチュード{magSt}、震源、{hypoJP.Replace(" ", "、").Replace("/", "、")}、{latStLongJP}、{lonStLongJP}、深さ{depthSt.Replace("km", "キロメートル")}。";
+                string logText = $"GFZ地震情報【{magType}{magSt}】{timeSt}\n{hypoJP}({hypoEN})\n{latStLong},{lonStLong}　深さ:{depthSt}\n{url}";
+                string bouyomiText = $"GFZ地震情報。{timeJP}発生、マグニチュード{magSt}、震源、{hypoJP.Replace(" ", "、").Replace("/", "、")}、{latStLongJP}、{lonStLongJP}、深さ{depthSt.Replace("km", "キロメートル")}。";
 
                 History history = new History
                 {
@@ -181,68 +174,68 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 bool isNew = false;
                 bool isNewUpdt = false;
                 int i = 0;
-                if (EMSCHist.ID == id)//同じか更新
+                if (GFZHist.ID == id)//同じか更新
                 {
-                    if (Settings.Default.EMSC_Update_Time)
-                        if (EMSCHist.Time != history.Time)
+                    if (Settings.Default.GFZ_Update_Time)
+                        if (GFZHist.Time != history.Time)
                         {
                             isNewUpdt = true;
-                            ExeLog($"[EMSC]Time:{EMSCHist.Time}->{history.Time}");
+                            ExeLog($"[GFZ]Time:{GFZHist.Time}->{history.Time}");
                         }
-                    if (Settings.Default.EMSC_Update_HypoJP)
-                        if (EMSCHist.HypoJP != history.HypoJP)
+                    if (Settings.Default.GFZ_Update_HypoJP)
+                        if (GFZHist.HypoJP != history.HypoJP)
                         {
                             isNewUpdt = true;
-                            ExeLog($"[EMSC]HypoJP:{EMSCHist.HypoJP}->{history.HypoJP}");
+                            ExeLog($"[GFZ]HypoJP:{GFZHist.HypoJP}->{history.HypoJP}");
                         }
-                    if (Settings.Default.EMSC_Update_HypoEN)
-                        if (EMSCHist.HypoEN != history.HypoEN)
+                    if (Settings.Default.GFZ_Update_HypoEN)
+                        if (GFZHist.HypoEN != history.HypoEN)
                         {
                             isNewUpdt = true;
-                            ExeLog($"[EMSC]HypoEN:{EMSCHist.HypoEN}->{history.HypoEN}");
+                            ExeLog($"[GFZ]HypoEN:{GFZHist.HypoEN}->{history.HypoEN}");
                         }
-                    if (Settings.Default.EMSC_Update_LatLon)
-                        if (EMSCHist.Lat != history.Lat || EMSCHist.Lon != history.Lon)
+                    if (Settings.Default.GFZ_Update_LatLon)
+                        if (GFZHist.Lat != history.Lat || GFZHist.Lon != history.Lon)
                         {
                             isNewUpdt = true;
-                            ExeLog($"[EMSC]Lat:{EMSCHist.Lat}->{history.Lat}, Lon:{EMSCHist.Lon}->{history.Lon}");
+                            ExeLog($"[GFZ]Lat:{GFZHist.Lat}->{history.Lat}, Lon:{GFZHist.Lon}->{history.Lon}");
                         }
-                    if (Settings.Default.EMSC_Update_Depth)
-                        if (EMSCHist.Depth != history.Depth)
+                    if (Settings.Default.GFZ_Update_Depth)
+                        if (GFZHist.Depth != history.Depth)
                         {
                             isNewUpdt = true;
-                            ExeLog($"[EMSC]Depth:{EMSCHist.Depth}->{history.Depth}");
+                            ExeLog($"[GFZ]Depth:{GFZHist.Depth}->{history.Depth}");
                         }
-                    if (Settings.Default.EMSC_Update_MagType)
-                        if (EMSCHist.MagType != history.MagType)
+                    if (Settings.Default.GFZ_Update_MagType)
+                        if (GFZHist.MagType != history.MagType)
                         {
                             isNewUpdt = true;
-                            ExeLog($"[EMSC]MagType:{EMSCHist.MagType}->{history.MagType}");
+                            ExeLog($"[GFZ]MagType:{GFZHist.MagType}->{history.MagType}");
                         }
-                    if (Settings.Default.EMSC_Update_Mag)
-                        if (EMSCHist.Mag != history.Mag)
+                    if (Settings.Default.GFZ_Update_Mag)
+                        if (GFZHist.Mag != history.Mag)
                         {
                             isNewUpdt = true;
-                            ExeLog($"[EMSC]Mag:{EMSCHist.Mag}->{history.Mag}");
+                            ExeLog($"[GFZ]Mag:{GFZHist.Mag}->{history.Mag}");
                         }
                     if (isNewUpdt)
                     {
-                        logText = logText.Replace("EMSC地震情報", "EMSC地震情報(更新)");
-                        bouyomiText = bouyomiText.Replace("EMSC地震情報", "EMSC地震情報、更新");
-                        ExeLog($"[EMSC]{id}更新検知");
+                        logText = logText.Replace("GFZ地震情報", "GFZ地震情報(更新)");
+                        bouyomiText = bouyomiText.Replace("GFZ地震情報", "GFZ地震情報、更新");
+                        ExeLog($"[GFZ]{id}更新検知");
                     }
                 }
                 else
                 {
                     isNew = true;
                     isNewUpdt = true;
-                    ExeLog($"[EMSC]{id}初回");
+                    ExeLog($"[GFZ]{id}初回");
                 }
 
                 if (isNewUpdt)
                 {
-                    EMSCHist = history;
-                    LogSave("Log\\EMSC\\M4.5+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{version}\n{logText}", id);
+                    GFZHist = history;
+                    LogSave("Log\\GFZ\\M4.5+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{version}\n{logText}", id);
                     SendSocket(logText);
 
                     WebHook(logText);
@@ -251,26 +244,26 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                         soundLevel = isNew ? 2 : 1;
                     if (mag >= 6)
                     {
-                        LogSave("Log\\EMSC\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{version}\n{logText}", id);
+                        LogSave("Log\\GFZ\\M6.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{version}\n{logText}", id);
 
                         if (soundLevel < 3 && Settings.Default.Sound_60_Enable)
                             soundLevel = isNew ? 4 : 3;
                         if (mag >= 8)
                         {
-                            LogSave("Log\\EMSC\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{version}\n{logText}", id);
+                            LogSave("Log\\GFZ\\M8.0+", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Version:{version}\n{logText}", id);
                             if (soundLevel < 5 && Settings.Default.Sound_80_Enable)
                                 soundLevel = isNew ? 6 : 5;
                         }
                     }
                     if (i == 0)
-                        latestTextEMSC = logText;
+                        latestTextGFZ = logText;
                     if (mag >= Settings.Default.Bouyomichan_LowerMagnitudeLimit)
                         Bouyomichan(bouyomiText);
                     if (mag >= Settings.Default.Tweet_LowerMagnitudeLimit)
-                        Tweet(logText, "EMSC", id);
+                        Tweet(logText, "GFZ", id);
                 }
                 else
-                    ExeLog($"[EMSC][{i}] 内容更新なし");
+                    ExeLog($"[GFZ][{i}] 内容更新なし");
                 switch (soundLevel)
                 {
                     case 1:
@@ -292,9 +285,9 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                         Sound("M80.wav");
                         break;
                 }
-                ErrorText.Text = "[EMSC]描画中…";
+                ErrorText.Text = "[GFZ]描画中…";
                 await Task.Delay(1);
-                ExeLog($"[EMSC]描画開始");
+                ExeLog($"[GFZ]描画開始");
                 bitmap = new Bitmap(1600, 1000);
                 Graphics g = Graphics.FromImage(bitmap);
                 g.DrawImage(Resources.Back, 0, 0);
@@ -323,17 +316,17 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 Brush color = Mag2Brush(mag);
                 g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 0, 0, 800, 200);
                 g.FillRectangle(new SolidBrush(Color.FromArgb(30, 30, 60)), 4, 40, 792, 156);
-                g.DrawString($"EMSC地震情報(M5.0+)                 {timeSt}", new Font(font, 20), Brushes.White, 0, 0);
-                g.DrawString($"{hypoJP}\n({hypoEN})\n{latDisplay}, {lonDisplay}   深さ:{depthSt}\nID:{id}  ソース:{source}", new Font(font, 20), color, 4, 42);
+                g.DrawString($"GFZ地震情報(M5.0+)                 {timeSt}", new Font(font, 20), Brushes.White, 0, 0);
+                g.DrawString($"{hypoJP}\n({hypoEN})\n{latDisplay}, {lonDisplay}   深さ:{depthSt}\nID:{id}", new Font(font, 20), color, 4, 42);
                 g.FillRectangle(new SolidBrush(Color.FromArgb(0, 0, 30)), 796, 0, 4, 200);
-                g.DrawString(magTypeWithSpace, new Font(font, 20), color, 590, 154);
-                g.DrawString(magSt, new Font(font, 50), color, 670, 110);
+                g.DrawString(magTypeWithSpace, new Font(font, 20), color, 560, 154);
+                g.DrawString(magSt, new Font(font, 50), color, 640, 110);
                 g.DrawRectangle(new Pen(Color.FromArgb(200, 200, 200)), 0, 0, 799, 199);
                 g.DrawRectangle(new Pen(Color.FromArgb(200, 200, 200)), 0, 200, 799, 799);
                 g.DrawImage(bitmap_USGS, 800, 0, 800, 1000);
-                if (!noFirst && waitEMSCDraw)//初回
+                if (!noFirst && waitGFZDraw)//初回
                     g.DrawImage(Resources.Back_USGS, 800, 0);
-                ExeLog($"[EMSC]描画完了");
+                ExeLog($"[GFZ]描画完了");
 
                 g.Dispose();
                 MainImage.Image = bitmap;
@@ -341,17 +334,17 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
             }
             catch (WebException ex)
             {
-                ErrorText.Text = $"[EMSC]ネットワークエラーが発生しました。内容:{ex.Message}";
+                ErrorText.Text = $"[GFZ]ネットワークエラーが発生しました。内容:{ex.Message}";
             }
             catch (Exception ex)
             {
-                LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,EMSCget_Tick Version:{version}\n{ex}");
-                ErrorText.Text = $"[EMSC]エラーが発生しました。エラーログの内容を報告してください。内容:{ex.Message}";
+                LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,GFZget_Tick Version:{version}\n{ex}");
+                ErrorText.Text = $"[GFZ]エラーが発生しました。エラーログの内容を報告してください。内容:{ex.Message}";
             }
-            waitEMSCDraw = false;//初回時の例外時にこれができないとUSGSも動かないからここ
+            waitGFZDraw = false;//初回時の例外時にこれができないとUSGSも動かないからここ
             if (!ErrorText.Text.Contains("エラー"))
                 ErrorText.Text = "";
-            ExeLog("[EMSC]処理終了");
+            ExeLog("[GFZ]処理終了");
             await Task.Delay(1);
         }
 
@@ -575,7 +568,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                         Sound("M80.wav");
                         break;
                 }
-                while (waitEMSCDraw)//初回のEMSCの描画を待機
+                while (waitGFZDraw)//初回のGFZの描画を待機
                     await Task.Delay(50);//小さすぎるとデッドロックみたいに動かなくなる
                 ErrorText.Text = "[USGS]描画中…";
                 await Task.Delay(1);
@@ -644,9 +637,9 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                     DateTime nowTime = DateTime.Now;
                     if (!Directory.Exists("Log"))
                         Directory.CreateDirectory("Log");
-                    if (directory.StartsWith("Log\\EMSC"))
-                        if (!Directory.Exists("Log\\EMSC"))
-                            Directory.CreateDirectory("Log\\EMSC");
+                    if (directory.StartsWith("Log\\GFZ"))
+                        if (!Directory.Exists("Log\\GFZ"))
+                            Directory.CreateDirectory("Log\\GFZ");
                     if (directory.StartsWith("Log\\USGS"))
                         if (!Directory.Exists("Log\\USGS"))
                             Directory.CreateDirectory("Log\\USGS");
@@ -660,7 +653,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                             text += "\n--------------------------------------------------\n" + File.ReadAllText($"Log\\ErrorLog\\{nowTime:yyyyMM}.txt");
                         File.WriteAllText($"Log\\ErrorLog\\{nowTime:yyyyMM}.txt", text);
                     }
-                    else if (directory.StartsWith("Log\\USGS") || directory.StartsWith("Log\\EMSC"))
+                    else if (directory.StartsWith("Log\\USGS") || directory.StartsWith("Log\\GFZ"))
                     {
                         if (!Directory.Exists($"{directory}\\{nowTime:yyyyMM}"))
                             Directory.CreateDirectory($"{directory}\\{nowTime:yyyyMM}");
@@ -911,7 +904,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
 
         private void RCMapEWSC_Click(object sender, EventArgs e)
         {
-            Process.Start("https://www.emsc-csem.org");
+            Process.Start("http://geofon.gfz-potsdam.de/eqinfo/seismon/globmon.php");
         }
 
         private void RCEarlyEst_Click(object sender, EventArgs e)
@@ -1115,9 +1108,9 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
             //別ソフトに移行
         }
 
-        private void RCTextCopyEMSC_Click(object sender, EventArgs e)
+        private void RCTextCopyGFZ_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(latestTextEMSC);
+            Clipboard.SetText(latestTextGFZ);
         }
 
         private void RCTextCopyUSGS_Click(object sender, EventArgs e)
@@ -1135,9 +1128,9 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
             Process.Start("https://discord.gg/7dBFWKjgGa");
         }
 
-        private void RCThisEMSC_Click(object sender, EventArgs e)
+        private void RCThisGFZ_Click(object sender, EventArgs e)
         {
-            Process.Start(latestURLEMSC);
+            Process.Start(latestURLGFZ);
         }
     }
 
