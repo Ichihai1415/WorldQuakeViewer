@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using static WorldQuakeViewer.Util_Class;
@@ -23,18 +23,18 @@ namespace WorldQuakeViewer
         public Data_[] Datas { get; set; } = new int[DataAuthorCount].Select((n, i) => new Data_
         {
             Name = ((DataAuthor)i).ToString(),
-            URL = DataDefURL[(DataAuthor)Enum.ToObject(typeof(DataAuthor), i)]
-        }).ToArray();//enum追加時も変えなくてもいいように
+            URL = DataDefURL[(DataAuthor)Enum.ToObject(typeof(DataAuthor), i)]//enum追加時も変えなくてもいいように
+        }).ToArray();
 
         /// <summary>
         /// 画面ごとの表示処理
         /// </summary>
-        public List<View_> Views { get; set; } = new List<View_> { new View_() };
+        public View_[] Views { get; set; } = new View_[] { new View_() };
 
         /// <summary>
         /// ログ出力関連(地震除く)
         /// </summary>
-        public LogN_ Log { get; set; } = new LogN_();
+        public LogN_ LogN { get; set; } = new LogN_();
 
         /// <summary>
         /// ログ出力関連(地震除く)
@@ -110,7 +110,7 @@ namespace WorldQuakeViewer
             public Webhook_ Webhook { get; set; } = new Webhook_();
 
             /// <summary>
-            /// ログ出力関連(地震のみ)
+            /// ログ出力関連(地震)
             /// </summary>
             public LogE_ LogE { get; set; } = new LogE_();
 
@@ -336,7 +336,7 @@ namespace WorldQuakeViewer
             }
 
             /// <summary>
-            /// ログ出力関連(地震のみ)
+            /// ログ出力関連(地震)
             /// </summary>
             public class LogE_
             {
@@ -384,6 +384,11 @@ namespace WorldQuakeViewer
             public ViewData Data { get; set; } = ViewData.Null;
 
             /// <summary>
+            /// 表示を英語にするか
+            /// </summary>
+            public bool DisplayEN { get; set; } = false;
+
+            /// <summary>
             /// 表示する最小マグニチュード
             /// </summary>
             public double LowerMagLimit { get; set; } = 0;
@@ -400,7 +405,7 @@ namespace WorldQuakeViewer
             public bool HypoShift { get; set; } = true;
 
             /// <summary>
-            /// 緯度経度を十進数で処理するか
+            /// 緯度経度を十進数で表示するか
             /// </summary>
             public bool LatLonDecimal { get; set; } = true;
 
@@ -427,12 +432,12 @@ namespace WorldQuakeViewer
                 public Color Back1_Back { get; set; } = Color.FromArgb(255, 0, 0, 30);
 
                 /// <summary>
-                /// 最新の前部分([日本語震源名]\n[緯度経度] [深さ]\n…のところ)のテキスト色
+                /// 最新の前部分([震源名]\n[緯度経度] [深さ]\n…のところ)のテキスト色
                 /// </summary>
                 public Color Fore1_Text { get; set; } = Color.FromArgb(255, 255, 255, 255);
 
                 /// <summary>
-                /// 最新の前部分([日本語震源名]\n[緯度経度] [深さ]\n…のところ)の背景色
+                /// 最新の前部分([震源名]\n[緯度経度] [深さ]\n…のところ)の背景色
                 /// </summary>
                 public Color Fore1_Back { get; set; } = Color.FromArgb(255, 30, 30, 60);
 
@@ -447,22 +452,22 @@ namespace WorldQuakeViewer
                 public Color Back2_Back { get; set; } = Color.FromArgb(255, 0, 0, 30);
 
                 /// <summary>
-                /// 履歴の前部分([日本語震源名]\n[緯度経度] [深さ]\n…のところ)のテキスト色
+                /// 履歴の前部分([震源名]\n[緯度経度] [深さ]\n…のところ)のテキスト色
                 /// </summary>
                 public Color Fore2_Text { get; set; } = Color.FromArgb(255, 255, 255, 255);
 
                 /// <summary>
-                /// 履歴の前部分([日本語震源名]\n[緯度経度] [深さ]\n…のところ)の背景色
+                /// 履歴の前部分([震源名]\n[緯度経度] [深さ]\n…のところ)の背景色
                 /// </summary>
                 public Color Fore2_Back { get; set; } = Color.FromArgb(255, 45, 45, 90);
 
                 /// <summary>
-                /// 地図データ:Natural Earthのテキスト色
+                /// 「地図データ:Natural Earth」のテキスト色
                 /// </summary>
                 public Color MapData_Text { get; set; } = Color.FromArgb(255, 255, 255, 255);
 
                 /// <summary>
-                /// 地図データ:Natural Earthの背景色
+                /// 「地図データ:Natural Earth」の背景色
                 /// </summary>
                 public Color MapData_Back { get; set; } = Color.FromArgb(128, 0, 0, 30);
 
@@ -471,6 +476,776 @@ namespace WorldQuakeViewer
                 /// </summary>
                 public Color Border { get; set; } = Color.FromArgb(255, 200, 200, 200);
             }
+        }
+    }
+
+    /// <summary>
+    /// 設定表示用クラス
+    /// </summary>
+    public class Config_Display
+    {
+        /// <summary>
+        /// 処理するデータ元ごとのデータ処理
+        /// </summary>
+        [Description("処理するデータ元ごとのデータ処理")]
+        public Data_[] Datas { get; set; }
+
+        /// <summary>
+        /// 画面ごとの表示処理
+        /// </summary>
+        [Description("画面ごとの表示処理")]
+        public View_[] Views { get; set; }
+
+        /// <summary>
+        /// ログ出力関連(地震除く)
+        /// </summary>
+        [Category("ログ出力関連")]
+        [Description("ログ出力関連(地震除く)")]
+        public LogN_ LogN { get; set; }
+
+        /// <summary>
+        /// ログ出力関連(地震除く)
+        /// </summary>
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [Category("ログ出力関連")]
+        [Description("ログ出力関連(地震除く)")]
+        public class LogN_
+        {
+            /// <summary>
+            /// 通常動作ログ出力を有効か
+            /// </summary>
+            [Category("ログ出力関連")]
+            [Description("通常動作ログ出力を有効か")]
+            public bool Normal_Enable { get; set; }
+
+            /// <summary>
+            /// エラーログ出力を有効か
+            /// </summary>
+            [Category("ログ出力関連")]
+            [Description("エラーログ出力を有効か")]
+            public bool Error_Enable { get; set; }
+
+            /// <summary>
+            /// 動作ログ自動消去の間隔 0で無効
+            /// </summary>
+            [Category("ログ出力関連")]
+            [Description("動作ログ自動消去の間隔 0で無効")]
+            public TimeSpan AutoDelate { get; set; }
+
+            /// <summary>
+            /// 動作ログ消去時に自動保存するか
+            /// </summary>
+            [Category("ログ出力関連")]
+            [Description("動作ログ消去時に自動保存するか")]
+            public bool Normal_AutoSave { get; set; }
+
+            /// <summary>
+            /// ConfigからConfig_Displayに変換します。
+            /// </summary>
+            /// <param name="from">変換元</param>
+            public static explicit operator LogN_(Config.LogN_ from)
+            {
+                return new LogN_
+                {
+                    Normal_Enable = from.Normal_Enable,
+                    Error_Enable = from.Error_Enable,
+                    AutoDelate = from.AutoDelate,
+                    Normal_AutoSave = from.Normal_AutoSave
+                };
+            }
+        }
+
+        /// <summary>
+        /// データ処理
+        /// </summary>
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [Description("データ処理")]
+        public class Data_
+        {
+            /// <summary>
+            /// 取得元
+            /// </summary>
+            [ReadOnly(true)]
+            [Description("取得元")]
+            public string _Name { get; set; }
+
+            /// <summary>
+            /// 取得するURL
+            /// </summary>
+            [Description("取得するURL")]
+            public string URL { get; set; }
+
+            /// <summary>
+            /// 取得時間(毎分x秒) -1で無効
+            /// </summary>
+            [Description("取得時間(毎分x秒)\n-1で無効")]
+            public int[] GetTimes { get; set; }
+
+            /// <summary>
+            /// 更新検知対象
+            /// </summary>
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            [Description("更新検知対象")]
+            public Update_ Update { get; set; }
+
+            /// <summary>
+            /// 棒読みちゃん送信
+            /// </summary>
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            [Description("棒読みちゃん送信")]
+            public Bouyomi_ Bouyomi { get; set; }
+
+            /// <summary>
+            /// 音声再生
+            /// </summary>
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            [Description("音声再生")]
+            public Sound_ Sound { get; set; }
+
+            /// <summary>
+            /// socket送信
+            /// </summary>
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            [Description("socket送信")]
+            public Socket_ Socket { get; set; }
+
+            /// <summary>
+            /// webhook送信
+            /// </summary
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            [Description("webhook送信")]
+            public Webhook_ Webhook { get; set; }
+
+            /// <summary>
+            /// ログ出力関連(地震)
+            /// </summary>
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            [Description("ログ出力関連(地震)")]
+            public LogE_ LogE { get; set; }
+
+            /// <summary>
+            /// 更新検知対象
+            /// </summary>
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            [Description("更新検知対象")]
+            public class Update_
+            {
+                /// <summary>
+                /// 更新確認対象期間
+                /// </summary>
+                [Description("更新確認対象期間")]
+                public TimeSpan MaxPeriod { get; set; }
+
+                /// <summary>
+                /// 発生時刻
+                /// </summary>
+                [Description("発生時刻")]
+                public bool Time { get; set; }
+
+                /// <summary>
+                /// 更新時刻
+                /// </summary>
+                [Description("更新時刻")]
+                public bool UpdtTime { get; set; }
+
+                /// <summary>
+                /// 震源名
+                /// </summary>
+                [Description("震源名")]
+                public bool Hypo { get; set; }
+
+                /// <summary>
+                /// 緯度経度
+                /// </summary>
+                [Description("緯度経度")]
+                public bool LatLon { get; set; }
+
+                /// <summary>
+                /// 深さ
+                /// </summary>
+                [Description("深さ")]
+                public bool Depth { get; set; }
+
+                /// <summary>
+                /// マグニチュードの種類
+                /// </summary>
+                [Description("マグニチュードの種類")]
+                public bool MagType { get; set; }
+
+                /// <summary>
+                /// マグニチュード
+                /// </summary>
+                [Description("マグニチュード")]
+                public bool Mag { get; set; }
+
+                /// <summary>
+                /// (USGSのみ)改正メルカリ震度階級(ShakeMap)
+                /// </summary>
+                [Description("(USGSのみ)改正メルカリ震度階級(ShakeMap)")]
+                public bool MMI { get; set; }
+
+                /// <summary>
+                /// (USGSのみ)アラート(PAGER)
+                /// </summary>
+                [Description("(USGSのみ)アラート(PAGER)")]
+                public bool Alert { get; set; }
+
+                /// <summary>
+                /// ConfigからConfig_Displayに変換します。
+                /// </summary>
+                /// <param name="from">変換元</param>
+                public static explicit operator Update_(Config.Data_.Update_ from)
+                {
+                    return new Update_
+                    {
+                        MaxPeriod = from.MaxPeriod,
+                        Time = from.Time,
+                        UpdtTime = from.UpdtTime,
+                        Hypo = from.Hypo,
+                        LatLon = from.LatLon,
+                        Depth = from.Depth,
+                        MagType = from.MagType,
+                        Mag = from.Mag,
+                        MMI = from.MMI,
+                        Alert = from.Alert
+                    };
+                }
+            }
+
+            /// <summary>
+            /// 棒読みちゃん送信
+            /// </summary>
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            [Description("棒読みちゃん送信")]
+            public class Bouyomi_
+            {
+                /// <summary>
+                /// 有効か
+                /// </summary>
+                [Description("有効か")]
+                public bool Enable { get; set; }
+
+                /// <summary>
+                /// 送信する最小マグニチュード
+                /// </summary>
+                [Description("送信する最小マグニチュード")]
+                public double LowerMagLimit { get; set; }
+
+                /// <summary>
+                /// ホスト名
+                /// </summary>
+                [Description("ホスト名")]
+                public string Host { get; set; }
+
+                /// <summary>
+                /// ポート
+                /// </summary>
+                [Description("ポート")]
+                public int Port { get; set; }
+
+                /// <summary>
+                /// 声質
+                /// </summary>
+                [Description("声質")]
+                public short Voice { get; set; }
+
+                /// <summary>
+                /// 速さ
+                /// </summary>
+                [Description("速さ")]
+                public short Speed { get; set; }
+
+                /// <summary>
+                /// 音程
+                /// </summary>
+                [Description("音程")]
+                public short Tone { get; set; }
+
+                /// <summary>
+                /// 音量
+                /// </summary>
+                [Description("音量")]
+                public short Volume { get; set; }
+
+                /// <summary>
+                /// 送信する文のフォーマット
+                /// </summary>
+                [Description("送信する文のフォーマット")]
+                public string Format { get; set; }
+
+                /// <summary>
+                /// ConfigからConfig_Displayに変換します。
+                /// </summary>
+                /// <param name="from">変換元</param>
+                public static explicit operator Bouyomi_(Config.Data_.Bouyomi_ from)
+                {
+                    return new Bouyomi_
+                    {
+                        Enable = from.Enable,
+                        LowerMagLimit = from.LowerMagLimit,
+                        Host = from.Host,
+                        Port = from.Port,
+                        Voice = from.Voice,
+                        Speed = from.Speed,
+                        Tone = from.Tone,
+                        Volume = from.Volume,
+                        Format = from.Format
+                    };
+                }
+            }
+
+            /// <summary>
+            /// 音声再生
+            /// </summary>
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            [Description("音声再生")]
+            public class Sound_
+            {
+                /// <summary>
+                /// M4.5未満を有効か
+                /// </summary>
+                [Description("M4.5未満を有効か")]
+                public bool L1_Enable { get; set; }
+
+                /// <summary>
+                /// M4.5以上M6.0未満を有効か
+                /// </summary>
+                [Description("M4.5以上M6.0未満を有効か")]
+                public bool L2_Enable { get; set; }
+
+                /// <summary>
+                /// M6.0以上M7.0未満を有効か
+                /// </summary>
+                [Description("M6.0以上M7.0未満を有効か")]
+                public bool L3_Enable { get; set; }
+
+                /// <summary>
+                /// M7.0以上M8.0未満を有効か
+                /// </summary>
+                [Description("M7.0以上M8.0未満を有効か")]
+                public bool L4_Enable { get; set; }
+
+                /// <summary>
+                /// M8.0以上を有効か
+                /// </summary>
+                [Description("M8.0以上を有効か")]
+                public bool L5_Enable { get; set; }
+
+                /// <summary>
+                /// M4.5未満の音声ファイルのパス
+                /// </summary>
+                [Description("M4.5未満の音声ファイルのパス")]
+                public string L1_Path { get; set; }
+
+                /// <summary>
+                /// M4.5以上M6.0未満の音声ファイルのパス
+                /// </summary>
+                [Description("M4.5以上M6.0未満の音声ファイルのパス")]
+                public string L2_Path { get; set; }
+
+                /// <summary>
+                /// M6.0以上M7.0未満の音声ファイルのパス
+                /// </summary>
+                [Description("M6.0以上M7.0未満の音声ファイルのパス")]
+                public string L3_Path { get; set; }
+
+                /// <summary>
+                /// M7.0以上M8.0未満の音声ファイルのパス
+                /// </summary>
+                [Description("M7.0以上M8.0未満の音声ファイルのパス")]
+                public string L4_Path { get; set; }
+
+                /// <summary>
+                /// M8.0以上の音声ファイルのパス
+                /// </summary>
+                [Description("M8.0以上の音声ファイルのパス")]
+                public string L5_Path { get; set; }
+
+                /// <summary>
+                /// ConfigからConfig_Displayに変換します。
+                /// </summary>
+                /// <param name="from">変換元</param>
+                public static explicit operator Sound_(Config.Data_.Sound_ from)
+                {
+                    return new Sound_
+                    {
+                        L1_Enable = from.L1_Enable,
+                        L2_Enable = from.L2_Enable,
+                        L3_Enable = from.L3_Enable,
+                        L4_Enable = from.L4_Enable,
+                        L5_Enable = from.L5_Enable,
+                        L1_Path = from.L1_Path,
+                        L2_Path = from.L2_Path,
+                        L3_Path = from.L3_Path,
+                        L4_Path = from.L4_Path,
+                        L5_Path = from.L5_Path
+                    };
+                }
+            }
+
+            /// <summary>
+            /// socket送信
+            /// </summary>
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            [Description("socket送信")]
+            public class Socket_
+            {
+                /// <summary>
+                /// 有効か
+                /// </summary>
+                [Description("有効か")]
+                public bool Enable { get; set; }
+
+                /// <summary>
+                /// 送信する最小マグニチュード
+                /// </summary>
+                [Description("送信する最小マグニチュード")]
+                public double LowerMagLimit { get; set; }
+
+                /// <summary>
+                /// ホスト名
+                /// </summary>
+                [Description("ホスト名")]
+                public string Host { get; set; }
+
+                /// <summary>
+                /// ポート
+                /// </summary>
+                [Description("ポート")]
+                public int Port { get; set; }
+
+                /// <summary>
+                /// 送信する文のフォーマット
+                /// </summary>
+                [Description("送信する文のフォーマット")]
+                public string Format { get; set; }
+
+                /// <summary>
+                /// ConfigからConfig_Displayに変換します。
+                /// </summary>
+                /// <param name="from">変換元</param>
+                public static explicit operator Socket_(Config.Data_.Socket_ from)
+                {
+                    return new Socket_
+                    {
+                        Enable = from.Enable,
+                        LowerMagLimit = from.LowerMagLimit,
+                        Host = from.Host,
+                        Port = from.Port,
+                        Format = from.Format
+                    };
+                }
+            }
+
+            /// <summary>
+            /// webhook送信
+            /// </summary>
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            [Description("webhook送信")]
+            public class Webhook_
+            {
+                /// <summary>
+                /// 有効か
+                /// </summary>
+                [Description("有効か")]
+                public bool Enable { get; set; }
+
+                /// <summary>
+                /// 送信する最小マグニチュード
+                /// </summary>
+                [Description("送信する最小マグニチュード")]
+                public double LowerMagLimit { get; set; }
+
+                /// <summary>
+                /// 送信するURL
+                /// </summary>
+                [Description("送信するURL")]
+                public string URL { get; set; }
+
+                /// <summary>
+                /// 送信する文のフォーマット
+                /// </summary>
+                [Description("送信する文のフォーマット")]
+                public string Format { get; set; }
+
+                /// <summary>
+                /// ConfigからConfig_Displayに変換します。
+                /// </summary>
+                /// <param name="from">変換元</param>
+                public static explicit operator Webhook_(Config.Data_.Webhook_ from)
+                {
+                    return new Webhook_
+                    {
+                        Enable = from.Enable,
+                        LowerMagLimit = from.LowerMagLimit,
+                        URL = from.URL,
+                        Format = from.Format
+                    };
+                }
+            }
+
+            /// <summary>
+            /// ログ出力関連(地震)
+            /// </summary>
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            [Description("ログ出力関連(地震)")]
+            public class LogE_
+            {
+                /// <summary>
+                /// M4.5未満を有効か
+                /// </summary>
+                [Description("M4.5未満を有効か")]
+                public bool L1_Enable { get; set; }
+
+                /// <summary>
+                /// M4.5以上M6.0未満を有効か
+                /// </summary>
+                [Description("M4.5以上M6.0未満を有効か")]
+                public bool L2_Enable { get; set; }
+
+                /// <summary>
+                /// M6.0以上M7.0未満を有効か
+                /// </summary>
+                [Description("M6.0以上M7.0未満を有効か")]
+                public bool L3_Enable { get; set; }
+
+                /// <summary>
+                /// M7.0以上M8.0未満を有効か
+                /// </summary>
+                [Description("M7.0以上M8.0未満を有効か")]
+                public bool L4_Enable { get; set; }
+
+                /// <summary>
+                /// M8.0以上を有効か
+                /// </summary>
+                [Description("M8.0以上を有効か")]
+                public bool L5_Enable { get; set; }
+
+                /// <summary>
+                /// 保存する文のフォーマット
+                /// </summary>
+                /// <remarks>情報の間にソフト情報等が入ります</remarks>
+                [Description("保存する文のフォーマット")]
+                public string Format { get; set; }
+
+                /// <summary>
+                /// ConfigからConfig_Displayに変換します。
+                /// </summary>
+                /// <param name="from">変換元</param>
+                public static explicit operator LogE_(Config.Data_.LogE_ from)
+                {
+                    return new LogE_
+                    {
+                        L1_Enable = from.L1_Enable,
+                        L2_Enable = from.L2_Enable,
+                        L3_Enable = from.L3_Enable,
+                        L4_Enable = from.L4_Enable,
+                        L5_Enable = from.L5_Enable,
+                        Format = from.Format
+                    };
+                }
+            }
+
+            /// <summary>
+            /// ConfigからConfig_Displayに変換します。
+            /// </summary>
+            /// <param name="from">変換元</param>
+            public static explicit operator Data_(Config.Data_ from)
+            {
+                return new Data_
+                {
+                    _Name = from.Name,
+                    URL = from.URL,
+                    GetTimes = from.GetTimes,
+                    Update = (Update_)from.Update,
+                    Bouyomi = (Bouyomi_)from.Bouyomi,
+                    Sound = (Sound_)from.Sound,
+                    Socket = (Socket_)from.Socket,
+                    Webhook = (Webhook_)from.Webhook,
+                    LogE = (LogE_)from.LogE
+                };
+            }
+        }
+
+        /// <summary>
+        /// 表示処理
+        /// </summary>
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [Description("表示処理")]
+        public class View_
+        {
+            /// <summary>
+            /// 表示するデータ
+            /// </summary>
+            [Description("表示するデータ")]
+            public ViewData Data { get; set; }
+
+            /// <summary>
+            /// 表示を英語にするか
+            /// </summary>
+            [Description("表示を英語にするか")]
+            public bool DisplayEN { get; set; }
+
+            /// <summary>
+            /// 表示する最小マグニチュード
+            /// </summary>
+            [Description("表示する最小マグニチュード")]
+            public double LowerMagLimit { get; set; }
+
+            /// <summary>
+            /// マップの範囲(°)
+            /// </summary>
+            /// <remarks>180/(マップ高さ/画面マップ部分高さ)</remarks>
+            [Description("マップの範囲(°)")]
+            public int MapRange { get; set; }
+
+            /// <summary>
+            /// 震源が極に近いときマップ範囲外を表示させないようずらすか
+            /// </summary>
+            [Description("震源が極に近いときマップ範囲外を表示させないようずらすか")]
+            public bool HypoShift { get; set; }
+
+            /// <summary>
+            /// 緯度経度を十進数で表示するか
+            /// </summary>
+            [Description("緯度経度を十進数で表示するか")]
+            public bool LatLonDecimal { get; set; }
+
+            /// <summary>
+            /// 描画色
+            /// </summary>
+            /// <remarks>マップはWorldQuakeViewer.MapGenerator</remarks>
+            [Description("描画色\nマップはWorldQuakeViewer.MapGenerator.exeで")]
+            public Colors_ Colors { get; set; }
+
+            /// <summary>
+            /// 描画色
+            /// </summary>
+            /// <remarks>マップはWorldQuakeViewer.MapGenerator</remarks>
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            [Description("描画色\nマップはWorldQuakeViewer.MapGenerator.exeで")]
+            public class Colors_
+            {
+                /// <summary>
+                /// 最新の後ろ部分(****地震情報…のところ)のテキスト色
+                /// </summary>
+                [Description("最新の後ろ部分(****地震情報…のところ)のテキスト色")]
+                public Color Back1_Text { get; set; }
+
+                /// <summary>
+                /// 最新の後ろ部分(****地震情報…のところ)の背景色
+                /// </summary>
+                [Description("最新の後ろ部分(****地震情報…のところ)の背景色")]
+                public Color Back1_Back { get; set; }
+
+                /// <summary>
+                /// 最新の前部分([震源名]\n[緯度経度] [深さ]\n…のところ)のテキスト色
+                /// </summary>
+                [Description("最新の前部分([震源名]\n[緯度経度] [深さ]\n…のところ)のテキスト色")]
+                public Color Fore1_Text { get; set; }
+
+                /// <summary>
+                /// 最新の前部分([震源名]\n[緯度経度] [深さ]\n…のところ)の背景色
+                /// </summary>
+                [Description("最新の前部分([震源名]\n[緯度経度] [深さ]\n…のところ)の背景色")]
+                public Color Fore1_Back { get; set; }
+
+                /// <summary>
+                /// 履歴の後ろ部分(****地震情報…のところ)のテキスト色
+                /// </summary>
+                [Description("履歴の後ろ部分(****地震情報…のところ)のテキスト色")]
+                public Color Back2_Text { get; set; }
+
+                /// <summary>
+                /// 履歴の後ろ部分(****地震情報…のところ)の背景色
+                /// </summary>
+                [Description("履歴の後ろ部分(****地震情報…のところ)の背景色")]
+                public Color Back2_Back { get; set; }
+
+                /// <summary>
+                /// 履歴の前部分([震源名]\n[緯度経度] [深さ]\n…のところ)のテキスト色
+                /// </summary>
+                [Description("履歴の前部分([震源名]\n[緯度経度] [深さ]\n…のところ)のテキスト色")]
+                public Color Fore2_Text { get; set; }
+
+                /// <summary>
+                /// 履歴の前部分([震源名]\n[緯度経度] [深さ]\n…のところ)の背景色
+                /// </summary>
+                [Description("履歴の前部分([震源名]\n[緯度経度] [深さ]\n…のところ)の背景色")]
+                public Color Fore2_Back { get; set; }
+
+                /// <summary>
+                /// 「地図データ:Natural Earth」のテキスト色
+                /// </summary>
+                [Description("「地図データ:Natural Earth」のテキスト色")]
+                public Color MapData_Text { get; set; }
+
+                /// <summary>
+                /// 「地図データ:Natural Earth」の背景色
+                /// </summary>
+                [Description("「地図データ:Natural Earth」の背景色")]
+                public Color MapData_Back { get; set; }
+
+                /// <summary>
+                /// 境界の線の色
+                /// </summary>
+                [Description("境界の線の色")]
+                public Color Border { get; set; }
+
+                /// <summary>
+                /// ConfigからConfig_Displayに変換します。
+                /// </summary>
+                /// <param name="from">変換元</param>
+                public static explicit operator Colors_(Config.View_.Colors_ from)
+                {
+                    return new Colors_
+                    {
+                        Back1_Text = from.Back1_Text,
+                        Back1_Back = from.Back1_Back,
+                        Fore1_Text = from.Fore1_Text,
+                        Fore1_Back = from.Fore1_Back,
+                        Back2_Text = from.Back2_Text,
+                        Back2_Back = from.Back2_Back,
+                        Fore2_Text = from.Fore2_Text,
+                        Fore2_Back = from.Fore2_Back,
+                        MapData_Text = from.MapData_Text,
+                        MapData_Back = from.MapData_Back,
+                        Border = from.Border
+                    };
+                }
+            }
+
+            /// <summary>
+            /// ConfigからConfig_Displayに変換します。
+            /// </summary>
+            /// <param name="from">変換元</param>
+            public static explicit operator View_(Config.View_ from)
+            {
+                return new View_
+                {
+                    Data = from.Data,
+                    DisplayEN = from.DisplayEN,
+                    LowerMagLimit = from.LowerMagLimit,
+                    MapRange = from.MapRange,
+                    HypoShift = from.HypoShift,
+                    LatLonDecimal = from.LatLonDecimal,
+                    Colors = (Colors_)from.Colors
+                };
+            }
+        }
+
+        /// <summary>
+        /// ConfigからConfig_Displayに変換します。
+        /// </summary>
+        /// <param name="from">変換元</param>
+        public static explicit operator Config_Display(Config from)
+        {
+            return new Config_Display
+            {
+                Datas = from.Datas.Select(n => (Data_)n).ToArray(),
+                Views = from.Views.Select(n => (View_)n).ToArray(),
+                LogN = (LogN_)from.LogN
+            };
         }
     }
 }

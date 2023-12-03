@@ -11,18 +11,36 @@ namespace WorldQuakeViewer
         /// <summary>
         /// プログラムのバージョン
         /// </summary>
-        public static readonly string version = "1.2.0α1";//こことアセンブリを変える
+        public static readonly string version = "1.2.0";//こことアセンブリを変える
 
         /// <summary>
         /// データ元
         /// </summary>
         public enum DataAuthor
         {
+            /// <summary>
+            /// 仮用
+            /// </summary>
             Null = -1,
+            /// <summary>
+            /// 他(ユーザー指定)
+            /// </summary>
             Other = 0,
+            /// <summary>
+            /// USGS
+            /// </summary>
             USGS = 1,
+            /// <summary>
+            /// EMSC
+            /// </summary>
             EMSC = 2,
+            /// <summary>
+            /// GFZ
+            /// </summary>
             GFZ = 3,
+            /// <summary>
+            /// Early-est
+            /// </summary>
             EarlyEst = 4
         };
 
@@ -49,24 +67,81 @@ namespace WorldQuakeViewer
         /// </summary>
         public enum ViewData
         {
+            /// <summary>
+            /// 仮用
+            /// </summary>
             Null = -1,
+            /// <summary>
+            /// 他(ユーザー指定)の最新とマップ
+            /// </summary>
             Other_Latest = 01,
+            /// <summary>
+            /// 他(ユーザー指定)の履歴
+            /// </summary>
             Other_History = 02,
+            /// <summary>
+            /// 他(ユーザー指定)の最新とマップと履歴
+            /// </summary>
             Other_LatestHistory = 03,
+            /// <summary>
+            /// USGSのの最新とマップ
+            /// </summary>
             USGS_Latest = 11,
+            /// <summary>
+            /// USGSの履歴
+            /// </summary>
             USGS_History = 12,
+            /// <summary>
+            /// USGSの最新とマップと履歴
+            /// </summary>
             USGS_LatestHistory = 13,
+            /// <summary>
+            /// EMSCの最新とマップ
+            /// </summary>
             EMSC_Latest = 21,
+            /// <summary>
+            /// EMSCの履歴
+            /// </summary>
             EMSC_History = 22,
+            /// <summary>
+            /// EMSCの最新とマップと履歴
+            /// </summary>
             EMSC_LatestHistory = 23,
+            /// <summary>
+            /// GFZの最新とマップ
+            /// </summary>
             GFZ_Latest = 31,
+            /// <summary>
+            /// GFZの履歴
+            /// </summary>
             GFZ_History = 32,
+            /// <summary>
+            /// GFZの最新とマップと履歴
+            /// </summary>
             GFZ_LatestHistory = 33,
+            /// <summary>
+            /// Early-estの最新とマップ
+            /// </summary>
             EarlyEst_Latest = 41,
+            /// <summary>
+            /// Early-estの履歴
+            /// </summary>
             EarlyEst_History = 42,
+            /// <summary>
+            /// Early-estの最新とマップと履歴
+            /// </summary>
             EarlyEst_LatestHistory = 43,
+            /// <summary>
+            /// すべての最新とマップ
+            /// </summary>
             All_Latest = 91,
+            /// <summary>
+            /// すべての履歴
+            /// </summary>
             All_History = 92,
+            /// <summary>
+            /// すべての最新とマップと履歴
+            /// </summary>
             All_LatestHistory = 93
         };
 

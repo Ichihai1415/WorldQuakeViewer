@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CtrlForm));
             this.TabCtrl_Main = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -35,22 +36,20 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.DGV_pro = new System.Windows.Forms.DataGridView();
+            this.GetTimer = new System.Windows.Forms.Timer(this.components);
+            this.PropertyGrid_pro = new System.Windows.Forms.PropertyGrid();
             this.tabPage6 = new System.Windows.Forms.TabPage();
-            this.GDV_pro_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.GDV_pro_USGS = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.GDV_pro_EMSC = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.GDV_pro_GFZ = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.GDV_pro_EarlyEst = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.GDV_pro_Other = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PropertyGrid_view = new System.Windows.Forms.PropertyGrid();
+            this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.PropertyGrid_other = new System.Windows.Forms.PropertyGrid();
             this.TabCtrl_Main.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DGV_pro)).BeginInit();
+            this.tabPage6.SuspendLayout();
+            this.tabPage7.SuspendLayout();
             this.SuspendLayout();
             // 
             // TabCtrl_Main
@@ -88,10 +87,10 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Location = new System.Drawing.Point(4, 27);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(492, 474);
+            this.tabPage2.Size = new System.Drawing.Size(492, 469);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "情報";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -108,28 +107,18 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Controls.Add(this.tabPage6);
+            this.tabControl1.Controls.Add(this.tabPage7);
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(492, 469);
             this.tabControl1.TabIndex = 0;
             // 
-            // tabPage4
-            // 
-            this.tabPage4.Location = new System.Drawing.Point(4, 27);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(484, 438);
-            this.tabPage4.TabIndex = 0;
-            this.tabPage4.Text = "基本";
-            this.tabPage4.UseVisualStyleBackColor = true;
-            // 
             // tabPage5
             // 
-            this.tabPage5.Controls.Add(this.DGV_pro);
+            this.tabPage5.Controls.Add(this.PropertyGrid_pro);
             this.tabPage5.Location = new System.Drawing.Point(4, 27);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
@@ -138,68 +127,55 @@
             this.tabPage5.Text = "処理";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
-            // DGV_pro
+            // GetTimer
             // 
-            this.DGV_pro.AllowUserToAddRows = false;
-            this.DGV_pro.AllowUserToDeleteRows = false;
-            this.DGV_pro.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.DGV_pro.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DGV_pro.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.GDV_pro_Name,
-            this.GDV_pro_USGS,
-            this.GDV_pro_EMSC,
-            this.GDV_pro_GFZ,
-            this.GDV_pro_EarlyEst,
-            this.GDV_pro_Other});
-            this.DGV_pro.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DGV_pro.Location = new System.Drawing.Point(3, 3);
-            this.DGV_pro.Name = "DGV_pro";
-            this.DGV_pro.RowHeadersVisible = false;
-            this.DGV_pro.RowTemplate.Height = 21;
-            this.DGV_pro.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.DGV_pro.Size = new System.Drawing.Size(478, 432);
-            this.DGV_pro.TabIndex = 1;
+            this.GetTimer.Tick += new System.EventHandler(this.GetTimer_Tick);
+            // 
+            // PropertyGrid_pro
+            // 
+            this.PropertyGrid_pro.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PropertyGrid_pro.Location = new System.Drawing.Point(3, 3);
+            this.PropertyGrid_pro.Name = "PropertyGrid_pro";
+            this.PropertyGrid_pro.Size = new System.Drawing.Size(478, 432);
+            this.PropertyGrid_pro.TabIndex = 0;
             // 
             // tabPage6
             // 
-            this.tabPage6.Location = new System.Drawing.Point(4, 22);
+            this.tabPage6.Controls.Add(this.PropertyGrid_view);
+            this.tabPage6.Location = new System.Drawing.Point(4, 27);
             this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Size = new System.Drawing.Size(484, 443);
+            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage6.Size = new System.Drawing.Size(484, 438);
             this.tabPage6.TabIndex = 2;
             this.tabPage6.Text = "表示";
             this.tabPage6.UseVisualStyleBackColor = true;
             // 
-            // GDV_pro_Name
+            // PropertyGrid_view
             // 
-            this.GDV_pro_Name.HeaderText = "項目";
-            this.GDV_pro_Name.Name = "GDV_pro_Name";
-            this.GDV_pro_Name.ReadOnly = true;
+            this.PropertyGrid_view.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PropertyGrid_view.Location = new System.Drawing.Point(3, 3);
+            this.PropertyGrid_view.Name = "PropertyGrid_view";
+            this.PropertyGrid_view.Size = new System.Drawing.Size(478, 432);
+            this.PropertyGrid_view.TabIndex = 1;
             // 
-            // GDV_pro_USGS
+            // tabPage7
             // 
-            this.GDV_pro_USGS.HeaderText = "USGS";
-            this.GDV_pro_USGS.Name = "GDV_pro_USGS";
-            this.GDV_pro_USGS.ReadOnly = true;
+            this.tabPage7.Controls.Add(this.PropertyGrid_other);
+            this.tabPage7.Location = new System.Drawing.Point(4, 27);
+            this.tabPage7.Name = "tabPage7";
+            this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage7.Size = new System.Drawing.Size(484, 438);
+            this.tabPage7.TabIndex = 3;
+            this.tabPage7.Text = "その他";
+            this.tabPage7.UseVisualStyleBackColor = true;
             // 
-            // GDV_pro_EMSC
+            // PropertyGrid_other
             // 
-            this.GDV_pro_EMSC.HeaderText = "EMSC";
-            this.GDV_pro_EMSC.Name = "GDV_pro_EMSC";
-            // 
-            // GDV_pro_GFZ
-            // 
-            this.GDV_pro_GFZ.HeaderText = "GFZ";
-            this.GDV_pro_GFZ.Name = "GDV_pro_GFZ";
-            // 
-            // GDV_pro_EarlyEst
-            // 
-            this.GDV_pro_EarlyEst.HeaderText = "Early-est";
-            this.GDV_pro_EarlyEst.Name = "GDV_pro_EarlyEst";
-            // 
-            // GDV_pro_Other
-            // 
-            this.GDV_pro_Other.HeaderText = "その他";
-            this.GDV_pro_Other.Name = "GDV_pro_Other";
+            this.PropertyGrid_other.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PropertyGrid_other.Location = new System.Drawing.Point(3, 3);
+            this.PropertyGrid_other.Name = "PropertyGrid_other";
+            this.PropertyGrid_other.Size = new System.Drawing.Size(478, 432);
+            this.PropertyGrid_other.TabIndex = 2;
             // 
             // CtrlForm
             // 
@@ -209,6 +185,7 @@
             this.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "CtrlForm";
             this.Text = "ControlForm";
             this.Load += new System.EventHandler(this.CtrlForm_Load);
@@ -218,7 +195,8 @@
             this.tabPage3.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.DGV_pro)).EndInit();
+            this.tabPage6.ResumeLayout(false);
+            this.tabPage7.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -231,15 +209,12 @@
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TextBox LogTextBox;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.Timer GetTimer;
+        private System.Windows.Forms.PropertyGrid PropertyGrid_pro;
         private System.Windows.Forms.TabPage tabPage6;
-        private System.Windows.Forms.DataGridView DGV_pro;
-        private System.Windows.Forms.DataGridViewTextBoxColumn GDV_pro_Name;
-        private System.Windows.Forms.DataGridViewTextBoxColumn GDV_pro_USGS;
-        private System.Windows.Forms.DataGridViewTextBoxColumn GDV_pro_EMSC;
-        private System.Windows.Forms.DataGridViewTextBoxColumn GDV_pro_GFZ;
-        private System.Windows.Forms.DataGridViewTextBoxColumn GDV_pro_EarlyEst;
-        private System.Windows.Forms.DataGridViewTextBoxColumn GDV_pro_Other;
+        private System.Windows.Forms.PropertyGrid PropertyGrid_view;
+        private System.Windows.Forms.TabPage tabPage7;
+        private System.Windows.Forms.PropertyGrid PropertyGrid_other;
     }
 }
