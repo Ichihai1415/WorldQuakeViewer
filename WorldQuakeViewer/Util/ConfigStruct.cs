@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -60,6 +61,18 @@ namespace WorldQuakeViewer
             /// 動作ログ消去時に自動保存するか
             /// </summary>
             public bool Normal_AutoSave { get; set; } = false;
+
+            /// <summary>
+            /// Config_DisplayからConfigに変換します。
+            /// </summary>
+            /// <param name="from">変換元</param>
+            public static explicit operator LogN_(Config_Display.LogN_ from) => new LogN_
+            {
+                Normal_Enable=from.Normal_Enable,
+                Error_Enable=from.Error_Enable,
+                AutoDelate=from.AutoDelate,
+                Normal_AutoSave=from.Normal_AutoSave
+            };
         }
 
         /// <summary>
@@ -168,6 +181,24 @@ namespace WorldQuakeViewer
                 /// (USGSのみ)アラート(PAGER)
                 /// </summary>
                 public bool Alert { get; set; } = true;
+
+                /// <summary>
+                /// Config_DisplayからConfigに変換します。
+                /// </summary>
+                /// <param name="from">変換元</param>
+                public static explicit operator Update_(Config_Display.Data_.Update_ from) => new Update_
+                {
+                    MaxPeriod=from.MaxPeriod,
+                    Time=from.Time,
+                    UpdtTime=from.UpdtTime,
+                    Hypo=from.Hypo,
+                    LatLon=from.LatLon,
+                    Depth=from.Depth,
+                    MagType=from.MagType,
+                    Mag=from.Mag,
+                    MMI=from.MMI,
+                    Alert=from.Alert
+                };
             }
 
             /// <summary>
@@ -219,6 +250,23 @@ namespace WorldQuakeViewer
                 /// 送信する文のフォーマット
                 /// </summary>
                 public string Format { get; set; } = "フォーマットを入力してください";
+
+                /// <summary>
+                /// Config_DisplayからConfigに変換します。
+                /// </summary>
+                /// <param name="from">変換元</param>
+                public static explicit operator Bouyomi_(Config_Display.Data_.Bouyomi_ from) => new Bouyomi_
+                {
+                    Enable = from.Enable,
+                    LowerMagLimit = from.LowerMagLimit,
+                    Host = from.Host,
+                    Port = from.Port,
+                    Voice = from.Voice,
+                    Speed = from.Speed,
+                    Tone = from.Tone,
+                    Volume = from.Volume,
+                    Format = from.Format
+                };
             }
 
             /// <summary>
@@ -276,6 +324,23 @@ namespace WorldQuakeViewer
                 /// </summary>
                 public string L5_Path { get; set; } = "Sound\\L5.wav";
 
+                /// <summary>
+                /// Config_DisplayからConfigに変換します。
+                /// </summary>
+                /// <param name="from">変換元</param>
+                public static explicit operator Sound_(Config_Display.Data_.Sound_ from) => new Sound_
+                {
+                    L1_Enable = from.L1_Enable,
+                    L2_Enable = from.L2_Enable,
+                    L3_Enable = from.L3_Enable,
+                    L4_Enable = from.L4_Enable,
+                    L5_Enable = from.L5_Enable,
+                    L1_Path = from.L1_Path,
+                    L2_Path = from.L2_Path,
+                    L3_Path = from.L3_Path,
+                    L4_Path = from.L4_Path,
+                    L5_Path = from.L5_Path
+                };
             }
 
             /// <summary>
@@ -307,6 +372,19 @@ namespace WorldQuakeViewer
                 /// 送信する文のフォーマット
                 /// </summary>
                 public string Format { get; set; } = "フォーマットを入力してください";
+
+                /// <summary>
+                /// Config_DisplayからConfigに変換します。
+                /// </summary>
+                /// <param name="from">変換元</param>
+                public static explicit operator Socket_(Config_Display.Data_.Socket_ from) => new Socket_
+                {
+                    Enable = from.Enable,
+                    LowerMagLimit = from.LowerMagLimit,
+                    Host = from.Host,
+                    Port = from.Port,
+                    Format = from.Format
+                };
             }
 
             /// <summary>
@@ -333,6 +411,18 @@ namespace WorldQuakeViewer
                 /// 送信する文のフォーマット
                 /// </summary>
                 public string Format { get; set; } = "フォーマットを入力してください";
+
+                /// <summary>
+                /// Config_DisplayからConfigに変換します。
+                /// </summary>
+                /// <param name="from">変換元</param>
+                public static explicit operator Webhook_(Config_Display.Data_.Webhook_ from) => new Webhook_
+                {
+                    Enable= from.Enable,
+                    LowerMagLimit = from.LowerMagLimit,
+                    URL = from.URL,
+                    Format = from.Format
+                };
             }
 
             /// <summary>
@@ -370,7 +460,38 @@ namespace WorldQuakeViewer
                 /// </summary>
                 /// <remarks>情報の間にソフト情報等が入ります</remarks>
                 public string Format { get; set; } = "フォーマットを入力してください";
+
+                /// <summary>
+                /// Config_DisplayからConfigに変換します。
+                /// </summary>
+                /// <param name="from">変換元</param>
+                public static explicit operator LogE_(Config_Display.Data_.LogE_ from) => new LogE_
+                {
+                    L1_Enable= from.L1_Enable,
+                    L2_Enable= from.L2_Enable,
+                    L3_Enable= from.L3_Enable,
+                    L4_Enable= from.L4_Enable,
+                    L5_Enable= from.L5_Enable,
+                    Format = from.Format
+                };
             }
+
+            /// <summary>
+            /// Config_DisplayからConfigに変換します。
+            /// </summary>
+            /// <param name="from">変換元</param>
+            public static explicit operator Data_(Config_Display.Data_ from) => new Data_
+            {
+                Name = from.Name,
+                URL = from.URL,
+                GetTimes = from.GetTimes,
+                Update = (Update_)from.Update,
+                Bouyomi = (Bouyomi_)from.Bouyomi,
+                Sound = (Sound_)from.Sound,
+                Socket = (Socket_)from.Socket,
+                Webhook = (Webhook_)from.Webhook,
+                LogE = (LogE_)from.LogE
+            };
         }
 
         /// <summary>
@@ -384,9 +505,9 @@ namespace WorldQuakeViewer
             public ViewData Data { get; set; } = ViewData.Null;
 
             /// <summary>
-            /// 表示を英語にするか
+            /// 表示するテキスト
             /// </summary>
-            public bool DisplayEN { get; set; } = false;
+            public string DisplayText { get; set; } = "設定してください";
 
             /// <summary>
             /// 表示する最小マグニチュード
@@ -475,14 +596,59 @@ namespace WorldQuakeViewer
                 /// 境界の線の色
                 /// </summary>
                 public Color Border { get; set; } = Color.FromArgb(255, 200, 200, 200);
+
+                /// <summary>
+                /// Config_DisplayからConfigに変換します。
+                /// </summary>
+                /// <param name="from">変換元</param>
+                public static explicit operator Colors_(Config_Display.View_.Colors_ from) => new Colors_
+                {
+                    Back1_Text = from.Back1_Text,
+                    Back1_Back = from.Back1_Back,
+                    Fore1_Text = from.Fore1_Text,
+                    Fore1_Back = from.Fore1_Back,
+                    Back2_Text = from.Back2_Text,
+                    Back2_Back = from.Back2_Back,
+                    Fore2_Text = from.Fore2_Text,
+                    Fore2_Back = from.Fore2_Back,
+                    MapData_Text = from.MapData_Text,
+                    MapData_Back = from.MapData_Back,
+                    Border = from.Border
+                };
             }
+
+            /// <summary>
+            /// Config_DisplayからConfigに変換します。
+            /// </summary>
+            /// <param name="from">変換元</param>
+            public static explicit operator View_(Config_Display.View_ from) => new View_
+            {
+                Data = from.Data,
+                DisplayText = from.DisplayText,
+                LowerMagLimit = from.LowerMagLimit,
+                MapRange = from.MapRange,
+                HypoShift = from.HypoShift,
+                LatLonDecimal = from.LatLonDecimal,
+                Colors = (Colors_)from.Colors
+            };
         }
+
+        /// <summary>
+        /// Config_DisplayからConfigに変換します。
+        /// </summary>
+        /// <param name="from">変換元</param>
+        public static explicit operator Config(Config_Display from) => new Config
+        {
+            Datas = from.Datas.Select(n => (Data_)n).ToArray(),
+            Views = from.Views.Select(n => (View_)n).ToArray(),
+            LogN = (LogN_)from.LogN
+        };
     }
 
     /// <summary>
     /// 設定表示用クラス
     /// </summary>
-    public class Config_Display
+    public class Config_Display//Categoryは配列だとできない？
     {
         /// <summary>
         /// 処理するデータ元ごとのデータ処理
@@ -499,7 +665,6 @@ namespace WorldQuakeViewer
         /// <summary>
         /// ログ出力関連(地震除く)
         /// </summary>
-        [Category("ログ出力関連")]
         [Description("ログ出力関連(地震除く)")]
         public LogN_ LogN { get; set; }
 
@@ -543,16 +708,13 @@ namespace WorldQuakeViewer
             /// ConfigからConfig_Displayに変換します。
             /// </summary>
             /// <param name="from">変換元</param>
-            public static explicit operator LogN_(Config.LogN_ from)
+            public static explicit operator LogN_(Config.LogN_ from) => new LogN_
             {
-                return new LogN_
-                {
-                    Normal_Enable = from.Normal_Enable,
-                    Error_Enable = from.Error_Enable,
-                    AutoDelate = from.AutoDelate,
-                    Normal_AutoSave = from.Normal_AutoSave
-                };
-            }
+                Normal_Enable = from.Normal_Enable,
+                Error_Enable = from.Error_Enable,
+                AutoDelate = from.AutoDelate,
+                Normal_AutoSave = from.Normal_AutoSave
+            };
         }
 
         /// <summary>
@@ -567,7 +729,7 @@ namespace WorldQuakeViewer
             /// </summary>
             [ReadOnly(true)]
             [Description("取得元")]
-            public string _Name { get; set; }
+            public string Name { get; set; }
 
             /// <summary>
             /// 取得するURL
@@ -694,22 +856,19 @@ namespace WorldQuakeViewer
                 /// ConfigからConfig_Displayに変換します。
                 /// </summary>
                 /// <param name="from">変換元</param>
-                public static explicit operator Update_(Config.Data_.Update_ from)
+                public static explicit operator Update_(Config.Data_.Update_ from) => new Update_
                 {
-                    return new Update_
-                    {
-                        MaxPeriod = from.MaxPeriod,
-                        Time = from.Time,
-                        UpdtTime = from.UpdtTime,
-                        Hypo = from.Hypo,
-                        LatLon = from.LatLon,
-                        Depth = from.Depth,
-                        MagType = from.MagType,
-                        Mag = from.Mag,
-                        MMI = from.MMI,
-                        Alert = from.Alert
-                    };
-                }
+                    MaxPeriod = from.MaxPeriod,
+                    Time = from.Time,
+                    UpdtTime = from.UpdtTime,
+                    Hypo = from.Hypo,
+                    LatLon = from.LatLon,
+                    Depth = from.Depth,
+                    MagType = from.MagType,
+                    Mag = from.Mag,
+                    MMI = from.MMI,
+                    Alert = from.Alert
+                };
             }
 
             /// <summary>
@@ -777,21 +936,18 @@ namespace WorldQuakeViewer
                 /// ConfigからConfig_Displayに変換します。
                 /// </summary>
                 /// <param name="from">変換元</param>
-                public static explicit operator Bouyomi_(Config.Data_.Bouyomi_ from)
+                public static explicit operator Bouyomi_(Config.Data_.Bouyomi_ from) => new Bouyomi_
                 {
-                    return new Bouyomi_
-                    {
-                        Enable = from.Enable,
-                        LowerMagLimit = from.LowerMagLimit,
-                        Host = from.Host,
-                        Port = from.Port,
-                        Voice = from.Voice,
-                        Speed = from.Speed,
-                        Tone = from.Tone,
-                        Volume = from.Volume,
-                        Format = from.Format
-                    };
-                }
+                    Enable = from.Enable,
+                    LowerMagLimit = from.LowerMagLimit,
+                    Host = from.Host,
+                    Port = from.Port,
+                    Voice = from.Voice,
+                    Speed = from.Speed,
+                    Tone = from.Tone,
+                    Volume = from.Volume,
+                    Format = from.Format
+                };
             }
 
             /// <summary>
@@ -865,22 +1021,19 @@ namespace WorldQuakeViewer
                 /// ConfigからConfig_Displayに変換します。
                 /// </summary>
                 /// <param name="from">変換元</param>
-                public static explicit operator Sound_(Config.Data_.Sound_ from)
+                public static explicit operator Sound_(Config.Data_.Sound_ from) => new Sound_
                 {
-                    return new Sound_
-                    {
-                        L1_Enable = from.L1_Enable,
-                        L2_Enable = from.L2_Enable,
-                        L3_Enable = from.L3_Enable,
-                        L4_Enable = from.L4_Enable,
-                        L5_Enable = from.L5_Enable,
-                        L1_Path = from.L1_Path,
-                        L2_Path = from.L2_Path,
-                        L3_Path = from.L3_Path,
-                        L4_Path = from.L4_Path,
-                        L5_Path = from.L5_Path
-                    };
-                }
+                    L1_Enable = from.L1_Enable,
+                    L2_Enable = from.L2_Enable,
+                    L3_Enable = from.L3_Enable,
+                    L4_Enable = from.L4_Enable,
+                    L5_Enable = from.L5_Enable,
+                    L1_Path = from.L1_Path,
+                    L2_Path = from.L2_Path,
+                    L3_Path = from.L3_Path,
+                    L4_Path = from.L4_Path,
+                    L5_Path = from.L5_Path
+                };
             }
 
             /// <summary>
@@ -924,17 +1077,14 @@ namespace WorldQuakeViewer
                 /// ConfigからConfig_Displayに変換します。
                 /// </summary>
                 /// <param name="from">変換元</param>
-                public static explicit operator Socket_(Config.Data_.Socket_ from)
+                public static explicit operator Socket_(Config.Data_.Socket_ from) => new Socket_
                 {
-                    return new Socket_
-                    {
-                        Enable = from.Enable,
-                        LowerMagLimit = from.LowerMagLimit,
-                        Host = from.Host,
-                        Port = from.Port,
-                        Format = from.Format
-                    };
-                }
+                    Enable = from.Enable,
+                    LowerMagLimit = from.LowerMagLimit,
+                    Host = from.Host,
+                    Port = from.Port,
+                    Format = from.Format
+                };
             }
 
             /// <summary>
@@ -972,16 +1122,13 @@ namespace WorldQuakeViewer
                 /// ConfigからConfig_Displayに変換します。
                 /// </summary>
                 /// <param name="from">変換元</param>
-                public static explicit operator Webhook_(Config.Data_.Webhook_ from)
+                public static explicit operator Webhook_(Config.Data_.Webhook_ from) => new Webhook_
                 {
-                    return new Webhook_
-                    {
-                        Enable = from.Enable,
-                        LowerMagLimit = from.LowerMagLimit,
-                        URL = from.URL,
-                        Format = from.Format
-                    };
-                }
+                    Enable = from.Enable,
+                    LowerMagLimit = from.LowerMagLimit,
+                    URL = from.URL,
+                    Format = from.Format
+                };
             }
 
             /// <summary>
@@ -1032,39 +1179,33 @@ namespace WorldQuakeViewer
                 /// ConfigからConfig_Displayに変換します。
                 /// </summary>
                 /// <param name="from">変換元</param>
-                public static explicit operator LogE_(Config.Data_.LogE_ from)
+                public static explicit operator LogE_(Config.Data_.LogE_ from) => new LogE_
                 {
-                    return new LogE_
-                    {
-                        L1_Enable = from.L1_Enable,
-                        L2_Enable = from.L2_Enable,
-                        L3_Enable = from.L3_Enable,
-                        L4_Enable = from.L4_Enable,
-                        L5_Enable = from.L5_Enable,
-                        Format = from.Format
-                    };
-                }
+                    L1_Enable = from.L1_Enable,
+                    L2_Enable = from.L2_Enable,
+                    L3_Enable = from.L3_Enable,
+                    L4_Enable = from.L4_Enable,
+                    L5_Enable = from.L5_Enable,
+                    Format = from.Format
+                };
             }
 
             /// <summary>
             /// ConfigからConfig_Displayに変換します。
             /// </summary>
             /// <param name="from">変換元</param>
-            public static explicit operator Data_(Config.Data_ from)
+            public static explicit operator Data_(Config.Data_ from) => new Data_
             {
-                return new Data_
-                {
-                    _Name = from.Name,
-                    URL = from.URL,
-                    GetTimes = from.GetTimes,
-                    Update = (Update_)from.Update,
-                    Bouyomi = (Bouyomi_)from.Bouyomi,
-                    Sound = (Sound_)from.Sound,
-                    Socket = (Socket_)from.Socket,
-                    Webhook = (Webhook_)from.Webhook,
-                    LogE = (LogE_)from.LogE
-                };
-            }
+                Name = from.Name,
+                URL = from.URL,
+                GetTimes = from.GetTimes,
+                Update = (Update_)from.Update,
+                Bouyomi = (Bouyomi_)from.Bouyomi,
+                Sound = (Sound_)from.Sound,
+                Socket = (Socket_)from.Socket,
+                Webhook = (Webhook_)from.Webhook,
+                LogE = (LogE_)from.LogE
+            };
         }
 
         /// <summary>
@@ -1081,10 +1222,10 @@ namespace WorldQuakeViewer
             public ViewData Data { get; set; }
 
             /// <summary>
-            /// 表示を英語にするか
+            /// 表示するテキスト
             /// </summary>
-            [Description("表示を英語にするか")]
-            public bool DisplayEN { get; set; }
+            [Description("表示するテキスト")]
+            public string DisplayText { get; set; }
 
             /// <summary>
             /// 表示する最小マグニチュード
@@ -1196,56 +1337,47 @@ namespace WorldQuakeViewer
                 /// ConfigからConfig_Displayに変換します。
                 /// </summary>
                 /// <param name="from">変換元</param>
-                public static explicit operator Colors_(Config.View_.Colors_ from)
+                public static explicit operator Colors_(Config.View_.Colors_ from) => new Colors_
                 {
-                    return new Colors_
-                    {
-                        Back1_Text = from.Back1_Text,
-                        Back1_Back = from.Back1_Back,
-                        Fore1_Text = from.Fore1_Text,
-                        Fore1_Back = from.Fore1_Back,
-                        Back2_Text = from.Back2_Text,
-                        Back2_Back = from.Back2_Back,
-                        Fore2_Text = from.Fore2_Text,
-                        Fore2_Back = from.Fore2_Back,
-                        MapData_Text = from.MapData_Text,
-                        MapData_Back = from.MapData_Back,
-                        Border = from.Border
-                    };
-                }
+                    Back1_Text = from.Back1_Text,
+                    Back1_Back = from.Back1_Back,
+                    Fore1_Text = from.Fore1_Text,
+                    Fore1_Back = from.Fore1_Back,
+                    Back2_Text = from.Back2_Text,
+                    Back2_Back = from.Back2_Back,
+                    Fore2_Text = from.Fore2_Text,
+                    Fore2_Back = from.Fore2_Back,
+                    MapData_Text = from.MapData_Text,
+                    MapData_Back = from.MapData_Back,
+                    Border = from.Border
+                };
             }
 
             /// <summary>
             /// ConfigからConfig_Displayに変換します。
             /// </summary>
             /// <param name="from">変換元</param>
-            public static explicit operator View_(Config.View_ from)
+            public static explicit operator View_(Config.View_ from) => new View_
             {
-                return new View_
-                {
-                    Data = from.Data,
-                    DisplayEN = from.DisplayEN,
-                    LowerMagLimit = from.LowerMagLimit,
-                    MapRange = from.MapRange,
-                    HypoShift = from.HypoShift,
-                    LatLonDecimal = from.LatLonDecimal,
-                    Colors = (Colors_)from.Colors
-                };
-            }
+                Data = from.Data,
+                DisplayText = from.DisplayText,
+                LowerMagLimit = from.LowerMagLimit,
+                MapRange = from.MapRange,
+                HypoShift = from.HypoShift,
+                LatLonDecimal = from.LatLonDecimal,
+                Colors = (Colors_)from.Colors
+            };
         }
 
         /// <summary>
         /// ConfigからConfig_Displayに変換します。
         /// </summary>
         /// <param name="from">変換元</param>
-        public static explicit operator Config_Display(Config from)
+        public static explicit operator Config_Display(Config from) => new Config_Display
         {
-            return new Config_Display
-            {
-                Datas = from.Datas.Select(n => (Data_)n).ToArray(),
-                Views = from.Views.Select(n => (View_)n).ToArray(),
-                LogN = (LogN_)from.LogN
-            };
-        }
+            Datas = from.Datas.Select(n => (Data_)n).ToArray(),
+            Views = from.Views.Select(n => (View_)n).ToArray(),
+            LogN = (LogN_)from.LogN
+        };
     }
 }

@@ -180,6 +180,7 @@
     <EmbeddedResource Include="SettingsForm.old.resx">
       <DependentUpon>SettingsForm.old.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="config-info.md" />
     <None Include="LICENSE">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
