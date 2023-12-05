@@ -31,43 +31,43 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CtrlForm));
             this.TabCtrl_Main = new System.Windows.Forms.TabControl();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.Tab_Main_Info = new System.Windows.Forms.TabPage();
+            this.Tab_Main_Log = new System.Windows.Forms.TabPage();
             this.LogTextBox = new System.Windows.Forms.TextBox();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.Tab_Main_Setting = new System.Windows.Forms.TabPage();
+            this.Config_Reset = new System.Windows.Forms.Button();
+            this.Config_Save = new System.Windows.Forms.Button();
             this.ConfigWebLink = new System.Windows.Forms.LinkLabel();
             this.ConsigInfoText = new System.Windows.Forms.Label();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.TabCtrl_Setting = new System.Windows.Forms.TabControl();
+            this.Tab_Setting_Pro = new System.Windows.Forms.TabPage();
             this.ProG_pro_Text1 = new System.Windows.Forms.Label();
             this.ProG_pro = new System.Windows.Forms.PropertyGrid();
-            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.Tab_Setting_View = new System.Windows.Forms.TabPage();
             this.ProG_view_CopyNum = new System.Windows.Forms.NumericUpDown();
             this.ProG_view_Copy = new System.Windows.Forms.Button();
             this.ProG_view_Text1 = new System.Windows.Forms.Label();
             this.ProG_view_Delete = new System.Windows.Forms.Button();
             this.ProG_view_Add = new System.Windows.Forms.Button();
             this.ProG_view = new System.Windows.Forms.PropertyGrid();
-            this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.Tab_Setting_Other = new System.Windows.Forms.TabPage();
             this.ProG_other = new System.Windows.Forms.PropertyGrid();
             this.GetTimer = new System.Windows.Forms.Timer(this.components);
-            this.Config_Save = new System.Windows.Forms.Button();
-            this.Config_Reset = new System.Windows.Forms.Button();
             this.TabCtrl_Main.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.tabPage3.SuspendLayout();
-            this.tabControl1.SuspendLayout();
-            this.tabPage5.SuspendLayout();
-            this.tabPage6.SuspendLayout();
+            this.Tab_Main_Log.SuspendLayout();
+            this.Tab_Main_Setting.SuspendLayout();
+            this.TabCtrl_Setting.SuspendLayout();
+            this.Tab_Setting_Pro.SuspendLayout();
+            this.Tab_Setting_View.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ProG_view_CopyNum)).BeginInit();
-            this.tabPage7.SuspendLayout();
+            this.Tab_Setting_Other.SuspendLayout();
             this.SuspendLayout();
             // 
             // TabCtrl_Main
             // 
-            this.TabCtrl_Main.Controls.Add(this.tabPage2);
-            this.TabCtrl_Main.Controls.Add(this.tabPage1);
-            this.TabCtrl_Main.Controls.Add(this.tabPage3);
+            this.TabCtrl_Main.Controls.Add(this.Tab_Main_Info);
+            this.TabCtrl_Main.Controls.Add(this.Tab_Main_Log);
+            this.TabCtrl_Main.Controls.Add(this.Tab_Main_Setting);
             this.TabCtrl_Main.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TabCtrl_Main.Location = new System.Drawing.Point(0, 0);
             this.TabCtrl_Main.Name = "TabCtrl_Main";
@@ -75,26 +75,26 @@
             this.TabCtrl_Main.Size = new System.Drawing.Size(500, 500);
             this.TabCtrl_Main.TabIndex = 0;
             // 
-            // tabPage2
+            // Tab_Main_Info
             // 
-            this.tabPage2.Location = new System.Drawing.Point(4, 27);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(492, 469);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "情報";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.Tab_Main_Info.Location = new System.Drawing.Point(4, 27);
+            this.Tab_Main_Info.Name = "Tab_Main_Info";
+            this.Tab_Main_Info.Padding = new System.Windows.Forms.Padding(3);
+            this.Tab_Main_Info.Size = new System.Drawing.Size(492, 469);
+            this.Tab_Main_Info.TabIndex = 1;
+            this.Tab_Main_Info.Text = "情報";
+            this.Tab_Main_Info.UseVisualStyleBackColor = true;
             // 
-            // tabPage1
+            // Tab_Main_Log
             // 
-            this.tabPage1.Controls.Add(this.LogTextBox);
-            this.tabPage1.Location = new System.Drawing.Point(4, 27);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(492, 469);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "ログ";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.Tab_Main_Log.Controls.Add(this.LogTextBox);
+            this.Tab_Main_Log.Location = new System.Drawing.Point(4, 27);
+            this.Tab_Main_Log.Name = "Tab_Main_Log";
+            this.Tab_Main_Log.Padding = new System.Windows.Forms.Padding(3);
+            this.Tab_Main_Log.Size = new System.Drawing.Size(492, 469);
+            this.Tab_Main_Log.TabIndex = 0;
+            this.Tab_Main_Log.Text = "ログ";
+            this.Tab_Main_Log.UseVisualStyleBackColor = true;
             // 
             // LogTextBox
             // 
@@ -107,29 +107,49 @@
             this.LogTextBox.Size = new System.Drawing.Size(492, 469);
             this.LogTextBox.TabIndex = 0;
             // 
-            // tabPage3
+            // Tab_Main_Setting
             // 
-            this.tabPage3.Controls.Add(this.Config_Reset);
-            this.tabPage3.Controls.Add(this.Config_Save);
-            this.tabPage3.Controls.Add(this.ConfigWebLink);
-            this.tabPage3.Controls.Add(this.ConsigInfoText);
-            this.tabPage3.Controls.Add(this.tabControl1);
-            this.tabPage3.Location = new System.Drawing.Point(4, 27);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(492, 469);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "設定";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            this.Tab_Main_Setting.Controls.Add(this.Config_Reset);
+            this.Tab_Main_Setting.Controls.Add(this.Config_Save);
+            this.Tab_Main_Setting.Controls.Add(this.ConfigWebLink);
+            this.Tab_Main_Setting.Controls.Add(this.ConsigInfoText);
+            this.Tab_Main_Setting.Controls.Add(this.TabCtrl_Setting);
+            this.Tab_Main_Setting.Location = new System.Drawing.Point(4, 27);
+            this.Tab_Main_Setting.Name = "Tab_Main_Setting";
+            this.Tab_Main_Setting.Size = new System.Drawing.Size(492, 469);
+            this.Tab_Main_Setting.TabIndex = 2;
+            this.Tab_Main_Setting.Text = "設定";
+            this.Tab_Main_Setting.UseVisualStyleBackColor = true;
+            // 
+            // Config_Reset
+            // 
+            this.Config_Reset.Location = new System.Drawing.Point(417, 446);
+            this.Config_Reset.Name = "Config_Reset";
+            this.Config_Reset.Size = new System.Drawing.Size(75, 23);
+            this.Config_Reset.TabIndex = 4;
+            this.Config_Reset.Text = "リセット";
+            this.Config_Reset.UseVisualStyleBackColor = true;
+            this.Config_Reset.Click += new System.EventHandler(this.Config_Reset_Click);
+            // 
+            // Config_Save
+            // 
+            this.Config_Save.Location = new System.Drawing.Point(342, 446);
+            this.Config_Save.Name = "Config_Save";
+            this.Config_Save.Size = new System.Drawing.Size(75, 23);
+            this.Config_Save.TabIndex = 3;
+            this.Config_Save.Text = "保存";
+            this.Config_Save.UseVisualStyleBackColor = true;
+            this.Config_Save.Click += new System.EventHandler(this.Config_Save_Click);
             // 
             // ConfigWebLink
             // 
             this.ConfigWebLink.AutoSize = true;
-            this.ConfigWebLink.Location = new System.Drawing.Point(288, 373);
+            this.ConfigWebLink.Location = new System.Drawing.Point(220, 448);
             this.ConfigWebLink.Name = "ConfigWebLink";
-            this.ConfigWebLink.Size = new System.Drawing.Size(44, 18);
+            this.ConfigWebLink.Size = new System.Drawing.Size(116, 18);
             this.ConfigWebLink.TabIndex = 2;
             this.ConfigWebLink.TabStop = true;
-            this.ConfigWebLink.Text = "こちら";
+            this.ConfigWebLink.Text = "設定の詳細はこちら";
             this.ConfigWebLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ConfigWebLink_LinkClicked);
             // 
             // ConsigInfoText
@@ -139,32 +159,33 @@
             this.ConsigInfoText.Name = "ConsigInfoText";
             this.ConsigInfoText.Size = new System.Drawing.Size(488, 90);
             this.ConsigInfoText.TabIndex = 1;
-            this.ConsigInfoText.Text = "> ←これを押して展開してください。設定の詳細は\r\n<処理>取得先別の処理の設定。Otherは処理できれば自由です。\r\n<表示>表示する処理の設定。[0]はコピー" +
-    "用で表示されません。\r\n追加を押して画面を追加できます。削除は一番最後のを削除するので注意してください。\r\n<その他>上記以外の設定。";
+            this.ConsigInfoText.Text = "> ←これを押して展開してください。一部は保存を押さないと反映されません。\r\n《処理》取得先別の処理の設定。Otherは処理できれば自由です。\r\n《表示》表示する" +
+    "処理の設定。[0]はコピー用で表示されません。\r\n追加を押して画面を追加できます。削除は一番最後のを削除するので注意してください。\r\n《その他》上記以外の設定。" +
+    "         ";
             // 
-            // tabControl1
+            // TabCtrl_Setting
             // 
-            this.tabControl1.Controls.Add(this.tabPage5);
-            this.tabControl1.Controls.Add(this.tabPage6);
-            this.tabControl1.Controls.Add(this.tabPage7);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tabControl1.Location = new System.Drawing.Point(0, 0);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(492, 369);
-            this.tabControl1.TabIndex = 0;
+            this.TabCtrl_Setting.Controls.Add(this.Tab_Setting_Pro);
+            this.TabCtrl_Setting.Controls.Add(this.Tab_Setting_View);
+            this.TabCtrl_Setting.Controls.Add(this.Tab_Setting_Other);
+            this.TabCtrl_Setting.Dock = System.Windows.Forms.DockStyle.Top;
+            this.TabCtrl_Setting.Location = new System.Drawing.Point(0, 0);
+            this.TabCtrl_Setting.Name = "TabCtrl_Setting";
+            this.TabCtrl_Setting.SelectedIndex = 0;
+            this.TabCtrl_Setting.Size = new System.Drawing.Size(492, 369);
+            this.TabCtrl_Setting.TabIndex = 0;
             // 
-            // tabPage5
+            // Tab_Setting_Pro
             // 
-            this.tabPage5.Controls.Add(this.ProG_pro_Text1);
-            this.tabPage5.Controls.Add(this.ProG_pro);
-            this.tabPage5.Location = new System.Drawing.Point(4, 27);
-            this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(484, 338);
-            this.tabPage5.TabIndex = 1;
-            this.tabPage5.Text = "処理";
-            this.tabPage5.UseVisualStyleBackColor = true;
+            this.Tab_Setting_Pro.Controls.Add(this.ProG_pro_Text1);
+            this.Tab_Setting_Pro.Controls.Add(this.ProG_pro);
+            this.Tab_Setting_Pro.Location = new System.Drawing.Point(4, 27);
+            this.Tab_Setting_Pro.Name = "Tab_Setting_Pro";
+            this.Tab_Setting_Pro.Padding = new System.Windows.Forms.Padding(3);
+            this.Tab_Setting_Pro.Size = new System.Drawing.Size(484, 338);
+            this.Tab_Setting_Pro.TabIndex = 1;
+            this.Tab_Setting_Pro.Text = "処理";
+            this.Tab_Setting_Pro.UseVisualStyleBackColor = true;
             // 
             // ProG_pro_Text1
             // 
@@ -185,21 +206,21 @@
             this.ProG_pro.Size = new System.Drawing.Size(478, 332);
             this.ProG_pro.TabIndex = 0;
             // 
-            // tabPage6
+            // Tab_Setting_View
             // 
-            this.tabPage6.Controls.Add(this.ProG_view_CopyNum);
-            this.tabPage6.Controls.Add(this.ProG_view_Copy);
-            this.tabPage6.Controls.Add(this.ProG_view_Text1);
-            this.tabPage6.Controls.Add(this.ProG_view_Delete);
-            this.tabPage6.Controls.Add(this.ProG_view_Add);
-            this.tabPage6.Controls.Add(this.ProG_view);
-            this.tabPage6.Location = new System.Drawing.Point(4, 27);
-            this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(484, 338);
-            this.tabPage6.TabIndex = 2;
-            this.tabPage6.Text = "表示";
-            this.tabPage6.UseVisualStyleBackColor = true;
+            this.Tab_Setting_View.Controls.Add(this.ProG_view_CopyNum);
+            this.Tab_Setting_View.Controls.Add(this.ProG_view_Copy);
+            this.Tab_Setting_View.Controls.Add(this.ProG_view_Text1);
+            this.Tab_Setting_View.Controls.Add(this.ProG_view_Delete);
+            this.Tab_Setting_View.Controls.Add(this.ProG_view_Add);
+            this.Tab_Setting_View.Controls.Add(this.ProG_view);
+            this.Tab_Setting_View.Location = new System.Drawing.Point(4, 27);
+            this.Tab_Setting_View.Name = "Tab_Setting_View";
+            this.Tab_Setting_View.Padding = new System.Windows.Forms.Padding(3);
+            this.Tab_Setting_View.Size = new System.Drawing.Size(484, 338);
+            this.Tab_Setting_View.TabIndex = 2;
+            this.Tab_Setting_View.Text = "表示";
+            this.Tab_Setting_View.UseVisualStyleBackColor = true;
             // 
             // ProG_view_CopyNum
             // 
@@ -223,6 +244,7 @@
             0,
             0,
             0});
+            this.ProG_view_CopyNum.ValueChanged += new System.EventHandler(this.ProG_view_CopyNum_ValueChanged);
             // 
             // ProG_view_Copy
             // 
@@ -276,16 +298,16 @@
             this.ProG_view.Size = new System.Drawing.Size(478, 332);
             this.ProG_view.TabIndex = 1;
             // 
-            // tabPage7
+            // Tab_Setting_Other
             // 
-            this.tabPage7.Controls.Add(this.ProG_other);
-            this.tabPage7.Location = new System.Drawing.Point(4, 27);
-            this.tabPage7.Name = "tabPage7";
-            this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage7.Size = new System.Drawing.Size(484, 338);
-            this.tabPage7.TabIndex = 3;
-            this.tabPage7.Text = "その他";
-            this.tabPage7.UseVisualStyleBackColor = true;
+            this.Tab_Setting_Other.Controls.Add(this.ProG_other);
+            this.Tab_Setting_Other.Location = new System.Drawing.Point(4, 27);
+            this.Tab_Setting_Other.Name = "Tab_Setting_Other";
+            this.Tab_Setting_Other.Padding = new System.Windows.Forms.Padding(3);
+            this.Tab_Setting_Other.Size = new System.Drawing.Size(484, 338);
+            this.Tab_Setting_Other.TabIndex = 3;
+            this.Tab_Setting_Other.Text = "その他";
+            this.Tab_Setting_Other.UseVisualStyleBackColor = true;
             // 
             // ProG_other
             // 
@@ -300,26 +322,6 @@
             // 
             this.GetTimer.Tick += new System.EventHandler(this.GetTimer_Tick);
             // 
-            // Config_Save
-            // 
-            this.Config_Save.Location = new System.Drawing.Point(342, 446);
-            this.Config_Save.Name = "Config_Save";
-            this.Config_Save.Size = new System.Drawing.Size(75, 23);
-            this.Config_Save.TabIndex = 3;
-            this.Config_Save.Text = "保存";
-            this.Config_Save.UseVisualStyleBackColor = true;
-            this.Config_Save.Click += new System.EventHandler(this.Config_Save_Click);
-            // 
-            // Config_Reset
-            // 
-            this.Config_Reset.Location = new System.Drawing.Point(417, 446);
-            this.Config_Reset.Name = "Config_Reset";
-            this.Config_Reset.Size = new System.Drawing.Size(75, 23);
-            this.Config_Reset.TabIndex = 4;
-            this.Config_Reset.Text = "リセット";
-            this.Config_Reset.UseVisualStyleBackColor = true;
-            this.Config_Reset.Click += new System.EventHandler(this.Config_Reset_Click);
-            // 
             // CtrlForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -333,17 +335,17 @@
             this.Text = "ControlForm";
             this.Load += new System.EventHandler(this.CtrlForm_Load);
             this.TabCtrl_Main.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
-            this.tabControl1.ResumeLayout(false);
-            this.tabPage5.ResumeLayout(false);
-            this.tabPage5.PerformLayout();
-            this.tabPage6.ResumeLayout(false);
-            this.tabPage6.PerformLayout();
+            this.Tab_Main_Log.ResumeLayout(false);
+            this.Tab_Main_Log.PerformLayout();
+            this.Tab_Main_Setting.ResumeLayout(false);
+            this.Tab_Main_Setting.PerformLayout();
+            this.TabCtrl_Setting.ResumeLayout(false);
+            this.Tab_Setting_Pro.ResumeLayout(false);
+            this.Tab_Setting_Pro.PerformLayout();
+            this.Tab_Setting_View.ResumeLayout(false);
+            this.Tab_Setting_View.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ProG_view_CopyNum)).EndInit();
-            this.tabPage7.ResumeLayout(false);
+            this.Tab_Setting_Other.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -351,17 +353,17 @@
         #endregion
 
         private System.Windows.Forms.TabControl TabCtrl_Main;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TabPage Tab_Main_Log;
+        private System.Windows.Forms.TabPage Tab_Main_Info;
+        private System.Windows.Forms.TabPage Tab_Main_Setting;
         private System.Windows.Forms.TextBox LogTextBox;
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.TabControl TabCtrl_Setting;
+        private System.Windows.Forms.TabPage Tab_Setting_Pro;
         private System.Windows.Forms.Timer GetTimer;
         private System.Windows.Forms.PropertyGrid ProG_pro;
-        private System.Windows.Forms.TabPage tabPage6;
+        private System.Windows.Forms.TabPage Tab_Setting_View;
         private System.Windows.Forms.PropertyGrid ProG_view;
-        private System.Windows.Forms.TabPage tabPage7;
+        private System.Windows.Forms.TabPage Tab_Setting_Other;
         private System.Windows.Forms.PropertyGrid ProG_other;
         private System.Windows.Forms.Button ProG_view_Add;
         private System.Windows.Forms.Button ProG_view_Delete;

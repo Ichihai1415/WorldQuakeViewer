@@ -28,11 +28,11 @@ namespace WorldQuakeViewer
                 try
                 {
                     config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("Setting\\config.json"));
-                    if (config.Version != version)//更新時必要な処置等あればここに
+                    if (config.Version != version)//更新時必要な処置等あれば
                     {
                         int[] nowVer = version.Split('.').Select(n => int.Parse(n.Replace("α", "-"))).ToArray();
                         int[] setVer = config.Version.Split('.').Select(n => int.Parse(n.Replace("α", "-"))).ToArray();
-                        if (setVer[1] <= 1 && setVer[2] <= 1)//x.1.2未満の場合
+                        if (setVer[1] <= 1 && setVer[2] <= 1)//x.1.1以下の場合
                             throw new Exception("バージョンが間違っています。製作者に報告してください。");
                     }
                     config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("Setting\\config.json"));
@@ -55,22 +55,23 @@ namespace WorldQuakeViewer
                 Directory.CreateDirectory("Setting");
                 File.WriteAllText("Setting\\config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
             }
-
             config_display = (Config_Display)config;
             ProG_pro.SelectedObject = config_display.Datas;
             ProG_view.SelectedObject = config_display.Views;
             ProG_other.SelectedObject = config_display.LogN;
-            if (config_display.Views.Count() == 1)
+            int c = config_display.Views.Count();
+            if (c == 1)
                 ProG_view_Delete.Enabled = false;
-            if (config_display.Views.Count() == 9)
+            if (c == 9)
                 ProG_view_Add.Enabled = false;
+            ProG_view_Copy.Enabled = c > ProG_view_CopyNum.Value ? true : false;
 
 
             File.WriteAllText("Setting\\config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
 
 
             GetTimer.Interval = 2000 - DateTime.Now.Millisecond;
-            GetTimer.Enabled=true;
+            GetTimer.Enabled = true;
         }
 
         private async void GetTimer_Tick(object sender, EventArgs e)
@@ -93,45 +94,63 @@ namespace WorldQuakeViewer
 
         private void Config_Save_Click(object sender, EventArgs e)
         {
-
+            config = (Config)config_display;
+            File.WriteAllText("Setting\\config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
         }
 
         private void Config_Reset_Click(object sender, EventArgs e)
         {
-
+            DialogResult ans = MessageBox.Show(topMost, "設定をリセットしてもよろしいですか？", "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+            if (ans == DialogResult.Yes)
+            {
+                config = new Config();
+                config_display = (Config_Display)config;
+                ProG_pro.SelectedObject = config_display.Datas;
+                ProG_view.SelectedObject = config_display.Views;
+                ProG_other.SelectedObject = config_display.LogN;
+                File.WriteAllText("Setting\\config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
+            }
         }
 
         private void ProG_view_Add_Click(object sender, EventArgs e)
         {
-            int n = config_display.Views.Count();
+            int c = config_display.Views.Count();
             List<Config_Display.View_> tmp = config_display.Views.ToList();
-                tmp.Add((Config_Display.View_)new Config.View_());
+            tmp.Add((Config_Display.View_)new Config.View_());
             config_display.Views = tmp.ToArray();
             ProG_view.SelectedObject = config_display.Views;
-            ProG_view.Refresh();
-            Console.WriteLine(config_display.Views.Count());
-            if (n == 9)//ここ時点で配列は+1されている//10
+            c++;
+            if (c == 10)
                 ProG_view_Add.Enabled = false;
-            if (n != 1)//2
+            if (c != 2)
                 ProG_view_Delete.Enabled = true;
+            ProG_view_Copy.Enabled = c > ProG_view_CopyNum.Value ? true : false;
         }
 
         private void ProG_view_Delete_Click(object sender, EventArgs e)
         {
-            int n = config_display.Views.Count();
+            int c = config_display.Views.Count();
             List<Config_Display.View_> tmp = config_display.Views.ToList();
-            tmp.RemoveAt(n - 1);
+            tmp.RemoveAt(c - 1);
             config_display.Views = tmp.ToArray();
             ProG_view.SelectedObject = config_display.Views;
-            if (n != 10)//ここ時点で配列は-1されている//9
+            c--;
+            if (c != 9)
                 ProG_view_Add.Enabled = true;
-            if (n == 2)//1
+            if (c == 1)
                 ProG_view_Delete.Enabled = false;
+            ProG_view_Copy.Enabled = c > ProG_view_CopyNum.Value ? true : false;
         }
 
         private void ProG_view_Copy_Click(object sender, EventArgs e)
         {
+            config_display.Views[(int)ProG_view_CopyNum.Value] = config_display.Views[0];
+            ProG_view.SelectedObject = config_display.Views;
+        }
 
+        private void ProG_view_CopyNum_ValueChanged(object sender, EventArgs e)
+        {
+            ProG_view_Copy.Enabled = config_display.Views.Count() > ProG_view_CopyNum.Value ? true : false;
         }
     }
 }

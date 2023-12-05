@@ -505,6 +505,16 @@ namespace WorldQuakeViewer
             public ViewData Data { get; set; } = ViewData.Null;
 
             /// <summary>
+            /// タイトル1のテキスト
+            /// </summary>
+            public string Title1Text { get; set; } = "設定してください";
+
+            /// <summary>
+            /// (最新、履歴のみ)タイトル2のテキスト
+            /// </summary>
+            public string Title2Text { get; set; } = "設定してください";
+
+            /// <summary>
             /// 表示するテキスト
             /// </summary>
             public string DisplayText { get; set; } = "設定してください";
@@ -624,6 +634,8 @@ namespace WorldQuakeViewer
             public static explicit operator View_(Config_Display.View_ from) => new View_
             {
                 Data = from.Data,
+                Title1Text = from.Title1Text,
+                Title2Text = from.Title2Text,
                 DisplayText = from.DisplayText,
                 LowerMagLimit = from.LowerMagLimit,
                 MapRange = from.MapRange,
@@ -1222,6 +1234,18 @@ namespace WorldQuakeViewer
             public ViewData Data { get; set; }
 
             /// <summary>
+            /// タイトル1のテキスト
+            /// </summary>
+            [Description("タイトル1のテキスト")]
+            public string Title1Text { get; set; }
+
+            /// <summary>
+            /// (最新、履歴のみ)タイトル2のテキスト
+            /// </summary>
+            [Description("(最新、履歴のみ)タイトル2のテキスト")]
+            public string Title2Text { get; set; }
+
+            /// <summary>
             /// 表示するテキスト
             /// </summary>
             [Description("表示するテキスト")]
@@ -1360,6 +1384,8 @@ namespace WorldQuakeViewer
             public static explicit operator View_(Config.View_ from) => new View_
             {
                 Data = from.Data,
+                Title1Text = from.Title1Text,
+                Title2Text = from.Title2Text,
                 DisplayText = from.DisplayText,
                 LowerMagLimit = from.LowerMagLimit,
                 MapRange = from.MapRange,
