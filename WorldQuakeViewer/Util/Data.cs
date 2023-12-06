@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WorldQuakeViewer
+namespace WorldQuakeViewer.Util
 {
-    public class Data_EarlyEst
+    public static class Data
     {
+        
     }
 }
