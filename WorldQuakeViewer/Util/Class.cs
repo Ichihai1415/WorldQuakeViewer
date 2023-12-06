@@ -1,0 +1,253 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace WorldQuakeViewer
+{
+    /// <summary>
+    /// 色々(クラス類)
+    /// </summary>
+    public class Util_Class
+    {
+        /// <summary>
+        /// プログラムのバージョン
+        /// </summary>
+        public static readonly string version = "1.2.0";//こことアセンブリを変える
+
+        /// <summary>
+        /// データ元
+        /// </summary>
+        public enum DataAuthor
+        {
+            /// <summary>
+            /// 仮用
+            /// </summary>
+            Null = -1,
+            /// <summary>
+            /// 他(ユーザー指定)
+            /// </summary>
+            Other = 0,
+            /// <summary>
+            /// USGS
+            /// </summary>
+            USGS = 1,
+            /// <summary>
+            /// EMSC
+            /// </summary>
+            EMSC = 2,
+            /// <summary>
+            /// GFZ
+            /// </summary>
+            GFZ = 3,
+            /// <summary>
+            /// Early-est
+            /// </summary>
+            EarlyEst = 4
+        };
+
+        /// <summary>
+        /// データ元の個数(null除く)
+        /// </summary>
+        public static readonly int DataAuthorCount = Enum.GetValues(typeof(DataAuthor)).Length - 1;
+
+        /// <summary>
+        /// データ元別既定のURL
+        /// </summary>
+        public static Dictionary<DataAuthor, string> DataDefURL = new Dictionary<DataAuthor, string>
+        {
+            { DataAuthor.Null, "" },
+            { DataAuthor.Other, "" },
+            { DataAuthor.USGS, "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson" },
+            { DataAuthor.EMSC, "https://www.seismicportal.eu/fdsnws/event/1/query?format=text&minmag=5.0&limit=10" },
+            { DataAuthor.GFZ, "https://geofon.gfz-potsdam.de/fdsnws/event/1/query?format=text&minmag=5.0&limit=10&end=2100-01-01" },
+            { DataAuthor.EarlyEst, "http://early-est.rm.ingv.it/monitor.xml" },
+        };
+
+        /// <summary>
+        /// 表示データ元判別用
+        /// </summary>
+        public enum ViewData
+        {
+            /// <summary>
+            /// 仮用
+            /// </summary>
+            Null = -1,
+            /// <summary>
+            /// 他(ユーザー指定)の最新とマップ
+            /// </summary>
+            Other_Latest = 01,
+            /// <summary>
+            /// 他(ユーザー指定)の履歴
+            /// </summary>
+            Other_History = 02,
+            /// <summary>
+            /// 他(ユーザー指定)の最新とマップと履歴
+            /// </summary>
+            Other_LatestHistory = 03,
+            /// <summary>
+            /// USGSのの最新とマップ
+            /// </summary>
+            USGS_Latest = 11,
+            /// <summary>
+            /// USGSの履歴
+            /// </summary>
+            USGS_History = 12,
+            /// <summary>
+            /// USGSの最新とマップと履歴
+            /// </summary>
+            USGS_LatestHistory = 13,
+            /// <summary>
+            /// EMSCの最新とマップ
+            /// </summary>
+            EMSC_Latest = 21,
+            /// <summary>
+            /// EMSCの履歴
+            /// </summary>
+            EMSC_History = 22,
+            /// <summary>
+            /// EMSCの最新とマップと履歴
+            /// </summary>
+            EMSC_LatestHistory = 23,
+            /// <summary>
+            /// GFZの最新とマップ
+            /// </summary>
+            GFZ_Latest = 31,
+            /// <summary>
+            /// GFZの履歴
+            /// </summary>
+            GFZ_History = 32,
+            /// <summary>
+            /// GFZの最新とマップと履歴
+            /// </summary>
+            GFZ_LatestHistory = 33,
+            /// <summary>
+            /// Early-estの最新とマップ
+            /// </summary>
+            EarlyEst_Latest = 41,
+            /// <summary>
+            /// Early-estの履歴
+            /// </summary>
+            EarlyEst_History = 42,
+            /// <summary>
+            /// Early-estの最新とマップと履歴
+            /// </summary>
+            EarlyEst_LatestHistory = 43,
+            /// <summary>
+            /// すべての最新とマップ
+            /// </summary>
+            All_Latest = 91,
+            /// <summary>
+            /// すべての履歴
+            /// </summary>
+            All_History = 92,
+            /// <summary>
+            /// すべての最新とマップと履歴
+            /// </summary>
+            All_LatestHistory = 93
+        };
+
+        /// <summary>
+        /// 履歴保存用クラス
+        /// </summary>
+        public class History
+        {
+            /// <summary>
+            /// データ元(USGS/EMSC/EarlyEst)
+            /// </summary>
+            public DataAuthor Author { get; set; }
+
+            /// <summary>
+            /// 地震ID(データ元間で互換性なし)
+            /// </summary>
+            public string ID { get; set; }
+
+            /// <summary>
+            /// 更新時刻
+            /// </summary>
+            public DateTimeOffset Update { get; set; }
+
+            /// <summary>
+            /// 詳細ページのURL
+            /// </summary>
+            public string URL { get; set; }
+
+
+            /// <summary>
+            /// 発生時刻
+            /// </summary>
+            public DateTimeOffset Time { get; set; }
+
+            /// <summary>
+            /// 日本語震源名
+            /// </summary>
+            public string HypoJP { get; set; }
+
+            /// <summary>
+            /// 英語震源名
+            /// </summary>
+            public string HypoEN { get; set; }
+
+            /// <summary>
+            /// 緯度
+            /// </summary>
+            public double Lat { get; set; }
+
+            /// <summary>
+            /// 経度
+            /// </summary>
+            public double Lon { get; set; }
+
+            /// <summary>
+            /// 深さ
+            /// </summary>
+            public double Depth { get; set; }
+
+            /// <summary>
+            /// マグニチュードのリスト[magType, mag]
+            /// </summary>
+            public Dictionary<string, double> Mags { get; set; }
+
+            /// <summary>
+            /// [USGSのみ]MMI
+            /// </summary>
+            public double? MMI { get; set; }
+
+            /// <summary>
+            /// [USGSのみ]アラート
+            /// </summary>
+            public string Alert { get; set; }
+
+            /// <summary>
+            /// [一部]データのソース
+            /// </summary>
+            public string Source { get; set; }
+        }
+
+        /// <summary>
+        /// 過去のクラス
+        /// </summary>
+        public class History_
+        {
+            public string URL { get; set; }
+            public long Update { get; set; }
+            public string ID { get; set; }
+            public long TweetID { get; set; }
+
+            //表示用
+            public string Display1 { get; set; }
+            public string Display2 { get; set; }
+            public string Display3 { get; set; }
+
+            //更新検知用
+            public long Time { get; set; }
+            public string HypoJP { get; set; }
+            public string HypoEN { get; set; }
+            public double Lat { get; set; }
+            public double Lon { get; set; }
+            public double Depth { get; set; }
+            public string MagType { get; set; }
+            public double Mag { get; set; }
+            public double? MMI { get; set; }
+            public string Alert { get; set; }
+        }
+    }
+}

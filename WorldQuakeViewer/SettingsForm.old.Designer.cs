@@ -1,6 +1,6 @@
 ﻿namespace WorldQuakeViewer
 {
-    partial class SettingsForm
+    partial class SettingsForm_old
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm_old));
             this.SettingSave = new System.Windows.Forms.Button();
             this.SettingReset = new System.Windows.Forms.Button();
             this.Tabs = new System.Windows.Forms.TabControl();

@@ -7,13 +7,14 @@ using System.Net.Sockets;
 using System.Text;
 using System.Windows.Forms;
 using WorldQuakeViewer.Properties;
-using static WorldQuakeViewer.Util;
+using static WorldQuakeViewer.Util_Class;
+using static WorldQuakeViewer.Util_Func;
 
 namespace WorldQuakeViewer
 {
-    public partial class SettingsForm : Form
+    public partial class SettingsForm_old : Form
     {
-        public SettingsForm()
+        public SettingsForm_old()
         {
             InitializeComponent();
             /*フォントはパス
@@ -33,7 +34,7 @@ namespace WorldQuakeViewer
         }
         private void SettingsForm_Load(object sender, EventArgs e)
         {
-            Version.Text = "WorldQuakeViewer v" + MainForm.version;
+            Version.Text = "WorldQuakeViewer v" + version;
             Tab_View_HideHist.Checked = Settings.Default.Display_HideHistory;
             Tab_View_HideMap.Checked = Settings.Default.Display_HideHistoryMap;
             Tab_View_LatLonDecimal.Checked = Settings.Default.Text_LatLonDecimal;
@@ -115,7 +116,7 @@ namespace WorldQuakeViewer
             if (Result == DialogResult.Yes)
             {
                 Settings.Default.Reset();
-                SettingsForm Setting = new SettingsForm();
+                SettingsForm_old Setting = new SettingsForm_old();
                 Configuration Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
                 if (File.Exists("UserSetting.xml"))
                     File.Delete("UserSetting.xml");
@@ -186,7 +187,7 @@ namespace WorldQuakeViewer
             catch (Exception ex)
             {
                 MessageBox.Show($"読み上げ指令の送信に失敗しました。({ex.Message})", "WQV - setting", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Setting,Bouyomichan Version:{MainForm.version}\n{ex}");
+                LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Setting,Bouyomichan Version:{version}\n{ex}");
             }
             Tab_Yomi_Test.Enabled = true;
         }
@@ -211,7 +212,7 @@ namespace WorldQuakeViewer
             catch (Exception ex)
             {
                 MessageBox.Show($"Socket送信に失敗しました。({ex.Message})", "WQV - setting", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Setting,Socket Version:{MainForm.version}\n{ex}");
+                LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Setting,Socket Version:{version}\n{ex}");
             }
             Tab_Socket_Test.Enabled = true;
         }

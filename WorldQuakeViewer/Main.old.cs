@@ -18,13 +18,14 @@ using System.Windows.Forms;
 using System.Xml;
 using WorldQuakeViewer.Properties;
 using static LL2FERC.LL2FERC;
-using static WorldQuakeViewer.Util;
+using static WorldQuakeViewer.Util_Func;
+using static WorldQuakeViewer.Util_Class;
 
 namespace WorldQuakeViewer//TODO:設定Formの作り直し
 {
     public partial class MainForm : Form//TODO:設定の分割(USGSとEMSC)
     {
-        public static readonly string version = "1.2.0α1";//こことアセンブリを変える
+        public static readonly string version_ = "1.2.0α1";//こことアセンブリを変える
         public static DateTime startTime = new DateTime();
         public static readonly Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
         public static int accesseCountEMSC = 0;
@@ -730,7 +731,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
         private void RCsetting_Click(object sender, EventArgs e)
         {
             ExeLog($"[RC]設定表示");
-            SettingsForm Settings = new SettingsForm();
+            SettingsForm_old Settings = new SettingsForm_old();
             Settings.FormClosed += SettingForm_FormClosed;//閉じたとき呼び出し
             Settings.Show();
         }
