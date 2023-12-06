@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -68,10 +67,10 @@ namespace WorldQuakeViewer
             /// <param name="from">変換元</param>
             public static explicit operator LogN_(Config_Display.LogN_ from) => new LogN_
             {
-                Normal_Enable=from.Normal_Enable,
-                Error_Enable=from.Error_Enable,
-                AutoDelate=from.AutoDelate,
-                Normal_AutoSave=from.Normal_AutoSave
+                Normal_Enable = from.Normal_Enable,
+                Error_Enable = from.Error_Enable,
+                AutoDelate = from.AutoDelate,
+                Normal_AutoSave = from.Normal_AutoSave
             };
         }
 
@@ -188,16 +187,16 @@ namespace WorldQuakeViewer
                 /// <param name="from">変換元</param>
                 public static explicit operator Update_(Config_Display.Data_.Update_ from) => new Update_
                 {
-                    MaxPeriod=from.MaxPeriod,
-                    Time=from.Time,
-                    UpdtTime=from.UpdtTime,
-                    Hypo=from.Hypo,
-                    LatLon=from.LatLon,
-                    Depth=from.Depth,
-                    MagType=from.MagType,
-                    Mag=from.Mag,
-                    MMI=from.MMI,
-                    Alert=from.Alert
+                    MaxPeriod = from.MaxPeriod,
+                    Time = from.Time,
+                    UpdtTime = from.UpdtTime,
+                    Hypo = from.Hypo,
+                    LatLon = from.LatLon,
+                    Depth = from.Depth,
+                    MagType = from.MagType,
+                    Mag = from.Mag,
+                    MMI = from.MMI,
+                    Alert = from.Alert
                 };
             }
 
@@ -418,7 +417,7 @@ namespace WorldQuakeViewer
                 /// <param name="from">変換元</param>
                 public static explicit operator Webhook_(Config_Display.Data_.Webhook_ from) => new Webhook_
                 {
-                    Enable= from.Enable,
+                    Enable = from.Enable,
                     LowerMagLimit = from.LowerMagLimit,
                     URL = from.URL,
                     Format = from.Format
@@ -467,11 +466,11 @@ namespace WorldQuakeViewer
                 /// <param name="from">変換元</param>
                 public static explicit operator LogE_(Config_Display.Data_.LogE_ from) => new LogE_
                 {
-                    L1_Enable= from.L1_Enable,
-                    L2_Enable= from.L2_Enable,
-                    L3_Enable= from.L3_Enable,
-                    L4_Enable= from.L4_Enable,
-                    L5_Enable= from.L5_Enable,
+                    L1_Enable = from.L1_Enable,
+                    L2_Enable = from.L2_Enable,
+                    L3_Enable = from.L3_Enable,
+                    L4_Enable = from.L4_Enable,
+                    L5_Enable = from.L5_Enable,
                     Format = from.Format
                 };
             }

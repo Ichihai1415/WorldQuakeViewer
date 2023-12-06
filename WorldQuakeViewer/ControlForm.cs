@@ -66,10 +66,6 @@ namespace WorldQuakeViewer
                 ProG_view_Add.Enabled = false;
             ProG_view_Copy.Enabled = c > ProG_view_CopyNum.Value ? true : false;
 
-
-            File.WriteAllText("Setting\\config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
-
-
             GetTimer.Interval = 2000 - DateTime.Now.Millisecond;
             GetTimer.Enabled = true;
         }
