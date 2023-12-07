@@ -146,80 +146,233 @@ namespace WorldQuakeViewer
         };
 
         /// <summary>
-        /// 履歴保存用クラス
+        /// ログの種類
         /// </summary>
-        public class History
+        public enum LogKind
         {
             /// <summary>
-            /// データ元(USGS/EMSC/EarlyEst)
+            /// 実行ログ
             /// </summary>
-            public DataAuthor Author { get; set; }
+            Exe = 1,
+            /// <summary>
+            /// エラーログ
+            /// </summary>
+            Error = 2,
+            /// <summary>
+            /// 地震ログ(他(ユーザー指定))
+            /// </summary>
+            Other = 10,
+            /// <summary>
+            /// 地震ログ(USGS)
+            /// </summary>
+            USGS = 11,
+            /// <summary>
+            /// 地震ログ(EMSC)
+            /// </summary>
+            EMSC = 12,
+            /// <summary>
+            /// 地震ログ(GFZ)
+            /// </summary>
+            GFZ = 13,
+            /// <summary>
+            /// 地震ログ(Early-est)
+            /// </summary>
+            EarlyEst = 14
+        }
+
+        /// <summary>
+        /// テキスト形式のデータ構造
+        /// </summary>
+        /// <remarks>既定はstring:"",double:-999,double?:null,DateTimeOffset:MinValue,DataAuthor:Null</remarks>
+        public class Data_Text
+        {
+            //USGS: #EventID|Time|Latitude|Longitude|Depth/km|Author|Catalog|Contributor|ContributorID|MagType|Magnitude|MagAuthor|EventLocationName
+            //EMSC: #EventID|Time|Latitude|Longitude|Depth/km|Author|Catalog|Contributor|ContributorID|MagType|Magnitude|MagAuthor|EventLocationName
+            //GFZ:  #EventID|Time|Latitude|Longitude|Depth/km|Author|Catalog|Contributor|ContributorID|MagType|Magnitude|MagAuthor|EventLocationName|EventType
 
             /// <summary>
-            /// 地震ID(データ元間で互換性なし)
+            /// イベントID
             /// </summary>
-            public string ID { get; set; }
-
-            /// <summary>
-            /// 更新時刻
-            /// </summary>
-            public DateTimeOffset Update { get; set; }
-
-            /// <summary>
-            /// 詳細ページのURL
-            /// </summary>
-            public string URL { get; set; }
-
+            public string EventID { get; set; } = "";
 
             /// <summary>
             /// 発生時刻
             /// </summary>
-            public DateTimeOffset Time { get; set; }
-
-            /// <summary>
-            /// 日本語震源名
-            /// </summary>
-            public string HypoJP { get; set; }
-
-            /// <summary>
-            /// 英語震源名
-            /// </summary>
-            public string HypoEN { get; set; }
+            public DateTimeOffset Time { get; set; } = DateTimeOffset.MinValue;
 
             /// <summary>
             /// 緯度
             /// </summary>
-            public double Lat { get; set; }
+            public double Latitude { get; set; } = -999;
 
             /// <summary>
             /// 経度
             /// </summary>
-            public double Lon { get; set; }
+            public double Longitude { get; set; } = -999;
+
+            /// <summary>
+            /// 深さ(km)
+            /// </summary>
+            public double Depth { get; set; } = -999;
+
+            /// <summary>
+            /// ソース
+            /// </summary>
+            /// <remarks>GFZはnull</remarks>
+            public string Author { get; set; } = "";
+
+            /// <summary>
+            /// カタログ
+            /// </summary>
+            /// <remarks>GFZはnull</remarks>
+            public string Catalog { get; set; } = "";
+
+            /// <summary>
+            /// ソース
+            /// </summary>
+            public string Contributor { get; set; } = "";
+
+            /// <summary>
+            /// ソースでのID
+            /// </summary>
+            public string ContributorID { get; set; } = "";
+
+            /// <summary>
+            /// マグニチュードの種類
+            /// </summary>
+            public string MagType { get; set; } = "";
+
+            /// <summary>
+            /// マグニチュード
+            /// </summary>
+            public double Magnitude { get; set; } = -999;
+
+            /// <summary>
+            /// マグニチュードの種類
+            /// </summary>
+            /// <remarks>GFZはnull</remarks>
+            public string MagAuthor { get; set; } = "";
+
+            /// <summary>
+            /// 震源
+            /// </summary>
+            public string EventLocationName { get; set; } = "";
+
+            /// <summary>
+            /// タイプ?
+            /// </summary>
+            /// <remarks>GFZのみ GFZはnull</remarks>
+            public string EventType { get; set; } = "";
+
+            /// <summary>
+            /// テキストからテキスト情報リストに変換します。
+            /// </summary>
+            /// <param name="from">変換元</param>
+            public static explicit operator Data_Text(string[] from) => new Data_Text
+            {
+                EventID = from[0],
+                Time = DateTimeOffset.Parse(from[1]),
+                Latitude = double.Parse(from[2]),
+                Longitude = double.Parse(from[3]),
+                Depth = double.Parse(from[4]),
+                Author = from[5],
+                Catalog = from[6],
+                Contributor = from[7],
+                ContributorID = from[8],
+                MagType = from[9],
+                Magnitude = double.Parse(from[10]),
+                MagAuthor = from[11],
+                EventLocationName = from[12],
+                EventType = from.Length > 13 ? from[13] : ""
+            };
+        }
+
+        /// <summary>
+        /// 履歴保存用クラス
+        /// </summary>
+        /// <remarks>既定はstring:"",double:-999,double?:null,DateTimeOffset:MinValue,DataAuthor:Null</remarks>
+        public class Data
+        {
+            /// <summary>
+            /// データ元(USGS/EMSC/EarlyEst)
+            /// </summary>
+            public DataAuthor Author { get; set; } = DataAuthor.Null;
+
+            /// <summary>
+            /// 地震ID(データ元間で互換性なし)
+            /// </summary>
+            public string ID { get; set; } = "";
+
+            /// <summary>
+            /// 発生時刻
+            /// </summary>
+            public DateTimeOffset Time { get; set; } = DateTimeOffset.MinValue;
+
+            /// <summary>
+            /// 更新時刻
+            /// </summary>
+            public DateTimeOffset UpdtTime { get; set; } = DateTimeOffset.MinValue;
+
+            /// <summary>
+            /// 震源名
+            /// </summary>
+            public string Hypo { get; set; } = "";
+
+            /// <summary>
+            /// 緯度
+            /// </summary>
+            public double Lat { get; set; } = -999;
+
+            /// <summary>
+            /// 経度
+            /// </summary>
+            public double Lon { get; set; } = -999;
 
             /// <summary>
             /// 深さ
             /// </summary>
-            public double Depth { get; set; }
+            public double Depth { get; set; } = -999;
 
             /// <summary>
-            /// マグニチュードのリスト[magType, mag]
+            /// マグニチュードの種類
             /// </summary>
-            public Dictionary<string, double> Mags { get; set; }
+            public string MagType { get; set; } = "";
+
+            /// <summary>
+            /// マグニチュード
+            /// </summary>
+            public double Mag { get; set; } = -999;
 
             /// <summary>
             /// [USGSのみ]MMI
             /// </summary>
-            public double? MMI { get; set; }
+            public double? MMI { get; set; } = null;
 
             /// <summary>
             /// [USGSのみ]アラート
             /// </summary>
-            public string Alert { get; set; }
+            public string Alert { get; set; } = "";
 
             /// <summary>
-            /// [一部]データのソース
+            /// [一部のみ]データのソース
             /// </summary>
-            public string Source { get; set; }
+            public string Source { get; set; } = "";
+
+            /// <summary>
+            /// テキスト情報リストから情報リストに変換します。
+            /// </summary>
+            /// <param name="from">変換元</param>
+            public static explicit operator Data(Data_Text from) => new Data
+            {
+                ID = from.EventID,
+                Time = from.Time,
+                Lat = from.Latitude,
+                Lon = from.Longitude,
+                Depth = from.Depth,
+                MagType = from.MagType,
+                Mag = from.Magnitude,
+                Source = from.Contributor
+            };
         }
 
         /// <summary>

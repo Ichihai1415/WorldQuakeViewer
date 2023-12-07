@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static WorldQuakeViewer.Util_Class;
@@ -14,6 +15,15 @@ namespace WorldQuakeViewer
     {
         public static Config config = new Config();
         public static Config_Display config_display = new Config_Display();
+
+        public static HttpClient client = new HttpClient();
+
+        public static Dictionary<string,Data> data_Other = new Dictionary<string,Data>();
+        public static Dictionary<string,Data> data_USGS = new Dictionary<string,Data>();
+        public static Dictionary<string,Data> data_EMSC = new Dictionary<string,Data>();
+        public static Dictionary<string,Data> data_GFZ = new Dictionary<string,Data>();
+        public static Dictionary<string,Data> data_EarlyEst = new Dictionary<string,Data>();
+        public static Dictionary<string,Data> data_All = new Dictionary<string, Data>();
 
         public static Form topMost = new Form { TopMost = true };
 
@@ -64,7 +74,7 @@ namespace WorldQuakeViewer
                 ProG_view_Delete.Enabled = false;
             if (c == 9)
                 ProG_view_Add.Enabled = false;
-            ProG_view_Copy.Enabled = c > ProG_view_CopyNum.Value ? true : false;
+            ProG_view_Copy.Enabled = c > ProG_view_CopyNum.Value;
 
             GetTimer.Interval = 2000 - DateTime.Now.Millisecond;
             GetTimer.Enabled = true;
@@ -120,7 +130,7 @@ namespace WorldQuakeViewer
                 ProG_view_Add.Enabled = false;
             if (c != 2)
                 ProG_view_Delete.Enabled = true;
-            ProG_view_Copy.Enabled = c > ProG_view_CopyNum.Value ? true : false;
+            ProG_view_Copy.Enabled = c > ProG_view_CopyNum.Value;
         }
 
         private void ProG_view_Delete_Click(object sender, EventArgs e)
@@ -135,7 +145,7 @@ namespace WorldQuakeViewer
                 ProG_view_Add.Enabled = true;
             if (c == 1)
                 ProG_view_Delete.Enabled = false;
-            ProG_view_Copy.Enabled = c > ProG_view_CopyNum.Value ? true : false;
+            ProG_view_Copy.Enabled = c > ProG_view_CopyNum.Value;
         }
 
         private void ProG_view_Copy_Click(object sender, EventArgs e)
@@ -146,7 +156,7 @@ namespace WorldQuakeViewer
 
         private void ProG_view_CopyNum_ValueChanged(object sender, EventArgs e)
         {
-            ProG_view_Copy.Enabled = config_display.Views.Count() > ProG_view_CopyNum.Value ? true : false;
+            ProG_view_Copy.Enabled = config_display.Views.Count() > ProG_view_CopyNum.Value;
         }
     }
 }

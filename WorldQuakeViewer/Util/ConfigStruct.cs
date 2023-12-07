@@ -102,14 +102,14 @@ namespace WorldQuakeViewer
             public Update_ Update { get; set; } = new Update_();
 
             /// <summary>
-            /// 棒読みちゃん送信
-            /// </summary>
-            public Bouyomi_ Bouyomi { get; set; } = new Bouyomi_();
-
-            /// <summary>
             /// 音声再生
             /// </summary>
             public Sound_ Sound { get; set; } = new Sound_();
+
+            /// <summary>
+            /// 棒読みちゃん送信
+            /// </summary>
+            public Bouyomi_ Bouyomi { get; set; } = new Bouyomi_();
 
             /// <summary>
             /// socket送信
@@ -182,6 +182,11 @@ namespace WorldQuakeViewer
                 public bool Alert { get; set; } = true;
 
                 /// <summary>
+                /// (一部のみ)データのソース
+                /// </summary>
+                public bool Source { get; set; } = true;
+
+                /// <summary>
                 /// Config_DisplayからConfigに変換します。
                 /// </summary>
                 /// <param name="from">変換元</param>
@@ -197,74 +202,6 @@ namespace WorldQuakeViewer
                     Mag = from.Mag,
                     MMI = from.MMI,
                     Alert = from.Alert
-                };
-            }
-
-            /// <summary>
-            /// 棒読みちゃん送信
-            /// </summary>
-            public class Bouyomi_
-            {
-                /// <summary>
-                /// 有効か
-                /// </summary>
-                public bool Enable { get; set; } = false;
-
-                /// <summary>
-                /// 送信する最小マグニチュード
-                /// </summary>
-                public double LowerMagLimit { get; set; } = 0;
-
-                /// <summary>
-                /// ホスト名
-                /// </summary>
-                public string Host { get; set; } = "172.0.0.1";
-
-                /// <summary>
-                /// ポート
-                /// </summary>
-                public int Port { get; set; } = 50001;
-
-                /// <summary>
-                /// 声質
-                /// </summary>
-                public short Voice { get; set; } = 0;
-
-                /// <summary>
-                /// 速さ
-                /// </summary>
-                public short Speed { get; set; } = -1;
-
-                /// <summary>
-                /// 音程
-                /// </summary>
-                public short Tone { get; set; } = -1;
-
-                /// <summary>
-                /// 音量
-                /// </summary>
-                public short Volume { get; set; } = -1;
-
-                /// <summary>
-                /// 送信する文のフォーマット
-                /// </summary>
-                public string Format { get; set; } = "フォーマットを入力してください";
-
-                /// <summary>
-                /// Config_DisplayからConfigに変換します。
-                /// </summary>
-                /// <param name="from">変換元</param>
-                public static explicit operator Bouyomi_(Config_Display.Data_.Bouyomi_ from) => new Bouyomi_
-                {
-                    Enable = from.Enable,
-                    LowerMagLimit = from.LowerMagLimit,
-                    Host = from.Host,
-                    Port = from.Port,
-                    Voice = from.Voice,
-                    Speed = from.Speed,
-                    Tone = from.Tone,
-                    Volume = from.Volume,
-                    Format = from.Format
                 };
             }
 
@@ -339,6 +276,74 @@ namespace WorldQuakeViewer
                     L3_Path = from.L3_Path,
                     L4_Path = from.L4_Path,
                     L5_Path = from.L5_Path
+                };
+            }
+
+            /// <summary>
+            /// 棒読みちゃん送信
+            /// </summary>
+            public class Bouyomi_
+            {
+                /// <summary>
+                /// 有効か
+                /// </summary>
+                public bool Enable { get; set; } = false;
+
+                /// <summary>
+                /// 送信する最小マグニチュード
+                /// </summary>
+                public double LowerMagLimit { get; set; } = 0;
+
+                /// <summary>
+                /// ホスト名
+                /// </summary>
+                public string Host { get; set; } = "172.0.0.1";
+
+                /// <summary>
+                /// ポート
+                /// </summary>
+                public int Port { get; set; } = 50001;
+
+                /// <summary>
+                /// 声質
+                /// </summary>
+                public short Voice { get; set; } = 0;
+
+                /// <summary>
+                /// 速さ
+                /// </summary>
+                public short Speed { get; set; } = -1;
+
+                /// <summary>
+                /// 音程
+                /// </summary>
+                public short Tone { get; set; } = -1;
+
+                /// <summary>
+                /// 音量
+                /// </summary>
+                public short Volume { get; set; } = -1;
+
+                /// <summary>
+                /// 送信する文のフォーマット
+                /// </summary>
+                public string Format { get; set; } = "フォーマットを入力してください";
+
+                /// <summary>
+                /// Config_DisplayからConfigに変換します。
+                /// </summary>
+                /// <param name="from">変換元</param>
+                public static explicit operator Bouyomi_(Config_Display.Data_.Bouyomi_ from) => new Bouyomi_
+                {
+                    Enable = from.Enable,
+                    LowerMagLimit = from.LowerMagLimit,
+                    Host = from.Host,
+                    Port = from.Port,
+                    Voice = from.Voice,
+                    Speed = from.Speed,
+                    Tone = from.Tone,
+                    Volume = from.Volume,
+                    Format = from.Format
                 };
             }
 
@@ -762,18 +767,18 @@ namespace WorldQuakeViewer
             public Update_ Update { get; set; }
 
             /// <summary>
-            /// 棒読みちゃん送信
-            /// </summary>
-            [TypeConverter(typeof(ExpandableObjectConverter))]
-            [Description("棒読みちゃん送信")]
-            public Bouyomi_ Bouyomi { get; set; }
-
-            /// <summary>
             /// 音声再生
             /// </summary>
             [TypeConverter(typeof(ExpandableObjectConverter))]
             [Description("音声再生")]
             public Sound_ Sound { get; set; }
+
+            /// <summary>
+            /// 棒読みちゃん送信
+            /// </summary>
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            [Description("棒読みちゃん送信")]
+            public Bouyomi_ Bouyomi { get; set; }
 
             /// <summary>
             /// socket送信
@@ -864,6 +869,12 @@ namespace WorldQuakeViewer
                 public bool Alert { get; set; }
 
                 /// <summary>
+                /// (一部のみ)データのソース
+                /// </summary>
+                [Description("(一部のみ)データのソース")]
+                public bool Source { get; set; }
+
+                /// <summary>
                 /// ConfigからConfig_Displayに変換します。
                 /// </summary>
                 /// <param name="from">変換元</param>
@@ -879,85 +890,6 @@ namespace WorldQuakeViewer
                     Mag = from.Mag,
                     MMI = from.MMI,
                     Alert = from.Alert
-                };
-            }
-
-            /// <summary>
-            /// 棒読みちゃん送信
-            /// </summary>
-            [TypeConverter(typeof(ExpandableObjectConverter))]
-            [Description("棒読みちゃん送信")]
-            public class Bouyomi_
-            {
-                /// <summary>
-                /// 有効か
-                /// </summary>
-                [Description("有効か")]
-                public bool Enable { get; set; }
-
-                /// <summary>
-                /// 送信する最小マグニチュード
-                /// </summary>
-                [Description("送信する最小マグニチュード")]
-                public double LowerMagLimit { get; set; }
-
-                /// <summary>
-                /// ホスト名
-                /// </summary>
-                [Description("ホスト名")]
-                public string Host { get; set; }
-
-                /// <summary>
-                /// ポート
-                /// </summary>
-                [Description("ポート")]
-                public int Port { get; set; }
-
-                /// <summary>
-                /// 声質
-                /// </summary>
-                [Description("声質")]
-                public short Voice { get; set; }
-
-                /// <summary>
-                /// 速さ
-                /// </summary>
-                [Description("速さ")]
-                public short Speed { get; set; }
-
-                /// <summary>
-                /// 音程
-                /// </summary>
-                [Description("音程")]
-                public short Tone { get; set; }
-
-                /// <summary>
-                /// 音量
-                /// </summary>
-                [Description("音量")]
-                public short Volume { get; set; }
-
-                /// <summary>
-                /// 送信する文のフォーマット
-                /// </summary>
-                [Description("送信する文のフォーマット")]
-                public string Format { get; set; }
-
-                /// <summary>
-                /// ConfigからConfig_Displayに変換します。
-                /// </summary>
-                /// <param name="from">変換元</param>
-                public static explicit operator Bouyomi_(Config.Data_.Bouyomi_ from) => new Bouyomi_
-                {
-                    Enable = from.Enable,
-                    LowerMagLimit = from.LowerMagLimit,
-                    Host = from.Host,
-                    Port = from.Port,
-                    Voice = from.Voice,
-                    Speed = from.Speed,
-                    Tone = from.Tone,
-                    Volume = from.Volume,
-                    Format = from.Format
                 };
             }
 
@@ -1044,6 +976,85 @@ namespace WorldQuakeViewer
                     L3_Path = from.L3_Path,
                     L4_Path = from.L4_Path,
                     L5_Path = from.L5_Path
+                };
+            }
+
+            /// <summary>
+            /// 棒読みちゃん送信
+            /// </summary>
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            [Description("棒読みちゃん送信")]
+            public class Bouyomi_
+            {
+                /// <summary>
+                /// 有効か
+                /// </summary>
+                [Description("有効か")]
+                public bool Enable { get; set; }
+
+                /// <summary>
+                /// 送信する最小マグニチュード
+                /// </summary>
+                [Description("送信する最小マグニチュード")]
+                public double LowerMagLimit { get; set; }
+
+                /// <summary>
+                /// ホスト名
+                /// </summary>
+                [Description("ホスト名")]
+                public string Host { get; set; }
+
+                /// <summary>
+                /// ポート
+                /// </summary>
+                [Description("ポート")]
+                public int Port { get; set; }
+
+                /// <summary>
+                /// 声質
+                /// </summary>
+                [Description("声質")]
+                public short Voice { get; set; }
+
+                /// <summary>
+                /// 速さ
+                /// </summary>
+                [Description("速さ")]
+                public short Speed { get; set; }
+
+                /// <summary>
+                /// 音程
+                /// </summary>
+                [Description("音程")]
+                public short Tone { get; set; }
+
+                /// <summary>
+                /// 音量
+                /// </summary>
+                [Description("音量")]
+                public short Volume { get; set; }
+
+                /// <summary>
+                /// 送信する文のフォーマット
+                /// </summary>
+                [Description("送信する文のフォーマット")]
+                public string Format { get; set; }
+
+                /// <summary>
+                /// ConfigからConfig_Displayに変換します。
+                /// </summary>
+                /// <param name="from">変換元</param>
+                public static explicit operator Bouyomi_(Config.Data_.Bouyomi_ from) => new Bouyomi_
+                {
+                    Enable = from.Enable,
+                    LowerMagLimit = from.LowerMagLimit,
+                    Host = from.Host,
+                    Port = from.Port,
+                    Voice = from.Voice,
+                    Speed = from.Speed,
+                    Tone = from.Tone,
+                    Volume = from.Volume,
+                    Format = from.Format
                 };
             }
 

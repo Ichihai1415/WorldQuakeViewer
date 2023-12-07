@@ -7,11 +7,16 @@ using System.Media;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
+using System.Security.Policy;
 using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Forms;
 using WorldQuakeViewer.Properties;
-using static WorldQuakeViewer.Util_Class;
+using static System.Net.Mime.MediaTypeNames;
+using static WorldQuakeViewer.Config;
+using static WorldQuakeViewer.CtrlForm;
 using static WorldQuakeViewer.MainForm;
+using static WorldQuakeViewer.Util_Class;
+using static WorldQuakeViewer.Util_Conv;
 
 namespace WorldQuakeViewer
 {
@@ -92,6 +97,111 @@ namespace WorldQuakeViewer
         }
 
         /// <summary>
+        /// ログを保存します。
+        /// </summary>
+        /// <param name="logKind">ログの種類</param>
+        /// <param name="text">保存する文</param>
+        /// <param name="id">(地震ログのみ)地震ID</param>
+        public static void LogSave(LogKind logKind, string text, string id = "unknown")
+        {
+            try
+            {
+                string dir = "";
+                string name = "";
+                switch ((int)logKind)
+                {
+                    case 1:
+                        dir = $"Log\\Execution\\{DateTime.Now:yyyyMM\\dd}";
+                        name = $"{DateTime.Now:yyyyMMddHHmmss}.log";
+                        break;
+                    case 2:
+                        dir = $"Log\\Error\\{DateTime.Now:yyyyMM\\dd}";
+                        name = $"{DateTime.Now:yyyyMMddHHmmss.ffff}.log";
+                        break;
+                    case 10:
+                    case 11:
+                    case 12:
+                    case 13:
+                    case 14:
+                        dir = $"Log\\{logKind}\\{DateTime.Now:yyyyMM\\dd}";
+                        name = $"{id}.txt";
+                        if (File.Exists($"{dir}\\{name}"))
+                            text = $"{File.ReadAllText($"{dir}\\{name}")}\n--------------------------------------------------\n{text}";
+                        break;
+                }
+                ExeLog($"[LogSave]保存開始({dir}\\{name})");
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+                File.WriteAllText($"{dir}\\{name}", text);
+                ExeLog($"[LogSave]保存成功");
+            }
+            catch (Exception ex)
+            {
+                ExeLog($"[LogSave]エラー:{ex.Message}");
+                LogSave(LogKind.Error, ex.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 更新を確認します。
+        /// </summary>
+        /// <param name="data_o">前のデータ</param>
+        /// <param name="data_n">新しいデータ</param>
+        /// <param name="dataAuthor">データ元</param>
+        /// <returns>更新か</returns>
+        public static bool UpdateCheck(Data data_o, Data data_n, DataAuthor dataAuthor)
+        {
+            bool update = false;
+            Data_.Update_ config_data_update = config.Datas[(int)dataAuthor].Update;
+            if (config_data_update.Time)
+                if (data_n.Time != data_o.Time)
+                    update = true;
+            if (config_data_update.UpdtTime)
+                if (data_n.UpdtTime != data_o.UpdtTime)
+                    update = true;
+            if (config_data_update.Hypo)
+                if (data_n.Hypo != data_o.Hypo)
+                    update = true;
+            if (config_data_update.LatLon)
+                if (data_n.Lat != data_o.Lat)
+                    update = true;
+            if (config_data_update.LatLon)
+                if (data_n.Lon != data_o.Lon)
+                    update = true;
+            if (config_data_update.Depth)
+                if (data_n.Depth != data_o.Depth)
+                    update = true;
+            if (config_data_update.MagType)
+                if (data_n.MagType != data_o.MagType)
+                    update = true;
+            if (config_data_update.Mag)
+                if (data_n.Mag != data_o.Mag)
+                    update = true;
+            if (config_data_update.MMI)
+                if (data_n.MMI != data_o.MMI)
+                    update = true;
+            if (config_data_update.Alert)
+                if (data_n.Alert != data_o.Alert)
+                    update = true;
+            if (config_data_update.Source)
+                if (data_n.Source != data_o.Source)
+                    update = true;
+            return update;
+        }
+
+        /// <summary>
+        /// 更新時処理
+        /// </summary>
+        /// <param name="dataAuthor">データ元</param>
+        /// <param name="data">データ</param>
+        /// <param name="isNew">新規か</param>
+        public static void UpdatePros(DataAuthor dataAuthor, Data data, bool isNew = false)
+        {
+            int level = Mag2Level(data.Mag);
+            Sound(level, dataAuthor);
+        }
+
+        /// <summary>
         /// 音声を再生します。
         /// </summary>
         /// <param name="soundFile">再生するSoundフォルダの中の音声ファイル。</param>
@@ -123,125 +233,70 @@ namespace WorldQuakeViewer
         }
 
         /// <summary>
-        /// 描画用マグニチュード別色
+        /// 音声を再生します。
         /// </summary>
-        /// <param name="mag">マグニチュード</param>
-        /// <returns>マグニチュード別の色</returns>
-        public static Brush Mag2Brush(double mag)
+        /// <param name="level">レベル</param>
+        /// <param name="dataAuthor">データ元</param>
+        public static void Sound(int level, DataAuthor dataAuthor)
         {
-            if (mag < 6)
-                return Brushes.White;
-            else if (mag < 8)
-                return Brushes.Yellow;
-            else
-                return Brushes.Red;
-        }
-
-        /// <summary>
-        /// 描画用アラート別色
-        /// </summary>
-        /// <param name="alert">アラート</param>
-        /// <returns>アラート別の色</returns>
-        public static Color Alert2Color(string alert)
-        {
-            switch (alert)
-            {
-                case "green":
-                    return Color.Green;
-                case "yellow":
-                    return Color.Yellow;
-                case "orange":
-                    return Color.Orange;
-                case "red":
-                    return Color.Red;
-                case "pending":
-                    return Color.DimGray;
-                default:
-                    return Color.FromArgb(45, 45, 90);
-            }
-        }
-
-        //##とか00はフォーマットのやつ
-        /// <summary>
-        /// 緯度を様々なフォーマットに変換します。
-        /// </summary>
-        /// <remarks>指定ミスに注意してください。</remarks>
-        /// <param name="lat">緯度</param>
-        /// <param name="latStLong">(string) 設定により {###.##…}ﾟN または {###}ﾟ{##}'{##}"N</param>
-        /// <param name="latStLongJP">(string) 設定により 北緯{###.##…}度 または 北緯{##}度{##}分{##}秒 </param>
-        /// <param name="latDisplay">(string) 設定により {###.00}ﾟN または {###}ﾟ{##}'{##}"N </param>
-        public static void Lat2String(double lat, out string latStLong, out string latStLongJP, out string latDisplay)//ここら辺は雑なので気が向いたら調整
-        {
-            double latShort = Math.Round(lat, 2, MidpointRounding.AwayFromZero);
-            string latStDecimal = lat > 0 ? $"{latShort}ﾟN" : $"{-latShort}ﾟS";
-            TimeSpan latTime = TimeSpan.FromHours(lat);
-            string latStShort = lat > 0 ? $"{(int)lat}ﾟ{latTime.Minutes}'N" : $"{(int)-lat}ﾟ{-latTime.Minutes}'S";
-            latStLong = Settings.Default.Text_LatLonDecimal ? lat > 0 ? $"{lat}ﾟN" : $"{-lat}ﾟS" : lat > 0 ? $"{(int)lat}ﾟ{latTime.Minutes}'{latTime.Seconds}\"N" : $"{(int)-lat}ﾟ{-latTime.Minutes}'{-latTime.Seconds}\"S";
-            latStLongJP = Settings.Default.Text_LatLonDecimal ? lat > 0 ? $"北緯{lat}度" : $"南緯{-lat}度" : lat > 0 ? $"北緯{(int)lat}度{latTime.Minutes}分{latTime.Seconds}秒" : $"南緯{(int)-lat}度{-latTime.Minutes}分{-latTime.Seconds}秒";
-            latDisplay = Settings.Default.Text_LatLonDecimal ? latStDecimal : latStShort;
-        }
-
-        /// <summary>
-        /// 緯度を様々なフォーマットに変換します。
-        /// </summary>
-        /// <remarks>指定ミスに注意してください。</remarks>
-        /// <param name="lat">緯度</param>
-        /// <param name="latShort">(double) ###.00</param>
-        /// <param name="latStDecimal">(string) {###.00}°N</param>
-        /// <param name="latStShort">(string) {###}ﾟ{##}'N</param>
-        /// <param name="latStLong">(string) 設定により {###.##…}ﾟN または {###}ﾟ{##}'{##}"N</param>
-        /// <param name="latStLongJP">(string) 設定により 北緯{###.##…}度 または 北緯{##}度{##}分{##}秒 </param>
-        /// <param name="latDisplay">(string) 設定により<paramref name="latStDecimal"/>または<paramref name="latStShort"/></param>
-        public static void Lat2String(double lat, out double latShort, out string latStDecimal, out string latStShort, out string latStLong, out string latStLongJP, out string latDisplay)
-        {
-            latShort = Math.Round(lat, 2, MidpointRounding.AwayFromZero);
-            latStDecimal = lat > 0 ? $"{latShort}ﾟN" : $"{-latShort}ﾟS";
-            TimeSpan latTime = TimeSpan.FromHours(lat);
-            latStShort = lat > 0 ? $"{(int)lat}ﾟ{latTime.Minutes}'N" : $"{(int)-lat}ﾟ{-latTime.Minutes}'S";
-            latStLong = Settings.Default.Text_LatLonDecimal ? lat > 0 ? $"{lat}ﾟN" : $"{-lat}ﾟS" : lat > 0 ? $"{(int)lat}ﾟ{latTime.Minutes}'{latTime.Seconds}\"N" : $"{(int)-lat}ﾟ{-latTime.Minutes}'{-latTime.Seconds}\"S";
-            latStLongJP = Settings.Default.Text_LatLonDecimal ? lat > 0 ? $"北緯{lat}度" : $"南緯{-lat}度" : lat > 0 ? $"北緯{(int)lat}度{latTime.Minutes}分{latTime.Seconds}秒" : $"南緯{(int)-lat}度{-latTime.Minutes}分{-latTime.Seconds}秒";
-            latDisplay = Settings.Default.Text_LatLonDecimal ? latStDecimal : latStShort;
-        }
-
-        /// <summary>
-        /// 経度を様々なフォーマットに変換します。
-        /// </summary>
-        /// <remarks>指定ミスに注意してください。</remarks>
-        /// <param name="lon">経度</param>
-        /// <param name="lonStLong">(string) 設定により {###.##…}ﾟE または {###}ﾟ{##}'{##}"E</param>
-        /// <param name="lonStLongJP">(string) 設定により 東経{###.##…}度 または 東経{##}度{##}分{##}秒 </param>
-        /// <param name="lonDisplay">(string) 設定により {###.00}ﾟE または {###}ﾟ{##}'{##}"E</param>
-        public static void Lon2String(double lon, out string lonStLong, out string lonStLongJP, out string lonDisplay)
-        {
-            double lonShort = Math.Round(lon, 2, MidpointRounding.AwayFromZero);
-            string lonStDecimal = lon > 0 ? $"{lonShort}ﾟE" : $"{-lonShort}ﾟW";
-            TimeSpan lonTime = TimeSpan.FromHours(lon);
-            string lonStShort = lon > 0 ? $"{(int)lon}ﾟ{lonTime.Minutes}'E" : $"{(int)-lon}ﾟ{-lonTime.Minutes}'W";
-            lonStLong = Settings.Default.Text_LatLonDecimal ? lon > 0 ? $"{lon}ﾟE" : $"{-lon}ﾟW" : lon > 0 ? $"{(int)lon}ﾟ{lonTime.Minutes}'{lonTime.Seconds}\"E" : $"{(int)-lon}ﾟ{-lonTime.Minutes}'{-lonTime.Seconds}\"W";
-            lonStLongJP = Settings.Default.Text_LatLonDecimal ? lon > 0 ? $"東経{lon}度" : $"西経{-lon}度" : lon > 0 ? $"東経{(int)lon}度{lonTime.Minutes}分{lonTime.Seconds}秒" : $"西経{(int)-lon}度{-lonTime.Minutes}分{-lonTime.Seconds}秒";
-            lonDisplay = Settings.Default.Text_LatLonDecimal ? lonStDecimal : lonStShort;
-        }
-
-        /// <summary>
-        /// 経度を様々なフォーマットに変換します。
-        /// </summary>
-        /// <remarks>指定ミスに注意してください。</remarks>
-        /// <param name="lon">経度</param>
-        /// <param name="lonShort">(double) ###.00</param>
-        /// <param name="lonStDecimal">(string) {###.00}ﾟE</param>
-        /// <param name="lonStShort">(string) {###}ﾟ{##}'E</param>
-        /// <param name="lonStLong">(string) 設定により {###.##…}ﾟE または {###}ﾟ{##}'{##}"E</param>
-        /// <param name="lonStLongJP">(string) 設定により 東経{###.##…}度 または 東経{##}度{##}分{##}秒 </param>
-        /// <param name="lonDisplay">(string) 設定により<paramref name="lonStDecimal"/>または<paramref name="lonStShort"/></param>
-        public static void Lon2String(double lon, out double lonShort, out string lonStDecimal, out string lonStShort, out string lonStLong, out string lonStLongJP, out string lonDisplay)
-        {
-            lonShort = Math.Round(lon, 2, MidpointRounding.AwayFromZero);
-            lonStDecimal = lon > 0 ? $"{lonShort}ﾟE" : $"{-lonShort}ﾟW";
-            TimeSpan lonTime = TimeSpan.FromHours(lon);
-            lonStShort = lon > 0 ? $"{(int)lon}ﾟ{lonTime.Minutes}'E" : $"{(int)-lon}ﾟ{-lonTime.Minutes}'W";
-            lonStLong = Settings.Default.Text_LatLonDecimal ? lon > 0 ? $"{lon}ﾟE" : $"{-lon}ﾟW" : lon > 0 ? $"{(int)lon}ﾟ{lonTime.Minutes}'{lonTime.Seconds}\"E" : $"{(int)-lon}ﾟ{-lonTime.Minutes}'{-lonTime.Seconds}\"W";
-            lonStLongJP = Settings.Default.Text_LatLonDecimal ? lon > 0 ? $"東経{lon}度" : $"西経{-lon}度" : lon > 0 ? $"東経{(int)lon}度{lonTime.Minutes}分{lonTime.Seconds}秒" : $"西経{(int)-lon}度{-lonTime.Minutes}分{-lonTime.Seconds}秒";
-            lonDisplay = Settings.Default.Text_LatLonDecimal ? lonStDecimal : lonStShort;
+            if (noFirst)
+                try
+                {
+                    bool end = false;
+                    string path = "";
+                    switch (level)
+                    {
+                        case 1:
+                            end = !config.Datas[(int)dataAuthor].Sound.L1_Enable;
+                            path = config.Datas[(int)dataAuthor].Sound.L1_Path;
+                            break;
+                        case 2:
+                            end = !config.Datas[(int)dataAuthor].Sound.L2_Enable;
+                            path = config.Datas[(int)dataAuthor].Sound.L2_Path;
+                            break;
+                        case 3:
+                            end = !config.Datas[(int)dataAuthor].Sound.L3_Enable;
+                            path = config.Datas[(int)dataAuthor].Sound.L3_Path;
+                            break;
+                        case 4:
+                            end = !config.Datas[(int)dataAuthor].Sound.L4_Enable;
+                            path = config.Datas[(int)dataAuthor].Sound.L4_Path;
+                            break;
+                        case 5:
+                            end = !config.Datas[(int)dataAuthor].Sound.L5_Enable;
+                            path = config.Datas[(int)dataAuthor].Sound.L5_Path;
+                            break;
+                        default:
+                            throw new ArgumentException($"レベル({level})が不正です。");
+                    }
+                    if (dataAuthor == DataAuthor.Null)
+                        throw new ArgumentException($"データ元({dataAuthor})が不正です。");
+                    if (end)
+                    {
+                        ExeLog($"[Sound]再生対象外です。");
+                        return;
+                    }
+                    if (!File.Exists(path))
+                    {
+                        ExeLog($"[Sound]音声ファイル({path})が見つかりませんでした。");
+                        return;
+                    }
+                    ExeLog($"[Sound]音声再生開始({path})");
+                    if (player != null)
+                    {
+                        player.Stop();
+                        player.Dispose();
+                        player = null;
+                    }
+                    player = new SoundPlayer(path);
+                    player.Play();
+                    ExeLog($"[Sound]音声再生成功");
+                }
+                catch (Exception ex)
+                {
+                    ExeLog($"[Sound]エラー:{ex.Message}");
+                    LogSave(LogKind.Error, ex.ToString());
+                }
         }
 
         /// <summary>
@@ -279,9 +334,43 @@ namespace WorldQuakeViewer
                 }
                 catch (Exception ex)
                 {
-                    //ErrorText.Text = $"棒読みちゃんへの送信に失敗しました。わからない場合エラーログの内容を報告してください。内容:{ex.Message}";
-                    LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Bouyomichan Version:{version}\n{ex}");
+                    ExeLog($"[Sound]エラー:{ex.Message}");
+                    LogSave(LogKind.Error, ex.ToString());
                 }
+        }
+
+        /// <summary>
+        /// 棒読みちゃんに読み上げ指令を送ります。
+        /// </summary>
+        /// <param name="text">読み上げさせる文</param>
+        /// <param name="mag">マグニチュード</param>
+        /// <param name="dataAuthor">データ元</param>
+        public static void Bouyomichan(string text, double mag, DataAuthor dataAuthor)
+        {
+            if (noFirst)
+                if (mag > config.Datas[(int)dataAuthor].Bouyomi.LowerMagLimit)
+                    try
+                    {
+                        var config_bouyomi = config.Datas[(int)dataAuthor].Bouyomi;
+                        byte[] message = Encoding.UTF8.GetBytes(text);
+                        using (TcpClient tcpClient = new TcpClient(config_bouyomi.Host,config_bouyomi.Port))
+                        using (NetworkStream networkStream = tcpClient.GetStream())
+                        using (BinaryWriter binaryWriter = new BinaryWriter(networkStream))
+                        {
+                            binaryWriter.Write((short)1);
+                            binaryWriter.Write(config_bouyomi.Speed);
+                            binaryWriter.Write(config_bouyomi.Tone);
+                            binaryWriter.Write(config_bouyomi.Volume);
+                            binaryWriter.Write(config_bouyomi.Voice);
+                            binaryWriter.Write((byte)0);
+                            binaryWriter.Write(message.Length);
+                            binaryWriter.Write(message);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Sound Version:{version}\n{ex}");
+                    }
         }
 
         /// <summary>
@@ -339,18 +428,6 @@ namespace WorldQuakeViewer
                     //ErrorText.Text = $"WebHookの送信に失敗しました。わからない場合エラーログの内容を報告してください。内容:{ex.Message}";
                     LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,WebHook Version:{version}\n{ex}");
                 }
-        }
-
-        /// <summary>
-        /// ツイートします。
-        /// </summary>
-        /// <remarks><b>**ツイートできる手段ができるまで廃止**</b></remarks>
-        /// <param name="text">ツイートするテキスト。</param>
-        /// <param name="source">データ元</param>
-        /// <param name="id">リプライ判別用地震ID。</param>
-        public static async void Tweet(string text, string source, string id)
-        {
-            await Task.Delay(1);
         }
 
         /// <summary>

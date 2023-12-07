@@ -20,6 +20,7 @@ using WorldQuakeViewer.Properties;
 using static LL2FERC.LL2FERC;
 using static WorldQuakeViewer.Util_Func;
 using static WorldQuakeViewer.Util_Class;
+using static WorldQuakeViewer.Util_Conv;
 
 namespace WorldQuakeViewer//TODO:設定Formの作り直し
 {
@@ -27,7 +28,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
     {
         public static readonly string version_ = "1.2.0α1";//こことアセンブリを変える
         public static DateTime startTime = new DateTime();
-        public static readonly Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
+        public static readonly Configuration config_ = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
         public static int accesseCountEMSC = 0;
         public static int accesseCountUSGS = 0;
         public static string latestURLUSGS = "";
@@ -37,8 +38,8 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
         public static string exeLogs = "";
         public static History_ EMSCHist = new History_();
         public static Dictionary<string, History_> USGSHist = new Dictionary<string, History_>();//EQID,Data
-        public static Dictionary<string, History> EarlyEstHist = new Dictionary<string, History>();//EQID,Data
-        public static Dictionary<string, History> AllHist = new Dictionary<string, History>();//EQID,Data
+        public static Dictionary<string, Data> EarlyEstHist = new Dictionary<string, Data>();//EQID,Data
+        public static Dictionary<string, Data> AllHist = new Dictionary<string, Data>();//EQID,Data
         public static string latestTextUSGS = "";
         public static string latestTextEMSC = "";
         public static Bitmap bitmap = new Bitmap(1600, 1000);
@@ -90,9 +91,9 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
             await Task.Delay(1);
             if (File.Exists("UserSetting.xml"))//AppDataに保存
             {
-                if (!Directory.Exists(config.FilePath.Replace("\\user.config", "")))//実質更新時
-                    Directory.CreateDirectory(config.FilePath.Replace("\\user.config", ""));
-                File.Copy("UserSetting.xml", config.FilePath, true);
+                if (!Directory.Exists(config_.FilePath.Replace("\\user.config", "")))//実質更新時
+                    Directory.CreateDirectory(config_.FilePath.Replace("\\user.config", ""));
+                File.Copy("UserSetting.xml", config_.FilePath, true);
                 ExeLog($"[Main]設定ファイルをAppDataにコピー");
             }
             ExeLog($"[Main]音声OK");
@@ -100,7 +101,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
             ImageCheck("hypo.png");
             ExeLog($"[Main]画像OK");
             if (!File.Exists("AppDataPath.txt"))
-                File.WriteAllText("AppDataPath.txt", config.FilePath);
+                File.WriteAllText("AppDataPath.txt", config_.FilePath);
             //SettingReload();
             ErrorText.Text = "設定の読み込みが完了しました。";
             await Task.Delay(1);
@@ -279,8 +280,6 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                         latestTextEMSC = logText;
                     if (mag >= Settings.Default.Bouyomichan_LowerMagnitudeLimit)
                         Bouyomichan(bouyomiText);
-                    if (mag >= Settings.Default.Tweet_LowerMagnitudeLimit)
-                        Tweet(logText, "EMSC", id);
                 }
                 else
                     ExeLog($"[EMSC][{i}] 内容更新なし");
@@ -564,8 +563,6 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                                 latestTextUSGS = logText;
                             if (mag >= Settings.Default.Bouyomichan_LowerMagnitudeLimit || mmi >= Settings.Default.Bouyomichan_LowerMMILimit)
                                 Bouyomichan(bouyomiText);
-                            if (mag >= Settings.Default.Tweet_LowerMagnitudeLimit || mmi >= Settings.Default.Tweet_LowerMMILimit)
-                                Tweet(logText, "USGS", id);
                             WebHook(logText);
                         }
                     }
@@ -639,7 +636,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
         }
 
         private async void EarlyEstGet_Tick(object sender, EventArgs e)
-        {
+        {/*
             ExeLog($"[EarlyEst]取得開始");
             //次の15秒までの時間を計算
             DateTime now = DateTime.Now;
@@ -658,7 +655,7 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                 {
                     string xmlString = await client.GetStringAsync("http://early-est.rm.ingv.it/monitor.xml");
                     xml.LoadXml(xmlString);
-                }*/
+                }*//*
                 xml.Load("C:\\Ichihai1415\\source\\vs\\EarlyEst-xml-handler\\EarlyEst-xml-handler\\bin\\Debug\\35.xml");
                 XmlNamespaceManager ns = new XmlNamespaceManager(xml.NameTable);
                 ns.AddNamespace("qml", "http://quakeml.org/xmlns/bed/1.2");
@@ -688,11 +685,11 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
                         foreach (XmlNode mag_ in infos.SelectNodes("qml:magnitude", ns))
                             mags[mag_.SelectSingleNode("qml:type", ns).InnerText] = double.Parse(mag_.SelectSingleNode("qml:mag/qml:value", ns).InnerText);
 
-                        History hist = new History
+                        Data hist = new Data
                         {
                             Author = DataAuthor.EarlyEst,
                             ID = id,
-                            Update = timeUpdtOff,
+                            UpdtTime = timeUpdtOff,
                             URL = url,
 
                             Time = timeOff,
@@ -721,11 +718,11 @@ namespace WorldQuakeViewer//TODO:設定Formの作り直し
             {
                 LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,EarlyEstGet_Tick Version:{version}\n{ex}");
                 ErrorText.Text = $"[EarlyEst]エラーが発生しました。エラーログの内容を報告してください。内容:{ex.Message}";
-            }*/
+            }*//*
             if (!ErrorText.Text.Contains("エラー"))
                 ErrorText.Text = "";
             ExeLog("[EarlyEst]処理終了");
-            await Task.Delay(1);
+            await Task.Delay(1);*/
         }
 
         private void RCsetting_Click(object sender, EventArgs e)
