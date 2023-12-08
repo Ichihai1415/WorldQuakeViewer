@@ -181,6 +181,29 @@ namespace WorldQuakeViewer
         }
 
         /// <summary>
+        /// 更新時処理名
+        /// </summary>
+        public enum UpdatePros
+        {
+            /// <summary>
+            /// 音声再生
+            /// </summary>
+            Sound=1,
+            /// <summary>
+            /// 棒読みちゃん送信
+            /// </summary>
+            Bouyomichan=2,
+            /// <summary>
+            /// Socket送信
+            /// </summary>
+            Socket=3,
+            /// <summary>
+            /// Webhook送信
+            /// </summary>
+            Webhook=4
+        }
+
+        /// <summary>
         /// テキスト形式のデータ構造
         /// </summary>
         /// <remarks>既定はstring:"",double:-999,double?:null,DateTimeOffset:MinValue,DataAuthor:Null</remarks>

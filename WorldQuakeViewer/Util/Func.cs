@@ -4,14 +4,10 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Media;
-using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
-using System.Security.Policy;
 using System.Text;
-using System.Windows.Forms;
 using WorldQuakeViewer.Properties;
-using static System.Net.Mime.MediaTypeNames;
 using static WorldQuakeViewer.Config;
 using static WorldQuakeViewer.CtrlForm;
 using static WorldQuakeViewer.MainForm;
@@ -195,42 +191,34 @@ namespace WorldQuakeViewer
         /// <param name="dataAuthor">データ元</param>
         /// <param name="data">データ</param>
         /// <param name="isNew">新規か</param>
-        public static void UpdatePros(DataAuthor dataAuthor, Data data, bool isNew = false)
+        public static void UpdatePros(Data data, DataAuthor dataAuthor,bool isNew = false)
         {
-            int level = Mag2Level(data.Mag);
-            Sound(level, dataAuthor);
+            if(noFirst)
+            try
+            {
+                if (dataAuthor == DataAuthor.Null)
+                    throw new ArgumentException($"データ元が不正です。", dataAuthor.ToString());
+                int level = Mag2Level(data.Mag);
+                Sound(level, dataAuthor);
+                string text_bouyomi =
+                Bouyomichan();
+            }
+            catch (Exception ex)
+            {
+                ExeLog($"[UpdatePros]エラー:{ex.Message}");
+                LogSave(LogKind.Error, ex.ToString());
+            }
         }
 
         /// <summary>
-        /// 音声を再生します。
+        /// データから各処理の
         /// </summary>
-        /// <param name="soundFile">再生するSoundフォルダの中の音声ファイル。</param>
-        public static void Sound(string soundFile)
+        /// <param name="data">データ</param>
+        /// <returns></returns>
+        public static string Data2String(Data data)
         {
-            if (noFirst)
-                try
-                {
-                    ExeLog($"[Sound]音声再生開始(Sound\\{soundFile})");
-                    if (player != null)
-                    {
-                        player.Stop();
-                        player.Dispose();
-                        player = null;
-                    }
-                    if (!File.Exists($"Sound\\{soundFile}"))
-                    {
-                        ExeLog($"[Sound]音声ファイル(Sound\\{soundFile})が見つかりませんでした。");
-                        return;
-                    }
-                    player = new SoundPlayer($"Sound\\{soundFile}");
-                    player.Play();
-                    ExeLog($"[Sound]音声再生成功");
-                }
-                catch (Exception ex)
-                {
-                    LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Sound Version:{version}\n{ex}");
-                }
-        }
+            
+        } 
 
         /// <summary>
         /// 音声を再生します。
@@ -239,7 +227,6 @@ namespace WorldQuakeViewer
         /// <param name="dataAuthor">データ元</param>
         public static void Sound(int level, DataAuthor dataAuthor)
         {
-            if (noFirst)
                 try
                 {
                     bool end = false;
@@ -267,10 +254,8 @@ namespace WorldQuakeViewer
                             path = config.Datas[(int)dataAuthor].Sound.L5_Path;
                             break;
                         default:
-                            throw new ArgumentException($"レベル({level})が不正です。");
+                            throw new ArgumentException($"レベルが不正です。", level.ToString());
                     }
-                    if (dataAuthor == DataAuthor.Null)
-                        throw new ArgumentException($"データ元({dataAuthor})が不正です。");
                     if (end)
                     {
                         ExeLog($"[Sound]再生対象外です。");
@@ -278,8 +263,7 @@ namespace WorldQuakeViewer
                     }
                     if (!File.Exists(path))
                     {
-                        ExeLog($"[Sound]音声ファイル({path})が見つかりませんでした。");
-                        return;
+                        throw new FileNotFoundException("ファイルが見つかりませんでした。", path);
                     }
                     ExeLog($"[Sound]音声再生開始({path})");
                     if (player != null)
@@ -302,58 +286,19 @@ namespace WorldQuakeViewer
         /// <summary>
         /// 棒読みちゃんに読み上げ指令を送ります。
         /// </summary>
-        /// <param name="text">読み上げさせる文。</param>
-        public static void Bouyomichan(string text)
-        {
-            if (noFirst && Settings.Default.Bouyomichan_Enable)
-                try
-                {
-                    ExeLog($"[Bouyomichan]棒読みちゃん送信中…");
-                    byte[] message = Encoding.UTF8.GetBytes(text);
-                    int length = message.Length;
-                    byte code = 0;
-                    short command = 0x0001;
-                    short speed = Settings.Default.Bouyomichan_Speed;
-                    short tone = Settings.Default.Bouyomichan_Tone;
-                    short volume = Settings.Default.Bouyomichan_Volume;
-                    short voice = Settings.Default.Bouyomichan_Voice;
-                    using (TcpClient tcpClient = new TcpClient(Settings.Default.Bouyomichan_Host, Settings.Default.Bouyomichan_Port))
-                    using (NetworkStream networkStream = tcpClient.GetStream())
-                    using (BinaryWriter binaryWriter = new BinaryWriter(networkStream))
-                    {
-                        binaryWriter.Write(command);
-                        binaryWriter.Write(speed);
-                        binaryWriter.Write(tone);
-                        binaryWriter.Write(volume);
-                        binaryWriter.Write(voice);
-                        binaryWriter.Write(code);
-                        binaryWriter.Write(length);
-                        binaryWriter.Write(message);
-                    }
-                    ExeLog($"[Bouyomichan]棒読みちゃん送信成功");
-                }
-                catch (Exception ex)
-                {
-                    ExeLog($"[Sound]エラー:{ex.Message}");
-                    LogSave(LogKind.Error, ex.ToString());
-                }
-        }
-
-        /// <summary>
-        /// 棒読みちゃんに読み上げ指令を送ります。
-        /// </summary>
         /// <param name="text">読み上げさせる文</param>
         /// <param name="mag">マグニチュード</param>
         /// <param name="dataAuthor">データ元</param>
         public static void Bouyomichan(string text, double mag, DataAuthor dataAuthor)
         {
-            if (noFirst)
-                if (mag > config.Datas[(int)dataAuthor].Bouyomi.LowerMagLimit)
+            Data_.Bouyomi_ config_bouyomi = config.Datas[(int)dataAuthor].Bouyomi;
+            if ( config_bouyomi.Enable)
+                if (mag > config_bouyomi.LowerMagLimit)
                     try
                     {
-                        var config_bouyomi = config.Datas[(int)dataAuthor].Bouyomi;
                         byte[] message = Encoding.UTF8.GetBytes(text);
-                        using (TcpClient tcpClient = new TcpClient(config_bouyomi.Host,config_bouyomi.Port))
+                        ExeLog($"[Bouyomichan]棒読みちゃん送信中…({config_bouyomi.Host}:{config_bouyomi.Port})");
+                        using (TcpClient tcpClient = new TcpClient(config_bouyomi.Host, config_bouyomi.Port))
                         using (NetworkStream networkStream = tcpClient.GetStream())
                         using (BinaryWriter binaryWriter = new BinaryWriter(networkStream))
                         {
@@ -366,68 +311,69 @@ namespace WorldQuakeViewer
                             binaryWriter.Write(message.Length);
                             binaryWriter.Write(message);
                         }
+                        ExeLog($"[Bouyomichan]棒読みちゃん送信成功");
                     }
                     catch (Exception ex)
                     {
-                        LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Sound Version:{version}\n{ex}");
+                        ExeLog($"[Bouyomichan]エラー:{ex.Message}");
+                        LogSave(LogKind.Error, ex.ToString());
                     }
         }
 
         /// <summary>
         /// Socket通信で送信します。
         /// </summary>
-        /// <param name="text">送信する文。</param>
-        public static async void SendSocket(string text)
+        /// <param name="text">送信する文</param>
+        /// <param name="mag">マグニチュード</param>
+        /// <param name="dataAuthor">データ元</param>
+        public static async void Socket(string text, double mag, DataAuthor dataAuthor)
         {
-            if (noFirst && Settings.Default.Socket_Enable)
-                try
-                {
-                    ExeLog($"[SendSocket]Socket送信中…({Settings.Default.Socket_Host}:{Settings.Default.Socket_Port})");
-                    IPEndPoint iPEndPoint = new IPEndPoint(IPAddress.Parse(Settings.Default.Socket_Host), Settings.Default.Socket_Port);
-                    using (TcpClient tcpClient = new TcpClient(Settings.Default.Socket_Host, Settings.Default.Socket_Port))
-                    using (NetworkStream networkStream = tcpClient.GetStream())
+            Data_.Socket_ config_socket = config.Datas[(int)dataAuthor].Socket;
+            if (config_socket.Enable)
+                if (mag > config_socket.LowerMagLimit)
+                    try
                     {
-                        byte[] bytes = new byte[4096];
-                        bytes = Encoding.UTF8.GetBytes(text);
-                        await networkStream.WriteAsync(bytes, 0, bytes.Length);
+                        byte[] message = new byte[4096];
+                        message = Encoding.UTF8.GetBytes(text);
+                        ExeLog($"[Socket]Socket送信中…({config_socket.Host}:{config_socket.Port})");
+                        using (TcpClient tcpClient = new TcpClient(config_socket.Host, config_socket.Port))
+                        using (NetworkStream networkStream = tcpClient.GetStream())
+                            await networkStream.WriteAsync(message, 0, message.Length);
+                        ExeLog($"[Socket]Socket送信成功");
                     }
-                    ExeLog($"[SendSocket]Socket送信成功");
-                }
-                catch (Exception ex)
-                {
-                    //ErrorText.Text = $"Socket送信に失敗しました。わからない場合エラーログの内容を報告してください。内容:{ex.Message}";
-                    LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,Socket Version:{version}\n{ex}");
-                }
+                    catch (Exception ex)
+                    {
+                        ExeLog($"[Socket]エラー:{ex.Message}");
+                        LogSave(LogKind.Error, ex.ToString());
+                    }
         }
 
         /// <summary>
-        /// WebHookを送信します。
+        /// Webhookを送信します。
         /// </summary>
-        /// <param name="text">送信するテキスト。</param>
-        public static async void WebHook(string text)
+        /// <param name="text">送信する文</param>
+        /// <param name="mag">マグニチュード</param>
+        /// <param name="dataAuthor">データ元</param>
+        public static async void Webhook(string text, double mag, DataAuthor dataAuthor)
         {
-            if (noFirst/* && Settings.Default.WebHook_Enable*/)
-                try
-                {
-                    ExeLog($"[WebHook]WebHook送信中…");
-                    HttpClient hc = new HttpClient();
-                    Dictionary<string, string> strs = new Dictionary<string, string>()
+            Data_.Webhook_ config_webhook = config.Datas[(int)dataAuthor].Webhook;
+            if (config_webhook.Enable)
+                if (mag > config_webhook.LowerMagLimit)
+                    try
                     {
-                        { "content", text }
-                    };
-                    if (File.Exists("WebHookURL.txt"))//仮
-                        Settings.Default.WebHook_URL = File.ReadAllText("WebHookURL.txt");
-                    else
-                        return;//ここまで仮
-                    await hc.PostAsync(Settings.Default.WebHook_URL, new FormUrlEncodedContent(strs));
-                    hc.Dispose();
-                    ExeLog($"[WebHook]WebHook送信成功");
-                }
-                catch (Exception ex)
-                {
-                    //ErrorText.Text = $"WebHookの送信に失敗しました。わからない場合エラーログの内容を報告してください。内容:{ex.Message}";
-                    LogSave("Log\\Error", $"Time:{DateTime.Now:yyyy/MM/dd HH:mm:ss} Location:Main,WebHook Version:{version}\n{ex}");
-                }
+                        Dictionary<string, string> strs = new Dictionary<string, string>()
+                        {
+                            { "content", text }
+                        };
+                        ExeLog($"[Webhook]Webhook送信中…({config_webhook.URL})");
+                        await client.PostAsync(config_webhook.URL, new FormUrlEncodedContent(strs));
+                        ExeLog($"[Webhook]Webhook送信成功");
+                    }
+                    catch (Exception ex)
+                    {
+                        ExeLog($"[Webhook]エラー:{ex.Message}");
+                        LogSave(LogKind.Error, ex.ToString());
+                    }
         }
 
         /// <summary>
@@ -437,13 +383,13 @@ namespace WorldQuakeViewer
         /// <exception cref="Exception">画像指定が間違っている場合。</exception>
         public static void ImageCheck(string fileName)
         {
-            if (!Directory.Exists("Image"))
-            {
-                Directory.CreateDirectory("Image");
-                ExeLog($"[ImageCheck]Imageフォルダを作成しました");
-            }
             if (!File.Exists($"Image\\{fileName}"))
             {
+                if (!Directory.Exists("Image"))
+                {
+                    Directory.CreateDirectory("Image");
+                    ExeLog($"[ImageCheck]Imageフォルダを作成しました");
+                }
                 Bitmap image;
                 switch (fileName)
                 {
