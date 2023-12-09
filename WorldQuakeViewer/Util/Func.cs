@@ -25,10 +25,13 @@ namespace WorldQuakeViewer
         /// </summary>
         /// <param name="text">保存するテキスト。</param>
         /// <remarks>タイムスタンプは自動で追加されます。</remarks>
-        public static void ExeLog(string text)
+        public static void ExeLog(string text, bool isError = false)
         {
-            if (config.LogN.Normal_Enable)
+            if ((isError && config.LogN.Error_Enable) || (!isError && config.LogN.Normal_Enable))
+            {
                 exeLogs += $"{DateTime.Now:HH:mm:ss.ffff} {text}\n";
+                ExeLogView(exeLogs);
+            }
             Console.WriteLine(text);
         }
 
@@ -78,7 +81,7 @@ namespace WorldQuakeViewer
             }
             catch (Exception ex)
             {
-                ExeLog($"[LogSave]エラー:{ex.Message}");
+                ExeLog($"[LogSave]エラー:{ex.Message}", true);
                 LogSave(LogKind.Error, ex.ToString());
             }
         }
@@ -142,6 +145,7 @@ namespace WorldQuakeViewer
                     DataAuthor dataAuthor = data.Author;
                     if (dataAuthor == DataAuthor.Null)
                         throw new ArgumentException($"データ元が不正です。", dataAuthor.ToString());
+
                     int level = Mag2Level(data.Mag);
                     Sound(level, dataAuthor);
                     if (config.Datas[(int)dataAuthor].Bouyomi.Enable)
@@ -157,7 +161,7 @@ namespace WorldQuakeViewer
                 }
                 catch (Exception ex)
                 {
-                    ExeLog($"[UpdatePros]エラー:{ex.Message}");
+                    ExeLog($"[UpdatePros]エラー:{ex.Message}", true);
                     LogSave(LogKind.Error, ex.ToString());
                 }
         }
@@ -220,7 +224,7 @@ namespace WorldQuakeViewer
             }
             catch (Exception ex)
             {
-                ExeLog($"[Sound]エラー:{ex.Message}");
+                ExeLog($"[Sound]エラー:{ex.Message}", true);
                 LogSave(LogKind.Error, ex.ToString());
             }
         }
@@ -256,7 +260,7 @@ namespace WorldQuakeViewer
             }
             catch (Exception ex)
             {
-                ExeLog($"[Bouyomichan]エラー:{ex.Message}");
+                ExeLog($"[Bouyomichan]エラー:{ex.Message}", true);
                 LogSave(LogKind.Error, ex.ToString());
             }
         }
@@ -283,7 +287,7 @@ namespace WorldQuakeViewer
             }
             catch (Exception ex)
             {
-                ExeLog($"[Socket]エラー:{ex.Message}");
+                ExeLog($"[Socket]エラー:{ex.Message}", true);
                 LogSave(LogKind.Error, ex.ToString());
             }
         }
@@ -310,7 +314,7 @@ namespace WorldQuakeViewer
             }
             catch (Exception ex)
             {
-                ExeLog($"[Webhook]エラー:{ex.Message}");
+                ExeLog($"[Webhook]エラー:{ex.Message}", true);
                 LogSave(LogKind.Error, ex.ToString());
             }
         }
@@ -358,7 +362,7 @@ namespace WorldQuakeViewer
             }
             catch (Exception ex)
             {
-                ExeLog($"[LogE]エラー:{ex.Message}");
+                ExeLog($"[LogE]エラー:{ex.Message}", true);
                 LogSave(LogKind.Error, ex.ToString());
             }
         }

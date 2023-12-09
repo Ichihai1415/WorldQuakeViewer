@@ -53,6 +53,7 @@
             this.Tab_Setting_Other = new System.Windows.Forms.TabPage();
             this.ProG_other = new System.Windows.Forms.PropertyGrid();
             this.GetTimer = new System.Windows.Forms.Timer(this.components);
+            this.LogClearTimer = new System.Windows.Forms.Timer(this.components);
             this.TabCtrl_Main.SuspendLayout();
             this.Tab_Main_Log.SuspendLayout();
             this.Tab_Main_Setting.SuspendLayout();
@@ -114,9 +115,9 @@
             this.Tab_Main_Setting.Controls.Add(this.ConfigWebLink);
             this.Tab_Main_Setting.Controls.Add(this.ConsigInfoText);
             this.Tab_Main_Setting.Controls.Add(this.TabCtrl_Setting);
-            this.Tab_Main_Setting.Location = new System.Drawing.Point(4, 27);
+            this.Tab_Main_Setting.Location = new System.Drawing.Point(4, 22);
             this.Tab_Main_Setting.Name = "Tab_Main_Setting";
-            this.Tab_Main_Setting.Size = new System.Drawing.Size(492, 469);
+            this.Tab_Main_Setting.Size = new System.Drawing.Size(492, 474);
             this.Tab_Main_Setting.TabIndex = 2;
             this.Tab_Main_Setting.Text = "設定";
             this.Tab_Main_Setting.UseVisualStyleBackColor = true;
@@ -214,10 +215,10 @@
             this.Tab_Setting_View.Controls.Add(this.ProG_view_Delete);
             this.Tab_Setting_View.Controls.Add(this.ProG_view_Add);
             this.Tab_Setting_View.Controls.Add(this.ProG_view);
-            this.Tab_Setting_View.Location = new System.Drawing.Point(4, 27);
+            this.Tab_Setting_View.Location = new System.Drawing.Point(4, 22);
             this.Tab_Setting_View.Name = "Tab_Setting_View";
             this.Tab_Setting_View.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_Setting_View.Size = new System.Drawing.Size(484, 338);
+            this.Tab_Setting_View.Size = new System.Drawing.Size(484, 343);
             this.Tab_Setting_View.TabIndex = 2;
             this.Tab_Setting_View.Text = "表示";
             this.Tab_Setting_View.UseVisualStyleBackColor = true;
@@ -295,16 +296,16 @@
             this.ProG_view.Location = new System.Drawing.Point(3, 3);
             this.ProG_view.Name = "ProG_view";
             this.ProG_view.PropertySort = System.Windows.Forms.PropertySort.Categorized;
-            this.ProG_view.Size = new System.Drawing.Size(478, 332);
+            this.ProG_view.Size = new System.Drawing.Size(478, 337);
             this.ProG_view.TabIndex = 1;
             // 
             // Tab_Setting_Other
             // 
             this.Tab_Setting_Other.Controls.Add(this.ProG_other);
-            this.Tab_Setting_Other.Location = new System.Drawing.Point(4, 27);
+            this.Tab_Setting_Other.Location = new System.Drawing.Point(4, 22);
             this.Tab_Setting_Other.Name = "Tab_Setting_Other";
             this.Tab_Setting_Other.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_Setting_Other.Size = new System.Drawing.Size(484, 338);
+            this.Tab_Setting_Other.Size = new System.Drawing.Size(484, 343);
             this.Tab_Setting_Other.TabIndex = 3;
             this.Tab_Setting_Other.Text = "その他";
             this.Tab_Setting_Other.UseVisualStyleBackColor = true;
@@ -315,12 +316,17 @@
             this.ProG_other.Location = new System.Drawing.Point(3, 3);
             this.ProG_other.Name = "ProG_other";
             this.ProG_other.PropertySort = System.Windows.Forms.PropertySort.Categorized;
-            this.ProG_other.Size = new System.Drawing.Size(478, 332);
+            this.ProG_other.Size = new System.Drawing.Size(478, 337);
             this.ProG_other.TabIndex = 2;
             // 
             // GetTimer
             // 
             this.GetTimer.Tick += new System.EventHandler(this.GetTimer_Tick);
+            // 
+            // LogClearTimer
+            // 
+            this.LogClearTimer.Interval = 1000;
+            this.LogClearTimer.Tick += new System.EventHandler(this.LogClearTimer_Tick);
             // 
             // CtrlForm
             // 
@@ -333,6 +339,7 @@
             this.MaximizeBox = false;
             this.Name = "CtrlForm";
             this.Text = "ControlForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CtrlForm_FormClosing);
             this.Load += new System.EventHandler(this.CtrlForm_Load);
             this.TabCtrl_Main.ResumeLayout(false);
             this.Tab_Main_Log.ResumeLayout(false);
@@ -375,5 +382,6 @@
         private System.Windows.Forms.LinkLabel ConfigWebLink;
         private System.Windows.Forms.Button Config_Reset;
         private System.Windows.Forms.Button Config_Save;
+        private System.Windows.Forms.Timer LogClearTimer;
     }
 }

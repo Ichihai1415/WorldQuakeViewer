@@ -5,15 +5,20 @@ using static WorldQuakeViewer.CtrlForm;
 using static WorldQuakeViewer.Util_Class;
 using static WorldQuakeViewer.Util_Func;
 
-namespace WorldQuakeViewer.Util
+namespace WorldQuakeViewer
 {
     public static class DataPro
     {
-
-        public static async void Get(DataAuthor dataAuthor)
+        /// <summary>
+        /// 取得します。
+        /// </summary>
+        /// <param name="dataAuthor">データ元</param>
+        /// <exception cref="ArgumentException">データ元が不正な場合</exception>
+        public static void Get(DataAuthor dataAuthor)
         {
-            if ((int)dataAuthor == -1)
-                throw new ArgumentException($"引数が不正です。({dataAuthor})");
+            ExeLog($"[Get]取得準備中...");
+            if (dataAuthor == DataAuthor.Null)
+                throw new ArgumentException("データ元が不正です。", dataAuthor.ToString());
             string URL = config.Datas[(int)dataAuthor].URL;
             if (URL.Contains("text"))
                 Get_Text(URL, dataAuthor);
@@ -45,17 +50,21 @@ namespace WorldQuakeViewer.Util
                     default:
                         throw new ArgumentException("データ元が不正です。", dataAuthor.ToString());
                 }
-
+                ExeLog($"[Get_Text]取得中...({dataAuthor},{URL})");
                 string res = await client.GetStringAsync(URL);
+                ExeLog($"[Get_Text]処理中...");
                 string[] datas = res.Split('\n').Skip(1).ToArray();
                 foreach (string data_ in datas)
                 {
+                    if (data_ == "")
+                        continue;
+                    Console.WriteLine(data_);
                     Data_Text data_text = (Data_Text)data_.Split('|');
                     Data data = (Data)data_text;
-
+                    data.Author = dataAuthor;
                     if (DateTime.Now - data.Time > config_data.Update.MaxPeriod)
                     {
-
+                        ExeLog($"[Get_Text]更新確認対象外です。");
                         continue;
                     }
                     if (data_tmp.ContainsKey(data.ID))
@@ -75,13 +84,12 @@ namespace WorldQuakeViewer.Util
                         UpdtPros(data, true);
                     }
                 }
-
-
-
+                ExeLog($"[Get_Text]処理終了");
             }
             catch (Exception ex)
             {
-
+                ExeLog($"[Get_Text]エラー:{ex.Message}", true);
+                LogSave(LogKind.Error, ex.ToString());
             }
         }
     }

@@ -8,20 +8,23 @@ using System.Media;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static WorldQuakeViewer.DataPro;
 using static WorldQuakeViewer.Util_Class;
+using static WorldQuakeViewer.Util_Func;
 
 namespace WorldQuakeViewer
 {
     public partial class CtrlForm : Form
     {
+        public static TextBox logTextBox;
         public static Config config = new Config();
         public static Config_Display config_display = new Config_Display();
-        public static Dictionary<string,Data> data_Other = new Dictionary<string,Data>();
-        public static Dictionary<string,Data> data_USGS = new Dictionary<string,Data>();
-        public static Dictionary<string,Data> data_EMSC = new Dictionary<string,Data>();
-        public static Dictionary<string,Data> data_GFZ = new Dictionary<string,Data>();
-        public static Dictionary<string,Data> data_EarlyEst = new Dictionary<string,Data>();
-        public static Dictionary<string,Data> data_All = new Dictionary<string, Data>();
+        public static Dictionary<string, Data> data_Other = new Dictionary<string, Data>();
+        public static Dictionary<string, Data> data_USGS = new Dictionary<string, Data>();
+        public static Dictionary<string, Data> data_EMSC = new Dictionary<string, Data>();
+        public static Dictionary<string, Data> data_GFZ = new Dictionary<string, Data>();
+        public static Dictionary<string, Data> data_EarlyEst = new Dictionary<string, Data>();
+        public static Dictionary<string, Data> data_All = new Dictionary<string, Data>();
         public static HttpClient client = new HttpClient();
         public static SoundPlayer player = null;
         public static Form topMost = new Form { TopMost = true };
@@ -31,25 +34,30 @@ namespace WorldQuakeViewer
         public CtrlForm()
         {
             InitializeComponent();
+            logTextBox = LogTextBox;
         }
 
         private void CtrlForm_Load(object sender, EventArgs e)
         {
+            ExeLog($"[CtrlForm_Load]起動しました。");
             if (File.Exists("Setting\\config.json"))
                 try
                 {
                     config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("Setting\\config.json"));
+                    ExeLog($"[CtrlForm_Load]設定読み込み完了");
                     if (config.Version != version)//更新時必要な処置等あれば
                     {
+                        ExeLog($"[CtrlForm_Load]更新を検知({config.Version}->{version})");
                         int[] nowVer = version.Split('.').Select(n => int.Parse(n.Replace("α", "-"))).ToArray();
                         int[] setVer = config.Version.Split('.').Select(n => int.Parse(n.Replace("α", "-"))).ToArray();
                         if (setVer[1] <= 1 && setVer[2] <= 1)//x.1.1以下の場合
                             throw new Exception("バージョンが間違っています。製作者に報告してください。");
                     }
-                    config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("Setting\\config.json"));
                 }
                 catch (Exception ex)
                 {
+                    ExeLog($"[CtrlForm_Load]エラー:{ex.Message}", true);
+                    LogSave(LogKind.Error, ex.ToString());
                     if (MessageBox.Show($"設定の読み込みに失敗しました。OKを押すとバックアップしてリセットされます。({ex.Message})", "エラー", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
                     {
                         File.Copy("Setting\\config.json", $"Setting\\config-backup-{DateTime.Now:yyyyMMddHHmmss}.json", true);
@@ -65,6 +73,7 @@ namespace WorldQuakeViewer
                 TopMost = false;
                 Directory.CreateDirectory("Setting");
                 File.WriteAllText("Setting\\config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
+                    ExeLog($"[CtrlForm_Load]設定保存完了");
             }
             config_display = (Config_Display)config;
             ProG_pro.SelectedObject = config_display.Datas;
@@ -76,22 +85,40 @@ namespace WorldQuakeViewer
             if (c == 9)
                 ProG_view_Add.Enabled = false;
             ProG_view_Copy.Enabled = c > ProG_view_CopyNum.Value;
-
             GetTimer.Interval = 2000 - DateTime.Now.Millisecond;
             GetTimer.Enabled = true;
+            LogClearTimer.Interval = (int)config.LogN.Normal_AutoDelete.TotalMilliseconds;
+            LogClearTimer.Enabled = true;
+            if (!config.LogN.Normal_Enable)
+                logTextBox.Text = "<動作ログを表示する場合、設定のその他のNormal_EnableをTrueにしてください>";
+                    ExeLog($"[CtrlForm_Load]起動処理完了");
         }
 
         private async void GetTimer_Tick(object sender, EventArgs e)
         {
-            //Console.WriteLine($"{DateTime.Now:ss.ffff}->");
             while (DateTime.Now.Millisecond > 800)
                 await Task.Delay(10);
             GetTimer.Interval = 1000 - DateTime.Now.Millisecond;
-            //Console.WriteLine($"{DateTime.Now:ss.ffff} n:{GetTimer.Interval}");
-            //Console.WriteLine(config.Views.Count());
+            Console.WriteLine(DateTime.Now.ToString("ss.ffff"));
+            Console.WriteLine(data_GFZ.Count);
+            if (data_GFZ.Count > 0)
+                throw new Exception();
+            try
+            {
+                for (int i = 0; i < DataAuthorCount; i++)
+                    if (config.Datas[i].GetTimes[0] == DateTime.Now.Second || config.Datas[i].GetTimes[1] == DateTime.Now.Second)
+                        Get((DataAuthor)i);
+            }
+            catch (Exception ex)//設定がおかしいとき
+            {
+                ExeLog($"[GetTimer_Tick]エラー:{ex.Message}", true);
+                LogSave(LogKind.Error, ex.ToString());
+            }
+        }
 
-
-
+        public static void ExeLogView(string text)
+        {
+            logTextBox.Text += text;
         }
 
         private void ConfigWebLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -158,6 +185,21 @@ namespace WorldQuakeViewer
         private void ProG_view_CopyNum_ValueChanged(object sender, EventArgs e)
         {
             ProG_view_Copy.Enabled = config_display.Views.Count() > ProG_view_CopyNum.Value;
+        }
+
+        private void CtrlForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (config.LogN.Normal_AutoSave)
+                LogSave(LogKind.Exe, exeLogs);
+        }
+
+        private void LogClearTimer_Tick(object sender, EventArgs e)
+        {
+            if (config.LogN.Normal_AutoSave)
+                LogSave(LogKind.Exe, exeLogs);
+            exeLogs = "";
+            ExeLog("[LogClearTimer_Tick]動作ログをクリアしました。");
+            logTextBox.Text = exeLogs;
         }
     }
 }

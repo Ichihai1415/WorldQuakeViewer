@@ -47,19 +47,19 @@ namespace WorldQuakeViewer
             public bool Normal_Enable { get; set; } = false;
 
             /// <summary>
-            /// エラーログ出力を有効か
-            /// </summary>
-            public bool Error_Enable { get; set; } = true;
-
-            /// <summary>
             /// 動作ログ自動消去の間隔 0で無効
             /// </summary>
-            public TimeSpan AutoDelate { get; set; } = TimeSpan.FromHours(24);
+            public TimeSpan Normal_AutoDelete { get; set; } = TimeSpan.FromHours(24);
 
             /// <summary>
             /// 動作ログ消去時に自動保存するか
             /// </summary>
             public bool Normal_AutoSave { get; set; } = false;
+
+            /// <summary>
+            /// エラーログ保存を有効か
+            /// </summary>
+            public bool Error_Enable { get; set; } = true;
 
             /// <summary>
             /// Config_DisplayからConfigに変換します。
@@ -68,9 +68,9 @@ namespace WorldQuakeViewer
             public static explicit operator LogN_(Config_Display.LogN_ from) => new LogN_
             {
                 Normal_Enable = from.Normal_Enable,
-                Error_Enable = from.Error_Enable,
-                AutoDelate = from.AutoDelate,
-                Normal_AutoSave = from.Normal_AutoSave
+                Normal_AutoDelete = from.Normal_AutoDelete,
+                Normal_AutoSave = from.Normal_AutoSave,
+                Error_Enable = from.Error_Enable
             };
         }
 
@@ -828,18 +828,11 @@ namespace WorldQuakeViewer
             public bool Normal_Enable { get; set; }
 
             /// <summary>
-            /// エラーログ出力を有効か
-            /// </summary>
-            [Category("ログ出力関連")]
-            [Description("エラーログ出力を有効か")]
-            public bool Error_Enable { get; set; }
-
-            /// <summary>
             /// 動作ログ自動消去の間隔 0で無効
             /// </summary>
             [Category("ログ出力関連")]
             [Description("動作ログ自動消去の間隔 0で無効")]
-            public TimeSpan AutoDelate { get; set; }
+            public TimeSpan Normal_AutoDelete { get; set; }
 
             /// <summary>
             /// 動作ログ消去時に自動保存するか
@@ -849,15 +842,22 @@ namespace WorldQuakeViewer
             public bool Normal_AutoSave { get; set; }
 
             /// <summary>
+            /// エラーログ保存を有効か
+            /// </summary>
+            [Category("ログ出力関連")]
+            [Description("エラーログ保存を有効か")]
+            public bool Error_Enable { get; set; }
+
+            /// <summary>
             /// ConfigからConfig_Displayに変換します。
             /// </summary>
             /// <param name="from">変換元</param>
             public static explicit operator LogN_(Config.LogN_ from) => new LogN_
             {
                 Normal_Enable = from.Normal_Enable,
-                Error_Enable = from.Error_Enable,
-                AutoDelate = from.AutoDelate,
-                Normal_AutoSave = from.Normal_AutoSave
+                Normal_AutoDelete = from.Normal_AutoDelete,
+                Normal_AutoSave = from.Normal_AutoSave,
+                Error_Enable = from.Error_Enable
             };
         }
 
