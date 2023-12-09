@@ -25,23 +25,25 @@ namespace WorldQuakeViewer.Util
             {
                 Dictionary<string, Data> data_tmp = new Dictionary<string, Data>();
                 Config.Data_ config_data = config.Datas[(int)dataAuthor];
-                switch ((int)dataAuthor)
+                switch (dataAuthor)
                 {
-                    case 0:
+                    case DataAuthor.Other:
                         data_tmp = data_Other;
                         break;
-                    case 1:
+                    case DataAuthor.USGS:
                         data_tmp = data_USGS;
                         break;
-                    case 2:
+                    case DataAuthor.EMSC:
                         data_tmp = data_EMSC;
                         break;
-                    case 3:
+                    case DataAuthor.GFZ:
                         data_tmp = data_GFZ;
                         break;
-                    case 4:
+                    case DataAuthor.EarlyEst:
                         data_tmp = data_EarlyEst;
                         break;
+                    default:
+                        throw new ArgumentException("データ元が不正です。", dataAuthor.ToString());
                 }
 
                 string res = await client.GetStringAsync(URL);
@@ -62,10 +64,15 @@ namespace WorldQuakeViewer.Util
                         if (update)
                         {
                             data_tmp[data.ID] = data;
-
-
-
+                            data_All[data.ID] = data;
+                            UpdtPros(data);
                         }
+                    }
+                    else
+                    {
+                        data_tmp[data.ID] = data;
+                        data_All[data.ID] = data;
+                        UpdtPros(data, true);
                     }
                 }
 

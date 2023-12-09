@@ -148,6 +148,7 @@ namespace WorldQuakeViewer
         /// <summary>
         /// ログの種類
         /// </summary>
+        /// <remarks>地震ログはDataAuthor+10となるように</remarks>
         public enum LogKind
         {
             /// <summary>
@@ -200,7 +201,11 @@ namespace WorldQuakeViewer
             /// <summary>
             /// Webhook送信
             /// </summary>
-            Webhook = 4
+            Webhook = 4,
+            /// <summary>
+            /// 地震ログ保存
+            /// </summary>
+            LogE = 5
         }
 
         /// <summary>
@@ -387,6 +392,16 @@ namespace WorldQuakeViewer
             /// [一部]データ元
             /// </summary>
             public string Source { get; set; } = "";
+
+            /// <summary>
+            /// 更新時に「更新」
+            /// </summary>
+            public string UpdateJP { get; set; } = "";
+
+            /// <summary>
+            /// 更新時に「update」
+            /// </summary>
+            public string UpdateEN { get; set; } = "";
         };
 
         /// <summary>

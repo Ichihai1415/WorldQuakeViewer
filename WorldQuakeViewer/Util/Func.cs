@@ -10,7 +10,6 @@ using System.Text;
 using WorldQuakeViewer.Properties;
 using static WorldQuakeViewer.Config;
 using static WorldQuakeViewer.CtrlForm;
-using static WorldQuakeViewer.MainForm;
 using static WorldQuakeViewer.Util_Class;
 using static WorldQuakeViewer.Util_Conv;
 
@@ -45,26 +44,31 @@ namespace WorldQuakeViewer
             {
                 string dir = "";
                 string name = "";
-                switch ((int)logKind)
+                switch (logKind)
                 {
-                    case 1:
+                    case LogKind.Exe:
                         dir = $"Log\\Execution\\{DateTime.Now:yyyyMM\\dd}";
                         name = $"{DateTime.Now:yyyyMMddHHmmss}.log";
                         break;
-                    case 2:
-                        dir = $"Log\\Error\\{DateTime.Now:yyyyMM\\dd}";
-                        name = $"{DateTime.Now:yyyyMMddHHmmss.ffff}.log";
+                    case LogKind.Error:
+                        dir = $"Log\\Error\\{DateTime.Now:yyyyMM}";
+                        name = $"{DateTime.Now:yyyyMMdd}.log";
+                        text = $"Time:{DateTime.Now} Version:{version}\n{text}";
+                        if (File.Exists($"{dir}\\{name}"))
+                            text = $"{File.ReadAllText($"{dir}\\{name}")}\n--------------------------------------------------\n{text}";
                         break;
-                    case 10:
-                    case 11:
-                    case 12:
-                    case 13:
-                    case 14:
+                    case LogKind.Other:
+                    case LogKind.USGS:
+                    case LogKind.EMSC:
+                    case LogKind.GFZ:
+                    case LogKind.EarlyEst:
                         dir = $"Log\\{logKind}\\{DateTime.Now:yyyyMM\\dd}";
                         name = $"{id}.txt";
                         if (File.Exists($"{dir}\\{name}"))
                             text = $"{File.ReadAllText($"{dir}\\{name}")}\n--------------------------------------------------\n{text}";
                         break;
+                    default:
+                        throw new ArgumentException($"ログの種類が不正です。", logKind.ToString());
                 }
                 ExeLog($"[LogSave]保存開始({dir}\\{name})");
                 if (!Directory.Exists(dir))
@@ -88,42 +92,41 @@ namespace WorldQuakeViewer
         /// <returns>更新か</returns>
         public static bool UpdateCheck(Data data_o, Data data_n, DataAuthor dataAuthor)
         {
-            bool update = false;
             Data_.Update_ config_data_update = config.Datas[(int)dataAuthor].Update;
             if (config_data_update.Time)
                 if (data_n.Time != data_o.Time)
-                    update = true;
+                    return true;
             if (config_data_update.UpdtTime)
                 if (data_n.UpdtTime != data_o.UpdtTime)
-                    update = true;
+                    return true;
             if (config_data_update.Hypo)
                 if (data_n.Hypo != data_o.Hypo)
-                    update = true;
+                    return true;
             if (config_data_update.LatLon)
                 if (data_n.Lat != data_o.Lat)
-                    update = true;
+                    return true;
             if (config_data_update.LatLon)
                 if (data_n.Lon != data_o.Lon)
-                    update = true;
+                    return true;
             if (config_data_update.Depth)
                 if (data_n.Depth != data_o.Depth)
-                    update = true;
+                    return true;
             if (config_data_update.MagType)
                 if (data_n.MagType != data_o.MagType)
-                    update = true;
+                    return true;
             if (config_data_update.Mag)
                 if (data_n.Mag != data_o.Mag)
-                    update = true;
+                    return true;
             if (config_data_update.MMI)
                 if (data_n.MMI != data_o.MMI)
-                    update = true;
+                    return true;
             if (config_data_update.Alert)
                 if (data_n.Alert != data_o.Alert)
-                    update = true;
+                    return true;
             if (config_data_update.Source)
                 if (data_n.Source != data_o.Source)
-                    update = true;
-            return update;
+                    return true;
+            return false;
         }
 
         /// <summary>
@@ -143,13 +146,14 @@ namespace WorldQuakeViewer
                     Sound(level, dataAuthor);
                     if (config.Datas[(int)dataAuthor].Bouyomi.Enable)
                         if (data.Mag >= config.Datas[(int)dataAuthor].Bouyomi.LowerMagLimit)
-                            Bouyomichan(Data2ProString(data, UpdatePros.Bouyomichan), dataAuthor);
+                            Bouyomichan(Data2ProString(data, UpdatePros.Bouyomichan, isNew), dataAuthor);
                     if (config.Datas[(int)dataAuthor].Socket.Enable)
                         if (data.Mag >= config.Datas[(int)dataAuthor].Socket.LowerMagLimit)
-                            Socket(Data2ProString(data, UpdatePros.Socket), dataAuthor);
+                            Socket(Data2ProString(data, UpdatePros.Socket, isNew), dataAuthor);
                     if (config.Datas[(int)dataAuthor].Webhook.Enable)
                         if (data.Mag >= config.Datas[(int)dataAuthor].Webhook.LowerMagLimit)
-                            Webhook(Data2ProString(data, UpdatePros.Webhook), dataAuthor);
+                            Webhook(Data2ProString(data, UpdatePros.Webhook, isNew), dataAuthor);
+                    LogE(data, isNew, level, dataAuthor);
                 }
                 catch (Exception ex)
                 {
@@ -307,6 +311,54 @@ namespace WorldQuakeViewer
             catch (Exception ex)
             {
                 ExeLog($"[Webhook]エラー:{ex.Message}");
+                LogSave(LogKind.Error, ex.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 地震ログを保存します。
+        /// </summary>
+        /// <param name="data">データ</param>
+        /// <param name="isNew">新規か</param>
+        /// <param name="level">レベル</param>
+        /// <param name="dataAuthor">データ元</param>
+        public static void LogE(Data data, bool isNew, int level, DataAuthor dataAuthor)
+        {
+            try
+            {
+                bool end = false;
+                string text;
+                switch (level)
+                {
+                    case 1:
+                        end = !config.Datas[(int)dataAuthor].LogE.L1_Enable;
+                        break;
+                    case 2:
+                        end = !config.Datas[(int)dataAuthor].LogE.L2_Enable;
+                        break;
+                    case 3:
+                        end = !config.Datas[(int)dataAuthor].LogE.L3_Enable;
+                        break;
+                    case 4:
+                        end = !config.Datas[(int)dataAuthor].LogE.L4_Enable;
+                        break;
+                    case 5:
+                        end = !config.Datas[(int)dataAuthor].LogE.L5_Enable;
+                        break;
+                    default:
+                        throw new ArgumentException($"レベルが不正です。", level.ToString());
+                }
+                if (end)
+                {
+                    ExeLog($"[LogE]保存対象外です。");
+                    return;
+                }
+                text = Data2ProString(data, UpdatePros.LogE, isNew);
+                LogSave((LogKind)(dataAuthor + 10), text, data.ID);
+            }
+            catch (Exception ex)
+            {
+                ExeLog($"[LogE]エラー:{ex.Message}");
                 LogSave(LogKind.Error, ex.ToString());
             }
         }

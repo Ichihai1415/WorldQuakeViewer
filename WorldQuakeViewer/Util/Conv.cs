@@ -36,7 +36,7 @@ namespace WorldQuakeViewer
         /// <param name="data">データ</param>
         /// <param name="updatePros">更新処理の名前</param>
         /// <returns>各処理の文字列</returns>
-        public static string Data2ProString(Data data, UpdatePros updatePros)
+        public static string Data2ProString(Data data, UpdatePros updatePros, bool isNew)
         {
             string format;
             switch (updatePros)
@@ -50,10 +50,12 @@ namespace WorldQuakeViewer
                 case UpdatePros.Webhook:
                     format = config.Datas[(int)data.Author].Webhook.Format;
                     break;
-                default:
-                    format = "";
+                case UpdatePros.LogE:
+                    format = config.Datas[(int)data.Author].LogE.Format;
                     break;
-            }//.Replace("{}",)
+                default:
+                    throw new ArgumentException("更新処理名が不正です。", updatePros.ToString());
+            }
             DateTimeOffset timeUser = data.Time.ToLocalTime();
             Lat2String(data.Lat, out string lat10, out string latNS, out string latNSJP, out string lat60d, out string lat60m, out string lat60s);
             Lon2String(data.Lon, out string lon10, out string lonEW, out string lonEWJP, out string lon60d, out string lon60m, out string lon60s);
@@ -94,10 +96,13 @@ namespace WorldQuakeViewer
                 MMIAra = MMI2Ara(data.MMI),
                 AlertJP = Alert2JP(data.Alert),
                 AlertEN = data.Alert,
-                Source = data.Source
+                Source = data.Source,
+                UpdateJP = isNew ? "" : "更新",
+                UpdateEN = isNew ? "" : "update",
             };
             //.Replace("[]",f.)
-            return format
+            format = format
+                .Replace("\\n", "\n")
                 .Replace("[ID]", f.ID)
                 .Replace("[TimeUTC_Year]", f.TimeUTC_Year).Replace("[TimeUTC_Month]", f.TimeUTC_Month).Replace("[TimeUTC_Day]", f.TimeUTC_Day)
                 .Replace("[TimeUTC_Hour]", f.TimeUTC_Hour).Replace("[TimeUTC_Minute]", f.TimeUTC_Minute).Replace("[TimeUTC_Second]", f.TimeUTC_Second)
@@ -114,6 +119,9 @@ namespace WorldQuakeViewer
                 .Replace("[MMI]", f.MMI).Replace("[MMIAra]", f.MMIAra)
                 .Replace("[AlertJP]", f.AlertJP).Replace("[AlertEN]", f.AlertEN)
                 .Replace("[Source]", f.Source);
+            foreach (Config.Data_.LogE_.TextReplace_ replace in config.Datas[(int)data.Author].LogE.TextReplace)
+                format = format.Replace(replace.OldValue, replace.NewValue);
+            return format;
         }
 
         /// <summary>

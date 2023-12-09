@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Media;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,17 +16,17 @@ namespace WorldQuakeViewer
     {
         public static Config config = new Config();
         public static Config_Display config_display = new Config_Display();
-
-        public static HttpClient client = new HttpClient();
-
         public static Dictionary<string,Data> data_Other = new Dictionary<string,Data>();
         public static Dictionary<string,Data> data_USGS = new Dictionary<string,Data>();
         public static Dictionary<string,Data> data_EMSC = new Dictionary<string,Data>();
         public static Dictionary<string,Data> data_GFZ = new Dictionary<string,Data>();
         public static Dictionary<string,Data> data_EarlyEst = new Dictionary<string,Data>();
         public static Dictionary<string,Data> data_All = new Dictionary<string, Data>();
-
+        public static HttpClient client = new HttpClient();
+        public static SoundPlayer player = null;
         public static Form topMost = new Form { TopMost = true };
+        public static string exeLogs = "";
+        public static bool noFirst = false;
 
         public CtrlForm()
         {

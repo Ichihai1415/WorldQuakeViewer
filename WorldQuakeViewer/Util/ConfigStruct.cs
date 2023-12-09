@@ -330,6 +330,37 @@ namespace WorldQuakeViewer
                 public string Format { get; set; } = "フォーマットを入力してください";
 
                 /// <summary>
+                /// 送信する文の置換
+                /// </summary>
+                public TextReplace_[] TextReplace { get; set; } = new TextReplace_[] { new TextReplace_() };
+
+                /// <summary>
+                /// 送信する文の置換
+                /// </summary>
+                public class TextReplace_
+                {
+                    /// <summary>
+                    /// 置換前
+                    /// </summary>
+                    public string OldValue { get; set; } = "置換前";
+
+                    /// <summary>
+                    /// 置換後
+                    /// </summary>
+                    public string NewValue { get; set; } = "置換後";
+
+                    /// <summary>
+                    /// ConfigからConfig_Displayに変換します。
+                    /// </summary>
+                    /// <param name="from">変換元</param>
+                    public static explicit operator TextReplace_(Config_Display.Data_.Bouyomi_.TextReplace_ from) => new TextReplace_
+                    {
+                        OldValue = from.OldValue,
+                        NewValue = from.NewValue,
+                    };
+                }
+
+                /// <summary>
                 /// Config_DisplayからConfigに変換します。
                 /// </summary>
                 /// <param name="from">変換元</param>
@@ -343,7 +374,8 @@ namespace WorldQuakeViewer
                     Speed = from.Speed,
                     Tone = from.Tone,
                     Volume = from.Volume,
-                    Format = from.Format
+                    Format = from.Format,
+                    TextReplace = from.TextReplace.Select(n => (TextReplace_)n).ToArray()
                 };
             }
 
@@ -378,6 +410,37 @@ namespace WorldQuakeViewer
                 public string Format { get; set; } = "フォーマットを入力してください";
 
                 /// <summary>
+                /// 送信する文の置換
+                /// </summary>
+                public TextReplace_[] TextReplace { get; set; } = new TextReplace_[] { new TextReplace_() };
+
+                /// <summary>
+                /// 送信する文の置換
+                /// </summary>
+                public class TextReplace_
+                {
+                    /// <summary>
+                    /// 置換前
+                    /// </summary>
+                    public string OldValue { get; set; } = "置換前";
+
+                    /// <summary>
+                    /// 置換後
+                    /// </summary>
+                    public string NewValue { get; set; } = "置換後";
+
+                    /// <summary>
+                    /// ConfigからConfig_Displayに変換します。
+                    /// </summary>
+                    /// <param name="from">変換元</param>
+                    public static explicit operator TextReplace_(Config_Display.Data_.Socket_.TextReplace_ from) => new TextReplace_
+                    {
+                        OldValue = from.OldValue,
+                        NewValue = from.NewValue,
+                    };
+                }
+
+                /// <summary>
                 /// Config_DisplayからConfigに変換します。
                 /// </summary>
                 /// <param name="from">変換元</param>
@@ -387,7 +450,8 @@ namespace WorldQuakeViewer
                     LowerMagLimit = from.LowerMagLimit,
                     Host = from.Host,
                     Port = from.Port,
-                    Format = from.Format
+                    Format = from.Format,
+                    TextReplace = from.TextReplace.Select(n => (TextReplace_)n).ToArray()
                 };
             }
 
@@ -417,6 +481,37 @@ namespace WorldQuakeViewer
                 public string Format { get; set; } = "フォーマットを入力してください";
 
                 /// <summary>
+                /// 送信する文の置換
+                /// </summary>
+                public TextReplace_[] TextReplace { get; set; } = new TextReplace_[] { new TextReplace_() };
+
+                /// <summary>
+                /// 送信する文の置換
+                /// </summary>
+                public class TextReplace_
+                {
+                    /// <summary>
+                    /// 置換前
+                    /// </summary>
+                    public string OldValue { get; set; } = "置換前";
+
+                    /// <summary>
+                    /// 置換後
+                    /// </summary>
+                    public string NewValue { get; set; } = "置換後";
+
+                    /// <summary>
+                    /// ConfigからConfig_Displayに変換します。
+                    /// </summary>
+                    /// <param name="from">変換元</param>
+                    public static explicit operator TextReplace_(Config_Display.Data_.Webhook_.TextReplace_ from) => new TextReplace_
+                    {
+                        OldValue = from.OldValue,
+                        NewValue = from.NewValue,
+                    };
+                }
+
+                /// <summary>
                 /// Config_DisplayからConfigに変換します。
                 /// </summary>
                 /// <param name="from">変換元</param>
@@ -425,7 +520,8 @@ namespace WorldQuakeViewer
                     Enable = from.Enable,
                     LowerMagLimit = from.LowerMagLimit,
                     URL = from.URL,
-                    Format = from.Format
+                    Format = from.Format,
+                    TextReplace = from.TextReplace.Select(n => (TextReplace_)n).ToArray()
                 };
             }
 
@@ -466,6 +562,37 @@ namespace WorldQuakeViewer
                 public string Format { get; set; } = "フォーマットを入力してください";
 
                 /// <summary>
+                /// 保存する文の置換
+                /// </summary>
+                public TextReplace_[] TextReplace { get; set; } = new TextReplace_[] { new TextReplace_() };
+
+                /// <summary>
+                /// 保存する文の置換
+                /// </summary>
+                public class TextReplace_
+                {
+                    /// <summary>
+                    /// 置換前
+                    /// </summary>
+                    public string OldValue { get; set; } = "置換前";
+
+                    /// <summary>
+                    /// 置換後
+                    /// </summary>
+                    public string NewValue { get; set; } = "置換後";
+
+                    /// <summary>
+                    /// ConfigからConfig_Displayに変換します。
+                    /// </summary>
+                    /// <param name="from">変換元</param>
+                    public static explicit operator TextReplace_(Config_Display.Data_.LogE_.TextReplace_ from) => new TextReplace_
+                    {
+                        OldValue = from.OldValue,
+                        NewValue = from.NewValue,
+                    };
+                }
+
+                /// <summary>
                 /// Config_DisplayからConfigに変換します。
                 /// </summary>
                 /// <param name="from">変換元</param>
@@ -476,7 +603,8 @@ namespace WorldQuakeViewer
                     L3_Enable = from.L3_Enable,
                     L4_Enable = from.L4_Enable,
                     L5_Enable = from.L5_Enable,
-                    Format = from.Format
+                    Format = from.Format,
+                    TextReplace = from.TextReplace.Select(n => (TextReplace_)n).ToArray()
                 };
             }
 
@@ -756,7 +884,7 @@ namespace WorldQuakeViewer
             /// <summary>
             /// 取得時間(毎分x秒) -1で無効
             /// </summary>
-            [Description("取得時間(毎分x秒)\n-1で無効")]
+            [Description("取得時間(毎分x秒)\n-1で無効 個数は2個にしてください")]
             public int[] GetTimes { get; set; }
 
             /// <summary>
@@ -1037,8 +1165,43 @@ namespace WorldQuakeViewer
                 /// <summary>
                 /// 送信する文のフォーマット
                 /// </summary>
-                [Description("送信する文のフォーマット")]
+                [Description("送信する文のフォーマット\n\\nで改行")]
                 public string Format { get; set; }
+
+                /// <summary>
+                /// 送信する文の置換
+                /// </summary>
+                [Description("送信する文の置換")]
+                public TextReplace_[] TextReplace { get; set; }
+
+                /// <summary>
+                /// 送信する文の置換
+                /// </summary>
+                [Description("送信する文の置換")]
+                public class TextReplace_
+                {
+                    /// <summary>
+                    /// 置換前
+                    /// </summary>
+                    [Description("置換前")]
+                    public string OldValue { get; set; }
+
+                    /// <summary>
+                    /// 置換後
+                    /// </summary>
+                    [Description("置換後")]
+                    public string NewValue { get; set; }
+
+                    /// <summary>
+                    /// ConfigからConfig_Displayに変換します。
+                    /// </summary>
+                    /// <param name="from">変換元</param>
+                    public static explicit operator TextReplace_(Config.Data_.Bouyomi_.TextReplace_ from) => new TextReplace_
+                    {
+                        OldValue = from.OldValue,
+                        NewValue = from.NewValue,
+                    };
+                }
 
                 /// <summary>
                 /// ConfigからConfig_Displayに変換します。
@@ -1054,7 +1217,8 @@ namespace WorldQuakeViewer
                     Speed = from.Speed,
                     Tone = from.Tone,
                     Volume = from.Volume,
-                    Format = from.Format
+                    Format = from.Format,
+                    TextReplace = from.TextReplace.Select(n => (TextReplace_)n).ToArray()
                 };
             }
 
@@ -1092,8 +1256,43 @@ namespace WorldQuakeViewer
                 /// <summary>
                 /// 送信する文のフォーマット
                 /// </summary>
-                [Description("送信する文のフォーマット")]
+                [Description("送信する文のフォーマット\n\\nで改行")]
                 public string Format { get; set; }
+
+                /// <summary>
+                /// 送信する文の置換
+                /// </summary>
+                [Description("送信する文の置換")]
+                public TextReplace_[] TextReplace { get; set; }
+
+                /// <summary>
+                /// 送信する文の置換
+                /// </summary>
+                [Description("送信する文の置換")]
+                public class TextReplace_
+                {
+                    /// <summary>
+                    /// 置換前
+                    /// </summary>
+                    [Description("置換前")]
+                    public string OldValue { get; set; }
+
+                    /// <summary>
+                    /// 置換後
+                    /// </summary>
+                    [Description("置換後")]
+                    public string NewValue { get; set; }
+
+                    /// <summary>
+                    /// ConfigからConfig_Displayに変換します。
+                    /// </summary>
+                    /// <param name="from">変換元</param>
+                    public static explicit operator TextReplace_(Config.Data_.Socket_.TextReplace_ from) => new TextReplace_
+                    {
+                        OldValue = from.OldValue,
+                        NewValue = from.NewValue,
+                    };
+                }
 
                 /// <summary>
                 /// ConfigからConfig_Displayに変換します。
@@ -1105,7 +1304,8 @@ namespace WorldQuakeViewer
                     LowerMagLimit = from.LowerMagLimit,
                     Host = from.Host,
                     Port = from.Port,
-                    Format = from.Format
+                    Format = from.Format,
+                    TextReplace = from.TextReplace.Select(n => (TextReplace_)n).ToArray()
                 };
             }
 
@@ -1137,8 +1337,43 @@ namespace WorldQuakeViewer
                 /// <summary>
                 /// 送信する文のフォーマット
                 /// </summary>
-                [Description("送信する文のフォーマット")]
+                [Description("送信する文のフォーマット\n\\nで改行")]
                 public string Format { get; set; }
+
+                /// <summary>
+                /// 送信する文の置換
+                /// </summary>
+                [Description("送信する文の置換")]
+                public TextReplace_[] TextReplace { get; set; }
+
+                /// <summary>
+                /// 送信する文の置換
+                /// </summary>
+                [Description("送信する文の置換")]
+                public class TextReplace_
+                {
+                    /// <summary>
+                    /// 置換前
+                    /// </summary>
+                    [Description("置換前")]
+                    public string OldValue { get; set; }
+
+                    /// <summary>
+                    /// 置換後
+                    /// </summary>
+                    [Description("置換後")]
+                    public string NewValue { get; set; }
+
+                    /// <summary>
+                    /// ConfigからConfig_Displayに変換します。
+                    /// </summary>
+                    /// <param name="from">変換元</param>
+                    public static explicit operator TextReplace_(Config.Data_.Webhook_.TextReplace_ from) => new TextReplace_
+                    {
+                        OldValue = from.OldValue,
+                        NewValue = from.NewValue,
+                    };
+                }
 
                 /// <summary>
                 /// ConfigからConfig_Displayに変換します。
@@ -1149,7 +1384,8 @@ namespace WorldQuakeViewer
                     Enable = from.Enable,
                     LowerMagLimit = from.LowerMagLimit,
                     URL = from.URL,
-                    Format = from.Format
+                    Format = from.Format,
+                    TextReplace = from.TextReplace.Select(n => (TextReplace_)n).ToArray()
                 };
             }
 
@@ -1194,8 +1430,43 @@ namespace WorldQuakeViewer
                 /// 保存する文のフォーマット
                 /// </summary>
                 /// <remarks>情報の間にソフト情報等が入ります</remarks>
-                [Description("保存する文のフォーマット")]
+                [Description("保存する文のフォーマット\n\\nで改行")]
                 public string Format { get; set; }
+
+                /// <summary>
+                /// 保存する文の置換
+                /// </summary>
+                [Description("送信する文の置換")]
+                public TextReplace_[] TextReplace { get; set; }
+
+                /// <summary>
+                /// 保存する文の置換
+                /// </summary>
+                [Description("送信する文の置換")]
+                public class TextReplace_
+                {
+                    /// <summary>
+                    /// 置換前
+                    /// </summary>
+                    [Description("置換前")]
+                    public string OldValue { get; set; }
+
+                    /// <summary>
+                    /// 置換後
+                    /// </summary>
+                    [Description("置換後")]
+                    public string NewValue { get; set; }
+
+                    /// <summary>
+                    /// ConfigからConfig_Displayに変換します。
+                    /// </summary>
+                    /// <param name="from">変換元</param>
+                    public static explicit operator TextReplace_(Config.Data_.LogE_.TextReplace_ from) => new TextReplace_
+                    {
+                        OldValue = from.OldValue,
+                        NewValue = from.NewValue,
+                    };
+                }
 
                 /// <summary>
                 /// ConfigからConfig_Displayに変換します。
@@ -1208,7 +1479,8 @@ namespace WorldQuakeViewer
                     L3_Enable = from.L3_Enable,
                     L4_Enable = from.L4_Enable,
                     L5_Enable = from.L5_Enable,
-                    Format = from.Format
+                    Format = from.Format,
+                    TextReplace = from.TextReplace.Select(n => (TextReplace_)n).ToArray()
                 };
             }
 

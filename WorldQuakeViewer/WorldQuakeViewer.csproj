@@ -132,24 +132,12 @@
     <Compile Include="IntConvert.Designer.cs">
       <DependentUpon>IntConvert.cs</DependentUpon>
     </Compile>
-    <Compile Include="Main.old.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Main.old.Designer.cs">
-      <DependentUpon>Main.old.cs</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
-    <Compile Include="SettingsForm.old.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SettingsForm.old.Designer.cs">
-      <DependentUpon>SettingsForm.old.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ControlForm.resx">
@@ -162,9 +150,6 @@
     <EmbeddedResource Include="IntConvert.resx">
       <DependentUpon>IntConvert.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Main.old.resx">
-      <DependentUpon>Main.old.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -175,9 +160,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="SettingsForm.old.resx">
-      <DependentUpon>SettingsForm.old.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="config-info.md" />
     <None Include="LICENSE">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
