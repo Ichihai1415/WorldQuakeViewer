@@ -188,19 +188,293 @@ namespace WorldQuakeViewer
             /// <summary>
             /// 音声再生
             /// </summary>
-            Sound=1,
+            Sound = 1,
             /// <summary>
             /// 棒読みちゃん送信
             /// </summary>
-            Bouyomichan=2,
+            Bouyomichan = 2,
             /// <summary>
             /// Socket送信
             /// </summary>
-            Socket=3,
+            Socket = 3,
             /// <summary>
             /// Webhook送信
             /// </summary>
-            Webhook=4
+            Webhook = 4
+        }
+
+        /// <summary>
+        /// フォーマット指定の置換用
+        /// </summary>
+        public class FormatReplaces
+        {
+            /// <summary>
+            /// 地震D
+            /// </summary>
+            public string ID { get; set; } = "";
+
+            /// <summary>
+            /// 発生日時(UTC・年)
+            /// </summary>
+            public string TimeUTC_Year { get; set; } = "";
+
+            /// <summary>
+            /// 発生日時(UTC・月)
+            /// </summary>
+            public string TimeUTC_Month { get; set; } = "";
+
+            /// <summary>
+            /// 発生日時(UTC・日)
+            /// </summary>
+            public string TimeUTC_Day { get; set; } = "";
+
+            /// <summary>
+            /// 発生日時(UTC・時)
+            /// </summary>
+            public string TimeUTC_Hour { get; set; } = "";
+
+            /// <summary>
+            /// 発生日時(UTC・分)
+            /// </summary>
+            public string TimeUTC_Minute { get; set; } = "";
+
+            /// <summary>
+            /// 発生日時(UTC・秒)
+            /// </summary>
+            public string TimeUTC_Second { get; set; } = "";
+
+            /// <summary>
+            /// 発生日時(ユーザー・年)
+            /// </summary>
+            public string TimeUser_Year { get; set; } = "";
+
+            /// <summary>
+            /// 発生日時(ユーザー・月)
+            /// </summary>
+            public string TimeUser_Month { get; set; } = "";
+
+            /// <summary>
+            /// 発生日時(ユーザー・日)
+            /// </summary>
+            public string TimeUser_Day { get; set; } = "";
+
+            /// <summary>
+            /// 発生日時(ユーザー・時)
+            /// </summary>
+            public string TimeUser_Hour { get; set; } = "";
+
+            /// <summary>
+            /// 発生日時(ユーザー・分)
+            /// </summary>
+            public string TimeUser_Minute { get; set; } = "";
+
+            /// <summary>
+            /// 発生日時(ユーザー・秒)
+            /// </summary>
+            public string TimeUser_Second { get; set; } = "";
+
+            /// <summary>
+            /// UTCとユーザータイムゾーンの差
+            /// </summary>
+            public string TimeUser_Off { get; set; } = "";
+
+            /// <summary>
+            /// 震源名(日本語)
+            /// </summary>
+            public string HypoJP { get; set; } = "";
+
+            /// <summary>
+            /// 震源名(英語)
+            /// </summary>
+            public string HypoEN { get; set; } = "";
+
+            /// <summary>
+            /// 緯度(十進数)
+            /// </summary>
+            public string Lat10 { get; set; } = "";
+
+            /// <summary>
+            /// NまたはS
+            /// </summary>
+            public string LatNS { get; set; } = "";
+
+            /// <summary>
+            /// 北緯または南緯
+            /// </summary>
+            public string LatNSJP { get; set; } = "";
+
+            /// <summary>
+            /// 緯度(六十進数・度)
+            /// </summary>
+            public string Lat60d { get; set; } = "";
+
+            /// <summary>
+            /// 緯度(六十進数・分)
+            /// </summary>
+            public string Lat60m { get; set; } = "";
+
+            /// <summary>
+            /// 緯度(六十進数・秒)
+            /// </summary>
+            public string Lat60s { get; set; } = "";
+
+            /// <summary>
+            /// 経度(十進数)
+            /// </summary>
+            public string Lon10 { get; set; } = "";
+
+            /// <summary>
+            /// EまたはW
+            /// </summary>
+            public string LonEW { get; set; } = "";
+
+            /// <summary>
+            /// 東経または西経
+            /// </summary>
+            public string LonEWJP { get; set; } = "";
+
+            /// <summary>
+            /// 経度(六十進数・度)
+            /// </summary>
+            public string Lon60d { get; set; } = "";
+
+            /// <summary>
+            /// 経度(六十進数・分)
+            /// </summary>
+            public string Lon60m { get; set; } = "";
+
+            /// <summary>
+            /// 経度(六十進数・秒)
+            /// </summary>
+            public string Lon60s { get; set; } = "";
+
+            /// <summary>
+            /// 深さ
+            /// </summary>
+            public string Depth { get; set; } = "";
+
+            /// <summary>
+            /// マグニチュードの種類
+            /// </summary>
+            public string MagType { get; set; } = "";
+
+            /// <summary>
+            /// マグニチュード
+            /// </summary>
+            public string Mag { get; set; } = "";
+
+            /// <summary>
+            /// [USGSのみ]改正メルカリ震度階級
+            /// </summary>
+            public string MMI { get; set; } = "";
+
+            /// <summary>
+            /// [USGSのみ]改正メルカリ震度階級(アラビア数字)
+            /// </summary>
+            public string MMIAra { get; set; } = "";
+
+            /// <summary>
+            /// [USGSのみ]アラート(日本語)
+            /// </summary>
+            public string AlertJP { get; set; } = "";
+
+            /// <summary>
+            /// [USGSのみ]アラート(英語)
+            /// </summary>
+            public string AlertEN { get; set; } = "";
+
+            /// <summary>
+            /// [一部]データ元
+            /// </summary>
+            public string Source { get; set; } = "";
+        };
+
+        /// <summary>
+        /// 履歴保存用クラス
+        /// </summary>
+        /// <remarks>既定はstring:"",double:-999,double?:null,DateTimeOffset:MinValue,DataAuthor:Null</remarks>
+        public class Data
+        {
+            /// <summary>
+            /// データ元(USGS/EMSC/EarlyEst)
+            /// </summary>
+            public DataAuthor Author { get; set; } = DataAuthor.Null;
+
+            /// <summary>
+            /// 地震ID(データ元間で互換性なし)
+            /// </summary>
+            public string ID { get; set; } = "";
+
+            /// <summary>
+            /// 発生時刻
+            /// </summary>
+            public DateTimeOffset Time { get; set; } = DateTimeOffset.MinValue;
+
+            /// <summary>
+            /// 更新時刻
+            /// </summary>
+            public DateTimeOffset UpdtTime { get; set; } = DateTimeOffset.MinValue;
+
+            /// <summary>
+            /// 震源名
+            /// </summary>
+            public string Hypo { get; set; } = "";
+
+            /// <summary>
+            /// 緯度
+            /// </summary>
+            public double Lat { get; set; } = -999;
+
+            /// <summary>
+            /// 経度
+            /// </summary>
+            public double Lon { get; set; } = -999;
+
+            /// <summary>
+            /// 深さ
+            /// </summary>
+            public double Depth { get; set; } = -999;
+
+            /// <summary>
+            /// マグニチュードの種類
+            /// </summary>
+            public string MagType { get; set; } = "";
+
+            /// <summary>
+            /// マグニチュード
+            /// </summary>
+            public double Mag { get; set; } = -999;
+
+            /// <summary>
+            /// [USGSのみ]MMI
+            /// </summary>
+            public double? MMI { get; set; } = null;
+
+            /// <summary>
+            /// [USGSのみ]アラート
+            /// </summary>
+            public string Alert { get; set; } = "";
+
+            /// <summary>
+            /// [一部のみ]データのソース
+            /// </summary>
+            public string Source { get; set; } = "";
+
+            /// <summary>
+            /// テキスト情報リストから情報リストに変換します。
+            /// </summary>
+            /// <param name="from">変換元</param>
+            public static explicit operator Data(Data_Text from) => new Data
+            {
+                ID = from.EventID,
+                Time = from.Time,
+                Lat = from.Latitude,
+                Lon = from.Longitude,
+                Depth = from.Depth,
+                MagType = from.MagType,
+                Mag = from.Magnitude,
+                Source = from.Contributor
+            };
         }
 
         /// <summary>
@@ -307,94 +581,6 @@ namespace WorldQuakeViewer
                 MagAuthor = from[11],
                 EventLocationName = from[12],
                 EventType = from.Length > 13 ? from[13] : ""
-            };
-        }
-
-        /// <summary>
-        /// 履歴保存用クラス
-        /// </summary>
-        /// <remarks>既定はstring:"",double:-999,double?:null,DateTimeOffset:MinValue,DataAuthor:Null</remarks>
-        public class Data
-        {
-            /// <summary>
-            /// データ元(USGS/EMSC/EarlyEst)
-            /// </summary>
-            public DataAuthor Author { get; set; } = DataAuthor.Null;
-
-            /// <summary>
-            /// 地震ID(データ元間で互換性なし)
-            /// </summary>
-            public string ID { get; set; } = "";
-
-            /// <summary>
-            /// 発生時刻
-            /// </summary>
-            public DateTimeOffset Time { get; set; } = DateTimeOffset.MinValue;
-
-            /// <summary>
-            /// 更新時刻
-            /// </summary>
-            public DateTimeOffset UpdtTime { get; set; } = DateTimeOffset.MinValue;
-
-            /// <summary>
-            /// 震源名
-            /// </summary>
-            public string Hypo { get; set; } = "";
-
-            /// <summary>
-            /// 緯度
-            /// </summary>
-            public double Lat { get; set; } = -999;
-
-            /// <summary>
-            /// 経度
-            /// </summary>
-            public double Lon { get; set; } = -999;
-
-            /// <summary>
-            /// 深さ
-            /// </summary>
-            public double Depth { get; set; } = -999;
-
-            /// <summary>
-            /// マグニチュードの種類
-            /// </summary>
-            public string MagType { get; set; } = "";
-
-            /// <summary>
-            /// マグニチュード
-            /// </summary>
-            public double Mag { get; set; } = -999;
-
-            /// <summary>
-            /// [USGSのみ]MMI
-            /// </summary>
-            public double? MMI { get; set; } = null;
-
-            /// <summary>
-            /// [USGSのみ]アラート
-            /// </summary>
-            public string Alert { get; set; } = "";
-
-            /// <summary>
-            /// [一部のみ]データのソース
-            /// </summary>
-            public string Source { get; set; } = "";
-
-            /// <summary>
-            /// テキスト情報リストから情報リストに変換します。
-            /// </summary>
-            /// <param name="from">変換元</param>
-            public static explicit operator Data(Data_Text from) => new Data
-            {
-                ID = from.EventID,
-                Time = from.Time,
-                Lat = from.Latitude,
-                Lon = from.Longitude,
-                Depth = from.Depth,
-                MagType = from.MagType,
-                Mag = from.Magnitude,
-                Source = from.Contributor
             };
         }
 

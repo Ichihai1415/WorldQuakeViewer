@@ -28,68 +28,9 @@ namespace WorldQuakeViewer
         /// <remarks>タイムスタンプは自動で追加されます。</remarks>
         public static void ExeLog(string text)
         {
-            if (Settings.Default.Log_Enable)
+            if (config.LogN.Normal_Enable)
                 exeLogs += $"{DateTime.Now:HH:mm:ss.ffff} {text}\n";
             Console.WriteLine(text);
-        }
-
-        /// <summary>
-        /// ログを保存します。
-        /// </summary>
-        /// <param name="directory">保存するディレクトリ。</param>
-        /// <param name="text">保存するテキスト。</param>
-        /// <param name="id">地震ログ保存時用地震ID。</param>
-        public static void LogSave(string directory, string text, string id = "unknown")//同じ参照({xxx}\\{yyy}\\{zzz})が多いのでstringにそれぞれまとめる?
-        {
-            if (Settings.Default.Log_Enable)
-            {
-                try
-                {
-                    ExeLog($"[LogSave]ログ保存中…");
-                    DateTime nowTime = DateTime.Now;
-                    if (!Directory.Exists("Log"))
-                        Directory.CreateDirectory("Log");
-                    if (directory.StartsWith("Log\\EMSC"))
-                        if (!Directory.Exists("Log\\EMSC"))
-                            Directory.CreateDirectory("Log\\EMSC");
-                    if (directory.StartsWith("Log\\USGS"))
-                        if (!Directory.Exists("Log\\USGS"))
-                            Directory.CreateDirectory("Log\\USGS");
-                    if (!Directory.Exists(directory))
-                        Directory.CreateDirectory(directory);
-                    if (directory == "Log")
-                        File.WriteAllText($"Log\\log.txt", text);
-                    else if (directory == "Log\\ErrorLog")
-                    {
-                        if (File.Exists($"Log\\ErrorLog\\{nowTime:yyyyMM}.txt"))
-                            text += "\n--------------------------------------------------\n" + File.ReadAllText($"Log\\ErrorLog\\{nowTime:yyyyMM}.txt");
-                        File.WriteAllText($"Log\\ErrorLog\\{nowTime:yyyyMM}.txt", text);
-                    }
-                    else if (directory.StartsWith("Log\\USGS") || directory.StartsWith("Log\\EMSC"))
-                    {
-                        if (!Directory.Exists($"{directory}\\{nowTime:yyyyMM}"))
-                            Directory.CreateDirectory($"{directory}\\{nowTime:yyyyMM}");
-                        if (!Directory.Exists($"{directory}\\{nowTime:yyyyMM}\\{nowTime:dd}"))
-                            Directory.CreateDirectory($"{directory}\\{nowTime:yyyyMM}\\{nowTime:dd}");
-                        if (noFirst && File.Exists($"{directory}\\{nowTime:yyyyMM}\\{nowTime:dd}\\{nowTime:yyyyMMdd}_{id}.txt"))
-                            text = File.ReadAllText($"{directory}\\{nowTime:yyyyMM}\\{nowTime:dd}\\{nowTime:yyyyMMdd}_{id}.txt") + "\n--------------------------------------------------\n" + text;
-                        File.WriteAllText($"{directory}\\{nowTime:yyyyMM}\\{nowTime:dd}\\{nowTime:yyyyMMdd}_{id}.txt", text);
-                    }
-                    else
-                    {
-                        if (!Directory.Exists($"{directory}\\{nowTime:yyyyMM}"))
-                            Directory.CreateDirectory($"{directory}\\{nowTime:yyyyMM}");
-                        if (File.Exists($"{directory}\\{nowTime:yyyyMM}\\{nowTime:yyyyMMdd}.txt"))
-                            text = File.ReadAllText($"{directory}\\{nowTime:yyyyMM}\\{nowTime:yyyyMMdd}.txt") + "\n--------------------------------------------------\n" + text;
-                        File.WriteAllText($"{directory}\\{nowTime:yyyyMM}\\{nowTime:yyyyMMdd}.txt", text);
-                    }
-                    ExeLog($"[LogSave]ログ保存成功");
-                }
-                catch (Exception ex)
-                {
-                    ExeLog($"[LogSave]ログ保存でエラーが発生:{ex.Message}");
-                }
-            }
         }
 
         /// <summary>
@@ -188,37 +129,34 @@ namespace WorldQuakeViewer
         /// <summary>
         /// 更新時処理
         /// </summary>
-        /// <param name="dataAuthor">データ元</param>
         /// <param name="data">データ</param>
         /// <param name="isNew">新規か</param>
-        public static void UpdatePros(Data data, DataAuthor dataAuthor,bool isNew = false)
+        public static void UpdtPros(Data data, bool isNew = false)
         {
-            if(noFirst)
-            try
-            {
-                if (dataAuthor == DataAuthor.Null)
-                    throw new ArgumentException($"データ元が不正です。", dataAuthor.ToString());
-                int level = Mag2Level(data.Mag);
-                Sound(level, dataAuthor);
-                string text_bouyomi =
-                Bouyomichan();
-            }
-            catch (Exception ex)
-            {
-                ExeLog($"[UpdatePros]エラー:{ex.Message}");
-                LogSave(LogKind.Error, ex.ToString());
-            }
+            if (noFirst)
+                try
+                {
+                    DataAuthor dataAuthor = data.Author;
+                    if (dataAuthor == DataAuthor.Null)
+                        throw new ArgumentException($"データ元が不正です。", dataAuthor.ToString());
+                    int level = Mag2Level(data.Mag);
+                    Sound(level, dataAuthor);
+                    if (config.Datas[(int)dataAuthor].Bouyomi.Enable)
+                        if (data.Mag >= config.Datas[(int)dataAuthor].Bouyomi.LowerMagLimit)
+                            Bouyomichan(Data2ProString(data, UpdatePros.Bouyomichan), dataAuthor);
+                    if (config.Datas[(int)dataAuthor].Socket.Enable)
+                        if (data.Mag >= config.Datas[(int)dataAuthor].Socket.LowerMagLimit)
+                            Socket(Data2ProString(data, UpdatePros.Socket), dataAuthor);
+                    if (config.Datas[(int)dataAuthor].Webhook.Enable)
+                        if (data.Mag >= config.Datas[(int)dataAuthor].Webhook.LowerMagLimit)
+                            Webhook(Data2ProString(data, UpdatePros.Webhook), dataAuthor);
+                }
+                catch (Exception ex)
+                {
+                    ExeLog($"[UpdatePros]エラー:{ex.Message}");
+                    LogSave(LogKind.Error, ex.ToString());
+                }
         }
-
-        /// <summary>
-        /// データから各処理の
-        /// </summary>
-        /// <param name="data">データ</param>
-        /// <returns></returns>
-        public static string Data2String(Data data)
-        {
-            
-        } 
 
         /// <summary>
         /// 音声を再生します。
@@ -227,153 +165,150 @@ namespace WorldQuakeViewer
         /// <param name="dataAuthor">データ元</param>
         public static void Sound(int level, DataAuthor dataAuthor)
         {
-                try
+            try
+            {
+                bool end = false;
+                string path = "";
+                switch (level)
                 {
-                    bool end = false;
-                    string path = "";
-                    switch (level)
-                    {
-                        case 1:
-                            end = !config.Datas[(int)dataAuthor].Sound.L1_Enable;
-                            path = config.Datas[(int)dataAuthor].Sound.L1_Path;
-                            break;
-                        case 2:
-                            end = !config.Datas[(int)dataAuthor].Sound.L2_Enable;
-                            path = config.Datas[(int)dataAuthor].Sound.L2_Path;
-                            break;
-                        case 3:
-                            end = !config.Datas[(int)dataAuthor].Sound.L3_Enable;
-                            path = config.Datas[(int)dataAuthor].Sound.L3_Path;
-                            break;
-                        case 4:
-                            end = !config.Datas[(int)dataAuthor].Sound.L4_Enable;
-                            path = config.Datas[(int)dataAuthor].Sound.L4_Path;
-                            break;
-                        case 5:
-                            end = !config.Datas[(int)dataAuthor].Sound.L5_Enable;
-                            path = config.Datas[(int)dataAuthor].Sound.L5_Path;
-                            break;
-                        default:
-                            throw new ArgumentException($"レベルが不正です。", level.ToString());
-                    }
-                    if (end)
-                    {
-                        ExeLog($"[Sound]再生対象外です。");
-                        return;
-                    }
-                    if (!File.Exists(path))
-                    {
-                        throw new FileNotFoundException("ファイルが見つかりませんでした。", path);
-                    }
-                    ExeLog($"[Sound]音声再生開始({path})");
-                    if (player != null)
-                    {
-                        player.Stop();
-                        player.Dispose();
-                        player = null;
-                    }
-                    player = new SoundPlayer(path);
-                    player.Play();
-                    ExeLog($"[Sound]音声再生成功");
+                    case 1:
+                        end = !config.Datas[(int)dataAuthor].Sound.L1_Enable;
+                        path = config.Datas[(int)dataAuthor].Sound.L1_Path;
+                        break;
+                    case 2:
+                        end = !config.Datas[(int)dataAuthor].Sound.L2_Enable;
+                        path = config.Datas[(int)dataAuthor].Sound.L2_Path;
+                        break;
+                    case 3:
+                        end = !config.Datas[(int)dataAuthor].Sound.L3_Enable;
+                        path = config.Datas[(int)dataAuthor].Sound.L3_Path;
+                        break;
+                    case 4:
+                        end = !config.Datas[(int)dataAuthor].Sound.L4_Enable;
+                        path = config.Datas[(int)dataAuthor].Sound.L4_Path;
+                        break;
+                    case 5:
+                        end = !config.Datas[(int)dataAuthor].Sound.L5_Enable;
+                        path = config.Datas[(int)dataAuthor].Sound.L5_Path;
+                        break;
+                    default:
+                        throw new ArgumentException($"レベルが不正です。", level.ToString());
                 }
-                catch (Exception ex)
+                if (end)
                 {
-                    ExeLog($"[Sound]エラー:{ex.Message}");
-                    LogSave(LogKind.Error, ex.ToString());
+                    ExeLog($"[Sound]再生対象外です。");
+                    return;
                 }
+                if (!File.Exists(path))
+                {
+                    throw new FileNotFoundException("ファイルが見つかりませんでした。", path);
+                }
+                ExeLog($"[Sound]音声再生開始({path})");
+                if (player != null)
+                {
+                    player.Stop();
+                    player.Dispose();
+                    player = null;
+                }
+                player = new SoundPlayer(path);
+                player.Play();
+                ExeLog($"[Sound]音声再生成功");
+            }
+            catch (Exception ex)
+            {
+                ExeLog($"[Sound]エラー:{ex.Message}");
+                LogSave(LogKind.Error, ex.ToString());
+            }
         }
 
         /// <summary>
         /// 棒読みちゃんに読み上げ指令を送ります。
         /// </summary>
+        /// <remarks>事前に有効確認が必要です。</remarks>
         /// <param name="text">読み上げさせる文</param>
         /// <param name="mag">マグニチュード</param>
         /// <param name="dataAuthor">データ元</param>
-        public static void Bouyomichan(string text, double mag, DataAuthor dataAuthor)
+        public static void Bouyomichan(string text, DataAuthor dataAuthor)
         {
-            Data_.Bouyomi_ config_bouyomi = config.Datas[(int)dataAuthor].Bouyomi;
-            if ( config_bouyomi.Enable)
-                if (mag > config_bouyomi.LowerMagLimit)
-                    try
-                    {
-                        byte[] message = Encoding.UTF8.GetBytes(text);
-                        ExeLog($"[Bouyomichan]棒読みちゃん送信中…({config_bouyomi.Host}:{config_bouyomi.Port})");
-                        using (TcpClient tcpClient = new TcpClient(config_bouyomi.Host, config_bouyomi.Port))
-                        using (NetworkStream networkStream = tcpClient.GetStream())
-                        using (BinaryWriter binaryWriter = new BinaryWriter(networkStream))
-                        {
-                            binaryWriter.Write((short)1);
-                            binaryWriter.Write(config_bouyomi.Speed);
-                            binaryWriter.Write(config_bouyomi.Tone);
-                            binaryWriter.Write(config_bouyomi.Volume);
-                            binaryWriter.Write(config_bouyomi.Voice);
-                            binaryWriter.Write((byte)0);
-                            binaryWriter.Write(message.Length);
-                            binaryWriter.Write(message);
-                        }
-                        ExeLog($"[Bouyomichan]棒読みちゃん送信成功");
-                    }
-                    catch (Exception ex)
-                    {
-                        ExeLog($"[Bouyomichan]エラー:{ex.Message}");
-                        LogSave(LogKind.Error, ex.ToString());
-                    }
+            try
+            {
+                Data_.Bouyomi_ config_bouyomi = config.Datas[(int)dataAuthor].Bouyomi;
+                byte[] message = Encoding.UTF8.GetBytes(text);
+                ExeLog($"[Bouyomichan]棒読みちゃん送信中…({config_bouyomi.Host}:{config_bouyomi.Port})");
+                using (TcpClient tcpClient = new TcpClient(config_bouyomi.Host, config_bouyomi.Port))
+                using (NetworkStream networkStream = tcpClient.GetStream())
+                using (BinaryWriter binaryWriter = new BinaryWriter(networkStream))
+                {
+                    binaryWriter.Write((short)1);
+                    binaryWriter.Write(config_bouyomi.Speed);
+                    binaryWriter.Write(config_bouyomi.Tone);
+                    binaryWriter.Write(config_bouyomi.Volume);
+                    binaryWriter.Write(config_bouyomi.Voice);
+                    binaryWriter.Write((byte)0);
+                    binaryWriter.Write(message.Length);
+                    binaryWriter.Write(message);
+                }
+                ExeLog($"[Bouyomichan]棒読みちゃん送信成功");
+            }
+            catch (Exception ex)
+            {
+                ExeLog($"[Bouyomichan]エラー:{ex.Message}");
+                LogSave(LogKind.Error, ex.ToString());
+            }
         }
 
         /// <summary>
         /// Socket通信で送信します。
         /// </summary>
+        /// <remarks>事前に有効確認が必要です。</remarks>
         /// <param name="text">送信する文</param>
         /// <param name="mag">マグニチュード</param>
         /// <param name="dataAuthor">データ元</param>
-        public static async void Socket(string text, double mag, DataAuthor dataAuthor)
+        public static async void Socket(string text, DataAuthor dataAuthor)
         {
-            Data_.Socket_ config_socket = config.Datas[(int)dataAuthor].Socket;
-            if (config_socket.Enable)
-                if (mag > config_socket.LowerMagLimit)
-                    try
-                    {
-                        byte[] message = new byte[4096];
-                        message = Encoding.UTF8.GetBytes(text);
-                        ExeLog($"[Socket]Socket送信中…({config_socket.Host}:{config_socket.Port})");
-                        using (TcpClient tcpClient = new TcpClient(config_socket.Host, config_socket.Port))
-                        using (NetworkStream networkStream = tcpClient.GetStream())
-                            await networkStream.WriteAsync(message, 0, message.Length);
-                        ExeLog($"[Socket]Socket送信成功");
-                    }
-                    catch (Exception ex)
-                    {
-                        ExeLog($"[Socket]エラー:{ex.Message}");
-                        LogSave(LogKind.Error, ex.ToString());
-                    }
+            try
+            {
+                Data_.Socket_ config_socket = config.Datas[(int)dataAuthor].Socket;
+                byte[] message = new byte[4096];
+                message = Encoding.UTF8.GetBytes(text);
+                ExeLog($"[Socket]Socket送信中…({config_socket.Host}:{config_socket.Port})");
+                using (TcpClient tcpClient = new TcpClient(config_socket.Host, config_socket.Port))
+                using (NetworkStream networkStream = tcpClient.GetStream())
+                    await networkStream.WriteAsync(message, 0, message.Length);
+                ExeLog($"[Socket]Socket送信成功");
+            }
+            catch (Exception ex)
+            {
+                ExeLog($"[Socket]エラー:{ex.Message}");
+                LogSave(LogKind.Error, ex.ToString());
+            }
         }
 
         /// <summary>
         /// Webhookを送信します。
         /// </summary>
+        /// <remarks>事前に有効確認が必要です。</remarks>
         /// <param name="text">送信する文</param>
         /// <param name="mag">マグニチュード</param>
         /// <param name="dataAuthor">データ元</param>
-        public static async void Webhook(string text, double mag, DataAuthor dataAuthor)
+        public static async void Webhook(string text, DataAuthor dataAuthor)
         {
-            Data_.Webhook_ config_webhook = config.Datas[(int)dataAuthor].Webhook;
-            if (config_webhook.Enable)
-                if (mag > config_webhook.LowerMagLimit)
-                    try
-                    {
-                        Dictionary<string, string> strs = new Dictionary<string, string>()
+            try
+            {
+                Data_.Webhook_ config_webhook = config.Datas[(int)dataAuthor].Webhook;
+                Dictionary<string, string> strs = new Dictionary<string, string>()
                         {
                             { "content", text }
                         };
-                        ExeLog($"[Webhook]Webhook送信中…({config_webhook.URL})");
-                        await client.PostAsync(config_webhook.URL, new FormUrlEncodedContent(strs));
-                        ExeLog($"[Webhook]Webhook送信成功");
-                    }
-                    catch (Exception ex)
-                    {
-                        ExeLog($"[Webhook]エラー:{ex.Message}");
-                        LogSave(LogKind.Error, ex.ToString());
-                    }
+                ExeLog($"[Webhook]Webhook送信中…({config_webhook.URL})");
+                await client.PostAsync(config_webhook.URL, new FormUrlEncodedContent(strs));
+                ExeLog($"[Webhook]Webhook送信成功");
+            }
+            catch (Exception ex)
+            {
+                ExeLog($"[Webhook]エラー:{ex.Message}");
+                LogSave(LogKind.Error, ex.ToString());
+            }
         }
 
         /// <summary>
