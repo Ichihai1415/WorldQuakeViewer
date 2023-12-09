@@ -117,7 +117,7 @@
       <DependentUpon>ControlForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Util\Class.cs" />
-    <Compile Include="Util\Data.cs" />
+    <Compile Include="Util\DataPro.cs" />
     <Compile Include="Util\Conv.cs" />
     <Compile Include="Util\Func.cs" />
     <Compile Include="DataView.cs">
