@@ -82,8 +82,7 @@ namespace WorldQuakeViewer
                     if (data_ == "")
                         continue;
                     Console.WriteLine(data_);
-                    Data_Text data_text = (Data_Text)data_.Split('|');
-                    Data data = (Data)data_text;
+                    Data data = (Data)data_.Split('|');
                     data.Author = dataAuthor;
                     if (DateTime.Now - data.Time > config_data.Update.MaxPeriod)
                     {
