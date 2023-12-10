@@ -102,37 +102,70 @@ namespace WorldQuakeViewer
             Data_.Update_ config_data_update = config.Datas[(int)dataAuthor].Update;
             if (config_data_update.Time)
                 if (data_n.Time != data_o.Time)
+                {
+                    ExeLog($"{data_o.Time}->{data_n.Time}");
                     return true;
+                }
             if (config_data_update.UpdtTime)
                 if (data_n.UpdtTime != data_o.UpdtTime)
+                {
+                    ExeLog($"{data_o.UpdtTime}->{data_n.UpdtTime}");
                     return true;
+                }
             if (config_data_update.Hypo)
                 if (data_n.Hypo != data_o.Hypo)
+                {
+                    ExeLog($"{data_o.Hypo}->{data_n.Hypo}");
                     return true;
+                }
             if (config_data_update.LatLon)
                 if (data_n.Lat != data_o.Lat)
+                {
+                    ExeLog($"{data_o.Lat}->{data_n.Lat}");
                     return true;
+                }
             if (config_data_update.LatLon)
                 if (data_n.Lon != data_o.Lon)
+                {
+                    ExeLog($"{data_o.Lon}->{data_n.Lon}");
                     return true;
+                }
             if (config_data_update.Depth)
                 if (data_n.Depth != data_o.Depth)
+                {
+                    ExeLog($"{data_o.Depth}->{data_n.Depth}");
                     return true;
+                }
             if (config_data_update.MagType)
                 if (data_n.MagType != data_o.MagType)
+                {
+                    ExeLog($"{data_o.MagType}->{data_n.MagType}");
                     return true;
+                }
             if (config_data_update.Mag)
                 if (data_n.Mag != data_o.Mag)
+                {
+                    ExeLog($"{data_o.Mag}->{data_n.Mag}");
                     return true;
+                }
             if (config_data_update.MMI)
                 if (data_n.MMI != data_o.MMI)
+                {
+                    ExeLog($"{data_o.MMI}->{data_n.MMI}");
                     return true;
+                }
             if (config_data_update.Alert)
                 if (data_n.Alert != data_o.Alert)
+                {
+                    ExeLog($"{data_o.Alert}->{data_n.Alert}");
                     return true;
+                }
             if (config_data_update.Source)
                 if (data_n.Source != data_o.Source)
+                {
+                    ExeLog($"{data_o.Source}->{data_n.Source}");
                     return true;
+                }
             Console.WriteLine("更新なし");
             return false;
         }
