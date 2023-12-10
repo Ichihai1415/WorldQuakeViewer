@@ -41,10 +41,11 @@ namespace WorldQuakeViewer
         /// <param name="logKind">ログの種類</param>
         /// <param name="text">保存する文</param>
         /// <param name="id">(地震ログのみ)地震ID</param>
-        public static void LogSave(LogKind logKind, string text, string id = "unknown")
+        public static void LogSave(LogKind logKind, string text, string id = "")
         {
             try
             {
+                Console.WriteLine($"ログ保存中({logKind})...");
                 string dir = "";
                 string name = "";
                 switch (logKind)
@@ -65,6 +66,8 @@ namespace WorldQuakeViewer
                     case LogKind.EMSC:
                     case LogKind.GFZ:
                     case LogKind.EarlyEst:
+                        if (id == "")
+                            throw new ArgumentException($"地震idが指定されていません。", id);
                         dir = $"Log\\{logKind}\\{DateTime.Now:yyyyMM\\dd}";
                         name = $"{id}.txt";
                         if (File.Exists($"{dir}\\{name}"))
@@ -95,6 +98,7 @@ namespace WorldQuakeViewer
         /// <returns>更新か</returns>
         public static bool UpdateCheck(Data data_o, Data data_n, DataAuthor dataAuthor)
         {
+            Console.WriteLine("更新確認中...");
             Data_.Update_ config_data_update = config.Datas[(int)dataAuthor].Update;
             if (config_data_update.Time)
                 if (data_n.Time != data_o.Time)
@@ -129,6 +133,7 @@ namespace WorldQuakeViewer
             if (config_data_update.Source)
                 if (data_n.Source != data_o.Source)
                     return true;
+            Console.WriteLine("更新なし");
             return false;
         }
 
@@ -142,10 +147,10 @@ namespace WorldQuakeViewer
             if (noFirst)
                 try
                 {
+                    Console.WriteLine("更新処理開始");
                     DataAuthor dataAuthor = data.Author;
                     if (dataAuthor == DataAuthor.Null)
                         throw new ArgumentException($"データ元が不正です。", dataAuthor.ToString());
-
                     int level = Mag2Level(data.Mag);
                     Sound(level, dataAuthor);
                     if (config.Datas[(int)dataAuthor].Bouyomi.Enable)
@@ -175,6 +180,7 @@ namespace WorldQuakeViewer
         {
             try
             {
+                Console.WriteLine("音声処理開始");
                 bool end = false;
                 string path = "";
                 switch (level)
@@ -204,7 +210,7 @@ namespace WorldQuakeViewer
                 }
                 if (end)
                 {
-                    ExeLog($"[Sound]再生対象外です。");
+                    Console.WriteLine("再生対象外です。");
                     return;
                 }
                 if (!File.Exists(path))
@@ -240,6 +246,7 @@ namespace WorldQuakeViewer
         {
             try
             {
+                Console.WriteLine("棒読みちゃん処理開始");
                 Data_.Bouyomi_ config_bouyomi = config.Datas[(int)dataAuthor].Bouyomi;
                 byte[] message = Encoding.UTF8.GetBytes(text);
                 ExeLog($"[Bouyomichan]棒読みちゃん送信中…({config_bouyomi.Host}:{config_bouyomi.Port})");
@@ -276,6 +283,7 @@ namespace WorldQuakeViewer
         {
             try
             {
+                Console.WriteLine("Socket処理開始");
                 Data_.Socket_ config_socket = config.Datas[(int)dataAuthor].Socket;
                 byte[] message = new byte[4096];
                 message = Encoding.UTF8.GetBytes(text);
@@ -303,11 +311,12 @@ namespace WorldQuakeViewer
         {
             try
             {
+                Console.WriteLine("Webhook処理開始");
                 Data_.Webhook_ config_webhook = config.Datas[(int)dataAuthor].Webhook;
                 Dictionary<string, string> strs = new Dictionary<string, string>()
-                        {
-                            { "content", text }
-                        };
+                {
+                    { "content", text }
+                };
                 ExeLog($"[Webhook]Webhook送信中…({config_webhook.URL})");
                 await client.PostAsync(config_webhook.URL, new FormUrlEncodedContent(strs));
                 ExeLog($"[Webhook]Webhook送信成功");
@@ -330,6 +339,7 @@ namespace WorldQuakeViewer
         {
             try
             {
+                Console.WriteLine("地震ログ処理開始");
                 bool end = false;
                 string text;
                 switch (level)

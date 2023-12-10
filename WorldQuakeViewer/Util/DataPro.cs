@@ -72,6 +72,7 @@ namespace WorldQuakeViewer
                         bool update = UpdateCheck(data_tmp[data.ID], data, dataAuthor);
                         if (update)
                         {
+                            ExeLog($"[Get_Text]更新を検知");
                             data_tmp[data.ID] = data;
                             data_All[data.ID] = data;
                             UpdtPros(data);
@@ -79,6 +80,7 @@ namespace WorldQuakeViewer
                     }
                     else
                     {
+                        ExeLog($"[Get_Text]新規を検知");
                         data_tmp[data.ID] = data;
                         data_All[data.ID] = data;
                         UpdtPros(data, true);

@@ -73,8 +73,20 @@ namespace WorldQuakeViewer
                 TopMost = false;
                 Directory.CreateDirectory("Setting");
                 File.WriteAllText("Setting\\config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
-                    ExeLog($"[CtrlForm_Load]設定保存完了");
+                ExeLog($"[CtrlForm_Load]設定保存完了");
             }
+            ConfigReload();
+            LogClearTimer.Enabled = true;
+            if (!config.LogN.Normal_Enable)
+                logTextBox.Text = "<動作ログを表示する場合、設定のその他のNormal_EnableをTrueにしてください>";
+            ExeLog($"[CtrlForm_Load]起動処理完了");
+        }
+
+        /// <summary>
+        /// 設定を反映させます。
+        /// </summary>
+        public void ConfigReload()
+        {
             config_display = (Config_Display)config;
             ProG_pro.SelectedObject = config_display.Datas;
             ProG_view.SelectedObject = config_display.Views;
@@ -88,10 +100,6 @@ namespace WorldQuakeViewer
             GetTimer.Interval = 2000 - DateTime.Now.Millisecond;
             GetTimer.Enabled = true;
             LogClearTimer.Interval = (int)config.LogN.Normal_AutoDelete.TotalMilliseconds;
-            LogClearTimer.Enabled = true;
-            if (!config.LogN.Normal_Enable)
-                logTextBox.Text = "<動作ログを表示する場合、設定のその他のNormal_EnableをTrueにしてください>";
-                    ExeLog($"[CtrlForm_Load]起動処理完了");
         }
 
         private async void GetTimer_Tick(object sender, EventArgs e)
@@ -100,9 +108,6 @@ namespace WorldQuakeViewer
                 await Task.Delay(10);
             GetTimer.Interval = 1000 - DateTime.Now.Millisecond;
             Console.WriteLine(DateTime.Now.ToString("ss.ffff"));
-            Console.WriteLine(data_GFZ.Count);
-            if (data_GFZ.Count > 0)
-                throw new Exception();
             try
             {
                 for (int i = 0; i < DataAuthorCount; i++)
@@ -116,6 +121,10 @@ namespace WorldQuakeViewer
             }
         }
 
+        /// <summary>
+        /// ログテキストボックスに追加します。
+        /// </summary>
+        /// <param name="text">追加する文(改行必要)</param>
         public static void ExeLogView(string text)
         {
             logTextBox.Text += text;
