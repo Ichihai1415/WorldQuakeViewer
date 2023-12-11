@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Xml;
 using static LL2FERC.LL2FERC;
 using static WorldQuakeViewer.CtrlForm;
 using static WorldQuakeViewer.Util_Class;
@@ -204,6 +205,39 @@ namespace WorldQuakeViewer
                 default:
                     return "-";
             }
+        }
+
+        /// <summary>
+        /// QuakeML形式からリスト形式に変換します。
+        /// </summary>
+        /// <remarks>Authorは手動で追加してください。</remarks>
+        /// <param name="info">変換元</param>
+        /// <param name="ns">xmlの名前空間</param>
+        /// <param name="dataAuthor">データ元</param>
+        /// <returns></returns>
+        public static Data QuakeML2Data(XmlNode info, XmlNamespaceManager ns, DataAuthor dataAuthor)
+        {
+            XmlNode origin = info.SelectSingleNode("qml:origin", ns);
+            XmlNodeList magnitude = info.SelectNodes("qml:magnitude", ns);
+            string id = "";
+            switch (dataAuthor)
+            {
+                case DataAuthor.EarlyEst:
+                    id = info.Attributes[0].Value.Split('/')[3];
+                    break;
+            }
+            return new Data
+            {
+                ID = id,
+                Time = DateTimeOffset.Parse(origin.SelectSingleNode("qml:time/qml:value", ns).InnerText),
+                UpdtTime = DateTimeOffset.Parse(info.SelectSingleNode("qml:creationInfo/qml:creationTime", ns).InnerText),
+                Hypo = NameJP(double.Parse(origin.SelectSingleNode("qml:latitude/qml:value", ns).InnerText), double.Parse(origin.SelectSingleNode("qml:longitude/qml:value", ns).InnerText)),
+                Lat = double.Parse(origin.SelectSingleNode("qml:latitude/qml:value", ns).InnerText),
+                Lon = double.Parse(origin.SelectSingleNode("qml:longitude/qml:value", ns).InnerText),
+                Depth = double.Parse(origin.SelectSingleNode("qml:depth/qml:value", ns).InnerText) / 1000d,
+                MagType = magnitude[magnitude.Count - 1].SelectSingleNode("qml:type", ns).InnerText,
+                Mag = double.Parse(magnitude[magnitude.Count - 1].SelectSingleNode("qml:mag/qml:value", ns).InnerText)
+            };
         }
 
         /// <summary>

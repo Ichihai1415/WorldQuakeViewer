@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using static LL2FERC.LL2FERC;
 
 namespace WorldQuakeViewer
 {
@@ -433,6 +434,7 @@ namespace WorldQuakeViewer
             /// <summary>
             /// 震源名
             /// </summary>
+            /// <remarks>基本的に震源名更新用</remarks>
             public string Hypo { get; set; } = "";
 
             /// <summary>
@@ -476,7 +478,7 @@ namespace WorldQuakeViewer
             public string Source { get; set; } = "";
 
             /// <summary>
-            /// テキスト情報リストから情報リストに変換します。
+            /// テキスト形式からリスト形式に変換します。
             /// </summary>
             /// <remarks>Authorは手動で追加してください。</remarks>
             /// <param name="from">変換元</param>
@@ -484,12 +486,13 @@ namespace WorldQuakeViewer
             {
                 ID = from[0],
                 Time = DateTimeOffset.Parse(from[1]),
+                Hypo = NameJP(double.Parse(from[2]), double.Parse(from[3])),
                 Lat = double.Parse(from[2]),
                 Lon = double.Parse(from[3]),
                 Depth = double.Parse(from[4]),
                 MagType = from[9],
                 Mag = double.Parse(from[10]),
-                Source= from[7],
+                Source = from[7],
             };
         }
     }
