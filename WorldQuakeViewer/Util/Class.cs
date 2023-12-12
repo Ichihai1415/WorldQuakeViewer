@@ -210,6 +210,29 @@ namespace WorldQuakeViewer
         }
 
         /// <summary>
+        /// データの種類
+        /// </summary>
+        public enum DataProType
+        {
+            /// <summary>
+            /// 自動判別
+            /// </summary>
+            Auto=0,
+            /// <summary>
+            /// テキスト形式
+            /// </summary>
+            Text=1,
+            /// <summary>
+            /// QuakeML形式
+            /// </summary>
+            QuakeML=2,
+            /// <summary>
+            /// GeoJSON形式
+            /// </summary>
+            GeoJSON=3
+        }
+
+        /// <summary>
         /// フォーマット指定の置換用
         /// </summary>
         public class FormatReplaces

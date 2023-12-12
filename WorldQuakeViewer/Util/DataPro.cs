@@ -22,7 +22,7 @@ namespace WorldQuakeViewer
         {
             try
             {
-                ExeLog($"[Get]取得準備中...");
+                ExeLog($"[Get]取得準備中...({dataAuthor})");
                 Dictionary<string, Data> data_tmp = new Dictionary<string, Data>();
                 switch (dataAuthor)
                 {
@@ -45,11 +45,14 @@ namespace WorldQuakeViewer
                         throw new ArgumentException("データ元が不正です。", dataAuthor.ToString());
                 }
                 string URL = config.Datas[(int)dataAuthor].URL;
+                string URLbasic = URL.Split('?')[0];
                 ExeLog($"[Get]取得中...({dataAuthor},{URL})");
                 string res = await client.GetStringAsync(URL);
 
                 if (URL.Contains("text"))
-                    Get_Text(URL, data_tmp, dataAuthor);
+                    Get_Text(res, data_tmp, dataAuthor);
+                else if(URLbasic== "https://geofon.gfz-potsdam.de/fdsnws/event/1/query")
+                        Get_QuakeML(res,data_tmp,dataAuthor);
             }
             catch (WebException ex)
             {

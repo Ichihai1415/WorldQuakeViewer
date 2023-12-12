@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using System.Xml;
 using static LL2FERC.LL2FERC;
 using static WorldQuakeViewer.CtrlForm;
@@ -219,18 +220,11 @@ namespace WorldQuakeViewer
         {
             XmlNode origin = info.SelectSingleNode("qml:origin", ns);
             XmlNodeList magnitude = info.SelectNodes("qml:magnitude", ns);
-            string id = "";
-            switch (dataAuthor)
-            {
-                case DataAuthor.EarlyEst:
-                    id = info.Attributes[0].Value.Split('/')[3];
-                    break;
-            }
             return new Data
             {
-                ID = id,
+                ID = info.Attributes[0].Value.Split('/').Last(),
                 Time = DateTimeOffset.Parse(origin.SelectSingleNode("qml:time/qml:value", ns).InnerText),
-                UpdtTime = DateTimeOffset.Parse(info.SelectSingleNode("qml:creationInfo/qml:creationTime", ns).InnerText),
+                UpdtTime = info.SelectSingleNode("qml:creationInfo/qml:creationTime", ns) != null ? DateTimeOffset.Parse(info.SelectSingleNode("qml:creationInfo/qml:creationTime", ns).InnerText) : DateTimeOffset.MinValue,
                 Hypo = NameJP(double.Parse(origin.SelectSingleNode("qml:latitude/qml:value", ns).InnerText), double.Parse(origin.SelectSingleNode("qml:longitude/qml:value", ns).InnerText)),
                 Lat = double.Parse(origin.SelectSingleNode("qml:latitude/qml:value", ns).InnerText),
                 Lon = double.Parse(origin.SelectSingleNode("qml:longitude/qml:value", ns).InnerText),

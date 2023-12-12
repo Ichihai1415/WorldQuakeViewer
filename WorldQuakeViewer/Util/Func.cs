@@ -29,8 +29,8 @@ namespace WorldQuakeViewer
         {
             if ((isError && config.LogN.Error_Enable) || (!isError && config.LogN.Normal_Enable))
             {
-                exeLogs += $"{DateTime.Now:HH:mm:ss.ffff} {text}\n";
-                ExeLogView(exeLogs);
+                exeLogs += $"{DateTime.Now:HH:mm:ss.ffff} {text}\r\n";//textbox用に\r
+                ExeLogView();
             }
             Console.WriteLine(text);
         }

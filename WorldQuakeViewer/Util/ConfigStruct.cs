@@ -92,6 +92,11 @@ namespace WorldQuakeViewer
             public string URL { get; set; }
 
             /// <summary>
+            /// データの種類
+            /// </summary>
+            public DataProType DataProType { get; set; } = DataProType.Auto;
+
+            /// <summary>
             /// 取得時間(毎分x秒) -1で無効
             /// </summary>
             public int[] GetTimes { get; set; } = new int[2] { -1, -1 };
@@ -616,6 +621,7 @@ namespace WorldQuakeViewer
             {
                 Name = from.Name,
                 URL = from.URL,
+                DataProType = from.DataProType,
                 GetTimes = from.GetTimes,
                 Update = (Update_)from.Update,
                 Bouyomi = (Bouyomi_)from.Bouyomi,
@@ -880,6 +886,12 @@ namespace WorldQuakeViewer
             /// </summary>
             [Description("取得するURL")]
             public string URL { get; set; }
+
+            /// <summary>
+            /// データの種類
+            /// </summary>
+            [Description("データの種類")]
+            public DataProType DataProType { get; set; }
 
             /// <summary>
             /// 取得時間(毎分x秒) -1で無効
@@ -1492,6 +1504,7 @@ namespace WorldQuakeViewer
             {
                 Name = from.Name,
                 URL = from.URL,
+                DataProType = from.DataProType,
                 GetTimes = from.GetTimes,
                 Update = (Update_)from.Update,
                 Bouyomi = (Bouyomi_)from.Bouyomi,

@@ -122,12 +122,11 @@ namespace WorldQuakeViewer
         }
 
         /// <summary>
-        /// ログテキストボックスに追加します。
+        /// 実行ログをテキストボックスに表示します。
         /// </summary>
-        /// <param name="text">追加する文(改行必要)</param>
-        public static void ExeLogView(string text)
+        public static void ExeLogView()
         {
-            logTextBox.Text += text;
+            logTextBox.Text =exeLogs;
         }
 
         private void ConfigWebLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
