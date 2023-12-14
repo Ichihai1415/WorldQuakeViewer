@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
+using System.Net.Http;
 using System.Xml;
 using static LL2FERC.LL2FERC;
 using static WorldQuakeViewer.CtrlForm;
 using static WorldQuakeViewer.Util_Class;
+using static WorldQuakeViewer.Util_Func;
 
 namespace WorldQuakeViewer
 {
@@ -63,7 +65,7 @@ namespace WorldQuakeViewer
             Lon2String(data.Lon, out string lon10, out string lonEW, out string lonEWJP, out string lon60d, out string lon60m, out string lon60s);
             FormatReplaces f = new FormatReplaces
             {
-                ID = data.ID,
+                ID = data.ID2,
                 TimeUTC_Year = data.Time.Year.ToString(),
                 TimeUTC_Month = data.Time.Month.ToString(),
                 TimeUTC_Day = data.Time.Day.ToString(),
@@ -211,18 +213,31 @@ namespace WorldQuakeViewer
         /// <summary>
         /// QuakeML形式からリスト形式に変換します。
         /// </summary>
-        /// <remarks>Authorは手動で追加してください。</remarks>
+        /// <remarks>EMSCの場合ID2を確認</remarks>
         /// <param name="info">変換元</param>
         /// <param name="ns">xmlの名前空間</param>
         /// <param name="dataAuthor">データ元</param>
-        /// <returns></returns>
+        /// <returns>リスト形式のデータ</returns>
         public static Data QuakeML2Data(XmlNode info, XmlNamespaceManager ns, DataAuthor dataAuthor)
         {
             XmlNode origin = info.SelectSingleNode("qml:origin", ns);
             XmlNodeList magnitude = info.SelectNodes("qml:magnitude", ns);
+            string id;
+            switch (dataAuthor)
+            {
+                case DataAuthor.USGS:
+                    id = ((XmlElement)info).GetAttribute("catalog:dataid").Split('/').Last();
+                    break;
+                default:
+                    id = ((XmlElement)info).GetAttribute("publicID").Split('/').Last();
+                    break;
+            }
+
             return new Data
             {
-                ID = info.Attributes[0].Value.Split('/').Last(),
+                Author = dataAuthor,
+                ID = id,
+                ID2 = id,
                 Time = DateTimeOffset.Parse(origin.SelectSingleNode("qml:time/qml:value", ns).InnerText),
                 UpdtTime = info.SelectSingleNode("qml:creationInfo/qml:creationTime", ns) != null ? DateTimeOffset.Parse(info.SelectSingleNode("qml:creationInfo/qml:creationTime", ns).InnerText) : DateTimeOffset.MinValue,
                 Hypo = NameJP(double.Parse(origin.SelectSingleNode("qml:latitude/qml:value", ns).InnerText), double.Parse(origin.SelectSingleNode("qml:longitude/qml:value", ns).InnerText)),
@@ -232,6 +247,32 @@ namespace WorldQuakeViewer
                 MagType = magnitude[magnitude.Count - 1].SelectSingleNode("qml:type", ns).InnerText,
                 Mag = double.Parse(magnitude[magnitude.Count - 1].SelectSingleNode("qml:mag/qml:value", ns).InnerText)
             };
+        }
+
+        /// <summary>
+        /// seismicportalのEventIDでIDを変換します。
+        /// </summary>
+        /// <param name="sourceID">元のID</param>
+        /// <param name="oldAuthor">元のデータ元</param>
+        /// <param name="newAuthor">返すデータ元</param>
+        /// <returns>変換されたID</returns>
+        public static string IDconvert(string sourceID, IDauthor oldAuthor, IDauthor newAuthor)
+        {
+            try
+            {
+                ExeLog("[IDconvert]ID変換中...", true);
+                return client.GetStringAsync($"https://seismicportal.eu/eventid/api/convert?source_id={sourceID}&source_catalog={oldAuthor}&out_catalog={newAuthor}&format=text").Result.Split('\n')[1].Split('|')[3];
+            }
+            catch (HttpRequestException ex)
+            {
+                ExeLog($"[IDconvert]エラー:{ex.Message}", true);
+            }
+            catch (Exception ex)
+            {
+                ExeLog($"[IDconvert]エラー:{ex.Message}", true);
+                LogSave(LogKind.Error, ex.ToString());
+            }
+            return "";
         }
 
         /// <summary>

@@ -233,6 +233,33 @@ namespace WorldQuakeViewer
         }
 
         /// <summary>
+        /// ID元(seismicportalのEventID用)
+        /// </summary>
+        public enum IDauthor
+        {
+            /// <summary>
+            /// UNID
+            /// </summary>
+            UNID=0,
+            /// <summary>
+            /// EMSC
+            /// </summary>
+            EMSC=1,
+            /// <summary>
+            /// INGV
+            /// </summary>
+            INGV=2,
+            /// <summary>
+            /// USGS
+            /// </summary>
+            USGS=3,
+            /// <summary>
+            /// ISC
+            /// </summary>
+            ISC=4
+        }
+
+        /// <summary>
         /// フォーマット指定の置換用
         /// </summary>
         public class FormatReplaces
@@ -445,6 +472,11 @@ namespace WorldQuakeViewer
             public string ID { get; set; } = "";
 
             /// <summary>
+            /// 地震ID(データ元間で互換性なし)(webに飛べるID)
+            /// </summary>
+            public string ID2 { get; set; } = "";
+
+            /// <summary>
             /// 発生時刻
             /// </summary>
             public DateTimeOffset Time { get; set; } = DateTimeOffset.MinValue;
@@ -508,6 +540,7 @@ namespace WorldQuakeViewer
             public static explicit operator Data(string[] from) => new Data
             {
                 ID = from[0],
+                ID2 = from[0],
                 Time = DateTimeOffset.Parse(from[1]),
                 Hypo = NameJP(double.Parse(from[2]), double.Parse(from[3])),
                 Lat = double.Parse(from[2]),

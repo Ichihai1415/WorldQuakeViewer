@@ -27,7 +27,7 @@ namespace WorldQuakeViewer
         /// <remarks>タイムスタンプは自動で追加されます。</remarks>
         public static void ExeLog(string text, bool isError = false)
         {
-            if ((isError && config.LogN.Error_Enable) || (!isError && config.LogN.Normal_Enable))
+            if ((isError && config.Other.LogN.Error_Enable) || (!isError && config.Other.LogN.Normal_Enable))
             {
                 exeLogs += $"{DateTime.Now:HH:mm:ss.ffff} {text}\r\n";//textbox用に\r
                 ExeLogView();

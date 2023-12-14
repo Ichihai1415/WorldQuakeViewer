@@ -77,7 +77,7 @@ namespace WorldQuakeViewer
             }
             ConfigReload();
             LogClearTimer.Enabled = true;
-            if (!config.LogN.Normal_Enable)
+            if (!config.Other.LogN.Normal_Enable)
                 logTextBox.Text = "<動作ログを表示する場合、設定のその他のNormal_EnableをTrueにしてください>";
             ExeLog($"[CtrlForm_Load]起動処理完了");
         }
@@ -90,7 +90,7 @@ namespace WorldQuakeViewer
             config_display = (Config_Display)config;
             ProG_pro.SelectedObject = config_display.Datas;
             ProG_view.SelectedObject = config_display.Views;
-            ProG_other.SelectedObject = config_display.LogN;
+            ProG_other.SelectedObject = config_display.Other;
             int c = config_display.Views.Count();
             if (c == 1)
                 ProG_view_Delete.Enabled = false;
@@ -99,7 +99,7 @@ namespace WorldQuakeViewer
             ProG_view_Copy.Enabled = c > ProG_view_CopyNum.Value;
             GetTimer.Interval = 2000 - DateTime.Now.Millisecond;
             GetTimer.Enabled = true;
-            LogClearTimer.Interval = (int)config.LogN.Normal_AutoDelete.TotalMilliseconds;
+            LogClearTimer.Interval = (int)config.Other.LogN.Normal_AutoDelete.TotalMilliseconds;
         }
 
         private async void GetTimer_Tick(object sender, EventArgs e)
@@ -149,7 +149,7 @@ namespace WorldQuakeViewer
                 config_display = (Config_Display)config;
                 ProG_pro.SelectedObject = config_display.Datas;
                 ProG_view.SelectedObject = config_display.Views;
-                ProG_other.SelectedObject = config_display.LogN;
+                ProG_other.SelectedObject = config_display.Other;
                 File.WriteAllText("Setting\\config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
             }
         }
@@ -197,13 +197,13 @@ namespace WorldQuakeViewer
 
         private void CtrlForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (config.LogN.Normal_AutoSave)
+            if (config.Other.LogN.Normal_AutoSave)
                 LogSave(LogKind.Exe, exeLogs);
         }
 
         private void LogClearTimer_Tick(object sender, EventArgs e)
         {
-            if (config.LogN.Normal_AutoSave)
+            if (config.Other.LogN.Normal_AutoSave)
                 LogSave(LogKind.Exe, exeLogs);
             exeLogs = "";
             ExeLog("[LogClearTimer_Tick]動作ログをクリアしました。");
