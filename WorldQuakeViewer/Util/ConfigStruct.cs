@@ -32,45 +32,71 @@ namespace WorldQuakeViewer
         public View_[] Views { get; set; } = new View_[] { new View_() };
 
         /// <summary>
-        /// ログ出力関連(地震除く)
+        /// その他の設定
         /// </summary>
-        public LogN_ LogN { get; set; } = new LogN_();
+        public Other_ Other { get; set; } = new Other_();
 
         /// <summary>
-        /// ログ出力関連(地震除く)
+        /// その他の設定
         /// </summary>
-        public class LogN_
+        public class Other_
         {
             /// <summary>
-            /// 通常動作ログ出力を有効か
+            /// EMSCのQuakeMLのID(UNID)をEMSCのIDに自動で変換するか
             /// </summary>
-            public bool Normal_Enable { get; set; } = false;
+            public bool EMSCqmlIDConv { get; set; } = false;
 
             /// <summary>
-            /// 動作ログ自動消去の間隔 0で無効
+            /// ログ出力関連(地震除く)
             /// </summary>
-            public TimeSpan Normal_AutoDelete { get; set; } = TimeSpan.FromHours(24);
+            public LogN_ LogN { get; set; } = new LogN_();
 
             /// <summary>
-            /// 動作ログ消去時に自動保存するか
+            /// ログ出力関連(地震除く)
             /// </summary>
-            public bool Normal_AutoSave { get; set; } = false;
+            public class LogN_
+            {
+                /// <summary>
+                /// 通常動作ログ出力を有効か
+                /// </summary>
+                public bool Normal_Enable { get; set; } = false;
 
-            /// <summary>
-            /// エラーログ保存を有効か
-            /// </summary>
-            public bool Error_Enable { get; set; } = true;
+                /// <summary>
+                /// 動作ログ自動消去の間隔 0で無効
+                /// </summary>
+                public TimeSpan Normal_AutoDelete { get; set; } = TimeSpan.FromHours(24);
+
+                /// <summary>
+                /// 動作ログ消去時に自動保存するか
+                /// </summary>
+                public bool Normal_AutoSave { get; set; } = false;
+
+                /// <summary>
+                /// エラーログ保存を有効か
+                /// </summary>
+                public bool Error_Enable { get; set; } = true;
+
+                /// <summary>
+                /// Config_DisplayからConfigに変換します。
+                /// </summary>
+                /// <param name="from">変換元</param>
+                public static explicit operator LogN_(Config_Display.Other_.LogN_ from) => new LogN_
+                {
+                    Normal_Enable = from.Normal_Enable,
+                    Normal_AutoDelete = from.Normal_AutoDelete,
+                    Normal_AutoSave = from.Normal_AutoSave,
+                    Error_Enable = from.Error_Enable
+                };
+            }
 
             /// <summary>
             /// Config_DisplayからConfigに変換します。
             /// </summary>
             /// <param name="from">変換元</param>
-            public static explicit operator LogN_(Config_Display.LogN_ from) => new LogN_
+            public static explicit operator Other_(Config_Display.Other_ from) => new Other_
             {
-                Normal_Enable = from.Normal_Enable,
-                Normal_AutoDelete = from.Normal_AutoDelete,
-                Normal_AutoSave = from.Normal_AutoSave,
-                Error_Enable = from.Error_Enable
+                EMSCqmlIDConv = from.EMSCqmlIDConv,
+                LogN = (LogN_)from.LogN
             };
         }
 
@@ -355,7 +381,7 @@ namespace WorldQuakeViewer
                     public string NewValue { get; set; } = "置換後";
 
                     /// <summary>
-                    /// ConfigからConfig_Displayに変換します。
+                    /// Config_DisplayからConfigに変換します。
                     /// </summary>
                     /// <param name="from">変換元</param>
                     public static explicit operator TextReplace_(Config_Display.Data_.Bouyomi_.TextReplace_ from) => new TextReplace_
@@ -435,7 +461,7 @@ namespace WorldQuakeViewer
                     public string NewValue { get; set; } = "置換後";
 
                     /// <summary>
-                    /// ConfigからConfig_Displayに変換します。
+                    /// Config_DisplayからConfigに変換します。
                     /// </summary>
                     /// <param name="from">変換元</param>
                     public static explicit operator TextReplace_(Config_Display.Data_.Socket_.TextReplace_ from) => new TextReplace_
@@ -506,7 +532,7 @@ namespace WorldQuakeViewer
                     public string NewValue { get; set; } = "置換後";
 
                     /// <summary>
-                    /// ConfigからConfig_Displayに変換します。
+                    /// Config_DisplayからConfigに変換します。
                     /// </summary>
                     /// <param name="from">変換元</param>
                     public static explicit operator TextReplace_(Config_Display.Data_.Webhook_.TextReplace_ from) => new TextReplace_
@@ -587,7 +613,7 @@ namespace WorldQuakeViewer
                     public string NewValue { get; set; } = "置換後";
 
                     /// <summary>
-                    /// ConfigからConfig_Displayに変換します。
+                    /// Config_DisplayからConfigに変換します。
                     /// </summary>
                     /// <param name="from">変換元</param>
                     public static explicit operator TextReplace_(Config_Display.Data_.LogE_.TextReplace_ from) => new TextReplace_
@@ -791,7 +817,7 @@ namespace WorldQuakeViewer
         {
             Datas = from.Datas.Select(n => (Data_)n).ToArray(),
             Views = from.Views.Select(n => (View_)n).ToArray(),
-            LogN = (LogN_)from.LogN
+            Other = (Other_)from.Other
         };
     }
 
@@ -813,57 +839,86 @@ namespace WorldQuakeViewer
         public View_[] Views { get; set; }
 
         /// <summary>
-        /// ログ出力関連(地震除く)
+        /// その他の設定
         /// </summary>
-        [Description("ログ出力関連(地震除く)")]
-        public LogN_ LogN { get; set; }
+        [Description("その他")]
+        public Other_ Other { get; set; } = new Other_();
 
         /// <summary>
-        /// ログ出力関連(地震除く)
+        /// その他の設定
         /// </summary>
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        [Category("ログ出力関連")]
-        [Description("ログ出力関連(地震除く)")]
-        public class LogN_
+        [Description("その他")]
+        public class Other_
         {
             /// <summary>
-            /// 通常動作ログ出力を有効か
+            /// EMSCのQuakeMLのID(UNID)をEMSCのIDに自動で変換するか
             /// </summary>
-            [Category("ログ出力関連")]
-            [Description("通常動作ログ出力を有効か")]
-            public bool Normal_Enable { get; set; }
+            [Description("EMSCのQuakeMLのID(UNID)をEMSCのIDに自動で変換するか")]
+            public bool EMSCqmlIDConv { get; set; }
 
             /// <summary>
-            /// 動作ログ自動消去の間隔 0で無効
+            /// ログ出力関連(地震除く)
             /// </summary>
-            [Category("ログ出力関連")]
-            [Description("動作ログ自動消去の間隔 0で無効")]
-            public TimeSpan Normal_AutoDelete { get; set; }
+            [Description("ログ出力関連(地震除く)")]
+            public LogN_ LogN { get; set; }
 
             /// <summary>
-            /// 動作ログ消去時に自動保存するか
+            /// ログ出力関連(地震除く)
             /// </summary>
+            [TypeConverter(typeof(ExpandableObjectConverter))]
             [Category("ログ出力関連")]
-            [Description("動作ログ消去時に自動保存するか")]
-            public bool Normal_AutoSave { get; set; }
+            [Description("ログ出力関連(地震除く)")]
+            public class LogN_
+            {
+                /// <summary>
+                /// 通常動作ログ出力を有効か
+                /// </summary>
+                [Category("ログ出力関連")]
+                [Description("通常動作ログ出力を有効か")]
+                public bool Normal_Enable { get; set; }
 
-            /// <summary>
-            /// エラーログ保存を有効か
-            /// </summary>
-            [Category("ログ出力関連")]
-            [Description("エラーログ保存を有効か")]
-            public bool Error_Enable { get; set; }
+                /// <summary>
+                /// 動作ログ自動消去の間隔 0で無効
+                /// </summary>
+                [Category("ログ出力関連")]
+                [Description("動作ログ自動消去の間隔 0で無効")]
+                public TimeSpan Normal_AutoDelete { get; set; }
+
+                /// <summary>
+                /// 動作ログ消去時に自動保存するか
+                /// </summary>
+                [Category("ログ出力関連")]
+                [Description("動作ログ消去時に自動保存するか")]
+                public bool Normal_AutoSave { get; set; }
+
+                /// <summary>
+                /// エラーログ保存を有効か
+                /// </summary>
+                [Category("ログ出力関連")]
+                [Description("エラーログ保存を有効か")]
+                public bool Error_Enable { get; set; }
+
+                /// <summary>
+                /// ConfigからConfig_Displayに変換します。
+                /// </summary>
+                /// <param name="from">変換元</param>
+                public static explicit operator LogN_(Config.Other_.LogN_ from) => new LogN_
+                {
+                    Normal_Enable = from.Normal_Enable,
+                    Normal_AutoDelete = from.Normal_AutoDelete,
+                    Normal_AutoSave = from.Normal_AutoSave,
+                    Error_Enable = from.Error_Enable
+                };
+            }
 
             /// <summary>
             /// ConfigからConfig_Displayに変換します。
             /// </summary>
             /// <param name="from">変換元</param>
-            public static explicit operator LogN_(Config.LogN_ from) => new LogN_
+            public static explicit operator Other_(Config.Other_ from) => new Other_
             {
-                Normal_Enable = from.Normal_Enable,
-                Normal_AutoDelete = from.Normal_AutoDelete,
-                Normal_AutoSave = from.Normal_AutoSave,
-                Error_Enable = from.Error_Enable
+                EMSCqmlIDConv = from.EMSCqmlIDConv,
+                LogN = (LogN_)from.LogN
             };
         }
 
@@ -1698,7 +1753,7 @@ namespace WorldQuakeViewer
         {
             Datas = from.Datas.Select(n => (Data_)n).ToArray(),
             Views = from.Views.Select(n => (View_)n).ToArray(),
-            LogN = (LogN_)from.LogN
+            Other = (Other_)from.Other
         };
     }
 }
