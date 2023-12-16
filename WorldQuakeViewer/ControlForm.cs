@@ -126,7 +126,8 @@ namespace WorldQuakeViewer
         /// </summary>
         public static void ExeLogView()
         {
-            logTextBox.Text =exeLogs;
+            logTextBox.Text = exeLogs;
+            logTextBox.ScrollToCaret();
         }
 
         private void ConfigWebLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
