@@ -90,6 +90,21 @@ namespace WorldQuakeViewer
         }
 
         /// <summary>
+        /// 異なるIDを統合します。USGSのGeoJSONのみ。
+        /// </summary>
+        /// <remarks>catchしません</remarks>
+        /// <param name="oldID"></param>
+        /// <param name="newID"></param>
+        public static void USGSgeojsonIDCorrect(string oldID, string newID)
+        {
+            data_USGS[newID] = data_USGS[oldID];
+            data_USGS.Remove(oldID);
+            data_All[newID] = data_USGS[oldID];
+            data_All.Remove(oldID);
+            ExeLog($"[USGSgeojsonIDCorrect]IDを統合しました({oldID}=>{newID})", true);
+        }
+
+        /// <summary>
         /// 更新を確認します。
         /// </summary>
         /// <param name="data_o">前のデータ</param>

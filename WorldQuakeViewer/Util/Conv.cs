@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Drawing;
 using System.Linq;
 using System.Net.Http;
@@ -210,6 +211,31 @@ namespace WorldQuakeViewer
             }
         }
 
+
+        /// <summary>
+        /// テキスト形式からリスト形式に変換します。
+        /// </summary>
+        /// <param name="info">変換元</param>
+        /// <param name="dataAuthor">データ元</param>
+        /// <returns>リスト形式のデータ</returns>
+        public static Data Text2Data(string[] info, DataAuthor dataAuthor)
+        {
+            return new Data
+            {
+                Author = dataAuthor,
+                ID = info[0],
+                ID2 = info[0],
+                Time = DateTimeOffset.Parse(info[1]),
+                Hypo = NameJP(double.Parse(info[2]), double.Parse(info[3])),
+                Lat = double.Parse(info[2]),
+                Lon = double.Parse(info[3]),
+                Depth = double.Parse(info[4]),
+                MagType = info[9],
+                Mag = double.Parse(info[10]),
+                Source = info[7],
+            };
+        }
+
         /// <summary>
         /// QuakeML形式からリスト形式に変換します。
         /// </summary>
@@ -250,8 +276,58 @@ namespace WorldQuakeViewer
         }
 
         /// <summary>
+        /// GeoJSON形式からリスト形式に変換します。
+        /// </summary>
+        /// <param name="feature">変換元(feature)</param>
+        /// <param name="dataAuthor">データ元</param>
+        /// <returns>リスト形式のデータ</returns>
+        public static Data GeoJSON2Data(JToken feature, DataAuthor dataAuthor)
+        {
+            JToken properties = feature.SelectToken("properties");
+            switch (dataAuthor)
+            {
+                case DataAuthor.USGS:
+                    return new Data
+                    {
+                        Author = dataAuthor,
+                        ID = (string)feature.SelectToken("id"),
+                        ID2 = (string)feature.SelectToken("id"),
+                        Time = DateTimeOffset.FromUnixTimeMilliseconds((long)properties.SelectToken("time")),
+                        UpdtTime = DateTimeOffset.FromUnixTimeMilliseconds((long)properties.SelectToken("updated")),
+                        Hypo = NameJP((double)feature.SelectToken("geometry.coordinates[1]"), (double)feature.SelectToken("geometry.coordinates[0]")),
+                        Lat = (double)feature.SelectToken("geometry.coordinates[1]"),
+                        Lon = (double)feature.SelectToken("geometry.coordinates[0]"),
+                        Depth = (double)feature.SelectToken("geometry.coordinates[2]"),
+                        MagType = (string)properties.SelectToken("magType"),
+                        Mag = (double)properties.SelectToken("mag"),
+                        MMI = (double?)properties.SelectToken("mmi"),
+                        Alert = (string)properties.SelectToken("alert")
+                    };
+                case DataAuthor.EMSC:
+                    return new Data
+                    {
+                        Author = dataAuthor,
+                        ID = (string)properties.SelectToken("source_id"),
+                        ID2 = (string)properties.SelectToken("source_id"),
+                        Time = DateTimeOffset.Parse((string)properties.SelectToken("time")),
+                        UpdtTime = DateTimeOffset.Parse((string)properties.SelectToken("lastupdate")),
+                        Hypo = NameJP((double)properties.SelectToken("lat"), (double)properties.SelectToken("lon")),
+                        Lat = (double)properties.SelectToken("lat"),
+                        Lon = (double)properties.SelectToken("lon"),
+                        Depth = (double)properties.SelectToken("depth"),
+                        MagType = (string)properties.SelectToken("magtype"),
+                        Mag = (double)properties.SelectToken("mag"),
+                        Source = (string)properties.SelectToken("auth")
+                    };
+                default:
+                    throw new ArgumentException("未対応のデータ元です。", dataAuthor.ToString());
+            }
+        }
+
+        /// <summary>
         /// seismicportalのEventIDでIDを変換します。
         /// </summary>
+        /// <remarks>失敗した場合元のIDを返します。</remarks>
         /// <param name="sourceID">元のID</param>
         /// <param name="oldAuthor">元のデータ元</param>
         /// <param name="newAuthor">返すデータ元</param>
@@ -272,7 +348,7 @@ namespace WorldQuakeViewer
                 ExeLog($"[IDconvert]エラー:{ex.Message}", true);
                 LogSave(LogKind.Error, ex.ToString());
             }
-            return "";
+            return sourceID;
         }
 
         /// <summary>

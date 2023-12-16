@@ -531,25 +531,6 @@ namespace WorldQuakeViewer
             /// [一部のみ]データのソース
             /// </summary>
             public string Source { get; set; } = "";
-
-            /// <summary>
-            /// テキスト形式からリスト形式に変換します。
-            /// </summary>
-            /// <remarks>Authorは手動で追加してください。</remarks>
-            /// <param name="from">変換元</param>
-            public static explicit operator Data(string[] from) => new Data
-            {
-                ID = from[0],
-                ID2 = from[0],
-                Time = DateTimeOffset.Parse(from[1]),
-                Hypo = NameJP(double.Parse(from[2]), double.Parse(from[3])),
-                Lat = double.Parse(from[2]),
-                Lon = double.Parse(from[3]),
-                Depth = double.Parse(from[4]),
-                MagType = from[9],
-                Mag = double.Parse(from[10]),
-                Source = from[7],
-            };
         }
     }
 }
