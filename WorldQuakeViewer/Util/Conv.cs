@@ -39,23 +39,30 @@ namespace WorldQuakeViewer
         /// データから各処理の文字列に変換します。
         /// </summary>
         /// <param name="data">データ</param>
-        /// <param name="updatePros">更新処理の名前</param>
+        /// <param name="updatePros">フォーマット置換処理名</param>
+        /// <param name="isNew">新規か</param>
+        /// <param name="viewIndex">表示用置換の場合表示インデックス</param>
         /// <returns>各処理の文字列</returns>
-        public static string Data2ProString(Data data, UpdatePros updatePros, bool isNew)
+        public static string Data2String(Data data, FormatPros updatePros, bool isNew, int viewIndex = 0)
         {
             string format;
             switch (updatePros)
             {
-                case UpdatePros.Bouyomichan:
+                case FormatPros.View:
+                    if (viewIndex == 0)
+                        throw new ArgumentException($"表示インデックス({viewIndex})が不正です。");//todo:こっちに戻す
+                    format = config.Views[viewIndex].DisplayText;
+                    break;
+                case FormatPros.Bouyomichan:
                     format = config.Datas[(int)data.Author].Bouyomi.Format;
                     break;
-                case UpdatePros.Socket:
+                case FormatPros.Socket:
                     format = config.Datas[(int)data.Author].Socket.Format;
                     break;
-                case UpdatePros.Webhook:
+                case FormatPros.Webhook:
                     format = config.Datas[(int)data.Author].Webhook.Format;
                     break;
-                case UpdatePros.LogE:
+                case FormatPros.LogE:
                     format = config.Datas[(int)data.Author].LogE.Format;
                     break;
                 default:

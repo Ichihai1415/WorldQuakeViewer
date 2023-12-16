@@ -700,11 +700,6 @@ namespace WorldQuakeViewer
             public bool HypoShift { get; set; } = true;
 
             /// <summary>
-            /// 緯度経度を十進数で表示するか
-            /// </summary>
-            public bool LatLonDecimal { get; set; } = true;
-
-            /// <summary>
             /// 描画色
             /// </summary>
             /// <remarks>マップはWorldQuakeViewer.MapGenerator</remarks>
@@ -804,7 +799,6 @@ namespace WorldQuakeViewer
                 LowerMagLimit = from.LowerMagLimit,
                 MapRange = from.MapRange,
                 HypoShift = from.HypoShift,
-                LatLonDecimal = from.LatLonDecimal,
                 Colors = (Colors_)from.Colors
             };
         }
@@ -1621,12 +1615,6 @@ namespace WorldQuakeViewer
             public bool HypoShift { get; set; }
 
             /// <summary>
-            /// 緯度経度を十進数で表示するか
-            /// </summary>
-            [Description("緯度経度を十進数で表示するか")]
-            public bool LatLonDecimal { get; set; }
-
-            /// <summary>
             /// 描画色
             /// </summary>
             /// <remarks>マップはWorldQuakeViewer.MapGenerator</remarks>
@@ -1740,7 +1728,6 @@ namespace WorldQuakeViewer
                 LowerMagLimit = from.LowerMagLimit,
                 MapRange = from.MapRange,
                 HypoShift = from.HypoShift,
-                LatLonDecimal = from.LatLonDecimal,
                 Colors = (Colors_)from.Colors
             };
         }

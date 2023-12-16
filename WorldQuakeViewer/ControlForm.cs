@@ -2,12 +2,16 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Media;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WorldQuakeViewer.Properties;
 using static WorldQuakeViewer.DataPro;
 using static WorldQuakeViewer.Util_Class;
 using static WorldQuakeViewer.Util_Func;
@@ -27,7 +31,6 @@ namespace WorldQuakeViewer
         public static Dictionary<string, Data> data_All = new Dictionary<string, Data>();
         public static HttpClient client = new HttpClient();
         public static SoundPlayer player = null;
-        public static Form topMost = new Form { TopMost = true };
         public static string exeLogs = "";
         public static bool noFirst = false;
 
@@ -79,6 +82,34 @@ namespace WorldQuakeViewer
             LogClearTimer.Enabled = true;
             if (!config.Other.LogN.Normal_Enable)
                 logTextBox.Text = "<動作ログを表示する場合、設定のその他のNormal_EnableをTrueにしてください>";
+
+
+            if (!Directory.Exists("Font"))
+            {
+                Directory.CreateDirectory("Font");
+                ExeLog($"[CtrlForm_Load]Fontフォルダを作成しました");
+            }
+            if (!File.Exists("Font\\Koruri-Regular.ttf"))
+            {
+                File.WriteAllBytes("Font\\Koruri-Regular.ttf", Resources.Koruri_Regular);
+                ExeLog($"[CtrlForm_Load]フォントファイル(\"Font\\Koruri-Regular.ttf\")をコピーしました");
+            }
+            if (!File.Exists("Font\\LICENSE"))
+            {
+                File.WriteAllText("Font\\LICENSE", Resources.Koruri_LICENSE);
+                ExeLog($"[CtrlForm_Load]ライセンスファイル(\"Font\\LICENSE\")をコピーしました");
+            }
+            PrivateFontCollection pfc = new PrivateFontCollection();
+            pfc.AddFontFile("Font\\Koruri-Regular.ttf");
+            font = pfc.Families[0];
+            ExeLog($"[CtrlForm_Load]フォント確認完了");
+
+            ColorMap[] colorChange = new ColorMap[] { new ColorMap() };
+            colorChange[0].OldColor = Color.Black;
+            colorChange[0].NewColor = Color.Transparent;
+            ia.SetRemapTable(colorChange);
+
+
             ExeLog($"[CtrlForm_Load]起動処理完了");
         }
 

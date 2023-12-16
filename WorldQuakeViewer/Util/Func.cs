@@ -203,13 +203,13 @@ namespace WorldQuakeViewer
                     Sound(level, dataAuthor);
                     if (config.Datas[(int)dataAuthor].Bouyomi.Enable)
                         if (data.Mag >= config.Datas[(int)dataAuthor].Bouyomi.LowerMagLimit)
-                            Bouyomichan(Data2ProString(data, UpdatePros.Bouyomichan, isNew), dataAuthor);
+                            Bouyomichan(Data2String(data, FormatPros.Bouyomichan, isNew), dataAuthor);
                     if (config.Datas[(int)dataAuthor].Socket.Enable)
                         if (data.Mag >= config.Datas[(int)dataAuthor].Socket.LowerMagLimit)
-                            Socket(Data2ProString(data, UpdatePros.Socket, isNew), dataAuthor);
+                            Socket(Data2String(data, FormatPros.Socket, isNew), dataAuthor);
                     if (config.Datas[(int)dataAuthor].Webhook.Enable)
                         if (data.Mag >= config.Datas[(int)dataAuthor].Webhook.LowerMagLimit)
-                            Webhook(Data2ProString(data, UpdatePros.Webhook, isNew), dataAuthor);
+                            Webhook(Data2String(data, FormatPros.Webhook, isNew), dataAuthor);
                     LogE(data, isNew, level, dataAuthor);
                 }
                 catch (Exception ex)
@@ -415,7 +415,7 @@ namespace WorldQuakeViewer
                     ExeLog($"[LogE]保存対象外です。");
                     return;
                 }
-                text = Data2ProString(data, UpdatePros.LogE, isNew);
+                text = Data2String(data, FormatPros.LogE, isNew);
                 LogSave((LogKind)(dataAuthor + 10), text, data.ID);
             }
             catch (Exception ex)

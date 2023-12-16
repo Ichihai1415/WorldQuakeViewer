@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Windows.Forms;
 
 namespace WorldQuakeViewer
 {
@@ -12,6 +15,21 @@ namespace WorldQuakeViewer
         /// プログラムのバージョン
         /// </summary>
         public static readonly string version = "1.2.0";
+
+        /// <summary>
+        /// ダイアログ等を最前面に表示する用
+        /// </summary>
+        public static Form topMost = new Form { TopMost = true };
+
+        /// <summary>
+        /// 文字描画用フォント
+        /// </summary>
+        public static FontFamily font;
+
+        /// <summary>
+        /// 震央マーク用色置換
+        /// </summary>
+        public static ImageAttributes ia = new ImageAttributes();
 
         /// <summary>
         /// データ元
@@ -182,14 +200,14 @@ namespace WorldQuakeViewer
         }
 
         /// <summary>
-        /// 更新時処理名
+        /// フォーマット置換処理名
         /// </summary>
-        public enum UpdatePros
+        public enum FormatPros
         {
             /// <summary>
-            /// 音声再生
+            /// データ表示
             /// </summary>
-            Sound = 1,
+            View = 0,
             /// <summary>
             /// 棒読みちゃん送信
             /// </summary>
