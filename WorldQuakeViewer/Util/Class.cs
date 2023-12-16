@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using static LL2FERC.LL2FERC;
 
 namespace WorldQuakeViewer
 {
@@ -12,7 +11,7 @@ namespace WorldQuakeViewer
         /// <summary>
         /// プログラムのバージョン
         /// </summary>
-        public static readonly string version = "1.2.0";//こことアセンブリを変える
+        public static readonly string version = "1.2.0";
 
         /// <summary>
         /// データ元
@@ -217,19 +216,19 @@ namespace WorldQuakeViewer
             /// <summary>
             /// 自動判別
             /// </summary>
-            Auto=0,
+            Auto = 0,
             /// <summary>
             /// テキスト形式
             /// </summary>
-            Text=1,
+            Text = 1,
             /// <summary>
             /// QuakeML形式
             /// </summary>
-            QuakeML=2,
+            QuakeML = 2,
             /// <summary>
             /// GeoJSON形式
             /// </summary>
-            GeoJSON=3
+            GeoJSON = 3
         }
 
         /// <summary>
@@ -240,23 +239,23 @@ namespace WorldQuakeViewer
             /// <summary>
             /// UNID
             /// </summary>
-            UNID=0,
+            UNID = 0,
             /// <summary>
             /// EMSC
             /// </summary>
-            EMSC=1,
+            EMSC = 1,
             /// <summary>
             /// INGV
             /// </summary>
-            INGV=2,
+            INGV = 2,
             /// <summary>
             /// USGS
             /// </summary>
-            USGS=3,
+            USGS = 3,
             /// <summary>
             /// ISC
             /// </summary>
-            ISC=4
+            ISC = 4
         }
 
         /// <summary>

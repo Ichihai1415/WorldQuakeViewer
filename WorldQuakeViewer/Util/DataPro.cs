@@ -200,7 +200,7 @@ namespace WorldQuakeViewer
                 }
                 catch (Exception ex)
                 {
-                    ExeLog($"[Get_Text]エラー:{ex.Message}", true);
+                    ExeLog($"[Get_QuakeML]エラー:{ex.Message}", true);
                     LogSave(LogKind.Error, ex.ToString());
                 }
             }
@@ -260,7 +260,7 @@ namespace WorldQuakeViewer
                 }
                 catch (Exception ex)
                 {
-                    ExeLog($"[Get_Text]エラー:{ex.Message}", true);
+                    ExeLog($"[Get_GeoJSON]エラー:{ex.Message}", true);
                     LogSave(LogKind.Error, ex.ToString());
                 }
             }

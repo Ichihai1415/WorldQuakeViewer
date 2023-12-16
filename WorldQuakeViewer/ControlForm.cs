@@ -124,10 +124,9 @@ namespace WorldQuakeViewer
         /// <summary>
         /// 実行ログをテキストボックスに表示します。
         /// </summary>
-        public static void ExeLogView()
+        public static void ExeLogView(string text)
         {
-            logTextBox.Text = exeLogs;
-            logTextBox.ScrollToCaret();
+            logTextBox.AppendText(text);
         }
 
         private void ConfigWebLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
