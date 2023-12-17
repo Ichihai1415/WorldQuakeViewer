@@ -67,14 +67,14 @@ namespace WorldQuakeViewer
                     case LogKind.GFZ:
                     case LogKind.EarlyEst:
                         if (id == "")
-                            throw new ArgumentException($"地震idが指定されていません。", id);
+                            throw new ArgumentException($"地震idが指定されていません。", nameof(id));
                         dir = $"Log\\{logKind}\\{DateTime.Now:yyyyMM\\dd}";
                         name = $"{id}.txt";
                         if (File.Exists($"{dir}\\{name}"))
                             text = $"{File.ReadAllText($"{dir}\\{name}")}\n--------------------------------------------------\n{text}";
                         break;
                     default:
-                        throw new ArgumentException($"ログの種類が不正です。", logKind.ToString());
+                        throw new ArgumentException($"ログの種類({logKind})が不正です。", nameof(logKind));
                 }
                 ExeLog($"[LogSave]保存開始({dir}\\{name})");
                 if (!Directory.Exists(dir))
@@ -198,7 +198,7 @@ namespace WorldQuakeViewer
                     Console.WriteLine("更新処理開始");
                     DataAuthor dataAuthor = data.Author;
                     if (dataAuthor == DataAuthor.Null)
-                        throw new ArgumentException($"データ元が不正です。", dataAuthor.ToString());
+                        throw new ArgumentException($"データ元({dataAuthor})が不正です。", nameof(dataAuthor));
                     int level = Mag2Level(data.Mag);
                     Sound(level, dataAuthor);
                     if (config.Datas[(int)dataAuthor].Bouyomi.Enable)
@@ -254,7 +254,7 @@ namespace WorldQuakeViewer
                         path = config.Datas[(int)dataAuthor].Sound.L5_Path;
                         break;
                     default:
-                        throw new ArgumentException($"レベルが不正です。", level.ToString());
+                        throw new ArgumentException($"レベル({level})が不正です。", nameof(level));
                 }
                 if (end)
                 {
@@ -408,7 +408,7 @@ namespace WorldQuakeViewer
                         end = !config.Datas[(int)dataAuthor].LogE.L5_Enable;
                         break;
                     default:
-                        throw new ArgumentException($"レベルが不正です。", level.ToString());
+                        throw new ArgumentException($"レベル({level})が不正です。", nameof(level));
                 }
                 if (end)
                 {
@@ -449,7 +449,7 @@ namespace WorldQuakeViewer
                         image = Resources.hypo;
                         break;
                     default:
-                        throw new Exception("画像のコピーに失敗しました。", new ArgumentException($"指定された画像({fileName})はResourcesにありません。"));
+                        throw new Exception("画像のコピーに失敗しました。", new ArgumentException($"指定された画像({fileName})はResourcesにありません。", nameof(fileName)));
                 }
                 image.Save($"Image\\{fileName}", ImageFormat.Png);
                 ExeLog($"[ImageCheck]画像(\"Image\\{fileName}\")をコピーしました");

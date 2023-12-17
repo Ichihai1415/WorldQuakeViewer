@@ -50,7 +50,7 @@ namespace WorldQuakeViewer
             {
                 case FormatPros.View:
                     if (viewIndex == 0)
-                        throw new ArgumentException($"表示インデックス({viewIndex})が不正です。");//todo:こっちに戻す
+                        throw new ArgumentException($"表示インデックス({viewIndex})が不正です。", nameof(viewIndex));
                     format = config.Views[viewIndex].DisplayText;
                     break;
                 case FormatPros.Bouyomichan:
@@ -66,7 +66,7 @@ namespace WorldQuakeViewer
                     format = config.Datas[(int)data.Author].LogE.Format;
                     break;
                 default:
-                    throw new ArgumentException("更新処理名が不正です。", updatePros.ToString());
+                    throw new ArgumentException($"更新処理名({updatePros})が不正です。", nameof(updatePros));
             }
             DateTimeOffset timeUser = data.Time.ToLocalTime();
             Lat2String(data.Lat, out string lat10, out string latNS, out string latNSJP, out string lat60d, out string lat60m, out string lat60s);
@@ -327,7 +327,7 @@ namespace WorldQuakeViewer
                         Source = (string)properties.SelectToken("auth")
                     };
                 default:
-                    throw new ArgumentException("未対応のデータ元です。", dataAuthor.ToString());
+                    throw new ArgumentException($"未対応のデータ元({dataAuthor})です。", nameof(dataAuthor));
             }
         }
 

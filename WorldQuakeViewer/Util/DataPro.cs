@@ -43,7 +43,7 @@ namespace WorldQuakeViewer
                         data_tmp = data_EarlyEst;
                         break;
                     default:
-                        throw new ArgumentException("データ元が不正です。", dataAuthor.ToString());
+                        throw new ArgumentException($"データ元({dataAuthor})が不正です。", nameof(dataAuthor));
                 }
                 string URL = config.Datas[(int)dataAuthor].URL;
                 string URLbasic = URL.Split('?')[0];

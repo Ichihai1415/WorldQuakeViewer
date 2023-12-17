@@ -21,7 +21,7 @@ namespace WorldQuakeViewer
         public DataView(int viewIndex, ViewData viewData)
         {
             if (viewData == ViewData.Null)
-                throw new ArgumentException("ViewDataの指定が不正です。", viewData.ToString());
+                throw new ArgumentException($"ViewData({viewData})が不正です。", nameof(viewData));
 
             InitializeComponent();
 
@@ -39,7 +39,7 @@ namespace WorldQuakeViewer
                     ClientSize = new Size(800, 500);
                     break;
                 default:
-                    throw new Exception("DataViewの初期化に失敗しました。", new ArgumentException($"{viewType}は種類として不正です。"));
+                    throw new Exception("DataViewの初期化に失敗しました。", new ArgumentException($"{viewType}は種類として不正です。", nameof(viewType)));
             }
             switch ((int)viewData / 10)
             {
