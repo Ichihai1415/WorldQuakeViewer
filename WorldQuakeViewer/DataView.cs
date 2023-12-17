@@ -84,14 +84,10 @@ namespace WorldQuakeViewer
 
         }
 
-        /// <summary>
-        /// 表示中に
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void DataView_Load(object sender, EventArgs e)
         {
             showing = true;
+            Draw();
         }
 
         /// <summary>
@@ -174,7 +170,7 @@ namespace WorldQuakeViewer
             g.DrawImage(Image.FromFile("Image\\map.png"), locX_image, locY_image, (int)(540 * zoom), (int)(180 * zoom));
             ImageCheck("hypo.png");
             Image hypoImg = Image.FromFile("Image\\hypo.png");
-            g.DrawImage(hypoImg, new Rectangle(400 - hypoImg.Width / 2, locY + locY_image - hypoImg.Height / 2, hypoImg.Width / 2, hypoImg.Width), 0, 0, hypoImg.Width / 2, hypoImg.Width, GraphicsUnit.Pixel, ia);
+            g.DrawImage(hypoImg, new Rectangle(400 - hypoImg.Width / 2, locY + locY_image - hypoImg.Height / 2, hypoImg.Width, hypoImg.Height), 0, 0, hypoImg.Width, hypoImg.Height, GraphicsUnit.Pixel, ia);
             g.FillRectangle(new SolidBrush(config_view.Colors.MapData_Back), 480, 950, 320, 50);
             g.DrawString("地図データ:Natural Earth", new Font(font, 19), new SolidBrush(config_view.Colors.MapData_Text), 490, 956);
             //最新
@@ -207,7 +203,7 @@ namespace WorldQuakeViewer
                 g.DrawImage(latestImage, 0, 0);
             if (datas == null)
             {
-                g.FillRectangle(new SolidBrush(config_view.Colors.Title_History_Back), w, 0, 800, 200);
+                g.FillRectangle(new SolidBrush(config_view.Colors.Title_History_Back), w, 0, 800, 1000);
                 g.DrawString(config_view.Title2Text, new Font(font, 20), new SolidBrush(config_view.Colors.Title_History_Text), 2 + w, 2);
                 for (int j = 0; j < 6; j++)
                     g.FillRectangle(new SolidBrush(config_view.Colors.Main_History_Back), 4 + w, 40 + 160 * j, 792, 156);
@@ -224,7 +220,7 @@ namespace WorldQuakeViewer
                 {
                     Data data = datas[j];
                     g.FillRectangle(new SolidBrush(Alert2Color(data.Alert, 2, i)), 4 + w, 40 + 160 * j, 792, 156);//USGSアラート用
-                    g.FillRectangle(new SolidBrush(config_view.Colors.Main_History_Back), 8 + w, 44, 784, 148);
+                    g.FillRectangle(new SolidBrush(config_view.Colors.Main_History_Back), 8 + w, 44 + 160 * j, 784, 148);
                     g.DrawString(Data2String(data, FormatPros.View, false, i), new Font(font, 20), Mag2Brush(data.Mag, 2, i), 5 + w, 42 + 160 * j);
                     g.DrawString(data.MagType, new Font(font, 20), Mag2Brush(data.Mag, 2, i), 640 - g.MeasureString(data.MagType, new Font(font, 20)).Width + w, 154 + 160 * j);
                     g.DrawString(data.Mag.ToString("0.0#"), new Font(font, 50), Mag2Brush(data.Mag, 2, i), 640 + w, 110 + 160 * j);

@@ -20,7 +20,7 @@ namespace WorldQuakeViewer
 {
     public partial class CtrlForm : Form
     {
-        public static TextBox logTextBox;
+        public static TextBox logTextBox;//staticでアクセスできるよう
         public static Config config = new Config();
         public static Config_Display config_display = new Config_Display();
         public static Dictionary<string, Data> data_Other = new Dictionary<string, Data>();
@@ -34,7 +34,7 @@ namespace WorldQuakeViewer
         public static string exeLogs = "";
         public static bool noFirst = false;
 
-        public DataView[] dataViews = new DataView[] { null, null, null, null, null, null, null, null, null, null };
+        public static DataView[] dataViews = new DataView[] { null, null, null, null, null, null, null, null, null, null };
 
         public CtrlForm()
         {
@@ -83,7 +83,7 @@ namespace WorldQuakeViewer
             ConfigReload();
             LogClearTimer.Enabled = true;
             if (!config.Other.LogN.Normal_Enable)
-                logTextBox.Text = "<動作ログを表示する場合、設定のその他のNormal_EnableをTrueにしてください>";
+                logTextBox.Text = "<動作ログを表示する場合、設定のその他のNormal_EnableをTrueにしてください>\n\r";
 
 
             if (!Directory.Exists("Font"))
@@ -245,7 +245,7 @@ namespace WorldQuakeViewer
 
         private void ProG_view_Open_Click(object sender, EventArgs e)
         {
-            Open((int)ProG_view_CopyNum.Value);
+            Open((int)ProG_view_OpenNum.Value);
         }
 
         private void ProG_view_OpenAll_Click(object sender, EventArgs e)
@@ -271,12 +271,12 @@ namespace WorldQuakeViewer
                     DialogResult res = MessageBox.Show(topMost, $"画面[{num}]はすでに表示されています。再試行を押すと閉じる要求を送信します。(確認画面が表示されるのでOKを押してください。)", "確認", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Information);
                     switch (res)
                     {
-                        case DialogResult.Abort:
-                            dataViews[num].Show();
-                            ExeLog($"[Open]画面[{num}]を表示しました。強制的に開いたため一部の動作がおかしくなる可能性があります。");
-                            break;
                         case DialogResult.Retry:
                             dataViews[num].Close();
+                            break;
+                        case DialogResult.Ignore:
+                            dataViews[num].Show();
+                            ExeLog($"[Open]画面[{num}]を表示しました。強制的に開いたため一部の動作がおかしくなる可能性があります。");
                             break;
                     }
                 }

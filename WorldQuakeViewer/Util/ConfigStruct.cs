@@ -59,12 +59,12 @@ namespace WorldQuakeViewer
                 /// <summary>
                 /// 通常動作ログ出力を有効か
                 /// </summary>
-                public bool Normal_Enable { get; set; } = false;
+                public bool Normal_Enable { get; set; } = true;
 
                 /// <summary>
                 /// 動作ログ自動消去の間隔 0で無効
                 /// </summary>
-                public TimeSpan Normal_AutoDelete { get; set; } = TimeSpan.FromHours(24);
+                public TimeSpan Normal_AutoDelete { get; set; } = TimeSpan.FromHours(1);
 
                 /// <summary>
                 /// 動作ログ消去時に自動保存するか
@@ -74,7 +74,7 @@ namespace WorldQuakeViewer
                 /// <summary>
                 /// エラーログ保存を有効か
                 /// </summary>
-                public bool Error_Enable { get; set; } = true;
+                public bool Error_SaveEnable { get; set; } = true;
 
                 /// <summary>
                 /// Config_DisplayからConfigに変換します。
@@ -85,7 +85,7 @@ namespace WorldQuakeViewer
                     Normal_Enable = from.Normal_Enable,
                     Normal_AutoDelete = from.Normal_AutoDelete,
                     Normal_AutoSave = from.Normal_AutoSave,
-                    Error_Enable = from.Error_Enable
+                    Error_SaveEnable = from.Error_SaveEnable
                 };
             }
 
@@ -890,7 +890,7 @@ namespace WorldQuakeViewer
                 /// </summary>
                 [Category("ログ出力関連")]
                 [Description("エラーログ保存を有効か")]
-                public bool Error_Enable { get; set; }
+                public bool Error_SaveEnable { get; set; }
 
                 /// <summary>
                 /// ConfigからConfig_Displayに変換します。
@@ -901,7 +901,7 @@ namespace WorldQuakeViewer
                     Normal_Enable = from.Normal_Enable,
                     Normal_AutoDelete = from.Normal_AutoDelete,
                     Normal_AutoSave = from.Normal_AutoSave,
-                    Error_Enable = from.Error_Enable
+                    Error_SaveEnable = from.Error_SaveEnable
                 };
             }
 

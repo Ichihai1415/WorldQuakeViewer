@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Xml;
 using static WorldQuakeViewer.CtrlForm;
@@ -70,12 +69,9 @@ namespace WorldQuakeViewer
                             throw new Exception("データ処理の自動判断に失敗しました。");
                         break;
                 }
+                ReDraw();
             }
-            catch (WebException ex)
-            {
-                ExeLog($"[Get]エラー:{ex.Message}", true);
-            }
-            catch (HttpRequestException ex)//GetStringAsyncならこっちだけでいい?
+            catch (HttpRequestException ex)
             {
                 ExeLog($"[Get]エラー:{ex.Message}", true);
             }

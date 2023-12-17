@@ -27,7 +27,7 @@ namespace WorldQuakeViewer
         /// <remarks>タイムスタンプは自動で追加されます。</remarks>
         public static void ExeLog(string text, bool isError = false)
         {
-            if ((isError && config.Other.LogN.Error_Enable) || (!isError && config.Other.LogN.Normal_Enable))
+            if (!isError && config.Other.LogN.Normal_Enable)
             {
                 exeLogs += $"{DateTime.Now:HH:mm:ss.ffff} {text}\n";
                 ExeLogView($"{DateTime.Now:HH:mm:ss.ffff} {text}\r\n");
@@ -55,6 +55,8 @@ namespace WorldQuakeViewer
                         name = $"{DateTime.Now:yyyyMMddHHmmss}.log";
                         break;
                     case LogKind.Error:
+                        if (!config.Other.LogN.Error_SaveEnable)
+                            break;
                         dir = $"Log\\Error\\{DateTime.Now:yyyyMM}";
                         name = $"{DateTime.Now:yyyyMMdd}.log";
                         text = $"Time:{DateTime.Now} Version:{version}\n{text}";
@@ -454,6 +456,12 @@ namespace WorldQuakeViewer
                 image.Save($"Image\\{fileName}", ImageFormat.Png);
                 ExeLog($"[ImageCheck]画像(\"Image\\{fileName}\")をコピーしました");
             }
+        }
+
+
+        public static void ReDraw()
+        {
+            dataViews[3].Draw();
         }
     }
 }
