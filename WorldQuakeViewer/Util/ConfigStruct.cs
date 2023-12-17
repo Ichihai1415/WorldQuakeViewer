@@ -669,19 +669,19 @@ namespace WorldQuakeViewer
             public ViewData Data { get; set; } = ViewData.Null;
 
             /// <summary>
-            /// タイトル1のテキスト
+            /// 最新のタイトルのテキスト
             /// </summary>
             public string Title1Text { get; set; } = "設定してください";
 
             /// <summary>
-            /// (最新、履歴のみ)タイトル2のテキスト
+            /// 履歴のタイトルのテキスト
             /// </summary>
             public string Title2Text { get; set; } = "設定してください";
 
             /// <summary>
-            /// 表示するテキスト
+            /// 表示するテキストのフォーマット
             /// </summary>
-            public string DisplayText { get; set; } = "設定してください";
+            public string DisplayTextFormat { get; set; } = "設定してください";
 
             /// <summary>
             /// 表示する最小マグニチュード
@@ -712,44 +712,44 @@ namespace WorldQuakeViewer
             public class Colors_
             {
                 /// <summary>
-                /// 最新の後ろ部分(****地震情報…のところ)のテキスト色
+                /// 最新のタイトル部分のテキスト色
                 /// </summary>
-                public Color Back1_Text { get; set; } = Color.FromArgb(255, 255, 255, 255);
+                public Color Title_Latest_Text { get; set; } = Color.FromArgb(255, 255, 255, 255);
 
                 /// <summary>
-                /// 最新の後ろ部分(****地震情報…のところ)の背景色
+                /// 最新のタイトル部分の背景色
                 /// </summary>
-                public Color Back1_Back { get; set; } = Color.FromArgb(255, 0, 0, 30);
+                public Color Title_Latest_Back { get; set; } = Color.FromArgb(255, 0, 0, 30);
 
                 /// <summary>
-                /// 最新の前部分([震源名]\n[緯度経度] [深さ]\n…のところ)のテキスト色
+                /// 最新のメイン部分のテキスト色
                 /// </summary>
-                public Color Fore1_Text { get; set; } = Color.FromArgb(255, 255, 255, 255);
+                public Color Main_Latest_Text { get; set; } = Color.FromArgb(255, 255, 255, 255);
 
                 /// <summary>
-                /// 最新の前部分([震源名]\n[緯度経度] [深さ]\n…のところ)の背景色
+                /// 最新のメイン部分の背景色
                 /// </summary>
-                public Color Fore1_Back { get; set; } = Color.FromArgb(255, 30, 30, 60);
+                public Color Main_Latest_Back { get; set; } = Color.FromArgb(255, 30, 30, 60);
 
                 /// <summary>
-                /// 履歴の後ろ部分(****地震情報…のところ)のテキスト色
+                /// 履歴のタイトル部分のテキスト色
                 /// </summary>
-                public Color Back2_Text { get; set; } = Color.FromArgb(255, 255, 255, 255);
+                public Color Title_History_Text { get; set; } = Color.FromArgb(255, 255, 255, 255);
 
                 /// <summary>
-                /// 履歴の後ろ部分(****地震情報…のところ)の背景色
+                /// 履歴のタイトル部分の背景色
                 /// </summary>
-                public Color Back2_Back { get; set; } = Color.FromArgb(255, 0, 0, 30);
+                public Color Title_History_Back { get; set; } = Color.FromArgb(255, 0, 0, 30);
 
                 /// <summary>
-                /// 履歴の前部分([震源名]\n[緯度経度] [深さ]\n…のところ)のテキスト色
+                /// 履歴のメイン部分のテキスト色
                 /// </summary>
-                public Color Fore2_Text { get; set; } = Color.FromArgb(255, 255, 255, 255);
+                public Color Main_History_Text { get; set; } = Color.FromArgb(255, 255, 255, 255);
 
                 /// <summary>
-                /// 履歴の前部分([震源名]\n[緯度経度] [深さ]\n…のところ)の背景色
+                /// 履歴のメイン部分の背景色
                 /// </summary>
-                public Color Fore2_Back { get; set; } = Color.FromArgb(255, 45, 45, 90);
+                public Color Main_History_Back { get; set; } = Color.FromArgb(255, 45, 45, 90);
 
                 /// <summary>
                 /// 「地図データ:Natural Earth」のテキスト色
@@ -772,14 +772,14 @@ namespace WorldQuakeViewer
                 /// <param name="from">変換元</param>
                 public static explicit operator Colors_(Config_Display.View_.Colors_ from) => new Colors_
                 {
-                    Back1_Text = from.Back1_Text,
-                    Back1_Back = from.Back1_Back,
-                    Fore1_Text = from.Fore1_Text,
-                    Fore1_Back = from.Fore1_Back,
-                    Back2_Text = from.Back2_Text,
-                    Back2_Back = from.Back2_Back,
-                    Fore2_Text = from.Fore2_Text,
-                    Fore2_Back = from.Fore2_Back,
+                    Title_Latest_Text = from.Title_Latest_Text,
+                    Title_Latest_Back = from.Title_Latest_Back,
+                    Main_Latest_Text = from.Main_Latest_Text,
+                    Main_Latest_Back = from.Main_Latest_Back,
+                    Title_History_Text = from.Title_History_Text,
+                    Title_History_Back = from.Title_History_Back,
+                    Main_History_Text = from.Main_History_Text,
+                    Main_History_Back = from.Main_History_Back,
                     MapData_Text = from.MapData_Text,
                     MapData_Back = from.MapData_Back,
                     Border = from.Border
@@ -795,7 +795,7 @@ namespace WorldQuakeViewer
                 Data = from.Data,
                 Title1Text = from.Title1Text,
                 Title2Text = from.Title2Text,
-                DisplayText = from.DisplayText,
+                DisplayTextFormat = from.DisplayText,
                 LowerMagLimit = from.LowerMagLimit,
                 MapRange = from.MapRange,
                 HypoShift = from.HypoShift,
@@ -1578,21 +1578,21 @@ namespace WorldQuakeViewer
             public ViewData Data { get; set; }
 
             /// <summary>
-            /// タイトル1のテキスト
+            /// 最新のタイトルのテキスト
             /// </summary>
-            [Description("タイトル1のテキスト")]
+            [Description("最新のタイトルのテキスト")]
             public string Title1Text { get; set; }
 
             /// <summary>
-            /// (最新、履歴のみ)タイトル2のテキスト
+            /// 履歴のタイトルのテキスト
             /// </summary>
-            [Description("(最新、履歴のみ)タイトル2のテキスト")]
+            [Description("履歴のタイトルのテキスト")]
             public string Title2Text { get; set; }
 
             /// <summary>
-            /// 表示するテキスト
+            /// 表示するテキストのフォーマット
             /// </summary>
-            [Description("表示するテキスト")]
+            [Description("表示するテキストのフォーマット")]
             public string DisplayText { get; set; }
 
             /// <summary>
@@ -1630,52 +1630,52 @@ namespace WorldQuakeViewer
             public class Colors_
             {
                 /// <summary>
-                /// 最新の後ろ部分(****地震情報…のところ)のテキスト色
+                /// 最新のタイトル部分のテキスト色
                 /// </summary>
-                [Description("最新の後ろ部分(****地震情報…のところ)のテキスト色")]
-                public Color Back1_Text { get; set; }
+                [Description("最新のタイトル部分のテキスト色")]
+                public Color Title_Latest_Text { get; set; }
 
                 /// <summary>
-                /// 最新の後ろ部分(****地震情報…のところ)の背景色
+                /// 最新のタイトル部分の背景色
                 /// </summary>
-                [Description("最新の後ろ部分(****地震情報…のところ)の背景色")]
-                public Color Back1_Back { get; set; }
+                [Description("最新のタイトル部分の背景色")]
+                public Color Title_Latest_Back { get; set; }
 
                 /// <summary>
-                /// 最新の前部分([震源名]\n[緯度経度] [深さ]\n…のところ)のテキスト色
+                /// 最新のメイン部分のテキスト色
                 /// </summary>
-                [Description("最新の前部分([震源名]\n[緯度経度] [深さ]\n…のところ)のテキスト色")]
-                public Color Fore1_Text { get; set; }
+                [Description("最新のメイン部分のテキスト色")]
+                public Color Main_Latest_Text { get; set; }
 
                 /// <summary>
-                /// 最新の前部分([震源名]\n[緯度経度] [深さ]\n…のところ)の背景色
+                /// 最新のメイン部分の背景色
                 /// </summary>
-                [Description("最新の前部分([震源名]\n[緯度経度] [深さ]\n…のところ)の背景色")]
-                public Color Fore1_Back { get; set; }
+                [Description("最新のメイン部分の背景色")]
+                public Color Main_Latest_Back { get; set; }
 
                 /// <summary>
-                /// 履歴の後ろ部分(****地震情報…のところ)のテキスト色
+                /// タイトル部分のテキスト色
                 /// </summary>
-                [Description("履歴の後ろ部分(****地震情報…のところ)のテキスト色")]
-                public Color Back2_Text { get; set; }
+                [Description("履歴のタイトル部分のテキスト色")]
+                public Color Title_History_Text { get; set; }
 
                 /// <summary>
-                /// 履歴の後ろ部分(****地震情報…のところ)の背景色
+                /// 履歴のタイトル部分の背景色
                 /// </summary>
-                [Description("履歴の後ろ部分(****地震情報…のところ)の背景色")]
-                public Color Back2_Back { get; set; }
+                [Description("履歴のタイトル部分の背景色")]
+                public Color Title_History_Back { get; set; }
 
                 /// <summary>
-                /// 履歴の前部分([震源名]\n[緯度経度] [深さ]\n…のところ)のテキスト色
+                /// 履歴のメイン部分のテキスト色
                 /// </summary>
-                [Description("履歴の前部分([震源名]\n[緯度経度] [深さ]\n…のところ)のテキスト色")]
-                public Color Fore2_Text { get; set; }
+                [Description("履歴のメイン部分のテキスト色")]
+                public Color Main_History_Text { get; set; }
 
                 /// <summary>
-                /// 履歴の前部分([震源名]\n[緯度経度] [深さ]\n…のところ)の背景色
+                /// 履歴のメイン部分の背景色
                 /// </summary>
-                [Description("履歴の前部分([震源名]\n[緯度経度] [深さ]\n…のところ)の背景色")]
-                public Color Fore2_Back { get; set; }
+                [Description("履歴のメイン部分の背景色")]
+                public Color Main_History_Back { get; set; }
 
                 /// <summary>
                 /// 「地図データ:Natural Earth」のテキスト色
@@ -1701,14 +1701,14 @@ namespace WorldQuakeViewer
                 /// <param name="from">変換元</param>
                 public static explicit operator Colors_(Config.View_.Colors_ from) => new Colors_
                 {
-                    Back1_Text = from.Back1_Text,
-                    Back1_Back = from.Back1_Back,
-                    Fore1_Text = from.Fore1_Text,
-                    Fore1_Back = from.Fore1_Back,
-                    Back2_Text = from.Back2_Text,
-                    Back2_Back = from.Back2_Back,
-                    Fore2_Text = from.Fore2_Text,
-                    Fore2_Back = from.Fore2_Back,
+                    Title_Latest_Text = from.Title_Latest_Text,
+                    Title_Latest_Back = from.Title_Latest_Back,
+                    Main_Latest_Text = from.Main_Latest_Text,
+                    Main_Latest_Back = from.Main_Latest_Back,
+                    Title_History_Text = from.Title_History_Text,
+                    Title_History_Back = from.Title_History_Back,
+                    Main_History_Text = from.Main_History_Text,
+                    Main_History_Back = from.Main_History_Back,
                     MapData_Text = from.MapData_Text,
                     MapData_Back = from.MapData_Back,
                     Border = from.Border
@@ -1724,7 +1724,7 @@ namespace WorldQuakeViewer
                 Data = from.Data,
                 Title1Text = from.Title1Text,
                 Title2Text = from.Title2Text,
-                DisplayText = from.DisplayText,
+                DisplayText = from.DisplayTextFormat,
                 LowerMagLimit = from.LowerMagLimit,
                 MapRange = from.MapRange,
                 HypoShift = from.HypoShift,
