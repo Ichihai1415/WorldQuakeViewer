@@ -16,6 +16,7 @@ namespace WorldQuakeViewer
         readonly int i;
         readonly Dictionary<string, Data> data_;
         static Config.View_ config_view;
+        public bool showing = false;
 
         public DataView(int viewIndex, ViewData viewData)
         {
@@ -71,6 +72,11 @@ namespace WorldQuakeViewer
             //todo:一定時間でgreenにするやつ
 
 
+        }
+
+        private void DataView_Load(object sender, EventArgs e)
+        {
+            showing = true;
         }
 
         /// <summary>
@@ -220,6 +226,8 @@ namespace WorldQuakeViewer
             DialogResult ok = MessageBox.Show(topMost, "閉じてもいいですか？メイン画面から再表示できます。", "確認", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
             if (ok == DialogResult.Cancel)
                 e.Cancel = true;
+            else
+                showing = false;
         }
     }
 }

@@ -54,6 +54,9 @@
             this.ProG_other = new System.Windows.Forms.PropertyGrid();
             this.GetTimer = new System.Windows.Forms.Timer(this.components);
             this.LogClearTimer = new System.Windows.Forms.Timer(this.components);
+            this.ProG_view_OpenNum = new System.Windows.Forms.NumericUpDown();
+            this.ProG_view_Open = new System.Windows.Forms.Button();
+            this.ProG_view_OpenAll = new System.Windows.Forms.Button();
             this.TabCtrl_Main.SuspendLayout();
             this.Tab_Main_Log.SuspendLayout();
             this.Tab_Main_Setting.SuspendLayout();
@@ -62,6 +65,7 @@
             this.Tab_Setting_View.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ProG_view_CopyNum)).BeginInit();
             this.Tab_Setting_Other.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ProG_view_OpenNum)).BeginInit();
             this.SuspendLayout();
             // 
             // TabCtrl_Main
@@ -209,23 +213,26 @@
             // 
             // Tab_Setting_View
             // 
+            this.Tab_Setting_View.Controls.Add(this.ProG_view_OpenAll);
+            this.Tab_Setting_View.Controls.Add(this.ProG_view_Open);
+            this.Tab_Setting_View.Controls.Add(this.ProG_view_OpenNum);
             this.Tab_Setting_View.Controls.Add(this.ProG_view_CopyNum);
             this.Tab_Setting_View.Controls.Add(this.ProG_view_Copy);
             this.Tab_Setting_View.Controls.Add(this.ProG_view_Text1);
             this.Tab_Setting_View.Controls.Add(this.ProG_view_Delete);
             this.Tab_Setting_View.Controls.Add(this.ProG_view_Add);
             this.Tab_Setting_View.Controls.Add(this.ProG_view);
-            this.Tab_Setting_View.Location = new System.Drawing.Point(4, 22);
+            this.Tab_Setting_View.Location = new System.Drawing.Point(4, 27);
             this.Tab_Setting_View.Name = "Tab_Setting_View";
             this.Tab_Setting_View.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_Setting_View.Size = new System.Drawing.Size(484, 343);
+            this.Tab_Setting_View.Size = new System.Drawing.Size(484, 338);
             this.Tab_Setting_View.TabIndex = 2;
             this.Tab_Setting_View.Text = "表示";
             this.Tab_Setting_View.UseVisualStyleBackColor = true;
             // 
             // ProG_view_CopyNum
             // 
-            this.ProG_view_CopyNum.Location = new System.Drawing.Point(247, 3);
+            this.ProG_view_CopyNum.Location = new System.Drawing.Point(222, 3);
             this.ProG_view_CopyNum.Maximum = new decimal(new int[] {
             9,
             0,
@@ -250,7 +257,7 @@
             // ProG_view_Copy
             // 
             this.ProG_view_Copy.Font = new System.Drawing.Font("メイリオ", 9F);
-            this.ProG_view_Copy.Location = new System.Drawing.Point(294, 4);
+            this.ProG_view_Copy.Location = new System.Drawing.Point(270, 4);
             this.ProG_view_Copy.Name = "ProG_view_Copy";
             this.ProG_view_Copy.Size = new System.Drawing.Size(55, 23);
             this.ProG_view_Copy.TabIndex = 5;
@@ -262,11 +269,11 @@
             // 
             this.ProG_view_Text1.AutoSize = true;
             this.ProG_view_Text1.BackColor = System.Drawing.SystemColors.Control;
-            this.ProG_view_Text1.Location = new System.Drawing.Point(200, 7);
+            this.ProG_view_Text1.Location = new System.Drawing.Point(175, 7);
             this.ProG_view_Text1.Name = "ProG_view_Text1";
-            this.ProG_view_Text1.Size = new System.Drawing.Size(97, 18);
+            this.ProG_view_Text1.Size = new System.Drawing.Size(209, 18);
             this.ProG_view_Text1.TabIndex = 4;
-            this.ProG_view_Text1.Text = "[0]から　　　に";
+            this.ProG_view_Text1.Text = "[0]から　　　に　　 　　　　　　を";
             // 
             // ProG_view_Delete
             // 
@@ -296,7 +303,7 @@
             this.ProG_view.Location = new System.Drawing.Point(3, 3);
             this.ProG_view.Name = "ProG_view";
             this.ProG_view.PropertySort = System.Windows.Forms.PropertySort.Categorized;
-            this.ProG_view.Size = new System.Drawing.Size(478, 337);
+            this.ProG_view.Size = new System.Drawing.Size(478, 332);
             this.ProG_view.TabIndex = 1;
             // 
             // Tab_Setting_Other
@@ -328,6 +335,51 @@
             this.LogClearTimer.Interval = 1000;
             this.LogClearTimer.Tick += new System.EventHandler(this.LogClearTimer_Tick);
             // 
+            // ProG_view_OpenNum
+            // 
+            this.ProG_view_OpenNum.Location = new System.Drawing.Point(335, 3);
+            this.ProG_view_OpenNum.Maximum = new decimal(new int[] {
+            9,
+            0,
+            0,
+            0});
+            this.ProG_view_OpenNum.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.ProG_view_OpenNum.Name = "ProG_view_OpenNum";
+            this.ProG_view_OpenNum.Size = new System.Drawing.Size(30, 25);
+            this.ProG_view_OpenNum.TabIndex = 7;
+            this.ProG_view_OpenNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.ProG_view_OpenNum.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // ProG_view_Open
+            // 
+            this.ProG_view_Open.Font = new System.Drawing.Font("メイリオ", 9F);
+            this.ProG_view_Open.Location = new System.Drawing.Point(380, 4);
+            this.ProG_view_Open.Name = "ProG_view_Open";
+            this.ProG_view_Open.Size = new System.Drawing.Size(40, 23);
+            this.ProG_view_Open.TabIndex = 8;
+            this.ProG_view_Open.Text = "表示";
+            this.ProG_view_Open.UseVisualStyleBackColor = true;
+            this.ProG_view_Open.Click += new System.EventHandler(this.ProG_view_Open_Click);
+            // 
+            // ProG_view_OpenAll
+            // 
+            this.ProG_view_OpenAll.Font = new System.Drawing.Font("メイリオ", 9F);
+            this.ProG_view_OpenAll.Location = new System.Drawing.Point(427, 4);
+            this.ProG_view_OpenAll.Name = "ProG_view_OpenAll";
+            this.ProG_view_OpenAll.Size = new System.Drawing.Size(52, 23);
+            this.ProG_view_OpenAll.TabIndex = 9;
+            this.ProG_view_OpenAll.Text = "全表示";
+            this.ProG_view_OpenAll.UseVisualStyleBackColor = true;
+            this.ProG_view_OpenAll.Click += new System.EventHandler(this.ProG_view_OpenAll_Click);
+            // 
             // CtrlForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -353,6 +405,7 @@
             this.Tab_Setting_View.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ProG_view_CopyNum)).EndInit();
             this.Tab_Setting_Other.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.ProG_view_OpenNum)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -383,5 +436,8 @@
         private System.Windows.Forms.Button Config_Reset;
         private System.Windows.Forms.Button Config_Save;
         private System.Windows.Forms.Timer LogClearTimer;
+        private System.Windows.Forms.Button ProG_view_Open;
+        private System.Windows.Forms.NumericUpDown ProG_view_OpenNum;
+        private System.Windows.Forms.Button ProG_view_OpenAll;
     }
 }

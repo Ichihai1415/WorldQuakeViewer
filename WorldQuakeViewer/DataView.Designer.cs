@@ -40,6 +40,7 @@
             this.Name = "DataView";
             this.Text = "DataView";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DataView_FormClosing);
+            this.Load += new System.EventHandler(this.DataView_Load);
             this.ResumeLayout(false);
 
         }
