@@ -362,11 +362,12 @@ namespace WorldQuakeViewer
         /// 描画用マグニチュード別色
         /// </summary>
         /// <param name="mag">マグニチュード</param>
+        /// <param name="viewIndex">表示インデックス</param>
         /// <returns>マグニチュード別の色</returns>
-        public static Brush Mag2Brush(double mag)
+        public static Brush Mag2Brush(double mag, int viewIndex)
         {
             if (mag < 6)
-                return Brushes.White;
+                return new SolidBrush(config.Views[viewIndex].Colors.Fore1_Back);
             else if (mag < 8)
                 return Brushes.Yellow;
             else
@@ -377,8 +378,10 @@ namespace WorldQuakeViewer
         /// 描画用アラート別色
         /// </summary>
         /// <param name="alert">アラート</param>
+        /// <param name="latestORhistory">最新の場合1、履歴の場合2</param>
+        /// <param name="viewIndex">表示インデックス</param>
         /// <returns>アラート別の色</returns>
-        public static Color Alert2Color(string alert)
+        public static Color Alert2Color(string alert, int latestORhistory, int viewIndex)
         {
             switch (alert)
             {
@@ -392,8 +395,36 @@ namespace WorldQuakeViewer
                     return Color.Red;
                 case "pending":
                     return Color.DimGray;
+                case "":
+                    switch (latestORhistory)
+                    {
+                        case 1:
+                            return config.Views[viewIndex].Colors.Fore1_Back;
+                        case 2:
+                            return config.Views[viewIndex].Colors.Fore2_Back;
+                        default:
+                            ExeLog($"[Alert2Color]警告:latestORhistory:{latestORhistory}は未確認です。", true);
+                            LogSave(LogKind.Error, new ArgumentException($"<警告>alert:{latestORhistory}は未確認です。", nameof(latestORhistory)).ToString());
+                            return config.Views[viewIndex].Colors.Back1_Back;
+                    }
                 default:
-                    return Color.FromArgb(45, 45, 90);
+                    switch (latestORhistory)
+                    {
+                        case 1:
+                            ExeLog($"[Alert2Color]警告:alert:{alert}は未確認です。", true);
+                            LogSave(LogKind.Error, new ArgumentException($"<警告>alert:{alert}は未確認です。", nameof(alert)).ToString());
+                            return config.Views[viewIndex].Colors.Fore1_Back;
+                        case 2:
+                            ExeLog($"[Alert2Color]警告:alert:{alert}は未確認です。", true);
+                            LogSave(LogKind.Error, new ArgumentException($"<警告>alert:{alert}は未確認です。", nameof(alert)).ToString());
+                            return config.Views[viewIndex].Colors.Fore2_Back;
+                        default:
+                            ExeLog($"[Alert2Color]警告:alert:{alert}は未確認です。", true);
+                            LogSave(LogKind.Error, new ArgumentException($"<警告>alert:{alert}は未確認です。", nameof(alert)).ToString());
+                            ExeLog($"[Alert2Color]警告:latestORhistory:{latestORhistory}は未確認です。", true);
+                            LogSave(LogKind.Error, new ArgumentException($"<警告>alert:{latestORhistory}は未確認です。", nameof(latestORhistory)).ToString());
+                            return config.Views[viewIndex].Colors.Fore1_Back;
+                    }
             }
         }
     }
