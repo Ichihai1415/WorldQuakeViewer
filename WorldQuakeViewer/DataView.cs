@@ -76,15 +76,8 @@ namespace WorldQuakeViewer
                 default:
                     throw new Exception("DataViewの初期化に失敗しました。", new ArgumentException($"{dataAuthorN}はデータ元として不正です。"));
             }
-
-
-
-
             config_view = config.Views[i];
-
-            //todo:一定時間でgreenにするやつ
-
-
+            //todo:一定時間でgreenにするやつ(必要なら)
         }
 
         private void DataView_Load(object sender, EventArgs e)
@@ -182,8 +175,8 @@ namespace WorldQuakeViewer
             ImageCheck("hypo.png");
             Image hypoImg = Image.FromFile("Image\\hypo.png");
             g.DrawImage(hypoImg, new Rectangle(400 - hypoImg.Width / 2, locY + locY_image - hypoImg.Height / 2, hypoImg.Width, hypoImg.Height), 0, 0, hypoImg.Width, hypoImg.Height, GraphicsUnit.Pixel, ia);
-            g.FillRectangle(new SolidBrush(config_view.Colors.MapData_Back), 480, 950, 320, 50);
-            g.DrawString("地図データ:Natural Earth", new Font(font, 19), new SolidBrush(config_view.Colors.MapData_Text), 490, 956);
+            g.FillRectangle(new SolidBrush(config_view.Colors.MapData_Back), 504, 958, 296, 42);
+            g.DrawString("地図データ:Natural Earth", new Font(font, 18), new SolidBrush(config_view.Colors.MapData_Text), 510, 962);
             //最新
             g.FillRectangle(new SolidBrush(config_view.Colors.Title_Latest_Back), 0, 0, 800, 200);
             g.FillRectangle(new SolidBrush(Alert2Color(data.Alert, 1, i)), 4, 40, 792, 156);//USGSアラート用
@@ -194,7 +187,6 @@ namespace WorldQuakeViewer
             g.DrawString(data.Mag.ToString("0.0#"), new Font(font, 50), Mag2Brush(data.Mag, 1, i), 640, 110);
             g.DrawRectangle(new Pen(config_view.Colors.Border), 0, 0, 800, 200);
             g.DrawRectangle(new Pen(config_view.Colors.Border), 0, 200, 800, 800);
-
             g.Dispose();
             return latestImg;
         }
@@ -239,7 +231,6 @@ namespace WorldQuakeViewer
                 else
                     g.FillRectangle(new SolidBrush(config_view.Colors.Title_History_Back), 4 + w, 40 + 160 * j, 792, 156);
             g.DrawRectangle(new Pen(config_view.Colors.Border), w, 0, 800, 1000);
-
             g.Dispose();
             return histImg;
         }
