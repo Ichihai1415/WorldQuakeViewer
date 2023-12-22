@@ -19,7 +19,7 @@ namespace WorldQuakeViewer
         readonly int i;
         readonly public int dataAuthorN;
         readonly Dictionary<string, Data> data_;
-        static Config.View_ config_view;
+        private static Config.View_ config_view;
         public bool showing = false;
 
         /// <summary>
@@ -43,6 +43,7 @@ namespace WorldQuakeViewer
             {
                 case 1:
                 case 2:
+                case 4:
                     ClientSize = new Size(400, 500);
                     break;
                 case 3:
@@ -97,6 +98,8 @@ namespace WorldQuakeViewer
         /// </summary>
         public void Draw()
         {
+            ExeLog($"[Draw][{i}]描画を開始します");
+            config_view = config.Views[i];
             Bitmap img;
             if (data_.Count == 0)
             {
@@ -110,6 +113,9 @@ namespace WorldQuakeViewer
                         break;
                     case 3:
                         img = Draw_History(null, Draw_Latest(null));
+                        break;
+                    case 4:
+                        img = Draw_AllLatestMulti(null);
                         break;
                     default:
                         return;
@@ -129,6 +135,9 @@ namespace WorldQuakeViewer
                         break;
                     case 3:
                         img = Draw_History(data.Skip(1).ToList(), Draw_Latest(data[0]));
+                        break;
+                    case 4:
+                        img = Draw_AllLatestMulti(data);
                         break;
                     default:
                         return;
@@ -236,10 +245,83 @@ namespace WorldQuakeViewer
         }
 
         /// <summary>
+        /// すべての最新1つずつ
+        /// </summary>
+        /// <remarks>ウィンドウサイズは自動で変更されます。</remarks>
+        /// <param name="datas">描画するデータ</param>
+        /// <returns>最新の情報の画像(800x(個数*200))</returns>
+        public Bitmap Draw_AllLatestMulti(List<Data> datas)
+        {
+            if (datas == null)
+            {
+                Bitmap histImg_ = new Bitmap(800, 200);
+                Graphics g_ = Graphics.FromImage(histImg_);
+
+                g_.FillRectangle(new SolidBrush(config_view.Colors.Title_Latest_Back), 0, 0, 800, 200);
+                g_.FillRectangle(new SolidBrush(config_view.Colors.Main_Latest_Back), 4, 40, 792, 156);
+                g_.DrawString(config_view.Title1Text, new Font(font, 20), new SolidBrush(config_view.Colors.Title_Latest_Text), 2, 2);
+                g_.DrawString("表示対象の情報を受信していません。", new Font(font, 20), new SolidBrush(config_view.Colors.Main_Latest_Text), 5, 42);
+                g_.DrawRectangle(new Pen(config_view.Colors.Border), 0, 0, 800, 200);
+
+                g_.Dispose();
+                ClientSize = new Size(400, 100);
+                return histImg_;
+            }
+            int[] latests;
+            string[] titles;
+            try
+            {
+                latests = config_view.Title2Text.Split(',').Select(n => int.Parse(n)).ToArray();
+                titles = config_view.Title1Text.Split(',');
+                if (latests.Count() != titles.Count())
+                    throw new Exception($"表示用処理値が等しくありません。(latests:{latests.Count()},titles:{titles.Count()})設定を確認してください。");
+            }
+            catch (FormatException ex)
+            {
+                ExeLog($"[Draw_AllLatestMulti]エラー:{ex.Message}(設定を確認してください。)", true);
+                LogSave(LogKind.Error, ex.ToString());
+                return Draw_AllLatestMulti(null);
+            }
+            catch (Exception ex)
+            {
+                ExeLog($"[Draw_AllLatestMulti]エラー:{ex.Message}", true);
+                LogSave(LogKind.Error, ex.ToString());
+                return Draw_AllLatestMulti(null);
+            }
+            int h = 200 * latests.Count();
+            Bitmap histImg = new Bitmap(800, h);
+            Graphics g = Graphics.FromImage(histImg);
+
+            g.FillRectangle(new SolidBrush(config_view.Colors.Title_Latest_Back), 0, 0, 800, h);
+            for (int j = 0; j < latests.Count(); j++)
+            {
+                Data data;
+                try
+                {
+                    data = datas.Where(x => x.Author == (DataAuthor)latests[j]).First();//データ元が一致する最初のやつ
+                }
+                catch (Exception ex)
+                {
+                    ExeLog($"[Draw_AllLatestMulti]警告:{ex.Message}(設定を確認してください。)", true);
+                    return Draw_AllLatestMulti(null);
+                }
+                g.DrawString(titles[j], new Font(font, 20), new SolidBrush(config_view.Colors.Title_Latest_Text), 2, 2 + 200 * j);
+                g.FillRectangle(new SolidBrush(Alert2Color(data.Alert, 1, i)), 4, 40 + 200 * j, 792, 156);//USGSアラート用
+                g.FillRectangle(new SolidBrush(config_view.Colors.Main_Latest_Back), 8, 44 + 200 * j, 784, 148);
+                g.DrawString(Data2String(data, FormatPros.View, false, i), new Font(font, 20), Mag2Brush(data.Mag, 1, i), 5, 42 + 200 * j);
+                g.DrawString(data.MagType, new Font(font, 20), Mag2Brush(data.Mag, 1, i), 640 - g.MeasureString(data.MagType, new Font(font, 20)).Width, 154 + 200 * j);
+                g.DrawString(data.Mag.ToString("0.0#"), new Font(font, 50), Mag2Brush(data.Mag, 1, i), 640, 110 + 200 * j);
+
+                g.DrawRectangle(new Pen(config_view.Colors.Border), 0, 200 * j, 800, 200);
+            }
+            g.Dispose();
+            ClientSize = new Size(400, h / 2);
+            return histImg;
+        }
+
+        /// <summary>
         /// 閉じるか確認
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void DataView_FormClosing(object sender, FormClosingEventArgs e)
         {
             DialogResult ok = MessageBox.Show(topMost, "閉じてもいいですか？メイン画面から再表示できます。", "確認", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);

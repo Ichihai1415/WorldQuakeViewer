@@ -24,6 +24,7 @@ namespace WorldQuakeViewer
         /// 実行ログを保存・表示します。
         /// </summary>
         /// <param name="text">保存するテキスト。</param>
+        /// <param name="isError">エラーの場合。</param>
         /// <remarks>タイムスタンプは自動で追加されます。</remarks>
         public static void ExeLog(string text, bool isError = false)
         {

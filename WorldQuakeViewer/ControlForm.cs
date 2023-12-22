@@ -111,7 +111,7 @@ namespace WorldQuakeViewer
             colorChange[0].NewColor = Color.Transparent;
             ia.SetRemapTable(colorChange);
 
-            for (int i = 0; i < config.Datas.Count() - 1; i++)
+            for (int i = 0; i < config.Datas.Count(); i++)
                 foreach (int time in config.Datas[i].GetTimes)
                     if (0 <= time && time < 60)
                     {

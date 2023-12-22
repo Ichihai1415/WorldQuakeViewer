@@ -160,7 +160,11 @@ namespace WorldQuakeViewer
             /// <summary>
             /// すべての最新とマップと履歴
             /// </summary>
-            All_LatestHistory = 93
+            All_LatestHistory = 93,
+            /// <summary>
+            /// すべての最新1つずつ
+            /// </summary>
+            All_LatestMulti = 94
         };
 
         /// <summary>
