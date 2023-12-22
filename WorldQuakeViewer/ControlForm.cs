@@ -40,6 +40,7 @@ namespace WorldQuakeViewer
         {
             InitializeComponent();
             logTextBox = LogTextBox;
+            InfoText0.Text = $"WorldQuakeViewer v{version}";
         }
 
         private void CtrlForm_Load(object sender, EventArgs e)
@@ -73,7 +74,7 @@ namespace WorldQuakeViewer
                 }
             else
             {
-                MessageBox.Show(topMost, $"WorldQuakeViewer v{version}へようこそ！OKを押すと開きます。README.mdを確認してください。", "WQV", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(topMost, $"WorldQuakeViewer v{version}へようこそ！OKを押すと開きます。README.mdを確認してください。", "welcome", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 TopMost = true;//いったん非アクティブになると後ろ行くから一時的に前に
                 TopMost = false;
                 Directory.CreateDirectory("Setting");
@@ -84,7 +85,6 @@ namespace WorldQuakeViewer
             LogClearTimer.Enabled = true;
             if (!config.Other.LogN.Normal_Enable)
                 logTextBox.Text = "<動作ログを表示する場合、設定のその他のNormal_EnableをTrueにしてください>\n\r";
-
 
             if (!Directory.Exists("Font"))
             {
@@ -263,6 +263,10 @@ namespace WorldQuakeViewer
                 Open(i);
         }
 
+        /// <summary>
+        /// データ表示Formを開きます。
+        /// </summary>
+        /// <param name="num">表示インデックス</param>
         private void Open(int num)
         {
             if (config.Views.Count() > num)
@@ -299,6 +303,11 @@ namespace WorldQuakeViewer
             }
             else
                 ExeLog($"[Open]画面[{num}]は設定されていません。");
+        }
+
+        private void InfoPageLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://ichihai1415.github.io/programs/wqv/");
         }
     }
 }

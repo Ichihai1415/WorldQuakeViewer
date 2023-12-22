@@ -44,6 +44,9 @@
             this.ProG_pro_Text1 = new System.Windows.Forms.Label();
             this.ProG_pro = new System.Windows.Forms.PropertyGrid();
             this.Tab_Setting_View = new System.Windows.Forms.TabPage();
+            this.ProG_view_OpenAll = new System.Windows.Forms.Button();
+            this.ProG_view_Open = new System.Windows.Forms.Button();
+            this.ProG_view_OpenNum = new System.Windows.Forms.NumericUpDown();
             this.ProG_view_CopyNum = new System.Windows.Forms.NumericUpDown();
             this.ProG_view_Copy = new System.Windows.Forms.Button();
             this.ProG_view_Text1 = new System.Windows.Forms.Label();
@@ -54,18 +57,19 @@
             this.ProG_other = new System.Windows.Forms.PropertyGrid();
             this.GetTimer = new System.Windows.Forms.Timer(this.components);
             this.LogClearTimer = new System.Windows.Forms.Timer(this.components);
-            this.ProG_view_OpenNum = new System.Windows.Forms.NumericUpDown();
-            this.ProG_view_Open = new System.Windows.Forms.Button();
-            this.ProG_view_OpenAll = new System.Windows.Forms.Button();
+            this.InfoText1 = new System.Windows.Forms.Label();
+            this.InfoText0 = new System.Windows.Forms.Label();
+            this.InfoPageLink = new System.Windows.Forms.LinkLabel();
             this.TabCtrl_Main.SuspendLayout();
+            this.Tab_Main_Info.SuspendLayout();
             this.Tab_Main_Log.SuspendLayout();
             this.Tab_Main_Setting.SuspendLayout();
             this.TabCtrl_Setting.SuspendLayout();
             this.Tab_Setting_Pro.SuspendLayout();
             this.Tab_Setting_View.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ProG_view_OpenNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ProG_view_CopyNum)).BeginInit();
             this.Tab_Setting_Other.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ProG_view_OpenNum)).BeginInit();
             this.SuspendLayout();
             // 
             // TabCtrl_Main
@@ -82,6 +86,9 @@
             // 
             // Tab_Main_Info
             // 
+            this.Tab_Main_Info.Controls.Add(this.InfoPageLink);
+            this.Tab_Main_Info.Controls.Add(this.InfoText0);
+            this.Tab_Main_Info.Controls.Add(this.InfoText1);
             this.Tab_Main_Info.Location = new System.Drawing.Point(4, 27);
             this.Tab_Main_Info.Name = "Tab_Main_Info";
             this.Tab_Main_Info.Padding = new System.Windows.Forms.Padding(3);
@@ -93,10 +100,10 @@
             // Tab_Main_Log
             // 
             this.Tab_Main_Log.Controls.Add(this.LogTextBox);
-            this.Tab_Main_Log.Location = new System.Drawing.Point(4, 22);
+            this.Tab_Main_Log.Location = new System.Drawing.Point(4, 27);
             this.Tab_Main_Log.Name = "Tab_Main_Log";
             this.Tab_Main_Log.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_Main_Log.Size = new System.Drawing.Size(492, 474);
+            this.Tab_Main_Log.Size = new System.Drawing.Size(492, 469);
             this.Tab_Main_Log.TabIndex = 0;
             this.Tab_Main_Log.Text = "ログ";
             this.Tab_Main_Log.UseVisualStyleBackColor = true;
@@ -164,9 +171,9 @@
             this.ConsigInfoText.Name = "ConsigInfoText";
             this.ConsigInfoText.Size = new System.Drawing.Size(488, 90);
             this.ConsigInfoText.TabIndex = 1;
-            this.ConsigInfoText.Text = "> ←これを押して展開してください。一部は保存を押さないと反映されません。\r\n《処理》取得先別の処理の設定。Otherは処理できれば自由です。\r\n《表示》表示する" +
-    "処理の設定。[0]はコピー用で表示されません。\r\n追加を押して画面を追加できます。削除は一番最後のを削除するので注意してください。\r\n《その他》上記以外の設定。" +
-    "         ";
+            this.ConsigInfoText.Text = "> ←これを押して展開してください。保存を押さないと反映されません。\r\n《処理》取得先別の処理の設定。Otherは処理できれば自由です。\r\n《表示》表示する処理の" +
+    "設定。[0]はコピー用で表示されません。\r\n追加を押して画面を追加できます。削除は一番最後のを削除するので注意してください。\r\n《その他》上記以外の設定。   " +
+    "      ";
             // 
             // TabCtrl_Setting
             // 
@@ -229,6 +236,51 @@
             this.Tab_Setting_View.TabIndex = 2;
             this.Tab_Setting_View.Text = "表示";
             this.Tab_Setting_View.UseVisualStyleBackColor = true;
+            // 
+            // ProG_view_OpenAll
+            // 
+            this.ProG_view_OpenAll.Font = new System.Drawing.Font("メイリオ", 9F);
+            this.ProG_view_OpenAll.Location = new System.Drawing.Point(427, 4);
+            this.ProG_view_OpenAll.Name = "ProG_view_OpenAll";
+            this.ProG_view_OpenAll.Size = new System.Drawing.Size(52, 23);
+            this.ProG_view_OpenAll.TabIndex = 9;
+            this.ProG_view_OpenAll.Text = "全表示";
+            this.ProG_view_OpenAll.UseVisualStyleBackColor = true;
+            this.ProG_view_OpenAll.Click += new System.EventHandler(this.ProG_view_OpenAll_Click);
+            // 
+            // ProG_view_Open
+            // 
+            this.ProG_view_Open.Font = new System.Drawing.Font("メイリオ", 9F);
+            this.ProG_view_Open.Location = new System.Drawing.Point(380, 4);
+            this.ProG_view_Open.Name = "ProG_view_Open";
+            this.ProG_view_Open.Size = new System.Drawing.Size(40, 23);
+            this.ProG_view_Open.TabIndex = 8;
+            this.ProG_view_Open.Text = "表示";
+            this.ProG_view_Open.UseVisualStyleBackColor = true;
+            this.ProG_view_Open.Click += new System.EventHandler(this.ProG_view_Open_Click);
+            // 
+            // ProG_view_OpenNum
+            // 
+            this.ProG_view_OpenNum.Location = new System.Drawing.Point(335, 3);
+            this.ProG_view_OpenNum.Maximum = new decimal(new int[] {
+            9,
+            0,
+            0,
+            0});
+            this.ProG_view_OpenNum.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.ProG_view_OpenNum.Name = "ProG_view_OpenNum";
+            this.ProG_view_OpenNum.Size = new System.Drawing.Size(30, 25);
+            this.ProG_view_OpenNum.TabIndex = 7;
+            this.ProG_view_OpenNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.ProG_view_OpenNum.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // ProG_view_CopyNum
             // 
@@ -335,50 +387,37 @@
             this.LogClearTimer.Interval = 1000;
             this.LogClearTimer.Tick += new System.EventHandler(this.LogClearTimer_Tick);
             // 
-            // ProG_view_OpenNum
+            // InfoText1
             // 
-            this.ProG_view_OpenNum.Location = new System.Drawing.Point(335, 3);
-            this.ProG_view_OpenNum.Maximum = new decimal(new int[] {
-            9,
-            0,
-            0,
-            0});
-            this.ProG_view_OpenNum.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.ProG_view_OpenNum.Name = "ProG_view_OpenNum";
-            this.ProG_view_OpenNum.Size = new System.Drawing.Size(30, 25);
-            this.ProG_view_OpenNum.TabIndex = 7;
-            this.ProG_view_OpenNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.ProG_view_OpenNum.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            this.InfoText1.AutoSize = true;
+            this.InfoText1.Font = new System.Drawing.Font("メイリオ", 10F);
+            this.InfoText1.Location = new System.Drawing.Point(-1, 40);
+            this.InfoText1.Name = "InfoText1";
+            this.InfoText1.Size = new System.Drawing.Size(497, 420);
+            this.InfoText1.TabIndex = 0;
+            this.InfoText1.Text = resources.GetString("InfoText1.Text");
             // 
-            // ProG_view_Open
+            // InfoText0
             // 
-            this.ProG_view_Open.Font = new System.Drawing.Font("メイリオ", 9F);
-            this.ProG_view_Open.Location = new System.Drawing.Point(380, 4);
-            this.ProG_view_Open.Name = "ProG_view_Open";
-            this.ProG_view_Open.Size = new System.Drawing.Size(40, 23);
-            this.ProG_view_Open.TabIndex = 8;
-            this.ProG_view_Open.Text = "表示";
-            this.ProG_view_Open.UseVisualStyleBackColor = true;
-            this.ProG_view_Open.Click += new System.EventHandler(this.ProG_view_Open_Click);
+            this.InfoText0.AutoSize = true;
+            this.InfoText0.Font = new System.Drawing.Font("メイリオ", 20F);
+            this.InfoText0.Location = new System.Drawing.Point(0, 0);
+            this.InfoText0.Name = "InfoText0";
+            this.InfoText0.Size = new System.Drawing.Size(362, 41);
+            this.InfoText0.TabIndex = 1;
+            this.InfoText0.Text = "WorldQuakeViewer v0.0.0";
             // 
-            // ProG_view_OpenAll
+            // InfoPageLink
             // 
-            this.ProG_view_OpenAll.Font = new System.Drawing.Font("メイリオ", 9F);
-            this.ProG_view_OpenAll.Location = new System.Drawing.Point(427, 4);
-            this.ProG_view_OpenAll.Name = "ProG_view_OpenAll";
-            this.ProG_view_OpenAll.Size = new System.Drawing.Size(52, 23);
-            this.ProG_view_OpenAll.TabIndex = 9;
-            this.ProG_view_OpenAll.Text = "全表示";
-            this.ProG_view_OpenAll.UseVisualStyleBackColor = true;
-            this.ProG_view_OpenAll.Click += new System.EventHandler(this.ProG_view_OpenAll_Click);
+            this.InfoPageLink.AutoSize = true;
+            this.InfoPageLink.Font = new System.Drawing.Font("メイリオ", 10F);
+            this.InfoPageLink.Location = new System.Drawing.Point(406, 439);
+            this.InfoPageLink.Name = "InfoPageLink";
+            this.InfoPageLink.Size = new System.Drawing.Size(80, 21);
+            this.InfoPageLink.TabIndex = 2;
+            this.InfoPageLink.TabStop = true;
+            this.InfoPageLink.Text = "解説ページ";
+            this.InfoPageLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.InfoPageLink_LinkClicked);
             // 
             // CtrlForm
             // 
@@ -390,10 +429,12 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "CtrlForm";
-            this.Text = "ControlForm";
+            this.Text = "WorldQuakeViewer - コントロール画面";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CtrlForm_FormClosing);
             this.Load += new System.EventHandler(this.CtrlForm_Load);
             this.TabCtrl_Main.ResumeLayout(false);
+            this.Tab_Main_Info.ResumeLayout(false);
+            this.Tab_Main_Info.PerformLayout();
             this.Tab_Main_Log.ResumeLayout(false);
             this.Tab_Main_Log.PerformLayout();
             this.Tab_Main_Setting.ResumeLayout(false);
@@ -403,9 +444,9 @@
             this.Tab_Setting_Pro.PerformLayout();
             this.Tab_Setting_View.ResumeLayout(false);
             this.Tab_Setting_View.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ProG_view_OpenNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ProG_view_CopyNum)).EndInit();
             this.Tab_Setting_Other.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.ProG_view_OpenNum)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -439,5 +480,8 @@
         private System.Windows.Forms.Button ProG_view_Open;
         private System.Windows.Forms.NumericUpDown ProG_view_OpenNum;
         private System.Windows.Forms.Button ProG_view_OpenAll;
+        private System.Windows.Forms.Label InfoText0;
+        private System.Windows.Forms.Label InfoText1;
+        private System.Windows.Forms.LinkLabel InfoPageLink;
     }
 }
