@@ -17,6 +17,7 @@ namespace WorldQuakeViewer
     {
         readonly int viewType;
         readonly int i;
+        readonly public int dataAuthorN;
         readonly Dictionary<string, Data> data_;
         static Config.View_ config_view;
         public bool showing = false;
@@ -50,7 +51,8 @@ namespace WorldQuakeViewer
                 default:
                     throw new Exception("DataViewの初期化に失敗しました。", new ArgumentException($"{viewType}は種類として不正です。", nameof(viewType)));
             }
-            switch ((int)viewData / 10)
+            dataAuthorN = (int)viewData / 10;
+            switch (dataAuthorN)
             {
                 case 0:
                     data_ = data_Other;
@@ -71,7 +73,7 @@ namespace WorldQuakeViewer
                     data_ = data_All;
                     break;
                 default:
-                    throw new Exception("DataViewの初期化に失敗しました。", new ArgumentException($"{(int)viewData / 10}はデータ元として不正です。"));
+                    throw new Exception("DataViewの初期化に失敗しました。", new ArgumentException($"{dataAuthorN}はデータ元として不正です。"));
             }
 
 

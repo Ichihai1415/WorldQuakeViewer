@@ -111,6 +111,15 @@ namespace WorldQuakeViewer
             colorChange[0].NewColor = Color.Transparent;
             ia.SetRemapTable(colorChange);
 
+            for (int i = 0; i < config.Datas.Count() - 1; i++)
+                foreach (int time in config.Datas[i].GetTimes)
+                    if (0 <= time && time < 60)
+                    {
+                        Get((DataAuthor)i);
+                        continue;
+                    }
+            for (int i = 1; i < config.Views.Count(); i++)
+                Open(i);
 
             ExeLog($"[CtrlForm_Load]起動処理完了");
         }
@@ -130,7 +139,7 @@ namespace WorldQuakeViewer
             if (c == 9)
                 ProG_view_Add.Enabled = false;
             ProG_view_Copy.Enabled = c > ProG_view_CopyNum.Value;
-            GetTimer.Interval = 2000 - DateTime.Now.Millisecond;
+            GetTimer.Interval = 10000 - DateTime.Now.Millisecond;
             GetTimer.Enabled = true;
             LogClearTimer.Interval = (int)config.Other.LogN.Normal_AutoDelete.TotalMilliseconds;
         }
