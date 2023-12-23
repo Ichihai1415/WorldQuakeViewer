@@ -358,7 +358,7 @@ namespace WorldQuakeViewer
                 /// <summary>
                 /// 送信する文のフォーマット
                 /// </summary>
-                public string Format { get; set; } = "フォーマットを入力してください";
+                public string Format { get; set; } = "[Author]地震情報、[UpdateJP]、{TimeUser:d日H時m分s秒}発生、マグニチュード[Mag]、震源、[HypoJP]、深さ[Depth]km。";
 
                 /// <summary>
                 /// 送信する文の置換
@@ -438,7 +438,7 @@ namespace WorldQuakeViewer
                 /// <summary>
                 /// 送信する文のフォーマット
                 /// </summary>
-                public string Format { get; set; } = "フォーマットを入力してください";
+                public string Format { get; set; } = "[formatJSON]";
 
                 /// <summary>
                 /// 送信する文の置換
@@ -509,12 +509,12 @@ namespace WorldQuakeViewer
                 /// <summary>
                 /// 送信する文のフォーマット
                 /// </summary>
-                public string Format { get; set; } = "フォーマットを入力してください";
+                public string Format { get; set; } = "[Author]地震情報([UpdateJP])【[MagType][Mag]】 {TimeUser:yyyy/MM/dd HH:mm:ss UTCzzz}発生\\n[HypoJP]([HypoEN])\\n[Lat60d]°[Lat60m]'[Lat60s]\"[LatNS], [Lon60d]°[Lon60m]'[Lon60s]\"[LonEW]  深さ[Depth]km";
 
                 /// <summary>
                 /// 送信する文の置換
                 /// </summary>
-                public TextReplace_[] TextReplace { get; set; } = new TextReplace_[] { new TextReplace_() };
+                public TextReplace_[] TextReplace { get; set; } = new TextReplace_[] { new TextReplace_ { OldValue = "()", NewValue = "" }, new TextReplace_() };
 
                 /// <summary>
                 /// 送信する文の置換
@@ -590,7 +590,7 @@ namespace WorldQuakeViewer
                 /// 保存する文のフォーマット
                 /// </summary>
                 /// <remarks>情報の間にソフト情報等が入ります</remarks>
-                public string Format { get; set; } = "フォーマットを入力してください";
+                public string Format { get; set; } = "[Author]地震情報([UpdateJP])【[MagType][Mag]】 {TimeUser:yyyy/MM/dd HH:mm:ss UTCzzz}発生\\n[HypoJP]([HypoEN])\\n[Lat60d]°[Lat60m]'[Lat60s]\"[LatNS], [Lon60d]°[Lon60m]'[Lon60s]\"[LonEW]  深さ[Depth]km\\nraw:[formatJSON]";
 
                 /// <summary>
                 /// 保存する文の置換
@@ -1238,6 +1238,7 @@ namespace WorldQuakeViewer
                 /// <summary>
                 /// 送信する文の置換
                 /// </summary>
+                [TypeConverter(typeof(ExpandableObjectConverter))]
                 [Description("送信する文の置換")]
                 public class TextReplace_
                 {
@@ -1329,6 +1330,7 @@ namespace WorldQuakeViewer
                 /// <summary>
                 /// 送信する文の置換
                 /// </summary>
+                [TypeConverter(typeof(ExpandableObjectConverter))]
                 [Description("送信する文の置換")]
                 public class TextReplace_
                 {
@@ -1410,6 +1412,7 @@ namespace WorldQuakeViewer
                 /// <summary>
                 /// 送信する文の置換
                 /// </summary>
+                [TypeConverter(typeof(ExpandableObjectConverter))]
                 [Description("送信する文の置換")]
                 public class TextReplace_
                 {
@@ -1503,6 +1506,7 @@ namespace WorldQuakeViewer
                 /// <summary>
                 /// 保存する文の置換
                 /// </summary>
+                [TypeConverter(typeof(ExpandableObjectConverter))]
                 [Description("送信する文の置換")]
                 public class TextReplace_
                 {

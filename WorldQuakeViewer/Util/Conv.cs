@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Drawing;
 using System.Linq;
@@ -138,7 +139,9 @@ namespace WorldQuakeViewer
                 .Replace("[MagType]", f.MagType).Replace("[Mag]", f.Mag)
                 .Replace("[MMI]", f.MMI).Replace("[MMIAra]", f.MMIAra)
                 .Replace("[AlertJP]", f.AlertJP).Replace("[AlertEN]", f.AlertEN)
-                .Replace("[Source]", f.Source);
+                .Replace("[Source]", f.Source)
+                .Replace("[UpdateJP]", f.UpdateJP).Replace("[UpdateEN]", f.UpdateEN)
+                .Replace("[formatJSON]", JsonConvert.SerializeObject(f));
             foreach (Config.Data_.LogE_.TextReplace_ replace in config.Datas[(int)data.Author].LogE.TextReplace)
                 format = format.Replace(replace.OldValue, replace.NewValue);
             return format;
