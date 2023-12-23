@@ -244,7 +244,7 @@ namespace WorldQuakeViewer
                 /// <summary>
                 /// M4.5未満を有効か
                 /// </summary>
-                public bool L1_Enable { get; set; } = true;
+                public bool L1_Enable { get; set; } = false;
 
                 /// <summary>
                 /// M4.5以上M6.0未満を有効か
@@ -853,7 +853,7 @@ namespace WorldQuakeViewer
             /// <summary>
             /// EMSCのQuakeMLのID(UNID)をEMSCのIDに自動で変換するか
             /// </summary>
-            [Description("EMSCのQuakeMLのID(UNID)をEMSCのIDに自動で変換するか")]
+            [Description("EMSCのQuakeMLのID(UNID)をEMSCのIDに自動で変換するか\n詳細ページに飛べるリンクに必要です。処理時間は少し長くなります。")]
             public bool EMSCqmlIDConv { get; set; }
 
             /// <summary>

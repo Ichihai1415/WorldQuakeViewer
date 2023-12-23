@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Xml;
 using static LL2FERC.LL2FERC;
 using static WorldQuakeViewer.CtrlForm;
@@ -242,7 +243,7 @@ namespace WorldQuakeViewer
             {
                 Author = dataAuthor,
                 ID = info[0],
-                ID2 = info[0],
+                ID2 = info[8],
                 Time = DateTimeOffset.Parse(info[1]),
                 Hypo = NameJP(double.Parse(info[2]), double.Parse(info[3])),
                 Lat = double.Parse(info[2]),
@@ -350,12 +351,13 @@ namespace WorldQuakeViewer
         /// <param name="oldAuthor">元のデータ元</param>
         /// <param name="newAuthor">返すデータ元</param>
         /// <returns>変換されたID</returns>
-        public static string IDconvert(string sourceID, IDauthor oldAuthor, IDauthor newAuthor)
+        public static async Task<string> IDconvert(string sourceID, IDauthor oldAuthor, IDauthor newAuthor)
         {
             try
             {
                 ExeLog("[IDconvert]ID変換中...", true);
-                return client.GetStringAsync($"https://seismicportal.eu/eventid/api/convert?source_id={sourceID}&source_catalog={oldAuthor}&out_catalog={newAuthor}&format=text").Result.Split('\n')[1].Split('|')[3];
+                string res = await client.GetStringAsync($"https://seismicportal.eu/eventid/api/convert?source_id={sourceID}&source_catalog={oldAuthor}&out_catalog={newAuthor}&format=text");
+                return res.Split('\n')[1].Split('|')[3];
             }
             catch (HttpRequestException ex)
             {
@@ -427,6 +429,7 @@ namespace WorldQuakeViewer
                 case "pending":
                     return Color.DimGray;
                 case "":
+                case "null":
                 case null:
                     break;
                 default:

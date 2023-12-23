@@ -51,20 +51,20 @@ namespace WorldQuakeViewer
                 switch (config.Datas[(int)dataAuthor].DataProType)
                 {
                     case DataProType.Text:
-                        Get_Text(res, data_tmp, dataAuthor);
+                        await Get_Text(res, data_tmp, dataAuthor);
                         break;
                     case DataProType.QuakeML:
-                        Get_QuakeML(res, data_tmp, dataAuthor);
+                        await Get_QuakeML(res, data_tmp, dataAuthor);
                         break;
                     case DataProType.GeoJSON:
                         break;
                     case DataProType.Auto:
                         if (res.StartsWith("#"))
-                            Get_Text(res, data_tmp, dataAuthor);
+                            await Get_Text(res, data_tmp, dataAuthor);
                         else if (res.StartsWith("<"))
-                            Get_QuakeML(res, data_tmp, dataAuthor);
+                            await Get_QuakeML(res, data_tmp, dataAuthor);
                         else if (res.StartsWith("{"))
-                            Get_GeoJSON(res, data_tmp, dataAuthor);
+                            await Get_GeoJSON(res, data_tmp, dataAuthor);
                         else
                             throw new Exception("データ処理の自動判断に失敗しました。");
                         break;
@@ -88,7 +88,7 @@ namespace WorldQuakeViewer
         /// <param name="res">レスポンス本文</param>
         /// <param name="data_tmp">データリスト(参照したものを渡す)</param>
         /// <param name="dataAuthor">データ元</param>
-        public static void Get_Text(string res, Dictionary<string, Data> data_tmp, DataAuthor dataAuthor)
+        public static Task Get_Text(string res, Dictionary<string, Data> data_tmp, DataAuthor dataAuthor)
         {
 
             ExeLog($"[Get_Text][{dataAuthor}]処理中...");
@@ -134,6 +134,7 @@ namespace WorldQuakeViewer
                 }
             }
             ExeLog($"[Get_Text][{dataAuthor}]処理終了");
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -142,7 +143,7 @@ namespace WorldQuakeViewer
         /// <param name="res">レスポンス本文</param>
         /// <param name="data_tmp">データリスト(参照したものを渡す)</param>
         /// <param name="dataAuthor">データ元</param>
-        public static void Get_QuakeML(string res, Dictionary<string, Data> data_tmp, DataAuthor dataAuthor)
+        public static async Task Get_QuakeML(string res, Dictionary<string, Data> data_tmp, DataAuthor dataAuthor)
         {
             ExeLog($"[Get_QuakeML][{dataAuthor}]処理中...");
             Config.Data_ config_data = config.Datas[(int)dataAuthor];
@@ -164,10 +165,10 @@ namespace WorldQuakeViewer
                         if (data_tmp.ContainsKey(data.ID))
                         {
                             if (data_tmp[data.ID].ID2 == "")
-                                data.ID2 = IDconvert(data.ID, IDauthor.UNID, IDauthor.EMSC);
+                                data.ID2 = await IDconvert(data.ID, IDauthor.UNID, IDauthor.EMSC);
                         }
                         else
-                            data.ID2 = IDconvert(data.ID, IDauthor.UNID, IDauthor.EMSC);
+                            data.ID2 = await IDconvert(data.ID, IDauthor.UNID, IDauthor.EMSC);
 
                     if (DateTime.Now - data.Time > config_data.Update.MaxPeriod)
                     {
@@ -200,6 +201,7 @@ namespace WorldQuakeViewer
                 }
             }
             ExeLog($"[Get_QuakeML][{dataAuthor}]処理終了");
+            return;
         }
 
         /// <summary>
@@ -208,7 +210,7 @@ namespace WorldQuakeViewer
         /// <param name="res">レスポンス本文</param>
         /// <param name="data_tmp">データリスト(参照したものを渡す)</param>
         /// <param name="dataAuthor">データ元</param>
-        public static void Get_GeoJSON(string res, Dictionary<string, Data> data_tmp, DataAuthor dataAuthor)
+        public static Task Get_GeoJSON(string res, Dictionary<string, Data> data_tmp, DataAuthor dataAuthor)
         {
             ExeLog($"[Get_GeoJSON][{dataAuthor}]処理中...");
             Config.Data_ config_data = config.Datas[(int)dataAuthor];
@@ -260,6 +262,7 @@ namespace WorldQuakeViewer
                 }
             }
             ExeLog($"[Get_GeoJSON][{dataAuthor}]処理終了");
+            return Task.CompletedTask;
         }
     }
 }

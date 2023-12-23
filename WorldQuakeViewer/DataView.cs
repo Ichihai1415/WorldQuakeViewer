@@ -149,8 +149,8 @@ namespace WorldQuakeViewer
                         return;
                 }
             }
-            BackgroundImage = null;
-            BackgroundImage = img;
+            //BackgroundImage = null;
+            ImageBox.BackgroundImage = img;
             ExeLog($"[Draw][{i}]描画完了");
         }
 
@@ -300,23 +300,22 @@ namespace WorldQuakeViewer
             g.FillRectangle(new SolidBrush(config_view.Colors.Title_Latest_Back_Color), 0, 0, 800, h);
             for (int j = 0; j < latests.Count(); j++)
             {
-                Data data;
-                try
-                {
-                    data = datas.Where(x => x.Author == (DataAuthor)latests[j]).First();//データ元が一致する最初のやつ
-                }
-                catch (Exception ex)
-                {
-                    ExeLog($"[Draw_AllLatestMulti]警告:{ex.Message}(設定を確認してください。)", true);
-                    return Draw_AllLatestMulti(null);
-                }
+                IEnumerable<Data> datas_ = datas.Where(x => x.Author == (DataAuthor)latests[j]);//データ元一致
                 g.DrawString(titles[j], new Font(font, 20), new SolidBrush(config_view.Colors.Title_Latest_Text_Color), 2, 2 + 200 * j);
-                g.FillRectangle(new SolidBrush(Alert2Color(data.Alert, 1, i)), 4, 40 + 200 * j, 792, 156);//USGSアラート用
-                g.FillRectangle(new SolidBrush(config_view.Colors.Main_Latest_Back_Color), 8, 44 + 200 * j, 784, 148);
-                g.DrawString(Data2String(data, FormatPros.View, false, i), new Font(font, 19), Mag2Brush(data.Mag, 1, i), 8, 44 + 200 * j);
-                g.DrawString(data.MagType, new Font(font, 20), Mag2Brush(data.Mag, 1, i), 640 - g.MeasureString(data.MagType, new Font(font, 20)).Width, 154 + 200 * j);
-                g.DrawString(data.Mag.ToString("0.0#"), new Font(font, 50), Mag2Brush(data.Mag, 1, i), 640, 110 + 200 * j);
-
+                if (datas_.Count() == 0)
+                {
+                    g.FillRectangle(new SolidBrush(config_view.Colors.Main_Latest_Back_Color), 4, 40 + 200 * j, 792, 156);
+                    g.DrawString("表示対象の情報を受信していません。", new Font(font, 19), new SolidBrush(config_view.Colors.Main_Latest_Text_Color), 8, 44 + 200 * j);
+                }
+                else
+                {
+                    Data data = datas_.First();
+                    g.FillRectangle(new SolidBrush(Alert2Color(data.Alert, 1, i)), 4, 40 + 200 * j, 792, 156);//USGSアラート用
+                    g.FillRectangle(new SolidBrush(config_view.Colors.Main_Latest_Back_Color), 8, 44 + 200 * j, 784, 148);
+                    g.DrawString(Data2String(data, FormatPros.View, false, i), new Font(font, 19), Mag2Brush(data.Mag, 1, i), 8, 44 + 200 * j);
+                    g.DrawString(data.MagType, new Font(font, 20), Mag2Brush(data.Mag, 1, i), 640 - g.MeasureString(data.MagType, new Font(font, 20)).Width, 154 + 200 * j);
+                    g.DrawString(data.Mag.ToString("0.0#"), new Font(font, 50), Mag2Brush(data.Mag, 1, i), 640, 110 + 200 * j);
+                }
                 g.DrawRectangle(new Pen(config_view.Colors.Border_Color), 0, 200 * j, 800, 200);
             }
             g.Dispose();
