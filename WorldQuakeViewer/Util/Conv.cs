@@ -3,6 +3,7 @@ using System;
 using System.Drawing;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Xml;
 using static LL2FERC.LL2FERC;
 using static WorldQuakeViewer.CtrlForm;
@@ -75,25 +76,6 @@ namespace WorldQuakeViewer
             {
                 Author = data.Author.ToString(),
                 ID = data.ID2,
-                TimeUTC_Year = data.Time.Year.ToString(),
-                TimeUTC_Month = data.Time.Month.ToString(),
-                TimeUTC_Day = data.Time.Day.ToString(),
-                TimeUTC_Hour = data.Time.Hour.ToString(),
-                TimeUTC_Minute = data.Time.Minute.ToString(),
-                TimeUTC_Second = data.Time.Second.ToString(),
-                TimeUTC_YMD = $"{data.Time.Year}/{data.Time.Month}/{data.Time.Day}",
-                TimeUTC_HMS = $"{data.Time.Hour}:{data.Time.Minute}:{data.Time.Second}",
-                TimeUTC_YMDHMS = $"{data.Time.Year}/{data.Time.Month}/{data.Time.Day} {data.Time.Hour}:{data.Time.Minute}:{data.Time.Second}",
-                TimeUser_Year = timeUser.Year.ToString(),
-                TimeUser_Month = timeUser.Month.ToString(),
-                TimeUser_Day = timeUser.Day.ToString(),
-                TimeUser_Hour = timeUser.Hour.ToString(),
-                TimeUser_Minute = timeUser.Minute.ToString(),
-                TimeUser_Second = timeUser.Second.ToString(),
-                TimeUser_Off = timeUser.Offset.ToString(),
-                TimeUser_YMD = $"{timeUser.Year}/{timeUser.Month}/{timeUser.Day}",
-                TimeUser_HMS = $"{timeUser.Hour}:{timeUser.Minute}:{timeUser.Second}",
-                TimeUser_YMDHMS = $"{timeUser.Year}/{timeUser.Month}/{timeUser.Day} {timeUser.Hour}:{timeUser.Minute}:{timeUser.Second}",
                 HypoJP = NameJP(data.Lat, data.Lon),
                 HypoEN = NameEN(data.Lat, data.Lon),
                 Lat10 = lat10,
@@ -119,17 +101,34 @@ namespace WorldQuakeViewer
                 UpdateJP = isNew ? "" : "更新",
                 UpdateEN = isNew ? "" : "update",
             };
+
+            foreach (Match match in Regex.Matches(format, "\\{.*?\\}"))
+            {
+                Console.WriteLine(match.Value);
+                string[] texts = match.Value.Replace("{", "").Replace("}", "").Split('*');
+                if (texts.Count() == 2)
+                {
+                    switch (texts[0])
+                    {
+                        case "TimeUTC":
+                            format = format.Replace(match.Value, data.Time.ToString(texts[1]));
+                            break;
+                        case "TimeUser":
+                            format = format.Replace(match.Value, timeUser.ToString(texts[1]));
+                            break;
+                        default:
+                            ExeLog($"[Data2String]警告:パターンが一致しません(値:{match.Value})。設定を確認してください。", true);
+                            break;
+                    }
+                }
+                else
+                    ExeLog($"[Data2String]警告:パターンが一致しません(値:{match.Value})。設定を確認してください。", true);
+            }
+
             //.Replace("[]",f.)
             format = format
                 .Replace("\\n", "\n")
                 .Replace("[Author]", f.Author).Replace("[ID]", f.ID)
-                .Replace("[TimeUTC_Year]", f.TimeUTC_Year).Replace("[TimeUTC_Month]", f.TimeUTC_Month).Replace("[TimeUTC_Day]", f.TimeUTC_Day)
-                .Replace("[TimeUTC_Hour]", f.TimeUTC_Hour).Replace("[TimeUTC_Minute]", f.TimeUTC_Minute).Replace("[TimeUTC_Second]", f.TimeUTC_Second)
-                .Replace("[TimeUTC_YMD]", f.TimeUTC_YMD).Replace("[TimeUTC_HMS]", f.TimeUTC_HMS).Replace("[TimeUTC_YMDHMS]", f.TimeUTC_YMDHMS)
-                .Replace("[TimeUser_Year]", f.TimeUser_Year).Replace("[TimeUser_Month]", f.TimeUser_Month).Replace("[TimeUser_Day]", f.TimeUser_Day)
-                .Replace("[TimeUser_Hour]", f.TimeUser_Hour).Replace("[TimeUser_Minute]", f.TimeUser_Minute).Replace("[TimeUser_Second]", f.TimeUser_Second)
-                .Replace("[TimeUser_YMD]", f.TimeUser_YMD).Replace("[TimeUser_HMS]", f.TimeUser_HMS).Replace("[TimeUser_YMDHMS]", f.TimeUser_YMDHMS)
-                .Replace("[TimeUser_Off]", f.TimeUser_Off)
                 .Replace("[HypoJP]", f.HypoJP).Replace("[HypoEN]", f.HypoEN)
                 .Replace("[Lat10]", f.Lat10).Replace("[LatNS]", f.LatNS).Replace("[LatNSJP]", f.LatNSJP)
                 .Replace("[Lat60d]", f.Lat60d).Replace("[Lat60m]", f.Lat60m).Replace("[Lat60s]", f.Lat60s)
@@ -381,9 +380,9 @@ namespace WorldQuakeViewer
                 switch (latestORhistory)
                 {
                     case 1:
-                        return new SolidBrush(config.Views[viewIndex].Colors.Main_Latest_Text);
+                        return new SolidBrush(config.Views[viewIndex].Colors.Main_Latest_Text_Color);
                     case 2:
-                        return new SolidBrush(config.Views[viewIndex].Colors.Main_History_Text);
+                        return new SolidBrush(config.Views[viewIndex].Colors.Main_History_Text_Color);
                     default:
                         ExeLog($"[Mag2Brush]警告:latestORhistory:{latestORhistory}は不正です。", true);
                         try
@@ -394,7 +393,7 @@ namespace WorldQuakeViewer
                         {
                             LogSave(LogKind.Error, ex.ToString());
                         }
-                        return new SolidBrush(config.Views[viewIndex].Colors.Main_Latest_Text);
+                        return new SolidBrush(config.Views[viewIndex].Colors.Main_Latest_Text_Color);
                 }
             }
             else if (mag < 8)
@@ -442,9 +441,9 @@ namespace WorldQuakeViewer
             switch (latestORhistory)
             {
                 case 1:
-                    return config.Views[viewIndex].Colors.Main_Latest_Back;
+                    return config.Views[viewIndex].Colors.Main_Latest_Back_Color;
                 case 2:
-                    return config.Views[viewIndex].Colors.Main_History_Back;
+                    return config.Views[viewIndex].Colors.Main_History_Back_Color;
                 default:
                     ExeLog($"[Alert2Color]警告:latestORhistory:{latestORhistory}は不正です。", true);
                     try
@@ -455,7 +454,7 @@ namespace WorldQuakeViewer
                     {
                         LogSave(LogKind.Error, ex.ToString());
                     }
-                    return config.Views[viewIndex].Colors.Main_Latest_Back;
+                    return config.Views[viewIndex].Colors.Main_Latest_Back_Color;
             }
         }
     }

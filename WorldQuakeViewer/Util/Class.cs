@@ -296,99 +296,14 @@ namespace WorldQuakeViewer
             public string ID { get; set; } = "";
 
             /// <summary>
-            /// 発生日時(UTC・年)
+            /// 発生日時(UTC)
             /// </summary>
-            public string TimeUTC_Year { get; set; } = "";
-
+            public string TimeUTC_Format { get; set; } = "";
+            
             /// <summary>
-            /// 発生日時(UTC・月)
+            /// 発生日時(ユーザー)
             /// </summary>
-            public string TimeUTC_Month { get; set; } = "";
-
-            /// <summary>
-            /// 発生日時(UTC・日)
-            /// </summary>
-            public string TimeUTC_Day { get; set; } = "";
-
-            /// <summary>
-            /// 発生日時(UTC・時)
-            /// </summary>
-            public string TimeUTC_Hour { get; set; } = "";
-
-            /// <summary>
-            /// 発生日時(UTC・分)
-            /// </summary>
-            public string TimeUTC_Minute { get; set; } = "";
-
-            /// <summary>
-            /// 発生日時(UTC・秒)
-            /// </summary>
-            public string TimeUTC_Second { get; set; } = "";
-
-            /// <summary>
-            /// 発生日時(UTC・年/月/日)
-            /// </summary>
-            public string TimeUTC_YMD { get; set; } = "";
-
-            /// <summary>
-            /// 発生日時(UTC・時:分:秒)
-            /// </summary>
-            public string TimeUTC_HMS { get; set; } = "";
-
-            /// <summary>
-            /// 発生日時(UTC・年/月/日 時:分:秒)
-            /// </summary>
-            public string TimeUTC_YMDHMS { get; set; } = "";
-
-            /// <summary>
-            /// 発生日時(ユーザー・年)
-            /// </summary>
-            public string TimeUser_Year { get; set; } = "";
-
-            /// <summary>
-            /// 発生日時(ユーザー・月)
-            /// </summary>
-            public string TimeUser_Month { get; set; } = "";
-
-            /// <summary>
-            /// 発生日時(ユーザー・日)
-            /// </summary>
-            public string TimeUser_Day { get; set; } = "";
-
-            /// <summary>
-            /// 発生日時(ユーザー・時)
-            /// </summary>
-            public string TimeUser_Hour { get; set; } = "";
-
-            /// <summary>
-            /// 発生日時(ユーザー・分)
-            /// </summary>
-            public string TimeUser_Minute { get; set; } = "";
-
-            /// <summary>
-            /// 発生日時(ユーザー・秒)
-            /// </summary>
-            public string TimeUser_Second { get; set; } = "";
-
-            /// <summary>
-            /// UTCとユーザータイムゾーンの差
-            /// </summary>
-            public string TimeUser_Off { get; set; } = "";
-
-            /// <summary>
-            /// 発生日時(ユーザー・年/月/日)
-            /// </summary>
-            public string TimeUser_YMD { get; set; } = "";
-
-            /// <summary>
-            /// 発生日時(ユーザー・時:分:秒)
-            /// </summary>
-            public string TimeUser_HMS { get; set; } = "";
-
-            /// <summary>
-            /// 発生日時(ユーザー・年/月/日 時:分:秒)
-            /// </summary>
-            public string TimeUser_YMDHMS { get; set; } = "";
+            public string TimeUser_Format { get; set; } = "";
 
             /// <summary>
             /// 震源名(日本語)

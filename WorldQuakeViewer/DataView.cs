@@ -151,12 +151,12 @@ namespace WorldQuakeViewer
             Graphics g = Graphics.FromImage(latestImg);
             if (data == null)
             {
-                g.FillRectangle(new SolidBrush(config_view.Colors.Title_Latest_Back), 0, 0, 800, 1000);
-                g.FillRectangle(new SolidBrush(config_view.Colors.Main_Latest_Back), 4, 40, 792, 156);
-                g.DrawString(config_view.Title1Text, new Font(font, 20), new SolidBrush(config_view.Colors.Title_Latest_Text), 2, 2);
-                g.DrawString("表示対象の情報を受信していません。", new Font(font, 20), new SolidBrush(config_view.Colors.Main_Latest_Text), 5, 42);
-                g.DrawRectangle(new Pen(config_view.Colors.Border), 0, 0, 800, 200);
-                g.DrawRectangle(new Pen(config_view.Colors.Border), 0, 200, 800, 800);
+                g.FillRectangle(new SolidBrush(config_view.Colors.Title_Latest_Back_Color), 0, 0, 800, 1000);
+                g.FillRectangle(new SolidBrush(config_view.Colors.Main_Latest_Back_Color), 4, 40, 792, 156);
+                g.DrawString(config_view.LatestTitleText, new Font(font, 20), new SolidBrush(config_view.Colors.Title_Latest_Text_Color), 2, 2);
+                g.DrawString("表示対象の情報を受信していません。", new Font(font, 20), new SolidBrush(config_view.Colors.Main_Latest_Text_Color), 5, 42);
+                g.DrawRectangle(new Pen(config_view.Colors.Border_Color), 0, 0, 800, 200);
+                g.DrawRectangle(new Pen(config_view.Colors.Border_Color), 0, 200, 800, 800);
 
                 g.Dispose();
                 return latestImg;
@@ -169,24 +169,24 @@ namespace WorldQuakeViewer
             int locY_image = (int)(200 + config_view.MapRange * zoom / 2 - locY);
             if (config_view.HypoShift)
                 locY_image = Math.Min(200, Math.Max(-800, locY_image));
-            g.FillRectangle(new SolidBrush(config_view.Colors.Main_Latest_Back), 0, 200, 800, 800);
+            g.FillRectangle(new SolidBrush(config_view.Colors.Main_Latest_Back_Color), 0, 200, 800, 800);
             ImageCheck("map.png");
             g.DrawImage(Image.FromFile("Image\\map.png"), locX_image, locY_image, (int)(540 * zoom), (int)(180 * zoom));
             ImageCheck("hypo.png");
             Image hypoImg = Image.FromFile("Image\\hypo.png");
             g.DrawImage(hypoImg, new Rectangle(400 - hypoImg.Width / 2, locY + locY_image - hypoImg.Height / 2, hypoImg.Width, hypoImg.Height), 0, 0, hypoImg.Width, hypoImg.Height, GraphicsUnit.Pixel, ia);
-            g.FillRectangle(new SolidBrush(config_view.Colors.MapData_Back), 504, 958, 296, 42);
-            g.DrawString("地図データ:Natural Earth", new Font(font, 18), new SolidBrush(config_view.Colors.MapData_Text), 510, 962);
+            g.FillRectangle(new SolidBrush(config_view.Colors.MapData_Back_Color), 504, 958, 296, 42);
+            g.DrawString("地図データ:Natural Earth", new Font(font, 18), new SolidBrush(config_view.Colors.MapData_Text_Color), 510, 962);
             //最新
-            g.FillRectangle(new SolidBrush(config_view.Colors.Title_Latest_Back), 0, 0, 800, 200);
+            g.FillRectangle(new SolidBrush(config_view.Colors.Title_Latest_Back_Color), 0, 0, 800, 200);
             g.FillRectangle(new SolidBrush(Alert2Color(data.Alert, 1, i)), 4, 40, 792, 156);//USGSアラート用
-            g.FillRectangle(new SolidBrush(config_view.Colors.Main_Latest_Back), 8, 44, 784, 148);
-            g.DrawString(config_view.Title1Text, new Font(font, 20), new SolidBrush(config_view.Colors.Title_Latest_Text), 2, 2);
-            g.DrawString(Data2String(data, FormatPros.View, false, i), new Font(font, 20), Mag2Brush(data.Mag, 1, i), 5, 42);
+            g.FillRectangle(new SolidBrush(config_view.Colors.Main_Latest_Back_Color), 8, 44, 784, 148);
+            g.DrawString(config_view.LatestTitleText, new Font(font, 20), new SolidBrush(config_view.Colors.Title_Latest_Text_Color), 2, 2);
+            g.DrawString(Data2String(data, FormatPros.View, false, i), new Font(font, 19), Mag2Brush(data.Mag, 1, i), 8, 44);
             g.DrawString(data.MagType, new Font(font, 20), Mag2Brush(data.Mag, 1, i), 640 - g.MeasureString(data.MagType, new Font(font, 20)).Width, 154);
             g.DrawString(data.Mag.ToString("0.0#"), new Font(font, 50), Mag2Brush(data.Mag, 1, i), 640, 110);
-            g.DrawRectangle(new Pen(config_view.Colors.Border), 0, 0, 800, 200);
-            g.DrawRectangle(new Pen(config_view.Colors.Border), 0, 200, 800, 800);
+            g.DrawRectangle(new Pen(config_view.Colors.Border_Color), 0, 0, 800, 200);
+            g.DrawRectangle(new Pen(config_view.Colors.Border_Color), 0, 200, 800, 800);
             g.Dispose();
             return latestImg;
         }
@@ -206,31 +206,31 @@ namespace WorldQuakeViewer
                 g.DrawImage(latestImage, 0, 0);
             if (datas == null)
             {
-                g.FillRectangle(new SolidBrush(config_view.Colors.Title_History_Back), w, 0, 800, 1000);
-                g.DrawString(config_view.Title2Text, new Font(font, 20), new SolidBrush(config_view.Colors.Title_History_Text), 2 + w, 2);
+                g.FillRectangle(new SolidBrush(config_view.Colors.Title_History_Back_Color), w, 0, 800, 1000);
+                g.DrawString(config_view.HistoryTitleText, new Font(font, 20), new SolidBrush(config_view.Colors.Title_History_Text_Color), 2 + w, 2);
                 for (int j = 0; j < 6; j++)
-                    g.FillRectangle(new SolidBrush(config_view.Colors.Main_History_Back), 4 + w, 40 + 160 * j, 792, 156);
-                g.DrawRectangle(new Pen(config_view.Colors.Border), w, 0, 800, 1000);
+                    g.FillRectangle(new SolidBrush(config_view.Colors.Main_History_Back_Color), 4 + w, 40 + 160 * j, 792, 156);
+                g.DrawRectangle(new Pen(config_view.Colors.Border_Color), w, 0, 800, 1000);
 
                 g.Dispose();
                 return histImg;
             }
-            g.FillRectangle(new SolidBrush(config_view.Colors.Title_History_Back), w, 0, 800, 1000);
-            g.DrawString(config_view.Title1Text, new Font(font, 20), new SolidBrush(config_view.Colors.Title_History_Text), 2 + w, 2);
+            g.FillRectangle(new SolidBrush(config_view.Colors.Title_History_Back_Color), w, 0, 800, 1000);
+            g.DrawString(config_view.HistoryTitleText, new Font(font, 20), new SolidBrush(config_view.Colors.Title_History_Text_Color), 2 + w, 2);
             //履歴
             for (int j = 0; j < 6; j++)
                 if (datas.Count > j)//データ不足対処
                 {
                     Data data = datas[j];
                     g.FillRectangle(new SolidBrush(Alert2Color(data.Alert, 2, i)), 4 + w, 40 + 160 * j, 792, 156);//USGSアラート用
-                    g.FillRectangle(new SolidBrush(config_view.Colors.Main_History_Back), 8 + w, 44 + 160 * j, 784, 148);
-                    g.DrawString(Data2String(data, FormatPros.View, false, i), new Font(font, 20), Mag2Brush(data.Mag, 2, i), 5 + w, 42 + 160 * j);
+                    g.FillRectangle(new SolidBrush(config_view.Colors.Main_History_Back_Color), 8 + w, 44 + 160 * j, 784, 148);
+                    g.DrawString(Data2String(data, FormatPros.View, false, i), new Font(font, 19), Mag2Brush(data.Mag, 2, i), 8 + w, 44 + 160 * j);
                     g.DrawString(data.MagType, new Font(font, 20), Mag2Brush(data.Mag, 2, i), 640 - g.MeasureString(data.MagType, new Font(font, 20)).Width + w, 154 + 160 * j);
                     g.DrawString(data.Mag.ToString("0.0#"), new Font(font, 50), Mag2Brush(data.Mag, 2, i), 640 + w, 110 + 160 * j);
                 }
                 else
-                    g.FillRectangle(new SolidBrush(config_view.Colors.Title_History_Back), 4 + w, 40 + 160 * j, 792, 156);
-            g.DrawRectangle(new Pen(config_view.Colors.Border), w, 0, 800, 1000);
+                    g.FillRectangle(new SolidBrush(config_view.Colors.Title_History_Back_Color), 4 + w, 40 + 160 * j, 792, 156);
+            g.DrawRectangle(new Pen(config_view.Colors.Border_Color), w, 0, 800, 1000);
             g.Dispose();
             return histImg;
         }
@@ -248,11 +248,11 @@ namespace WorldQuakeViewer
                 Bitmap histImg_ = new Bitmap(800, 200);
                 Graphics g_ = Graphics.FromImage(histImg_);
 
-                g_.FillRectangle(new SolidBrush(config_view.Colors.Title_Latest_Back), 0, 0, 800, 200);
-                g_.FillRectangle(new SolidBrush(config_view.Colors.Main_Latest_Back), 4, 40, 792, 156);
-                g_.DrawString(config_view.Title1Text, new Font(font, 20), new SolidBrush(config_view.Colors.Title_Latest_Text), 2, 2);
-                g_.DrawString("表示対象の情報を受信していません。", new Font(font, 20), new SolidBrush(config_view.Colors.Main_Latest_Text), 5, 42);
-                g_.DrawRectangle(new Pen(config_view.Colors.Border), 0, 0, 800, 200);
+                g_.FillRectangle(new SolidBrush(config_view.Colors.Title_Latest_Back_Color), 0, 0, 800, 200);
+                g_.FillRectangle(new SolidBrush(config_view.Colors.Main_Latest_Back_Color), 4, 40, 792, 156);
+                g_.DrawString(config_view.LatestTitleText, new Font(font, 20), new SolidBrush(config_view.Colors.Title_Latest_Text_Color), 2, 2);
+                g_.DrawString("表示対象の情報を受信していません。", new Font(font, 20), new SolidBrush(config_view.Colors.Main_Latest_Text_Color), 5, 42);
+                g_.DrawRectangle(new Pen(config_view.Colors.Border_Color), 0, 0, 800, 200);
 
                 g_.Dispose();
                 ClientSize = new Size(400, 100);
@@ -262,8 +262,8 @@ namespace WorldQuakeViewer
             string[] titles;
             try
             {
-                latests = config_view.Title2Text.Split(',').Select(n => int.Parse(n)).ToArray();
-                titles = config_view.Title1Text.Split(',');
+                latests = config_view.HistoryTitleText.Split(',').Select(n => int.Parse(n)).ToArray();
+                titles = config_view.LatestTitleText.Split(',');
                 if (latests.Count() != titles.Count())
                     throw new Exception($"表示用処理値が等しくありません。(latests:{latests.Count()},titles:{titles.Count()})設定を確認してください。");
             }
@@ -283,7 +283,7 @@ namespace WorldQuakeViewer
             Bitmap histImg = new Bitmap(800, h);
             Graphics g = Graphics.FromImage(histImg);
 
-            g.FillRectangle(new SolidBrush(config_view.Colors.Title_Latest_Back), 0, 0, 800, h);
+            g.FillRectangle(new SolidBrush(config_view.Colors.Title_Latest_Back_Color), 0, 0, 800, h);
             for (int j = 0; j < latests.Count(); j++)
             {
                 Data data;
@@ -296,14 +296,14 @@ namespace WorldQuakeViewer
                     ExeLog($"[Draw_AllLatestMulti]警告:{ex.Message}(設定を確認してください。)", true);
                     return Draw_AllLatestMulti(null);
                 }
-                g.DrawString(titles[j], new Font(font, 20), new SolidBrush(config_view.Colors.Title_Latest_Text), 2, 2 + 200 * j);
+                g.DrawString(titles[j], new Font(font, 20), new SolidBrush(config_view.Colors.Title_Latest_Text_Color), 2, 2 + 200 * j);
                 g.FillRectangle(new SolidBrush(Alert2Color(data.Alert, 1, i)), 4, 40 + 200 * j, 792, 156);//USGSアラート用
-                g.FillRectangle(new SolidBrush(config_view.Colors.Main_Latest_Back), 8, 44 + 200 * j, 784, 148);
-                g.DrawString(Data2String(data, FormatPros.View, false, i), new Font(font, 20), Mag2Brush(data.Mag, 1, i), 5, 42 + 200 * j);
+                g.FillRectangle(new SolidBrush(config_view.Colors.Main_Latest_Back_Color), 8, 44 + 200 * j, 784, 148);
+                g.DrawString(Data2String(data, FormatPros.View, false, i), new Font(font, 19), Mag2Brush(data.Mag, 1, i), 8, 44 + 200 * j);
                 g.DrawString(data.MagType, new Font(font, 20), Mag2Brush(data.Mag, 1, i), 640 - g.MeasureString(data.MagType, new Font(font, 20)).Width, 154 + 200 * j);
                 g.DrawString(data.Mag.ToString("0.0#"), new Font(font, 50), Mag2Brush(data.Mag, 1, i), 640, 110 + 200 * j);
 
-                g.DrawRectangle(new Pen(config_view.Colors.Border), 0, 200 * j, 800, 200);
+                g.DrawRectangle(new Pen(config_view.Colors.Border_Color), 0, 200 * j, 800, 200);
             }
             g.Dispose();
             ClientSize = new Size(400, h / 2);

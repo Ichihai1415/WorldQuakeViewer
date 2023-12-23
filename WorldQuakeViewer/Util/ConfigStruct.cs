@@ -671,17 +671,17 @@ namespace WorldQuakeViewer
             /// <summary>
             /// 最新のタイトルのテキスト
             /// </summary>
-            public string Title1Text { get; set; } = "設定してください";
+            public string LatestTitleText { get; set; } = "地震情報(最新)";
 
             /// <summary>
             /// 履歴のタイトルのテキスト
             /// </summary>
-            public string Title2Text { get; set; } = "設定してください";
+            public string HistoryTitleText { get; set; } = "地震情報(履歴)";
 
             /// <summary>
             /// 表示するテキストのフォーマット
             /// </summary>
-            public string DisplayTextFormat { get; set; } = "設定してください";
+            public string DisplayTextFormat { get; set; } = "{TimeUser*yyyy/MM/dd HH:mm:ss UTCzzz}発生\\n[HypoJP]\\n[Lat60d]°[Lat60m]'[Lat60s]\"[LatNS], [Lon60d]°[Lon60m]'[Lon60s]\"[LonEW]   深さ[Depth]km\\nID:[ID]";
 
             /// <summary>
             /// 表示する最小マグニチュード
@@ -714,57 +714,57 @@ namespace WorldQuakeViewer
                 /// <summary>
                 /// 最新のタイトル部分のテキスト色
                 /// </summary>
-                public Color Title_Latest_Text { get; set; } = Color.FromArgb(255, 255, 255, 255);
+                public Color Title_Latest_Text_Color { get; set; } = Color.FromArgb(255, 255, 255, 255);
 
                 /// <summary>
                 /// 最新のタイトル部分の背景色
                 /// </summary>
-                public Color Title_Latest_Back { get; set; } = Color.FromArgb(255, 0, 0, 30);
+                public Color Title_Latest_Back_Color { get; set; } = Color.FromArgb(255, 0, 0, 30);
 
                 /// <summary>
                 /// 最新のメイン部分のテキスト色
                 /// </summary>
-                public Color Main_Latest_Text { get; set; } = Color.FromArgb(255, 255, 255, 255);
+                public Color Main_Latest_Text_Color { get; set; } = Color.FromArgb(255, 255, 255, 255);
 
                 /// <summary>
                 /// 最新のメイン部分の背景色
                 /// </summary>
-                public Color Main_Latest_Back { get; set; } = Color.FromArgb(255, 30, 30, 60);
+                public Color Main_Latest_Back_Color { get; set; } = Color.FromArgb(255, 30, 30, 60);
 
                 /// <summary>
                 /// 履歴のタイトル部分のテキスト色
                 /// </summary>
-                public Color Title_History_Text { get; set; } = Color.FromArgb(255, 255, 255, 255);
+                public Color Title_History_Text_Color { get; set; } = Color.FromArgb(255, 255, 255, 255);
 
                 /// <summary>
                 /// 履歴のタイトル部分の背景色
                 /// </summary>
-                public Color Title_History_Back { get; set; } = Color.FromArgb(255, 0, 0, 30);
+                public Color Title_History_Back_Color { get; set; } = Color.FromArgb(255, 0, 0, 30);
 
                 /// <summary>
                 /// 履歴のメイン部分のテキスト色
                 /// </summary>
-                public Color Main_History_Text { get; set; } = Color.FromArgb(255, 255, 255, 255);
+                public Color Main_History_Text_Color { get; set; } = Color.FromArgb(255, 255, 255, 255);
 
                 /// <summary>
                 /// 履歴のメイン部分の背景色
                 /// </summary>
-                public Color Main_History_Back { get; set; } = Color.FromArgb(255, 45, 45, 90);
+                public Color Main_History_Back_Color { get; set; } = Color.FromArgb(255, 45, 45, 90);
 
                 /// <summary>
                 /// 「地図データ:Natural Earth」のテキスト色
                 /// </summary>
-                public Color MapData_Text { get; set; } = Color.FromArgb(255, 255, 255, 255);
+                public Color MapData_Text_Color { get; set; } = Color.FromArgb(255, 255, 255, 255);
 
                 /// <summary>
                 /// 「地図データ:Natural Earth」の背景色
                 /// </summary>
-                public Color MapData_Back { get; set; } = Color.FromArgb(128, 0, 0, 30);
+                public Color MapData_Back_Color { get; set; } = Color.FromArgb(128, 0, 0, 30);
 
                 /// <summary>
                 /// 境界の線の色
                 /// </summary>
-                public Color Border { get; set; } = Color.FromArgb(255, 200, 200, 200);
+                public Color Border_Color { get; set; } = Color.FromArgb(255, 200, 200, 200);
 
                 /// <summary>
                 /// Config_DisplayからConfigに変換します。
@@ -772,17 +772,17 @@ namespace WorldQuakeViewer
                 /// <param name="from">変換元</param>
                 public static explicit operator Colors_(Config_Display.View_.Colors_ from) => new Colors_
                 {
-                    Title_Latest_Text = from.Title_Latest_Text,
-                    Title_Latest_Back = from.Title_Latest_Back,
-                    Main_Latest_Text = from.Main_Latest_Text,
-                    Main_Latest_Back = from.Main_Latest_Back,
-                    Title_History_Text = from.Title_History_Text,
-                    Title_History_Back = from.Title_History_Back,
-                    Main_History_Text = from.Main_History_Text,
-                    Main_History_Back = from.Main_History_Back,
-                    MapData_Text = from.MapData_Text,
-                    MapData_Back = from.MapData_Back,
-                    Border = from.Border
+                    Title_Latest_Text_Color = from.Title_Latest_Text_Color,
+                    Title_Latest_Back_Color = from.Title_Latest_Back_Color,
+                    Main_Latest_Text_Color = from.Main_Latest_Text_Color,
+                    Main_Latest_Back_Color = from.Main_Latest_Back_Color,
+                    Title_History_Text_Color = from.Title_History_Text_Color,
+                    Title_History_Back_Color = from.Title_History_Back_Color,
+                    Main_History_Text_Color = from.Main_History_Text_Color,
+                    Main_History_Back_Color = from.Main_History_Back_Color,
+                    MapData_Text_Color = from.MapData_Text_Color,
+                    MapData_Back_Color = from.MapData_Back_Color,
+                    Border_Color = from.Border_Color
                 };
             }
 
@@ -793,9 +793,9 @@ namespace WorldQuakeViewer
             public static explicit operator View_(Config_Display.View_ from) => new View_
             {
                 Data = from.Data,
-                Title1Text = from.Title1Text,
-                Title2Text = from.Title2Text,
-                DisplayTextFormat = from.DisplayText,
+                LatestTitleText = from.LatestTitleText,
+                HistoryTitleText = from.HistoryTitleText,
+                DisplayTextFormat = from.DisplayTextFormat,
                 LowerMagLimit = from.LowerMagLimit,
                 MapRange = from.MapRange,
                 HypoShift = from.HypoShift,
@@ -1581,19 +1581,19 @@ namespace WorldQuakeViewer
             /// 最新のタイトルのテキスト
             /// </summary>
             [Description("最新のタイトルのテキスト")]
-            public string Title1Text { get; set; }
+            public string LatestTitleText { get; set; }
 
             /// <summary>
             /// 履歴のタイトルのテキスト
             /// </summary>
             [Description("履歴のタイトルのテキスト")]
-            public string Title2Text { get; set; }
+            public string HistoryTitleText { get; set; }
 
             /// <summary>
             /// 表示するテキストのフォーマット
             /// </summary>
             [Description("表示するテキストのフォーマット")]
-            public string DisplayText { get; set; }
+            public string DisplayTextFormat { get; set; }
 
             /// <summary>
             /// 表示する最小マグニチュード
@@ -1633,67 +1633,67 @@ namespace WorldQuakeViewer
                 /// 最新のタイトル部分のテキスト色
                 /// </summary>
                 [Description("最新のタイトル部分のテキスト色")]
-                public Color Title_Latest_Text { get; set; }
+                public Color Title_Latest_Text_Color { get; set; }
 
                 /// <summary>
                 /// 最新のタイトル部分の背景色
                 /// </summary>
                 [Description("最新のタイトル部分の背景色")]
-                public Color Title_Latest_Back { get; set; }
+                public Color Title_Latest_Back_Color { get; set; }
 
                 /// <summary>
                 /// 最新のメイン部分のテキスト色
                 /// </summary>
                 [Description("最新のメイン部分のテキスト色")]
-                public Color Main_Latest_Text { get; set; }
+                public Color Main_Latest_Text_Color { get; set; }
 
                 /// <summary>
                 /// 最新のメイン部分の背景色
                 /// </summary>
                 [Description("最新のメイン部分の背景色")]
-                public Color Main_Latest_Back { get; set; }
+                public Color Main_Latest_Back_Color { get; set; }
 
                 /// <summary>
                 /// タイトル部分のテキスト色
                 /// </summary>
                 [Description("履歴のタイトル部分のテキスト色")]
-                public Color Title_History_Text { get; set; }
+                public Color Title_History_Text_Color { get; set; }
 
                 /// <summary>
                 /// 履歴のタイトル部分の背景色
                 /// </summary>
                 [Description("履歴のタイトル部分の背景色")]
-                public Color Title_History_Back { get; set; }
+                public Color Title_History_Back_Color { get; set; }
 
                 /// <summary>
                 /// 履歴のメイン部分のテキスト色
                 /// </summary>
                 [Description("履歴のメイン部分のテキスト色")]
-                public Color Main_History_Text { get; set; }
+                public Color Main_History_Text_Color { get; set; }
 
                 /// <summary>
                 /// 履歴のメイン部分の背景色
                 /// </summary>
                 [Description("履歴のメイン部分の背景色")]
-                public Color Main_History_Back { get; set; }
+                public Color Main_History_Back_Color { get; set; }
 
                 /// <summary>
                 /// 「地図データ:Natural Earth」のテキスト色
                 /// </summary>
                 [Description("「地図データ:Natural Earth」のテキスト色")]
-                public Color MapData_Text { get; set; }
+                public Color MapData_Text_Color { get; set; }
 
                 /// <summary>
                 /// 「地図データ:Natural Earth」の背景色
                 /// </summary>
                 [Description("「地図データ:Natural Earth」の背景色")]
-                public Color MapData_Back { get; set; }
+                public Color MapData_Back_Color { get; set; }
 
                 /// <summary>
                 /// 境界の線の色
                 /// </summary>
                 [Description("境界の線の色")]
-                public Color Border { get; set; }
+                public Color Border_Color { get; set; }
 
                 /// <summary>
                 /// ConfigからConfig_Displayに変換します。
@@ -1701,17 +1701,17 @@ namespace WorldQuakeViewer
                 /// <param name="from">変換元</param>
                 public static explicit operator Colors_(Config.View_.Colors_ from) => new Colors_
                 {
-                    Title_Latest_Text = from.Title_Latest_Text,
-                    Title_Latest_Back = from.Title_Latest_Back,
-                    Main_Latest_Text = from.Main_Latest_Text,
-                    Main_Latest_Back = from.Main_Latest_Back,
-                    Title_History_Text = from.Title_History_Text,
-                    Title_History_Back = from.Title_History_Back,
-                    Main_History_Text = from.Main_History_Text,
-                    Main_History_Back = from.Main_History_Back,
-                    MapData_Text = from.MapData_Text,
-                    MapData_Back = from.MapData_Back,
-                    Border = from.Border
+                    Title_Latest_Text_Color = from.Title_Latest_Text_Color,
+                    Title_Latest_Back_Color = from.Title_Latest_Back_Color,
+                    Main_Latest_Text_Color = from.Main_Latest_Text_Color,
+                    Main_Latest_Back_Color = from.Main_Latest_Back_Color,
+                    Title_History_Text_Color = from.Title_History_Text_Color,
+                    Title_History_Back_Color = from.Title_History_Back_Color,
+                    Main_History_Text_Color = from.Main_History_Text_Color,
+                    Main_History_Back_Color = from.Main_History_Back_Color,
+                    MapData_Text_Color = from.MapData_Text_Color,
+                    MapData_Back_Color = from.MapData_Back_Color,
+                    Border_Color = from.Border_Color
                 };
             }
 
@@ -1722,9 +1722,9 @@ namespace WorldQuakeViewer
             public static explicit operator View_(Config.View_ from) => new View_
             {
                 Data = from.Data,
-                Title1Text = from.Title1Text,
-                Title2Text = from.Title2Text,
-                DisplayText = from.DisplayTextFormat,
+                LatestTitleText = from.LatestTitleText,
+                HistoryTitleText = from.HistoryTitleText,
+                DisplayTextFormat = from.DisplayTextFormat,
                 LowerMagLimit = from.LowerMagLimit,
                 MapRange = from.MapRange,
                 HypoShift = from.HypoShift,
