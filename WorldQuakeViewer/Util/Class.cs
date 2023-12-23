@@ -286,6 +286,11 @@ namespace WorldQuakeViewer
         public class FormatReplaces
         {
             /// <summary>
+            /// データ元
+            /// </summary>
+            public string Author { get; set; } = "";
+
+            /// <summary>
             /// 地震D
             /// </summary>
             public string ID { get; set; } = "";
@@ -321,6 +326,21 @@ namespace WorldQuakeViewer
             public string TimeUTC_Second { get; set; } = "";
 
             /// <summary>
+            /// 発生日時(UTC・年/月/日)
+            /// </summary>
+            public string TimeUTC_YMD { get; set; } = "";
+
+            /// <summary>
+            /// 発生日時(UTC・時:分:秒)
+            /// </summary>
+            public string TimeUTC_HMS { get; set; } = "";
+
+            /// <summary>
+            /// 発生日時(UTC・年/月/日 時:分:秒)
+            /// </summary>
+            public string TimeUTC_YMDHMS { get; set; } = "";
+
+            /// <summary>
             /// 発生日時(ユーザー・年)
             /// </summary>
             public string TimeUser_Year { get; set; } = "";
@@ -354,6 +374,21 @@ namespace WorldQuakeViewer
             /// UTCとユーザータイムゾーンの差
             /// </summary>
             public string TimeUser_Off { get; set; } = "";
+
+            /// <summary>
+            /// 発生日時(ユーザー・年/月/日)
+            /// </summary>
+            public string TimeUser_YMD { get; set; } = "";
+
+            /// <summary>
+            /// 発生日時(ユーザー・時:分:秒)
+            /// </summary>
+            public string TimeUser_HMS { get; set; } = "";
+
+            /// <summary>
+            /// 発生日時(ユーザー・年/月/日 時:分:秒)
+            /// </summary>
+            public string TimeUser_YMDHMS { get; set; } = "";
 
             /// <summary>
             /// 震源名(日本語)
