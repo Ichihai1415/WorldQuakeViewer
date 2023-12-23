@@ -429,7 +429,7 @@ namespace WorldQuakeViewer
         /// <summary>
         /// 履歴保存用クラス
         /// </summary>
-        /// <remarks>既定はstring:"",double:-999,double?:null,DateTimeOffset:MinValue,DataAuthor:Null</remarks>
+        /// <remarks>既定はstring:"null",double:-999,double?:null,DateTimeOffset:MinValue,DataAuthor:Null</remarks>
         public class Data
         {
             /// <summary>
@@ -440,12 +440,12 @@ namespace WorldQuakeViewer
             /// <summary>
             /// 地震ID(データ元間で互換性なし)
             /// </summary>
-            public string ID { get; set; } = "";
+            public string ID { get; set; } = "null";
 
             /// <summary>
             /// 地震ID(データ元間で互換性なし)(webに飛べるID)
             /// </summary>
-            public string ID2 { get; set; } = "";
+            public string ID2 { get; set; } = "null";
 
             /// <summary>
             /// 発生時刻
@@ -461,7 +461,7 @@ namespace WorldQuakeViewer
             /// 震源名
             /// </summary>
             /// <remarks>基本的に震源名更新用</remarks>
-            public string Hypo { get; set; } = "";
+            public string Hypo { get; set; } = "null";
 
             /// <summary>
             /// 緯度
@@ -481,7 +481,7 @@ namespace WorldQuakeViewer
             /// <summary>
             /// マグニチュードの種類
             /// </summary>
-            public string MagType { get; set; } = "";
+            public string MagType { get; set; } = "null";
 
             /// <summary>
             /// マグニチュード
@@ -496,12 +496,12 @@ namespace WorldQuakeViewer
             /// <summary>
             /// [USGSのみ]アラート
             /// </summary>
-            public string Alert { get; set; } = "";
+            public string Alert { get; set; } = "null";
 
             /// <summary>
             /// [一部のみ]データのソース
             /// </summary>
-            public string Source { get; set; } = "";
+            public string Source { get; set; } = "null";
         }
     }
 }

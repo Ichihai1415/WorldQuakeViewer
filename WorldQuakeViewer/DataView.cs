@@ -76,8 +76,21 @@ namespace WorldQuakeViewer
                 default:
                     throw new Exception("DataViewの初期化に失敗しました。", new ArgumentException($"{dataAuthorN}はデータ元として不正です。"));
             }
-            config_view = config.Views[i];
+            ConfigReload();
             //todo:一定時間でgreenにするやつ(必要なら)
+        }
+
+        /// <summary>
+        /// 設定を再読み込みします。
+        /// </summary>
+        private void ConfigReload()
+        {
+            config_view = config.Views[i];
+            if (config_view.LockDataViewSize)
+            {
+                FormBorderStyle = FormBorderStyle.FixedSingle;
+                MaximizeBox = false;
+            }
         }
 
         private void DataView_Load(object sender, EventArgs e)
@@ -91,8 +104,8 @@ namespace WorldQuakeViewer
         /// </summary>
         public void Draw()
         {
-            ExeLog($"[Draw][{i}]描画を開始します");
-            config_view = config.Views[i];
+            ExeLog($"[Draw][{i}]描画中...");
+            ConfigReload();
             Bitmap img;
             if (data_.Count == 0)
             {
@@ -138,6 +151,7 @@ namespace WorldQuakeViewer
             }
             BackgroundImage = null;
             BackgroundImage = img;
+            ExeLog($"[Draw][{i}]描画完了");
         }
 
         /// <summary>

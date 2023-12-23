@@ -111,6 +111,14 @@ namespace WorldQuakeViewer
             colorChange[0].NewColor = Color.Transparent;
             ia.SetRemapTable(colorChange);
 
+            int c = config_display.Views.Count();
+            if (c == 1)
+                ProG_view_Delete.Enabled = false;
+            if (c == 9)
+                ProG_view_Add.Enabled = false;
+            ProG_view_Copy.Enabled = c > ProG_view_CopyNum.Value;
+
+            ExeLog($"[CtrlForm_Load]初回取得中...");
             for (int i = 0; i < config.Datas.Count(); i++)
                 foreach (int time in config.Datas[i].GetTimes)
                     if (0 <= time && time < 60)
@@ -121,6 +129,8 @@ namespace WorldQuakeViewer
             for (int i = 1; i < config.Views.Count(); i++)
                 Open(i);
 
+            GetTimer.Interval = 10000 - DateTime.Now.Millisecond;
+            GetTimer.Enabled = true;
             ExeLog($"[CtrlForm_Load]起動処理完了");
         }
 
@@ -133,19 +143,12 @@ namespace WorldQuakeViewer
             ProG_pro.SelectedObject = config_display.Datas;
             ProG_view.SelectedObject = config_display.Views;
             ProG_other.SelectedObject = config_display.Other;
-            int c = config_display.Views.Count();
-            if (c == 1)
-                ProG_view_Delete.Enabled = false;
-            if (c == 9)
-                ProG_view_Add.Enabled = false;
-            ProG_view_Copy.Enabled = c > ProG_view_CopyNum.Value;
-            GetTimer.Interval = 10000 - DateTime.Now.Millisecond;
-            GetTimer.Enabled = true;
             LogClearTimer.Interval = (int)config.Other.LogN.Normal_AutoDelete.TotalMilliseconds;
         }
 
         private async void GetTimer_Tick(object sender, EventArgs e)
         {
+            noFirst = true;//Loadだと早すぎる
             while (DateTime.Now.Millisecond > 800)
                 await Task.Delay(10);
             GetTimer.Interval = 1000 - DateTime.Now.Millisecond;

@@ -28,7 +28,7 @@ namespace WorldQuakeViewer
         /// <remarks>タイムスタンプは自動で追加されます。</remarks>
         public static void ExeLog(string text, bool isError = false)
         {
-            if (!isError && config.Other.LogN.Normal_Enable)
+            if ((!isError && config.Other.LogN.Normal_Enable) || isError)
             {
                 exeLogs += $"{DateTime.Now:HH:mm:ss.ffff} {text}\n";
                 ExeLogView($"{DateTime.Now:HH:mm:ss.ffff} {text}\r\n");
@@ -52,11 +52,11 @@ namespace WorldQuakeViewer
                 switch (logKind)
                 {
                     case LogKind.Exe:
-                        dir = $"Log\\Execution\\{DateTime.Now:yyyyMM\\dd}";
+                        dir = $"Log\\Execution\\{DateTime.Now:yyyyMM\\\\dd}";
                         name = $"{DateTime.Now:yyyyMMddHHmmss}.log";
                         break;
                     case LogKind.Error:
-                        if (!config.Other.LogN.Error_SaveEnable)
+                        if (!config.Other.LogN.Error_AutoSave)
                             break;
                         dir = $"Log\\Error\\{DateTime.Now:yyyyMM}";
                         name = $"{DateTime.Now:yyyyMMdd}.log";
@@ -71,7 +71,7 @@ namespace WorldQuakeViewer
                     case LogKind.EarlyEst:
                         if (id == "")
                             throw new ArgumentException($"地震idが指定されていません。", nameof(id));
-                        dir = $"Log\\{logKind}\\{DateTime.Now:yyyyMM\\dd}";
+                        dir = $"Log\\{logKind}\\{DateTime.Now:yyyyMM\\\\dd}";
                         name = $"{id}.txt";
                         if (File.Exists($"{dir}\\{name}"))
                             text = $"{File.ReadAllText($"{dir}\\{name}")}\n--------------------------------------------------\n{text}";
@@ -191,18 +191,20 @@ namespace WorldQuakeViewer
         /// <summary>
         /// 更新時処理
         /// </summary>
+        /// <remarks>地震ログのみ起動直後も行います。</remarks>
         /// <param name="data">データ</param>
         /// <param name="isNew">新規か</param>
         public static void UpdtPros(Data data, bool isNew = false)
         {
-            if (noFirst)
-                try
+            try
+            {
+                Console.WriteLine("更新処理開始");
+                DataAuthor dataAuthor = data.Author;
+                if (dataAuthor == DataAuthor.Null)
+                    throw new ArgumentException($"データ元({dataAuthor})が不正です。", nameof(dataAuthor));
+                int level = Mag2Level(data.Mag);
+                if (noFirst)
                 {
-                    Console.WriteLine("更新処理開始");
-                    DataAuthor dataAuthor = data.Author;
-                    if (dataAuthor == DataAuthor.Null)
-                        throw new ArgumentException($"データ元({dataAuthor})が不正です。", nameof(dataAuthor));
-                    int level = Mag2Level(data.Mag);
                     Sound(level, dataAuthor);
                     if (config.Datas[(int)dataAuthor].Bouyomi.Enable)
                         if (data.Mag >= config.Datas[(int)dataAuthor].Bouyomi.LowerMagLimit)
@@ -213,13 +215,16 @@ namespace WorldQuakeViewer
                     if (config.Datas[(int)dataAuthor].Webhook.Enable)
                         if (data.Mag >= config.Datas[(int)dataAuthor].Webhook.LowerMagLimit)
                             Webhook(Data2String(data, FormatPros.Webhook, isNew), dataAuthor);
-                    LogE(data, isNew, level, dataAuthor);
                 }
-                catch (Exception ex)
-                {
-                    ExeLog($"[UpdatePros]エラー:{ex.Message}", true);
-                    LogSave(LogKind.Error, ex.ToString());
-                }
+                else
+                    ExeLog("[UpdatePros]初回のため地震ログ書き込みのみ");
+                LogE(data, isNew, level, dataAuthor);
+            }
+            catch (Exception ex)
+            {
+                ExeLog($"[UpdatePros]エラー:{ex.Message}", true);
+                LogSave(LogKind.Error, ex.ToString());
+            }
         }
 
         /// <summary>

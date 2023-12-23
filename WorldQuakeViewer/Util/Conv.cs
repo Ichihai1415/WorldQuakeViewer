@@ -97,7 +97,7 @@ namespace WorldQuakeViewer
                 MMI = data.MMI == null ? "" : data.MMI.ToString(),
                 MMIAra = MMI2Ara(data.MMI),
                 AlertJP = Alert2JP(data.Alert),
-                AlertEN = data.Alert,
+                AlertEN = data.Alert == null ? "" : data.Alert,
                 Source = data.Source,
                 UpdateJP = isNew ? "" : "更新",
                 UpdateEN = isNew ? "" : "update",
@@ -184,8 +184,8 @@ namespace WorldQuakeViewer
         public static void Lon2String(double lon, out string lon10, out string lonEW, out string lonEWJP, out string lon60d, out string lon60m, out string lon60s)
         {
             lon10 = lon.ToString();
-            lonEW = lon >= 0 ? "N" : "S";
-            lonEWJP = lon >= 0 ? "北緯" : "南緯";
+            lonEW = lon >= 0 ? "E" : "W";
+            lonEWJP = lon >= 0 ? "東経" : "西経";
             lon = Math.Abs(lon);
             double deg = Math.Floor(lon);
             double min = Math.Floor((lon - deg) * 60);

@@ -74,7 +74,7 @@ namespace WorldQuakeViewer
                 /// <summary>
                 /// エラーログ保存を有効か
                 /// </summary>
-                public bool Error_SaveEnable { get; set; } = true;
+                public bool Error_AutoSave { get; set; } = true;
 
                 /// <summary>
                 /// Config_DisplayからConfigに変換します。
@@ -85,7 +85,7 @@ namespace WorldQuakeViewer
                     Normal_Enable = from.Normal_Enable,
                     Normal_AutoDelete = from.Normal_AutoDelete,
                     Normal_AutoSave = from.Normal_AutoSave,
-                    Error_SaveEnable = from.Error_SaveEnable
+                    Error_AutoSave = from.Error_SaveEnable
                 };
             }
 
@@ -358,7 +358,7 @@ namespace WorldQuakeViewer
                 /// <summary>
                 /// 送信する文のフォーマット
                 /// </summary>
-                public string Format { get; set; } = "[Author]地震情報、[UpdateJP]、{TimeUser:d日H時m分s秒}発生、マグニチュード[Mag]、震源、[HypoJP]、深さ[Depth]km。";
+                public string Format { get; set; } = "[Author]地震情報、[UpdateJP]、{TimeUser*d日H時m分s秒}発生、マグニチュード[Mag]、震源、[HypoJP]、深さ[Depth]km。";
 
                 /// <summary>
                 /// 送信する文の置換
@@ -509,7 +509,7 @@ namespace WorldQuakeViewer
                 /// <summary>
                 /// 送信する文のフォーマット
                 /// </summary>
-                public string Format { get; set; } = "[Author]地震情報([UpdateJP])【[MagType][Mag]】 {TimeUser:yyyy/MM/dd HH:mm:ss UTCzzz}発生\\n[HypoJP]([HypoEN])\\n[Lat60d]°[Lat60m]'[Lat60s]\"[LatNS], [Lon60d]°[Lon60m]'[Lon60s]\"[LonEW]  深さ[Depth]km";
+                public string Format { get; set; } = "[Author]地震情報([UpdateJP])【[MagType][Mag]】 {TimeUser*yyyy/MM/dd HH:mm:ss UTCzzz}発生\\n[HypoJP]([HypoEN])\\n[Lat60d]°[Lat60m]'[Lat60s]\"[LatNS], [Lon60d]°[Lon60m]'[Lon60s]\"[LonEW]  深さ[Depth]km";
 
                 /// <summary>
                 /// 送信する文の置換
@@ -590,12 +590,12 @@ namespace WorldQuakeViewer
                 /// 保存する文のフォーマット
                 /// </summary>
                 /// <remarks>情報の間にソフト情報等が入ります</remarks>
-                public string Format { get; set; } = "[Author]地震情報([UpdateJP])【[MagType][Mag]】 {TimeUser:yyyy/MM/dd HH:mm:ss UTCzzz}発生\\n[HypoJP]([HypoEN])\\n[Lat60d]°[Lat60m]'[Lat60s]\"[LatNS], [Lon60d]°[Lon60m]'[Lon60s]\"[LonEW]  深さ[Depth]km\\nraw:[formatJSON]";
+                public string Format { get; set; } = "[Author]地震情報([UpdateJP])【[MagType][Mag]】 {TimeUser*yyyy/MM/dd HH:mm:ss UTCzzz}発生\\n[HypoJP]([HypoEN])\\n[Lat60d]°[Lat60m]'[Lat60s]\"[LatNS], [Lon60d]°[Lon60m]'[Lon60s]\"[LonEW]  深さ[Depth]km\\nraw:[formatJSON]";
 
                 /// <summary>
                 /// 保存する文の置換
                 /// </summary>
-                public TextReplace_[] TextReplace { get; set; } = new TextReplace_[] { new TextReplace_() };
+                public TextReplace_[] TextReplace { get; set; } = new TextReplace_[] { new TextReplace_ { OldValue = "()", NewValue = "" }, new TextReplace_() };
 
                 /// <summary>
                 /// 保存する文の置換
@@ -700,6 +700,11 @@ namespace WorldQuakeViewer
             public bool HypoShift { get; set; } = true;
 
             /// <summary>
+            /// データ表示画面のサイズ変更を無効化するか
+            /// </summary>
+            public bool LockDataViewSize { get; set; } = true;
+
+            /// <summary>
             /// 描画色
             /// </summary>
             /// <remarks>マップはWorldQuakeViewer.MapGenerator</remarks>
@@ -799,6 +804,7 @@ namespace WorldQuakeViewer
                 LowerMagLimit = from.LowerMagLimit,
                 MapRange = from.MapRange,
                 HypoShift = from.HypoShift,
+                LockDataViewSize = from.LockDataViewSize,
                 Colors = (Colors_)from.Colors
             };
         }
@@ -901,7 +907,7 @@ namespace WorldQuakeViewer
                     Normal_Enable = from.Normal_Enable,
                     Normal_AutoDelete = from.Normal_AutoDelete,
                     Normal_AutoSave = from.Normal_AutoSave,
-                    Error_SaveEnable = from.Error_SaveEnable
+                    Error_SaveEnable = from.Error_AutoSave
                 };
             }
 
@@ -1619,6 +1625,12 @@ namespace WorldQuakeViewer
             public bool HypoShift { get; set; }
 
             /// <summary>
+            /// データ表示画面のサイズ変更を無効化するか
+            /// </summary>
+            [Description("データ表示画面のサイズ変更を無効化するか")]
+            public bool LockDataViewSize { get; set; }
+
+            /// <summary>
             /// 描画色
             /// </summary>
             /// <remarks>マップはWorldQuakeViewer.MapGenerator</remarks>
@@ -1732,6 +1744,7 @@ namespace WorldQuakeViewer
                 LowerMagLimit = from.LowerMagLimit,
                 MapRange = from.MapRange,
                 HypoShift = from.HypoShift,
+                LockDataViewSize = from.LockDataViewSize,
                 Colors = (Colors_)from.Colors
             };
         }
