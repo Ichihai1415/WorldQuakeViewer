@@ -32,6 +32,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CtrlForm));
             this.TabCtrl_Main = new System.Windows.Forms.TabControl();
             this.Tab_Main_Info = new System.Windows.Forms.TabPage();
+            this.InfoPageLink = new System.Windows.Forms.LinkLabel();
+            this.InfoText0 = new System.Windows.Forms.Label();
+            this.InfoText1 = new System.Windows.Forms.Label();
             this.Tab_Main_Log = new System.Windows.Forms.TabPage();
             this.LogTextBox = new System.Windows.Forms.TextBox();
             this.Tab_Main_Setting = new System.Windows.Forms.TabPage();
@@ -57,9 +60,6 @@
             this.ProG_other = new System.Windows.Forms.PropertyGrid();
             this.GetTimer = new System.Windows.Forms.Timer(this.components);
             this.LogClearTimer = new System.Windows.Forms.Timer(this.components);
-            this.InfoText1 = new System.Windows.Forms.Label();
-            this.InfoText0 = new System.Windows.Forms.Label();
-            this.InfoPageLink = new System.Windows.Forms.LinkLabel();
             this.TabCtrl_Main.SuspendLayout();
             this.Tab_Main_Info.SuspendLayout();
             this.Tab_Main_Log.SuspendLayout();
@@ -96,6 +96,38 @@
             this.Tab_Main_Info.TabIndex = 1;
             this.Tab_Main_Info.Text = "情報";
             this.Tab_Main_Info.UseVisualStyleBackColor = true;
+            // 
+            // InfoPageLink
+            // 
+            this.InfoPageLink.AutoSize = true;
+            this.InfoPageLink.Font = new System.Drawing.Font("メイリオ", 10F);
+            this.InfoPageLink.Location = new System.Drawing.Point(406, 439);
+            this.InfoPageLink.Name = "InfoPageLink";
+            this.InfoPageLink.Size = new System.Drawing.Size(80, 21);
+            this.InfoPageLink.TabIndex = 2;
+            this.InfoPageLink.TabStop = true;
+            this.InfoPageLink.Text = "解説ページ";
+            this.InfoPageLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.InfoPageLink_LinkClicked);
+            // 
+            // InfoText0
+            // 
+            this.InfoText0.AutoSize = true;
+            this.InfoText0.Font = new System.Drawing.Font("メイリオ", 20F);
+            this.InfoText0.Location = new System.Drawing.Point(0, 0);
+            this.InfoText0.Name = "InfoText0";
+            this.InfoText0.Size = new System.Drawing.Size(362, 41);
+            this.InfoText0.TabIndex = 1;
+            this.InfoText0.Text = "WorldQuakeViewer v0.0.0";
+            // 
+            // InfoText1
+            // 
+            this.InfoText1.AutoSize = true;
+            this.InfoText1.Font = new System.Drawing.Font("メイリオ", 10F);
+            this.InfoText1.Location = new System.Drawing.Point(-1, 40);
+            this.InfoText1.Name = "InfoText1";
+            this.InfoText1.Size = new System.Drawing.Size(497, 420);
+            this.InfoText1.TabIndex = 0;
+            this.InfoText1.Text = resources.GetString("InfoText1.Text");
             // 
             // Tab_Main_Log
             // 
@@ -361,10 +393,10 @@
             // Tab_Setting_Other
             // 
             this.Tab_Setting_Other.Controls.Add(this.ProG_other);
-            this.Tab_Setting_Other.Location = new System.Drawing.Point(4, 27);
+            this.Tab_Setting_Other.Location = new System.Drawing.Point(4, 22);
             this.Tab_Setting_Other.Name = "Tab_Setting_Other";
             this.Tab_Setting_Other.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_Setting_Other.Size = new System.Drawing.Size(484, 338);
+            this.Tab_Setting_Other.Size = new System.Drawing.Size(484, 343);
             this.Tab_Setting_Other.TabIndex = 3;
             this.Tab_Setting_Other.Text = "その他";
             this.Tab_Setting_Other.UseVisualStyleBackColor = true;
@@ -375,7 +407,7 @@
             this.ProG_other.Location = new System.Drawing.Point(3, 3);
             this.ProG_other.Name = "ProG_other";
             this.ProG_other.PropertySort = System.Windows.Forms.PropertySort.Categorized;
-            this.ProG_other.Size = new System.Drawing.Size(478, 332);
+            this.ProG_other.Size = new System.Drawing.Size(478, 337);
             this.ProG_other.TabIndex = 2;
             // 
             // GetTimer
@@ -386,38 +418,6 @@
             // 
             this.LogClearTimer.Interval = 1000;
             this.LogClearTimer.Tick += new System.EventHandler(this.LogClearTimer_Tick);
-            // 
-            // InfoText1
-            // 
-            this.InfoText1.AutoSize = true;
-            this.InfoText1.Font = new System.Drawing.Font("メイリオ", 10F);
-            this.InfoText1.Location = new System.Drawing.Point(-1, 40);
-            this.InfoText1.Name = "InfoText1";
-            this.InfoText1.Size = new System.Drawing.Size(497, 420);
-            this.InfoText1.TabIndex = 0;
-            this.InfoText1.Text = resources.GetString("InfoText1.Text");
-            // 
-            // InfoText0
-            // 
-            this.InfoText0.AutoSize = true;
-            this.InfoText0.Font = new System.Drawing.Font("メイリオ", 20F);
-            this.InfoText0.Location = new System.Drawing.Point(0, 0);
-            this.InfoText0.Name = "InfoText0";
-            this.InfoText0.Size = new System.Drawing.Size(362, 41);
-            this.InfoText0.TabIndex = 1;
-            this.InfoText0.Text = "WorldQuakeViewer v0.0.0";
-            // 
-            // InfoPageLink
-            // 
-            this.InfoPageLink.AutoSize = true;
-            this.InfoPageLink.Font = new System.Drawing.Font("メイリオ", 10F);
-            this.InfoPageLink.Location = new System.Drawing.Point(406, 439);
-            this.InfoPageLink.Name = "InfoPageLink";
-            this.InfoPageLink.Size = new System.Drawing.Size(80, 21);
-            this.InfoPageLink.TabIndex = 2;
-            this.InfoPageLink.TabStop = true;
-            this.InfoPageLink.Text = "解説ページ";
-            this.InfoPageLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.InfoPageLink_LinkClicked);
             // 
             // CtrlForm
             // 

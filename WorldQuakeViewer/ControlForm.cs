@@ -178,8 +178,19 @@ namespace WorldQuakeViewer
 
         private void Config_Save_Click(object sender, EventArgs e)
         {
+            for (int i = 1; i < config_display.Views.Count(); i++)
+            {
+                if (config_display.Views[i].Data == ViewData.Null)
+                {
+                    MessageBox.Show($"表示[{i}]のDataが指定されていません。", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+            }
             config = (Config)config_display;
             File.WriteAllText("Setting\\config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
+            for (int i = 1; i < config.Views.Count(); i++)
+                if (dataViews[i] != null)
+                    ReDraw((DataAuthor)dataViews[i].dataAuthorN);
         }
 
         private void Config_Reset_Click(object sender, EventArgs e)

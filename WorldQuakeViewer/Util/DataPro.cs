@@ -45,7 +45,6 @@ namespace WorldQuakeViewer
                         throw new ArgumentException($"データ元({dataAuthor})が不正です。", nameof(dataAuthor));
                 }
                 string URL = config.Datas[(int)dataAuthor].URL;
-                string URLbasic = URL.Split('?')[0];
                 ExeLog($"[Get][{dataAuthor}]取得中...({dataAuthor},{URL})");
                 string res = await client.GetStringAsync(URL);
                 switch (config.Datas[(int)dataAuthor].DataProType)

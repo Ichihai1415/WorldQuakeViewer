@@ -104,7 +104,7 @@ namespace WorldQuakeViewer
 
             foreach (Match match in Regex.Matches(format, "\\{.*?\\}"))
             {
-                Console.WriteLine(match.Value);
+                //Console.WriteLine(match.Value);
                 string[] texts = match.Value.Replace("{", "").Replace("}", "").Split('*');
                 if (texts.Count() == 2)
                 {

@@ -163,12 +163,12 @@ namespace WorldQuakeViewer
             }
             //マップ
             double zoom = 800d / config_view.MapRange;//80°=>800px(x10)//40°=>800px(x20)
-            int locX = data.Lon > 0 ? (int)Math.Round((data.Lon + 90) * zoom, MidpointRounding.AwayFromZero) : (int)Math.Round((data.Lon + 450) * zoom, MidpointRounding.AwayFromZero);
-            int locY = (int)Math.Round((90 - data.Lat) * zoom, MidpointRounding.AwayFromZero);
-            int locX_image = (int)(config_view.MapRange * zoom / 2 - locX);//80°=>半分40°=400px//40°=>半分20°=800px
-            int locY_image = (int)(200 + config_view.MapRange * zoom / 2 - locY);
+            int locX = data.Lon > 0 ? (int)Math.Round((data.Lon + 90) * zoom, MidpointRounding.AwayFromZero) : (int)Math.Round((data.Lon + 450) * zoom, MidpointRounding.AwayFromZero);//地図画像での経度の位置
+            int locY = (int)Math.Round((90 - data.Lat) * zoom, MidpointRounding.AwayFromZero);//地図画像での緯度の位置
+            int locX_image = 400 - locX;
+            int locY_image = 600 - locY;
             if (config_view.HypoShift)
-                locY_image = Math.Min(200, Math.Max(-800, locY_image));
+                locY_image = Math.Min(200, Math.Max((int)(-180 * zoom + 1000), locY_image));//-180*zoom+1000<locY_image<200
             g.FillRectangle(new SolidBrush(config_view.Colors.Main_Latest_Back_Color), 0, 200, 800, 800);
             ImageCheck("map.png");
             g.DrawImage(Image.FromFile("Image\\map.png"), locX_image, locY_image, (int)(540 * zoom), (int)(180 * zoom));
