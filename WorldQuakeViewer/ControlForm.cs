@@ -43,7 +43,7 @@ namespace WorldQuakeViewer
             InfoText0.Text = $"WorldQuakeViewer v{version}";
         }
 
-        private void CtrlForm_Load(object sender, EventArgs e)
+        private async void CtrlForm_Load(object sender, EventArgs e)
         {
             ExeLog($"[CtrlForm_Load]起動しました。");
             if (File.Exists("Setting\\config.json"))
@@ -120,10 +120,10 @@ namespace WorldQuakeViewer
 
             ExeLog($"[CtrlForm_Load]初回取得中...");
             for (int i = 0; i < config.Datas.Count(); i++)
-                foreach (int time in config.Datas[i].GetTimes)
+                foreach (int time in config.Datas[i].GetTimes)//2個じゃない可能性もなくはないため
                     if (0 <= time && time < 60)
                     {
-                        Get((DataAuthor)i);
+                        await Get((DataAuthor)i);
                         continue;
                     }
             for (int i = 1; i < config.Views.Count(); i++)
@@ -131,7 +131,8 @@ namespace WorldQuakeViewer
 
             GetTimer.Interval = 10000 - DateTime.Now.Millisecond;
             GetTimer.Enabled = true;
-            ExeLog($"[CtrlForm_Load]起動処理完了");
+            ExeLog($"[CtrlForm_Load]起動処理完了 約10秒後に通常取得を開始します。");
+            noFirst = true;
         }
 
         /// <summary>
@@ -148,7 +149,6 @@ namespace WorldQuakeViewer
 
         private async void GetTimer_Tick(object sender, EventArgs e)
         {
-            noFirst = true;//Loadだと早すぎる
             while (DateTime.Now.Millisecond > 800)
                 await Task.Delay(10);
             GetTimer.Interval = 1000 - DateTime.Now.Millisecond;
@@ -157,7 +157,7 @@ namespace WorldQuakeViewer
             {
                 for (int i = 0; i < DataAuthorCount; i++)
                     if (config.Datas[i].GetTimes[0] == DateTime.Now.Second || config.Datas[i].GetTimes[1] == DateTime.Now.Second)
-                        Get((DataAuthor)i);
+                        await Get((DataAuthor)i);
             }
             catch (Exception ex)//設定がおかしいとき
             {

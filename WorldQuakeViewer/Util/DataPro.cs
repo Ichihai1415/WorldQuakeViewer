@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Xml;
 using static WorldQuakeViewer.CtrlForm;
 using static WorldQuakeViewer.Util_Class;
@@ -18,7 +19,7 @@ namespace WorldQuakeViewer
         /// </summary>
         /// <param name="dataAuthor">データ元</param>
         /// <exception cref="ArgumentException">データ元が不正な場合</exception>
-        public static async void Get(DataAuthor dataAuthor)
+        public static async Task Get(DataAuthor dataAuthor)
         {
             try
             {

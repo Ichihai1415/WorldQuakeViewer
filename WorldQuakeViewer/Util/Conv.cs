@@ -97,7 +97,7 @@ namespace WorldQuakeViewer
                 MMI = data.MMI == null ? "" : data.MMI.ToString(),
                 MMIAra = MMI2Ara(data.MMI),
                 AlertJP = Alert2JP(data.Alert),
-                AlertEN = data.Alert == null ? "" : data.Alert,
+                AlertEN = data.Alert ?? "",
                 Source = data.Source,
                 UpdateJP = isNew ? "" : "更新",
                 UpdateEN = isNew ? "" : "update",
