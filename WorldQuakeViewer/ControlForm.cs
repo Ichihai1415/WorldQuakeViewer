@@ -14,8 +14,8 @@ using System.Windows.Forms;
 using WorldQuakeViewer.Properties;
 using static WorldQuakeViewer.DataPro;
 using static WorldQuakeViewer.Util_Class;
-using static WorldQuakeViewer.Util_Func;
 using static WorldQuakeViewer.Util_Conv;
+using static WorldQuakeViewer.Util_Func;
 
 namespace WorldQuakeViewer
 {
@@ -397,6 +397,37 @@ namespace WorldQuakeViewer
         private void IntConv_Link_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("https://qiita.com/Ichihai1415/items/2e14fc2356ec8e140291");
+        }
+
+        private void ConfigMarge_Select1_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            ConfigMarge_Select3.DataSource = null;
+            ConfigMarge_Select3.Items.Clear();
+            ConfigMarge_Select2.Value = 0;
+            ConfigMarge_Select2.Enabled = true;
+            switch (ConfigMarge_Select1.SelectedIndex)
+            {
+                case 0://処理
+                    ConfigMarge_Select3.DataSource = Enum.GetValues(typeof(ConfigMarge_Select3_Data));
+                    break;
+                case 1://表示
+                    ConfigMarge_Select3.DataSource = Enum.GetValues(typeof(ConfigMarge_Select3_View));
+                    break;
+                case 2://その他
+                    ConfigMarge_Select3.DataSource = Enum.GetValues(typeof(ConfigMarge_Select3_Other));
+                    ConfigMarge_Select2.Enabled = false;
+                    break;
+            }
+        }
+
+        private void ConfigMarge_Read_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ConfigMarge_Write_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

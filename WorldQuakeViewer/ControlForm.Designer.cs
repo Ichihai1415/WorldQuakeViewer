@@ -38,6 +38,15 @@
             this.Tab_Main_Log = new System.Windows.Forms.TabPage();
             this.LogTextBox = new System.Windows.Forms.TextBox();
             this.Tab_Main_Tool = new System.Windows.Forms.TabPage();
+            this.GroupBox_ConfigMarge = new System.Windows.Forms.GroupBox();
+            this.ConfigMarge_Write = new System.Windows.Forms.Button();
+            this.ConfigMarge_Read = new System.Windows.Forms.Button();
+            this.ConfigMarge_Select3 = new System.Windows.Forms.ComboBox();
+            this.ConfigMarge_Select2 = new System.Windows.Forms.NumericUpDown();
+            this.ConfigMarge_Text2 = new System.Windows.Forms.Label();
+            this.ConfigMarge_PathBox = new System.Windows.Forms.TextBox();
+            this.ConfigMarge_Select1 = new System.Windows.Forms.ComboBox();
+            this.ConfigMarge_Text = new System.Windows.Forms.Label();
             this.GroupBox_IntConv = new System.Windows.Forms.GroupBox();
             this.IntConv_Conv4 = new System.Windows.Forms.Button();
             this.IntConv_Conv2 = new System.Windows.Forms.Button();
@@ -74,11 +83,12 @@
             this.ProG_other = new System.Windows.Forms.PropertyGrid();
             this.GetTimer = new System.Windows.Forms.Timer(this.components);
             this.LogClearTimer = new System.Windows.Forms.Timer(this.components);
-            this.GroupBox_ConfigMarge = new System.Windows.Forms.GroupBox();
             this.TabCtrl_Main.SuspendLayout();
             this.Tab_Main_Info.SuspendLayout();
             this.Tab_Main_Log.SuspendLayout();
             this.Tab_Main_Tool.SuspendLayout();
+            this.GroupBox_ConfigMarge.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ConfigMarge_Select2)).BeginInit();
             this.GroupBox_IntConv.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.IntConv_NumBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.IntConv_NumBox2)).BeginInit();
@@ -183,6 +193,104 @@
             this.Tab_Main_Tool.TabIndex = 3;
             this.Tab_Main_Tool.Text = "ツール";
             this.Tab_Main_Tool.UseVisualStyleBackColor = true;
+            // 
+            // GroupBox_ConfigMarge
+            // 
+            this.GroupBox_ConfigMarge.Controls.Add(this.ConfigMarge_Write);
+            this.GroupBox_ConfigMarge.Controls.Add(this.ConfigMarge_Read);
+            this.GroupBox_ConfigMarge.Controls.Add(this.ConfigMarge_Select3);
+            this.GroupBox_ConfigMarge.Controls.Add(this.ConfigMarge_Select2);
+            this.GroupBox_ConfigMarge.Controls.Add(this.ConfigMarge_Text2);
+            this.GroupBox_ConfigMarge.Controls.Add(this.ConfigMarge_PathBox);
+            this.GroupBox_ConfigMarge.Controls.Add(this.ConfigMarge_Select1);
+            this.GroupBox_ConfigMarge.Controls.Add(this.ConfigMarge_Text);
+            this.GroupBox_ConfigMarge.Location = new System.Drawing.Point(8, 138);
+            this.GroupBox_ConfigMarge.Name = "GroupBox_ConfigMarge";
+            this.GroupBox_ConfigMarge.Size = new System.Drawing.Size(478, 122);
+            this.GroupBox_ConfigMarge.TabIndex = 1;
+            this.GroupBox_ConfigMarge.TabStop = false;
+            this.GroupBox_ConfigMarge.Text = "設定結合ツール";
+            // 
+            // ConfigMarge_Write
+            // 
+            this.ConfigMarge_Write.Location = new System.Drawing.Point(408, 90);
+            this.ConfigMarge_Write.Name = "ConfigMarge_Write";
+            this.ConfigMarge_Write.Size = new System.Drawing.Size(64, 23);
+            this.ConfigMarge_Write.TabIndex = 7;
+            this.ConfigMarge_Write.Text = "書き出す";
+            this.ConfigMarge_Write.UseVisualStyleBackColor = true;
+            this.ConfigMarge_Write.Click += new System.EventHandler(this.ConfigMarge_Write_Click);
+            // 
+            // ConfigMarge_Read
+            // 
+            this.ConfigMarge_Read.Location = new System.Drawing.Point(344, 90);
+            this.ConfigMarge_Read.Name = "ConfigMarge_Read";
+            this.ConfigMarge_Read.Size = new System.Drawing.Size(64, 23);
+            this.ConfigMarge_Read.TabIndex = 6;
+            this.ConfigMarge_Read.Text = "読み込む";
+            this.ConfigMarge_Read.UseVisualStyleBackColor = true;
+            this.ConfigMarge_Read.Click += new System.EventHandler(this.ConfigMarge_Read_Click);
+            // 
+            // ConfigMarge_Select3
+            // 
+            this.ConfigMarge_Select3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ConfigMarge_Select3.FormattingEnabled = true;
+            this.ConfigMarge_Select3.Location = new System.Drawing.Point(158, 89);
+            this.ConfigMarge_Select3.Name = "ConfigMarge_Select3";
+            this.ConfigMarge_Select3.Size = new System.Drawing.Size(100, 26);
+            this.ConfigMarge_Select3.TabIndex = 5;
+            // 
+            // ConfigMarge_Select2
+            // 
+            this.ConfigMarge_Select2.Location = new System.Drawing.Point(108, 90);
+            this.ConfigMarge_Select2.Maximum = new decimal(new int[] {
+            9,
+            0,
+            0,
+            0});
+            this.ConfigMarge_Select2.Name = "ConfigMarge_Select2";
+            this.ConfigMarge_Select2.Size = new System.Drawing.Size(30, 25);
+            this.ConfigMarge_Select2.TabIndex = 4;
+            // 
+            // ConfigMarge_Text2
+            // 
+            this.ConfigMarge_Text2.AutoSize = true;
+            this.ConfigMarge_Text2.Location = new System.Drawing.Point(6, 63);
+            this.ConfigMarge_Text2.Name = "ConfigMarge_Text2";
+            this.ConfigMarge_Text2.Size = new System.Drawing.Size(37, 18);
+            this.ConfigMarge_Text2.TabIndex = 3;
+            this.ConfigMarge_Text2.Text = "パス:";
+            // 
+            // ConfigMarge_PathBox
+            // 
+            this.ConfigMarge_PathBox.Location = new System.Drawing.Point(42, 60);
+            this.ConfigMarge_PathBox.Name = "ConfigMarge_PathBox";
+            this.ConfigMarge_PathBox.Size = new System.Drawing.Size(430, 25);
+            this.ConfigMarge_PathBox.TabIndex = 2;
+            // 
+            // ConfigMarge_Select1
+            // 
+            this.ConfigMarge_Select1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ConfigMarge_Select1.FormattingEnabled = true;
+            this.ConfigMarge_Select1.Items.AddRange(new object[] {
+            "Data",
+            "View",
+            "Other"});
+            this.ConfigMarge_Select1.Location = new System.Drawing.Point(7, 89);
+            this.ConfigMarge_Select1.Name = "ConfigMarge_Select1";
+            this.ConfigMarge_Select1.Size = new System.Drawing.Size(100, 26);
+            this.ConfigMarge_Select1.TabIndex = 1;
+            this.ConfigMarge_Select1.SelectionChangeCommitted += new System.EventHandler(this.ConfigMarge_Select1_SelectionChangeCommitted);
+            // 
+            // ConfigMarge_Text
+            // 
+            this.ConfigMarge_Text.AutoSize = true;
+            this.ConfigMarge_Text.Location = new System.Drawing.Point(6, 21);
+            this.ConfigMarge_Text.Name = "ConfigMarge_Text";
+            this.ConfigMarge_Text.Size = new System.Drawing.Size(332, 90);
+            this.ConfigMarge_Text.TabIndex = 0;
+            this.ConfigMarge_Text.Text = "部分的な設定のファイルの読み込みや書き出しができます。\r\n設定例を設定詳細ページで公開しています。\r\n\r\n\r\n                          " +
+    "       の                           を";
             // 
             // GroupBox_IntConv
             // 
@@ -629,15 +737,6 @@
             this.LogClearTimer.Interval = 1000;
             this.LogClearTimer.Tick += new System.EventHandler(this.LogClearTimer_Tick);
             // 
-            // GroupBox_ConfigMarge
-            // 
-            this.GroupBox_ConfigMarge.Location = new System.Drawing.Point(8, 138);
-            this.GroupBox_ConfigMarge.Name = "GroupBox_ConfigMarge";
-            this.GroupBox_ConfigMarge.Size = new System.Drawing.Size(478, 100);
-            this.GroupBox_ConfigMarge.TabIndex = 1;
-            this.GroupBox_ConfigMarge.TabStop = false;
-            this.GroupBox_ConfigMarge.Text = "設定結合ツール";
-            // 
             // CtrlForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -657,6 +756,9 @@
             this.Tab_Main_Log.ResumeLayout(false);
             this.Tab_Main_Log.PerformLayout();
             this.Tab_Main_Tool.ResumeLayout(false);
+            this.GroupBox_ConfigMarge.ResumeLayout(false);
+            this.GroupBox_ConfigMarge.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ConfigMarge_Select2)).EndInit();
             this.GroupBox_IntConv.ResumeLayout(false);
             this.GroupBox_IntConv.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.IntConv_NumBox3)).EndInit();
@@ -723,5 +825,13 @@
         private System.Windows.Forms.Button IntConv_Conv4;
         private System.Windows.Forms.Button IntConv_Conv2;
         private System.Windows.Forms.GroupBox GroupBox_ConfigMarge;
+        private System.Windows.Forms.Label ConfigMarge_Text;
+        private System.Windows.Forms.ComboBox ConfigMarge_Select1;
+        private System.Windows.Forms.NumericUpDown ConfigMarge_Select2;
+        private System.Windows.Forms.Label ConfigMarge_Text2;
+        private System.Windows.Forms.TextBox ConfigMarge_PathBox;
+        private System.Windows.Forms.ComboBox ConfigMarge_Select3;
+        private System.Windows.Forms.Button ConfigMarge_Write;
+        private System.Windows.Forms.Button ConfigMarge_Read;
     }
 }

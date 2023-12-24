@@ -299,7 +299,7 @@ namespace WorldQuakeViewer
             /// 発生日時(UTC)
             /// </summary>
             public string TimeUTC_Format { get; set; } = "";
-            
+
             /// <summary>
             /// 発生日時(ユーザー)
             /// </summary>
@@ -502,6 +502,71 @@ namespace WorldQuakeViewer
             /// [一部のみ]データのソース
             /// </summary>
             public string Source { get; set; } = "null";
+        }
+
+        /// <summary>
+        /// 設定結合ツールのSelect1がDataのときの選択肢
+        /// </summary>
+        public enum ConfigMarge_Select3_Data
+        {
+            /// <summary>
+            /// すべて
+            /// </summary>
+            All = 0,
+            /// <summary>
+            /// 更新検知対象
+            /// </summary>
+            Update = 1,
+            /// <summary>
+            /// 音声再生
+            /// </summary>
+            Sound = 2,
+            /// <summary>
+            /// 棒読みちゃん送信
+            /// </summary>
+            Bouyomi = 3,
+            /// <summary>
+            /// socket送信
+            /// </summary>
+            Socket = 4,
+            /// <summary>
+            /// webhook送信
+            /// </summary>
+            Webhook = 5,
+            /// <summary>
+            /// ログ出力関連(地震)
+            /// </summary>
+            LogE = 6
+        }
+
+        /// <summary>
+        /// 設定結合ツールのSelect1がViewのときの選択肢
+        /// </summary>
+        public enum ConfigMarge_Select3_View
+        {
+            /// <summary>
+            /// すべて
+            /// </summary>
+            All = 0,
+            /// <summary>
+            /// 描画色
+            /// </summary>
+            Color = 1
+        }
+
+        /// <summary>
+        /// 設定結合ツールのSelect1がOtherのときの選択肢
+        /// </summary>
+        public enum ConfigMarge_Select3_Other
+        {
+            /// <summary>
+            /// すべて
+            /// </summary>
+            All = 0,
+            /// <summary>
+            /// ログ出力関連(地震除く)
+            /// </summary>
+            LogN = 1
         }
     }
 }
