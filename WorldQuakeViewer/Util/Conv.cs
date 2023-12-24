@@ -244,7 +244,7 @@ namespace WorldQuakeViewer
                 Author = dataAuthor,
                 ID = info[0],
                 ID2 = info[8],
-                Time = DateTimeOffset.Parse(info[1]),
+                Time = DateTimeOffset.Parse(info[1] + "Z"),//ZをつけないとLocalTime判定になる
                 Hypo = NameJP(double.Parse(info[2]), double.Parse(info[3])),
                 Lat = double.Parse(info[2]),
                 Lon = double.Parse(info[3]),
