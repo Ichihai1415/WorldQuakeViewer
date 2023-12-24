@@ -122,15 +122,14 @@
  - https://earthquake.usgs.gov/ws/geoserve/regions.php
 
 震源日本語名:気象庁防災情報XMLフォーマット 個別コード表(20221118)
-地震火山関連コード表-シート43 AreaEpicenterDetailコード表
-(種別:"詳細震央地名")
+地震火山関連コード表-シート43 AreaEpicenterDetailコード表(種別:"詳細震央地名")
  - http://xml.kishou.go.jp/tec_material.html
 
 既定地図:Natural Earth - 1:50m Physical Vectors, Graticules30°(5.1.0)
  - https://www.naturalearthdata.com/
 
 プレート境界:tectonicplates (from:Peter Bird "Geochemistry Geophysics
-                 Geosystems", 4(3), 1027, [doi:10.1029/2001GC000252])
+                                       Geosystems", 4(3), 1027, [doi:10.1029/2001GC000252])
  - https://github.com/fraxen/tectonicplates
 
 フォント:Koruri Regular(20210720)

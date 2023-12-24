@@ -37,6 +37,20 @@
             this.InfoText1 = new System.Windows.Forms.Label();
             this.Tab_Main_Log = new System.Windows.Forms.TabPage();
             this.LogTextBox = new System.Windows.Forms.TextBox();
+            this.Tab_Main_Tool = new System.Windows.Forms.TabPage();
+            this.GroupBox_IntConv = new System.Windows.Forms.GroupBox();
+            this.IntConv_Conv4 = new System.Windows.Forms.Button();
+            this.IntConv_Conv2 = new System.Windows.Forms.Button();
+            this.IntConv_Link = new System.Windows.Forms.LinkLabel();
+            this.IntConv_Text = new System.Windows.Forms.Label();
+            this.IntConv_Conv3 = new System.Windows.Forms.Button();
+            this.IntConv_Conv1 = new System.Windows.Forms.Button();
+            this.IntConv_NumBox3 = new System.Windows.Forms.NumericUpDown();
+            this.IntConv_NumBox2 = new System.Windows.Forms.NumericUpDown();
+            this.IntConv_NumBox1 = new System.Windows.Forms.NumericUpDown();
+            this.IntConv_ComBox3 = new System.Windows.Forms.ComboBox();
+            this.IntConv_ComBox2 = new System.Windows.Forms.ComboBox();
+            this.IntConv_ComBox1 = new System.Windows.Forms.ComboBox();
             this.Tab_Main_Setting = new System.Windows.Forms.TabPage();
             this.Config_Reset = new System.Windows.Forms.Button();
             this.Config_Save = new System.Windows.Forms.Button();
@@ -60,9 +74,15 @@
             this.ProG_other = new System.Windows.Forms.PropertyGrid();
             this.GetTimer = new System.Windows.Forms.Timer(this.components);
             this.LogClearTimer = new System.Windows.Forms.Timer(this.components);
+            this.GroupBox_ConfigMarge = new System.Windows.Forms.GroupBox();
             this.TabCtrl_Main.SuspendLayout();
             this.Tab_Main_Info.SuspendLayout();
             this.Tab_Main_Log.SuspendLayout();
+            this.Tab_Main_Tool.SuspendLayout();
+            this.GroupBox_IntConv.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.IntConv_NumBox3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.IntConv_NumBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.IntConv_NumBox1)).BeginInit();
             this.Tab_Main_Setting.SuspendLayout();
             this.TabCtrl_Setting.SuspendLayout();
             this.Tab_Setting_Pro.SuspendLayout();
@@ -76,6 +96,7 @@
             // 
             this.TabCtrl_Main.Controls.Add(this.Tab_Main_Info);
             this.TabCtrl_Main.Controls.Add(this.Tab_Main_Log);
+            this.TabCtrl_Main.Controls.Add(this.Tab_Main_Tool);
             this.TabCtrl_Main.Controls.Add(this.Tab_Main_Setting);
             this.TabCtrl_Main.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TabCtrl_Main.Location = new System.Drawing.Point(0, 0);
@@ -101,12 +122,12 @@
             // 
             this.InfoPageLink.AutoSize = true;
             this.InfoPageLink.Font = new System.Drawing.Font("メイリオ", 10F);
-            this.InfoPageLink.Location = new System.Drawing.Point(406, 439);
+            this.InfoPageLink.Location = new System.Drawing.Point(341, 445);
             this.InfoPageLink.Name = "InfoPageLink";
-            this.InfoPageLink.Size = new System.Drawing.Size(80, 21);
+            this.InfoPageLink.Size = new System.Drawing.Size(148, 21);
             this.InfoPageLink.TabIndex = 2;
             this.InfoPageLink.TabStop = true;
-            this.InfoPageLink.Text = "解説ページ";
+            this.InfoPageLink.Text = "解説ページ(確認推奨)";
             this.InfoPageLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.InfoPageLink_LinkClicked);
             // 
             // InfoText0
@@ -122,20 +143,20 @@
             // InfoText1
             // 
             this.InfoText1.AutoSize = true;
-            this.InfoText1.Font = new System.Drawing.Font("メイリオ", 10F);
-            this.InfoText1.Location = new System.Drawing.Point(-1, 40);
+            this.InfoText1.Font = new System.Drawing.Font("メイリオ", 9F);
+            this.InfoText1.Location = new System.Drawing.Point(4, 41);
             this.InfoText1.Name = "InfoText1";
-            this.InfoText1.Size = new System.Drawing.Size(497, 420);
+            this.InfoText1.Size = new System.Drawing.Size(490, 342);
             this.InfoText1.TabIndex = 0;
             this.InfoText1.Text = resources.GetString("InfoText1.Text");
             // 
             // Tab_Main_Log
             // 
             this.Tab_Main_Log.Controls.Add(this.LogTextBox);
-            this.Tab_Main_Log.Location = new System.Drawing.Point(4, 27);
+            this.Tab_Main_Log.Location = new System.Drawing.Point(4, 22);
             this.Tab_Main_Log.Name = "Tab_Main_Log";
             this.Tab_Main_Log.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_Main_Log.Size = new System.Drawing.Size(492, 469);
+            this.Tab_Main_Log.Size = new System.Drawing.Size(492, 474);
             this.Tab_Main_Log.TabIndex = 0;
             this.Tab_Main_Log.Text = "ログ";
             this.Tab_Main_Log.UseVisualStyleBackColor = true;
@@ -151,6 +172,195 @@
             this.LogTextBox.Size = new System.Drawing.Size(492, 469);
             this.LogTextBox.TabIndex = 0;
             // 
+            // Tab_Main_Tool
+            // 
+            this.Tab_Main_Tool.Controls.Add(this.GroupBox_ConfigMarge);
+            this.Tab_Main_Tool.Controls.Add(this.GroupBox_IntConv);
+            this.Tab_Main_Tool.Location = new System.Drawing.Point(4, 27);
+            this.Tab_Main_Tool.Name = "Tab_Main_Tool";
+            this.Tab_Main_Tool.Padding = new System.Windows.Forms.Padding(3);
+            this.Tab_Main_Tool.Size = new System.Drawing.Size(492, 469);
+            this.Tab_Main_Tool.TabIndex = 3;
+            this.Tab_Main_Tool.Text = "ツール";
+            this.Tab_Main_Tool.UseVisualStyleBackColor = true;
+            // 
+            // GroupBox_IntConv
+            // 
+            this.GroupBox_IntConv.Controls.Add(this.IntConv_Conv4);
+            this.GroupBox_IntConv.Controls.Add(this.IntConv_Conv2);
+            this.GroupBox_IntConv.Controls.Add(this.IntConv_Link);
+            this.GroupBox_IntConv.Controls.Add(this.IntConv_Text);
+            this.GroupBox_IntConv.Controls.Add(this.IntConv_Conv3);
+            this.GroupBox_IntConv.Controls.Add(this.IntConv_Conv1);
+            this.GroupBox_IntConv.Controls.Add(this.IntConv_NumBox3);
+            this.GroupBox_IntConv.Controls.Add(this.IntConv_NumBox2);
+            this.GroupBox_IntConv.Controls.Add(this.IntConv_NumBox1);
+            this.GroupBox_IntConv.Controls.Add(this.IntConv_ComBox3);
+            this.GroupBox_IntConv.Controls.Add(this.IntConv_ComBox2);
+            this.GroupBox_IntConv.Controls.Add(this.IntConv_ComBox1);
+            this.GroupBox_IntConv.Location = new System.Drawing.Point(8, 6);
+            this.GroupBox_IntConv.Name = "GroupBox_IntConv";
+            this.GroupBox_IntConv.Size = new System.Drawing.Size(478, 126);
+            this.GroupBox_IntConv.TabIndex = 0;
+            this.GroupBox_IntConv.TabStop = false;
+            this.GroupBox_IntConv.Text = "震度変換ツール";
+            // 
+            // IntConv_Conv4
+            // 
+            this.IntConv_Conv4.Location = new System.Drawing.Point(318, 56);
+            this.IntConv_Conv4.Name = "IntConv_Conv4";
+            this.IntConv_Conv4.Size = new System.Drawing.Size(25, 25);
+            this.IntConv_Conv4.TabIndex = 13;
+            this.IntConv_Conv4.Text = "→";
+            this.IntConv_Conv4.UseVisualStyleBackColor = true;
+            this.IntConv_Conv4.Click += new System.EventHandler(this.IntConv_Conv4_Click);
+            // 
+            // IntConv_Conv2
+            // 
+            this.IntConv_Conv2.Location = new System.Drawing.Point(160, 56);
+            this.IntConv_Conv2.Name = "IntConv_Conv2";
+            this.IntConv_Conv2.Size = new System.Drawing.Size(25, 25);
+            this.IntConv_Conv2.TabIndex = 12;
+            this.IntConv_Conv2.Text = "→";
+            this.IntConv_Conv2.UseVisualStyleBackColor = true;
+            this.IntConv_Conv2.Click += new System.EventHandler(this.IntConv_Conv2_Click);
+            // 
+            // IntConv_Link
+            // 
+            this.IntConv_Link.AutoSize = true;
+            this.IntConv_Link.Location = new System.Drawing.Point(175, 84);
+            this.IntConv_Link.Name = "IntConv_Link";
+            this.IntConv_Link.Size = new System.Drawing.Size(56, 18);
+            this.IntConv_Link.TabIndex = 11;
+            this.IntConv_Link.TabStop = true;
+            this.IntConv_Link.Text = "式の詳細";
+            this.IntConv_Link.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.IntConv_Link_LinkClicked);
+            // 
+            // IntConv_Text
+            // 
+            this.IntConv_Text.AutoSize = true;
+            this.IntConv_Text.Location = new System.Drawing.Point(6, 84);
+            this.IntConv_Text.Name = "IntConv_Text";
+            this.IntConv_Text.Size = new System.Drawing.Size(460, 36);
+            this.IntConv_Text.TabIndex = 10;
+            this.IntConv_Text.Text = "参考程度に利用してください。\r\n最大速度と気象庁震度階級との変換は藤本･翠川(2005)の換算式を利用しています。";
+            // 
+            // IntConv_Conv3
+            // 
+            this.IntConv_Conv3.Location = new System.Drawing.Point(293, 56);
+            this.IntConv_Conv3.Name = "IntConv_Conv3";
+            this.IntConv_Conv3.Size = new System.Drawing.Size(25, 25);
+            this.IntConv_Conv3.TabIndex = 9;
+            this.IntConv_Conv3.Text = "←";
+            this.IntConv_Conv3.UseVisualStyleBackColor = true;
+            this.IntConv_Conv3.Click += new System.EventHandler(this.IntConv_Conv3_Click);
+            // 
+            // IntConv_Conv1
+            // 
+            this.IntConv_Conv1.Location = new System.Drawing.Point(135, 56);
+            this.IntConv_Conv1.Name = "IntConv_Conv1";
+            this.IntConv_Conv1.Size = new System.Drawing.Size(25, 25);
+            this.IntConv_Conv1.TabIndex = 8;
+            this.IntConv_Conv1.Text = "←";
+            this.IntConv_Conv1.UseVisualStyleBackColor = true;
+            this.IntConv_Conv1.Click += new System.EventHandler(this.IntConv_Conv1_Click);
+            // 
+            // IntConv_NumBox3
+            // 
+            this.IntConv_NumBox3.DecimalPlaces = 3;
+            this.IntConv_NumBox3.Location = new System.Drawing.Point(367, 56);
+            this.IntConv_NumBox3.Maximum = new decimal(new int[] {
+            99999,
+            0,
+            0,
+            131072});
+            this.IntConv_NumBox3.Minimum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            -2147352576});
+            this.IntConv_NumBox3.Name = "IntConv_NumBox3";
+            this.IntConv_NumBox3.Size = new System.Drawing.Size(60, 25);
+            this.IntConv_NumBox3.TabIndex = 7;
+            this.IntConv_NumBox3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // IntConv_NumBox2
+            // 
+            this.IntConv_NumBox2.DecimalPlaces = 3;
+            this.IntConv_NumBox2.Location = new System.Drawing.Point(209, 56);
+            this.IntConv_NumBox2.Maximum = new decimal(new int[] {
+            99999,
+            0,
+            0,
+            131072});
+            this.IntConv_NumBox2.Minimum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            -2147352576});
+            this.IntConv_NumBox2.Name = "IntConv_NumBox2";
+            this.IntConv_NumBox2.Size = new System.Drawing.Size(60, 25);
+            this.IntConv_NumBox2.TabIndex = 6;
+            this.IntConv_NumBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // IntConv_NumBox1
+            // 
+            this.IntConv_NumBox1.DecimalPlaces = 3;
+            this.IntConv_NumBox1.Location = new System.Drawing.Point(51, 56);
+            this.IntConv_NumBox1.Maximum = new decimal(new int[] {
+            99999,
+            0,
+            0,
+            131072});
+            this.IntConv_NumBox1.Minimum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            -2147352576});
+            this.IntConv_NumBox1.Name = "IntConv_NumBox1";
+            this.IntConv_NumBox1.Size = new System.Drawing.Size(60, 25);
+            this.IntConv_NumBox1.TabIndex = 5;
+            this.IntConv_NumBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // IntConv_ComBox3
+            // 
+            this.IntConv_ComBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.IntConv_ComBox3.FormattingEnabled = true;
+            this.IntConv_ComBox3.Items.AddRange(new object[] {
+            "改正メルカリ震度階級",
+            "最大速度(cm/s)",
+            "気象庁震度階級"});
+            this.IntConv_ComBox3.Location = new System.Drawing.Point(322, 24);
+            this.IntConv_ComBox3.Name = "IntConv_ComBox3";
+            this.IntConv_ComBox3.Size = new System.Drawing.Size(150, 26);
+            this.IntConv_ComBox3.TabIndex = 2;
+            // 
+            // IntConv_ComBox2
+            // 
+            this.IntConv_ComBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.IntConv_ComBox2.FormattingEnabled = true;
+            this.IntConv_ComBox2.Items.AddRange(new object[] {
+            "改正メルカリ震度階級",
+            "最大速度(cm/s)",
+            "気象庁震度階級"});
+            this.IntConv_ComBox2.Location = new System.Drawing.Point(164, 24);
+            this.IntConv_ComBox2.Name = "IntConv_ComBox2";
+            this.IntConv_ComBox2.Size = new System.Drawing.Size(150, 26);
+            this.IntConv_ComBox2.TabIndex = 1;
+            // 
+            // IntConv_ComBox1
+            // 
+            this.IntConv_ComBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.IntConv_ComBox1.FormattingEnabled = true;
+            this.IntConv_ComBox1.Items.AddRange(new object[] {
+            "改正メルカリ震度階級",
+            "最大速度(cm/s)",
+            "気象庁震度階級"});
+            this.IntConv_ComBox1.Location = new System.Drawing.Point(6, 24);
+            this.IntConv_ComBox1.Name = "IntConv_ComBox1";
+            this.IntConv_ComBox1.Size = new System.Drawing.Size(150, 26);
+            this.IntConv_ComBox1.TabIndex = 0;
+            // 
             // Tab_Main_Setting
             // 
             this.Tab_Main_Setting.Controls.Add(this.Config_Reset);
@@ -158,9 +368,9 @@
             this.Tab_Main_Setting.Controls.Add(this.ConfigWebLink);
             this.Tab_Main_Setting.Controls.Add(this.ConsigInfoText);
             this.Tab_Main_Setting.Controls.Add(this.TabCtrl_Setting);
-            this.Tab_Main_Setting.Location = new System.Drawing.Point(4, 27);
+            this.Tab_Main_Setting.Location = new System.Drawing.Point(4, 22);
             this.Tab_Main_Setting.Name = "Tab_Main_Setting";
-            this.Tab_Main_Setting.Size = new System.Drawing.Size(492, 469);
+            this.Tab_Main_Setting.Size = new System.Drawing.Size(492, 474);
             this.Tab_Main_Setting.TabIndex = 2;
             this.Tab_Main_Setting.Text = "設定";
             this.Tab_Main_Setting.UseVisualStyleBackColor = true;
@@ -261,10 +471,10 @@
             this.Tab_Setting_View.Controls.Add(this.ProG_view_Delete);
             this.Tab_Setting_View.Controls.Add(this.ProG_view_Add);
             this.Tab_Setting_View.Controls.Add(this.ProG_view);
-            this.Tab_Setting_View.Location = new System.Drawing.Point(4, 27);
+            this.Tab_Setting_View.Location = new System.Drawing.Point(4, 22);
             this.Tab_Setting_View.Name = "Tab_Setting_View";
             this.Tab_Setting_View.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_Setting_View.Size = new System.Drawing.Size(484, 338);
+            this.Tab_Setting_View.Size = new System.Drawing.Size(484, 343);
             this.Tab_Setting_View.TabIndex = 2;
             this.Tab_Setting_View.Text = "表示";
             this.Tab_Setting_View.UseVisualStyleBackColor = true;
@@ -387,7 +597,7 @@
             this.ProG_view.Location = new System.Drawing.Point(3, 3);
             this.ProG_view.Name = "ProG_view";
             this.ProG_view.PropertySort = System.Windows.Forms.PropertySort.Categorized;
-            this.ProG_view.Size = new System.Drawing.Size(478, 332);
+            this.ProG_view.Size = new System.Drawing.Size(478, 337);
             this.ProG_view.TabIndex = 1;
             // 
             // Tab_Setting_Other
@@ -419,6 +629,15 @@
             this.LogClearTimer.Interval = 1000;
             this.LogClearTimer.Tick += new System.EventHandler(this.LogClearTimer_Tick);
             // 
+            // GroupBox_ConfigMarge
+            // 
+            this.GroupBox_ConfigMarge.Location = new System.Drawing.Point(8, 138);
+            this.GroupBox_ConfigMarge.Name = "GroupBox_ConfigMarge";
+            this.GroupBox_ConfigMarge.Size = new System.Drawing.Size(478, 100);
+            this.GroupBox_ConfigMarge.TabIndex = 1;
+            this.GroupBox_ConfigMarge.TabStop = false;
+            this.GroupBox_ConfigMarge.Text = "設定結合ツール";
+            // 
             // CtrlForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -437,6 +656,12 @@
             this.Tab_Main_Info.PerformLayout();
             this.Tab_Main_Log.ResumeLayout(false);
             this.Tab_Main_Log.PerformLayout();
+            this.Tab_Main_Tool.ResumeLayout(false);
+            this.GroupBox_IntConv.ResumeLayout(false);
+            this.GroupBox_IntConv.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.IntConv_NumBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.IntConv_NumBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.IntConv_NumBox1)).EndInit();
             this.Tab_Main_Setting.ResumeLayout(false);
             this.Tab_Main_Setting.PerformLayout();
             this.TabCtrl_Setting.ResumeLayout(false);
@@ -483,5 +708,20 @@
         private System.Windows.Forms.Label InfoText0;
         private System.Windows.Forms.Label InfoText1;
         private System.Windows.Forms.LinkLabel InfoPageLink;
+        private System.Windows.Forms.TabPage Tab_Main_Tool;
+        private System.Windows.Forms.GroupBox GroupBox_IntConv;
+        private System.Windows.Forms.ComboBox IntConv_ComBox1;
+        private System.Windows.Forms.ComboBox IntConv_ComBox3;
+        private System.Windows.Forms.ComboBox IntConv_ComBox2;
+        private System.Windows.Forms.NumericUpDown IntConv_NumBox3;
+        private System.Windows.Forms.NumericUpDown IntConv_NumBox2;
+        private System.Windows.Forms.NumericUpDown IntConv_NumBox1;
+        private System.Windows.Forms.Button IntConv_Conv3;
+        private System.Windows.Forms.Button IntConv_Conv1;
+        private System.Windows.Forms.Label IntConv_Text;
+        private System.Windows.Forms.LinkLabel IntConv_Link;
+        private System.Windows.Forms.Button IntConv_Conv4;
+        private System.Windows.Forms.Button IntConv_Conv2;
+        private System.Windows.Forms.GroupBox GroupBox_ConfigMarge;
     }
 }

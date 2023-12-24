@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml;
 using static LL2FERC.LL2FERC;
 using static WorldQuakeViewer.CtrlForm;
@@ -462,6 +463,116 @@ namespace WorldQuakeViewer
                     }
                     return config.Views[viewIndex].Colors.Main_Latest_Back_Color;
             }
+        }
+
+        /// <summary>
+        /// 震度を変換します。
+        /// </summary>
+        /// <remarks>値の名前: 0:改正メルカリ震度階級 1:最大速度(cm/s) 2:気象庁震度階級</remarks>
+        /// <param name="fromValue">元の値</param>
+        /// <param name="beforeIndex">元の値の名前</param>
+        /// <param name="afterIndex">変換後の値の名前</param>
+        /// <returns>変換後の値(エラー時はメッセージ表示してNaNを返す)</returns>
+        public static double IntConvert(double fromValue, int beforeIndex, int afterIndex)
+        {
+            try
+            {
+                if (beforeIndex == afterIndex)
+                    return fromValue;
+                switch (beforeIndex)
+                {
+                    case 0:
+                        switch (afterIndex)
+                        {
+                            case 1:
+                                return MMI2PGV(fromValue);
+                            case 2:
+                                return PGV2JI(MMI2PGV(fromValue));
+                            default:
+                                throw new ArgumentException("変換名称が不正です。", nameof(afterIndex));
+                        }
+                    case 1:
+                        switch (afterIndex)
+                        {
+                            case 0:
+                                return PGV2MMI(fromValue);
+                            case 2:
+                                return PGV2JI(fromValue);
+                            default:
+                                throw new ArgumentException("変換名称が不正です。", nameof(afterIndex));
+                        }
+                    case 2:
+                        switch (afterIndex)
+                        {
+                            case 0:
+                                return PGV2MMI(JI2PGV(fromValue));
+                            case 1:
+                                return JI2PGV(fromValue);
+                            default:
+                                throw new ArgumentException("変換名称が不正です。", nameof(afterIndex));
+                        }
+                    default:
+                        throw new ArgumentException("変換名称が不正です。", nameof(beforeIndex));
+                }
+            }
+            catch (Exception ex)
+            {
+                ExeLog($"[IntConvert]エラー:{ex.Message}", true);
+                MessageBox.Show(topMost,"変換に失敗しました。値を確認してください。内容:" + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return double.NaN;
+        }
+
+        /// <summary>
+        /// 改正メルカリ震度階級から最大速度を計算します。
+        /// </summary>
+        /// <param name="mmi">改正メルカリ震度階級</param>
+        /// <returns>計算された最大速度</returns>
+        public static double MMI2PGV(double mmi)
+        {
+            if (mmi < 4.4)
+                return Math.Pow(10, (mmi - 3.5) / 1.5);
+            else
+                return Math.Pow(10, (mmi - 2.5) / 3.155);
+        }
+
+        /// <summary>
+        /// 最大速度から気象庁震度階級を計算します。
+        /// </summary>
+        /// <param name="pgv">最大速度</param>
+        /// <returns>計算された気象庁震度階級</returns>
+        public static double PGV2JI(double pgv)
+        {
+            if (pgv < 7)
+                return 2.165 + 2.262 * Math.Log10(pgv);
+            else
+                return 2.002 + 2.603 * Math.Log10(pgv) - 0.213 * Math.Pow(Math.Log10(pgv), 2);
+        }
+
+        /// <summary>
+        /// 最大速度から改正メルカリ震度階級を計算します。
+        /// </summary>
+        /// <param name="pgv">最大速度</param>
+        /// <returns>計算された改正メルカリ震度階級</returns>
+        public static double PGV2MMI(double pgv)
+        {
+            if (pgv < 4)
+                return 3.5 + 1.5 * Math.Log10(pgv);
+            else
+                return 2.5 + 3.155 * Math.Log10(pgv);
+        }
+
+        /// <summary>
+        /// 気象庁震度階級から最大速度を計算します。
+        /// </summary>
+        /// <param name="ji">気象庁震度階級</param>
+        /// <returns>計算された最大速度</returns>
+        public static double JI2PGV(double ji)
+        {
+            if (ji < 4)
+                return Math.Pow(10, (ji - 2.165) / 2.262);
+            else//Microsoft math solverで計算
+                return Math.Pow(10, -2d * Math.Sqrt(-250d * ji / 213d + 8481313d / 725904d) + 47d / 426d + 6d);
         }
     }
 }

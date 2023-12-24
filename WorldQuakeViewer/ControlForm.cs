@@ -15,6 +15,7 @@ using WorldQuakeViewer.Properties;
 using static WorldQuakeViewer.DataPro;
 using static WorldQuakeViewer.Util_Class;
 using static WorldQuakeViewer.Util_Func;
+using static WorldQuakeViewer.Util_Conv;
 
 namespace WorldQuakeViewer
 {
@@ -111,6 +112,10 @@ namespace WorldQuakeViewer
             colorChange[0].OldColor = Color.Black;
             colorChange[0].NewColor = Color.Transparent;
             ia.SetRemapTable(colorChange);
+
+            IntConv_ComBox1.SelectedIndex = 0;
+            IntConv_ComBox2.SelectedIndex = 1;
+            IntConv_ComBox3.SelectedIndex = 2;
 
             int c = config_display.Views.Count();
             if (c == 1)
@@ -323,6 +328,75 @@ namespace WorldQuakeViewer
         private void InfoPageLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("https://ichihai1415.github.io/programs/wqv/");
+        }
+
+        private void IntConv_Conv1_Click(object sender, EventArgs e)//2=>1
+        {
+            try
+            {
+                double afterValue = IntConvert((double)IntConv_NumBox2.Value, IntConv_ComBox2.SelectedIndex, IntConv_ComBox1.SelectedIndex);
+                if (afterValue == double.NaN)
+                    return;
+                IntConv_NumBox1.Value = (decimal)afterValue;
+            }
+            catch (Exception ex)
+            {
+                ExeLog($"[IntConv_Conv1_Click]エラー:{ex.Message}", true);
+                MessageBox.Show(topMost, "変換に失敗しました。値を確認してください。内容:" + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void IntConv_Conv2_Click(object sender, EventArgs e)//1=>2
+        {
+            try
+            {
+                double afterValue = IntConvert((double)IntConv_NumBox1.Value, IntConv_ComBox1.SelectedIndex, IntConv_ComBox2.SelectedIndex);
+                if (afterValue == double.NaN)
+                    return;
+                IntConv_NumBox2.Value = (decimal)afterValue;
+            }
+            catch (Exception ex)
+            {
+                ExeLog($"[IntConv_Conv2_Click]エラー:{ex.Message}", true);
+                MessageBox.Show(topMost, "変換に失敗しました。値を確認してください。内容:" + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void IntConv_Conv3_Click(object sender, EventArgs e)//3=>2
+        {
+            try
+            {
+                double afterValue = IntConvert((double)IntConv_NumBox3.Value, IntConv_ComBox3.SelectedIndex, IntConv_ComBox2.SelectedIndex);
+                if (afterValue == double.NaN)
+                    return;
+                IntConv_NumBox2.Value = (decimal)afterValue;
+            }
+            catch (Exception ex)
+            {
+                ExeLog($"[IntConv_Conv3_Click]エラー:{ex.Message}", true);
+                MessageBox.Show(topMost, "変換に失敗しました。値を確認してください。内容:" + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void IntConv_Conv4_Click(object sender, EventArgs e)//2=>3
+        {
+            try
+            {
+                double afterValue = IntConvert((double)IntConv_NumBox2.Value, IntConv_ComBox2.SelectedIndex, IntConv_ComBox3.SelectedIndex);
+                if (afterValue == double.NaN)
+                    return;
+                IntConv_NumBox3.Value = (decimal)afterValue;
+            }
+            catch (Exception ex)
+            {
+                ExeLog($"[IntConv_Conv4_Click]エラー:{ex.Message}", true);
+                MessageBox.Show(topMost, "変換に失敗しました。値を確認してください。内容:" + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void IntConv_Link_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://qiita.com/Ichihai1415/items/2e14fc2356ec8e140291");
         }
     }
 }
