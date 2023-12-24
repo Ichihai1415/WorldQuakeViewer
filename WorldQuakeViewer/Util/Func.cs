@@ -98,13 +98,13 @@ namespace WorldQuakeViewer
         /// <remarks>catchしません</remarks>
         /// <param name="oldID"></param>
         /// <param name="newID"></param>
-        public static void USGSgeojsonIDCorrect(string oldID, string newID)
+        public static void USGSgeojsonIDMerge(string oldID, string newID)
         {
             data_USGS[newID] = data_USGS[oldID];
             data_USGS.Remove(oldID);
             data_All[newID] = data_USGS[oldID];
             data_All.Remove(oldID);
-            ExeLog($"[USGSgeojsonIDCorrect]IDを統合しました({oldID}=>{newID})", true);
+            ExeLog($"[USGSgeojsonIDMerge]IDを統合しました({oldID}=>{newID})");
         }
 
         /// <summary>

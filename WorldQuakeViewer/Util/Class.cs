@@ -507,7 +507,7 @@ namespace WorldQuakeViewer
         /// <summary>
         /// 設定結合ツールのSelect1がDataのときの選択肢
         /// </summary>
-        public enum ConfigMarge_Select3_Data
+        public enum ConfigMerge_Select3_Data
         {
             /// <summary>
             /// すべて
@@ -542,7 +542,7 @@ namespace WorldQuakeViewer
         /// <summary>
         /// 設定結合ツールのSelect1がViewのときの選択肢
         /// </summary>
-        public enum ConfigMarge_Select3_View
+        public enum ConfigMerge_Select3_View
         {
             /// <summary>
             /// すべて
@@ -557,7 +557,7 @@ namespace WorldQuakeViewer
         /// <summary>
         /// 設定結合ツールのSelect1がOtherのときの選択肢
         /// </summary>
-        public enum ConfigMarge_Select3_Other
+        public enum ConfigMerge_Select3_Other
         {
             /// <summary>
             /// すべて

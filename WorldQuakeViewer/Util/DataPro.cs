@@ -232,7 +232,7 @@ namespace WorldQuakeViewer
                             if (id == id_n)//同じならそのまま
                                 continue;
                             if (data_tmp.ContainsKey(id))//すでにある(統合が必要)
-                                USGSgeojsonIDCorrect(id, id_n);
+                                USGSgeojsonIDMerge(id, id_n);
                         }
                     }
                     Data data = GeoJSON2Data(info, dataAuthor);

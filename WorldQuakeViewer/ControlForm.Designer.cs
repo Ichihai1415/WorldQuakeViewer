@@ -38,15 +38,15 @@
             this.Tab_Main_Log = new System.Windows.Forms.TabPage();
             this.LogTextBox = new System.Windows.Forms.TextBox();
             this.Tab_Main_Tool = new System.Windows.Forms.TabPage();
-            this.GroupBox_ConfigMarge = new System.Windows.Forms.GroupBox();
-            this.ConfigMarge_Write = new System.Windows.Forms.Button();
-            this.ConfigMarge_Read = new System.Windows.Forms.Button();
-            this.ConfigMarge_Select3 = new System.Windows.Forms.ComboBox();
-            this.ConfigMarge_Select2 = new System.Windows.Forms.NumericUpDown();
-            this.ConfigMarge_Text2 = new System.Windows.Forms.Label();
-            this.ConfigMarge_PathBox = new System.Windows.Forms.TextBox();
-            this.ConfigMarge_Select1 = new System.Windows.Forms.ComboBox();
-            this.ConfigMarge_Text = new System.Windows.Forms.Label();
+            this.GroupBox_ConfigMerge = new System.Windows.Forms.GroupBox();
+            this.ConfigMerge_Write = new System.Windows.Forms.Button();
+            this.ConfigMerge_Read = new System.Windows.Forms.Button();
+            this.ConfigMerge_Select3 = new System.Windows.Forms.ComboBox();
+            this.ConfigMerge_Select2 = new System.Windows.Forms.NumericUpDown();
+            this.ConfigMerge_Text2 = new System.Windows.Forms.Label();
+            this.ConfigMerge_PathBox = new System.Windows.Forms.TextBox();
+            this.ConfigMerge_Select1 = new System.Windows.Forms.ComboBox();
+            this.ConfigMerge_Text = new System.Windows.Forms.Label();
             this.GroupBox_IntConv = new System.Windows.Forms.GroupBox();
             this.IntConv_Conv4 = new System.Windows.Forms.Button();
             this.IntConv_Conv2 = new System.Windows.Forms.Button();
@@ -87,8 +87,8 @@
             this.Tab_Main_Info.SuspendLayout();
             this.Tab_Main_Log.SuspendLayout();
             this.Tab_Main_Tool.SuspendLayout();
-            this.GroupBox_ConfigMarge.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ConfigMarge_Select2)).BeginInit();
+            this.GroupBox_ConfigMerge.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ConfigMerge_Select2)).BeginInit();
             this.GroupBox_IntConv.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.IntConv_NumBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.IntConv_NumBox2)).BeginInit();
@@ -184,7 +184,7 @@
             // 
             // Tab_Main_Tool
             // 
-            this.Tab_Main_Tool.Controls.Add(this.GroupBox_ConfigMarge);
+            this.Tab_Main_Tool.Controls.Add(this.GroupBox_ConfigMerge);
             this.Tab_Main_Tool.Controls.Add(this.GroupBox_IntConv);
             this.Tab_Main_Tool.Location = new System.Drawing.Point(4, 27);
             this.Tab_Main_Tool.Name = "Tab_Main_Tool";
@@ -194,103 +194,103 @@
             this.Tab_Main_Tool.Text = "ツール";
             this.Tab_Main_Tool.UseVisualStyleBackColor = true;
             // 
-            // GroupBox_ConfigMarge
+            // GroupBox_ConfigMerge
             // 
-            this.GroupBox_ConfigMarge.Controls.Add(this.ConfigMarge_Write);
-            this.GroupBox_ConfigMarge.Controls.Add(this.ConfigMarge_Read);
-            this.GroupBox_ConfigMarge.Controls.Add(this.ConfigMarge_Select3);
-            this.GroupBox_ConfigMarge.Controls.Add(this.ConfigMarge_Select2);
-            this.GroupBox_ConfigMarge.Controls.Add(this.ConfigMarge_Text2);
-            this.GroupBox_ConfigMarge.Controls.Add(this.ConfigMarge_PathBox);
-            this.GroupBox_ConfigMarge.Controls.Add(this.ConfigMarge_Select1);
-            this.GroupBox_ConfigMarge.Controls.Add(this.ConfigMarge_Text);
-            this.GroupBox_ConfigMarge.Location = new System.Drawing.Point(8, 138);
-            this.GroupBox_ConfigMarge.Name = "GroupBox_ConfigMarge";
-            this.GroupBox_ConfigMarge.Size = new System.Drawing.Size(478, 122);
-            this.GroupBox_ConfigMarge.TabIndex = 1;
-            this.GroupBox_ConfigMarge.TabStop = false;
-            this.GroupBox_ConfigMarge.Text = "設定結合ツール";
+            this.GroupBox_ConfigMerge.Controls.Add(this.ConfigMerge_Write);
+            this.GroupBox_ConfigMerge.Controls.Add(this.ConfigMerge_Read);
+            this.GroupBox_ConfigMerge.Controls.Add(this.ConfigMerge_Select3);
+            this.GroupBox_ConfigMerge.Controls.Add(this.ConfigMerge_Select2);
+            this.GroupBox_ConfigMerge.Controls.Add(this.ConfigMerge_Text2);
+            this.GroupBox_ConfigMerge.Controls.Add(this.ConfigMerge_PathBox);
+            this.GroupBox_ConfigMerge.Controls.Add(this.ConfigMerge_Select1);
+            this.GroupBox_ConfigMerge.Controls.Add(this.ConfigMerge_Text);
+            this.GroupBox_ConfigMerge.Location = new System.Drawing.Point(8, 138);
+            this.GroupBox_ConfigMerge.Name = "GroupBox_ConfigMerge";
+            this.GroupBox_ConfigMerge.Size = new System.Drawing.Size(478, 122);
+            this.GroupBox_ConfigMerge.TabIndex = 1;
+            this.GroupBox_ConfigMerge.TabStop = false;
+            this.GroupBox_ConfigMerge.Text = "設定結合ツール";
             // 
-            // ConfigMarge_Write
+            // ConfigMerge_Write
             // 
-            this.ConfigMarge_Write.Location = new System.Drawing.Point(408, 90);
-            this.ConfigMarge_Write.Name = "ConfigMarge_Write";
-            this.ConfigMarge_Write.Size = new System.Drawing.Size(64, 23);
-            this.ConfigMarge_Write.TabIndex = 7;
-            this.ConfigMarge_Write.Text = "書き出す";
-            this.ConfigMarge_Write.UseVisualStyleBackColor = true;
-            this.ConfigMarge_Write.Click += new System.EventHandler(this.ConfigMarge_Write_Click);
+            this.ConfigMerge_Write.Location = new System.Drawing.Point(408, 90);
+            this.ConfigMerge_Write.Name = "ConfigMerge_Write";
+            this.ConfigMerge_Write.Size = new System.Drawing.Size(64, 23);
+            this.ConfigMerge_Write.TabIndex = 7;
+            this.ConfigMerge_Write.Text = "書き出す";
+            this.ConfigMerge_Write.UseVisualStyleBackColor = true;
+            this.ConfigMerge_Write.Click += new System.EventHandler(this.ConfigMerge_Write_Click);
             // 
-            // ConfigMarge_Read
+            // ConfigMerge_Read
             // 
-            this.ConfigMarge_Read.Location = new System.Drawing.Point(344, 90);
-            this.ConfigMarge_Read.Name = "ConfigMarge_Read";
-            this.ConfigMarge_Read.Size = new System.Drawing.Size(64, 23);
-            this.ConfigMarge_Read.TabIndex = 6;
-            this.ConfigMarge_Read.Text = "読み込む";
-            this.ConfigMarge_Read.UseVisualStyleBackColor = true;
-            this.ConfigMarge_Read.Click += new System.EventHandler(this.ConfigMarge_Read_Click);
+            this.ConfigMerge_Read.Location = new System.Drawing.Point(344, 90);
+            this.ConfigMerge_Read.Name = "ConfigMerge_Read";
+            this.ConfigMerge_Read.Size = new System.Drawing.Size(64, 23);
+            this.ConfigMerge_Read.TabIndex = 6;
+            this.ConfigMerge_Read.Text = "読み込む";
+            this.ConfigMerge_Read.UseVisualStyleBackColor = true;
+            this.ConfigMerge_Read.Click += new System.EventHandler(this.ConfigMerge_Read_Click);
             // 
-            // ConfigMarge_Select3
+            // ConfigMerge_Select3
             // 
-            this.ConfigMarge_Select3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ConfigMarge_Select3.FormattingEnabled = true;
-            this.ConfigMarge_Select3.Location = new System.Drawing.Point(158, 89);
-            this.ConfigMarge_Select3.Name = "ConfigMarge_Select3";
-            this.ConfigMarge_Select3.Size = new System.Drawing.Size(100, 26);
-            this.ConfigMarge_Select3.TabIndex = 5;
+            this.ConfigMerge_Select3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ConfigMerge_Select3.FormattingEnabled = true;
+            this.ConfigMerge_Select3.Location = new System.Drawing.Point(158, 89);
+            this.ConfigMerge_Select3.Name = "ConfigMerge_Select3";
+            this.ConfigMerge_Select3.Size = new System.Drawing.Size(100, 26);
+            this.ConfigMerge_Select3.TabIndex = 5;
             // 
-            // ConfigMarge_Select2
+            // ConfigMerge_Select2
             // 
-            this.ConfigMarge_Select2.Location = new System.Drawing.Point(108, 90);
-            this.ConfigMarge_Select2.Maximum = new decimal(new int[] {
+            this.ConfigMerge_Select2.Location = new System.Drawing.Point(108, 90);
+            this.ConfigMerge_Select2.Maximum = new decimal(new int[] {
             9,
             0,
             0,
             0});
-            this.ConfigMarge_Select2.Name = "ConfigMarge_Select2";
-            this.ConfigMarge_Select2.Size = new System.Drawing.Size(30, 25);
-            this.ConfigMarge_Select2.TabIndex = 4;
+            this.ConfigMerge_Select2.Name = "ConfigMerge_Select2";
+            this.ConfigMerge_Select2.Size = new System.Drawing.Size(30, 25);
+            this.ConfigMerge_Select2.TabIndex = 4;
             // 
-            // ConfigMarge_Text2
+            // ConfigMerge_Text2
             // 
-            this.ConfigMarge_Text2.AutoSize = true;
-            this.ConfigMarge_Text2.Location = new System.Drawing.Point(6, 63);
-            this.ConfigMarge_Text2.Name = "ConfigMarge_Text2";
-            this.ConfigMarge_Text2.Size = new System.Drawing.Size(37, 18);
-            this.ConfigMarge_Text2.TabIndex = 3;
-            this.ConfigMarge_Text2.Text = "パス:";
+            this.ConfigMerge_Text2.AutoSize = true;
+            this.ConfigMerge_Text2.Location = new System.Drawing.Point(6, 63);
+            this.ConfigMerge_Text2.Name = "ConfigMerge_Text2";
+            this.ConfigMerge_Text2.Size = new System.Drawing.Size(37, 18);
+            this.ConfigMerge_Text2.TabIndex = 3;
+            this.ConfigMerge_Text2.Text = "パス:";
             // 
-            // ConfigMarge_PathBox
+            // ConfigMerge_PathBox
             // 
-            this.ConfigMarge_PathBox.Location = new System.Drawing.Point(42, 60);
-            this.ConfigMarge_PathBox.Name = "ConfigMarge_PathBox";
-            this.ConfigMarge_PathBox.Size = new System.Drawing.Size(430, 25);
-            this.ConfigMarge_PathBox.TabIndex = 2;
+            this.ConfigMerge_PathBox.Location = new System.Drawing.Point(42, 60);
+            this.ConfigMerge_PathBox.Name = "ConfigMerge_PathBox";
+            this.ConfigMerge_PathBox.Size = new System.Drawing.Size(430, 25);
+            this.ConfigMerge_PathBox.TabIndex = 2;
             // 
-            // ConfigMarge_Select1
+            // ConfigMerge_Select1
             // 
-            this.ConfigMarge_Select1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ConfigMarge_Select1.FormattingEnabled = true;
-            this.ConfigMarge_Select1.Items.AddRange(new object[] {
+            this.ConfigMerge_Select1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ConfigMerge_Select1.FormattingEnabled = true;
+            this.ConfigMerge_Select1.Items.AddRange(new object[] {
             "Data",
             "View",
             "Other"});
-            this.ConfigMarge_Select1.Location = new System.Drawing.Point(7, 89);
-            this.ConfigMarge_Select1.Name = "ConfigMarge_Select1";
-            this.ConfigMarge_Select1.Size = new System.Drawing.Size(100, 26);
-            this.ConfigMarge_Select1.TabIndex = 1;
-            this.ConfigMarge_Select1.SelectionChangeCommitted += new System.EventHandler(this.ConfigMarge_Select1_SelectionChangeCommitted);
+            this.ConfigMerge_Select1.Location = new System.Drawing.Point(7, 89);
+            this.ConfigMerge_Select1.Name = "ConfigMerge_Select1";
+            this.ConfigMerge_Select1.Size = new System.Drawing.Size(100, 26);
+            this.ConfigMerge_Select1.TabIndex = 1;
+            this.ConfigMerge_Select1.SelectionChangeCommitted += new System.EventHandler(this.ConfigMerge_Select1_SelectionChangeCommitted);
             // 
-            // ConfigMarge_Text
+            // ConfigMerge_Text
             // 
-            this.ConfigMarge_Text.AutoSize = true;
-            this.ConfigMarge_Text.Location = new System.Drawing.Point(6, 21);
-            this.ConfigMarge_Text.Name = "ConfigMarge_Text";
-            this.ConfigMarge_Text.Size = new System.Drawing.Size(332, 90);
-            this.ConfigMarge_Text.TabIndex = 0;
-            this.ConfigMarge_Text.Text = "部分的な設定のファイルの読み込みや書き出しができます。\r\n設定例を設定詳細ページで公開しています。\r\n\r\n\r\n                          " +
-    "       の                           を";
+            this.ConfigMerge_Text.AutoSize = true;
+            this.ConfigMerge_Text.Location = new System.Drawing.Point(6, 21);
+            this.ConfigMerge_Text.Name = "ConfigMerge_Text";
+            this.ConfigMerge_Text.Size = new System.Drawing.Size(464, 90);
+            this.ConfigMerge_Text.TabIndex = 0;
+            this.ConfigMerge_Text.Text = "部分的な設定のファイルの読み込みや書き出しができます。\r\n自動で上書きされるので注意してください。設定例を詳細ページで公開しています。\r\n\r\n\r\n        " +
+    "                         の                           を";
             // 
             // GroupBox_IntConv
             // 
@@ -756,9 +756,9 @@
             this.Tab_Main_Log.ResumeLayout(false);
             this.Tab_Main_Log.PerformLayout();
             this.Tab_Main_Tool.ResumeLayout(false);
-            this.GroupBox_ConfigMarge.ResumeLayout(false);
-            this.GroupBox_ConfigMarge.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ConfigMarge_Select2)).EndInit();
+            this.GroupBox_ConfigMerge.ResumeLayout(false);
+            this.GroupBox_ConfigMerge.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ConfigMerge_Select2)).EndInit();
             this.GroupBox_IntConv.ResumeLayout(false);
             this.GroupBox_IntConv.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.IntConv_NumBox3)).EndInit();
@@ -824,14 +824,14 @@
         private System.Windows.Forms.LinkLabel IntConv_Link;
         private System.Windows.Forms.Button IntConv_Conv4;
         private System.Windows.Forms.Button IntConv_Conv2;
-        private System.Windows.Forms.GroupBox GroupBox_ConfigMarge;
-        private System.Windows.Forms.Label ConfigMarge_Text;
-        private System.Windows.Forms.ComboBox ConfigMarge_Select1;
-        private System.Windows.Forms.NumericUpDown ConfigMarge_Select2;
-        private System.Windows.Forms.Label ConfigMarge_Text2;
-        private System.Windows.Forms.TextBox ConfigMarge_PathBox;
-        private System.Windows.Forms.ComboBox ConfigMarge_Select3;
-        private System.Windows.Forms.Button ConfigMarge_Write;
-        private System.Windows.Forms.Button ConfigMarge_Read;
+        private System.Windows.Forms.GroupBox GroupBox_ConfigMerge;
+        private System.Windows.Forms.Label ConfigMerge_Text;
+        private System.Windows.Forms.ComboBox ConfigMerge_Select1;
+        private System.Windows.Forms.NumericUpDown ConfigMerge_Select2;
+        private System.Windows.Forms.Label ConfigMerge_Text2;
+        private System.Windows.Forms.TextBox ConfigMerge_PathBox;
+        private System.Windows.Forms.ComboBox ConfigMerge_Select3;
+        private System.Windows.Forms.Button ConfigMerge_Write;
+        private System.Windows.Forms.Button ConfigMerge_Read;
     }
 }

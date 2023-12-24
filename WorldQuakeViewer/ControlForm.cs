@@ -399,33 +399,113 @@ namespace WorldQuakeViewer
             Process.Start("https://qiita.com/Ichihai1415/items/2e14fc2356ec8e140291");
         }
 
-        private void ConfigMarge_Select1_SelectionChangeCommitted(object sender, EventArgs e)
+        private void ConfigMerge_Select1_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            ConfigMarge_Select3.DataSource = null;
-            ConfigMarge_Select3.Items.Clear();
-            ConfigMarge_Select2.Value = 0;
-            ConfigMarge_Select2.Enabled = true;
-            switch (ConfigMarge_Select1.SelectedIndex)
+            ConfigMerge_Select3.DataSource = null;
+            ConfigMerge_Select3.Items.Clear();
+            ConfigMerge_Select2.Value = 0;
+            ConfigMerge_Select2.Enabled = true;
+            switch (ConfigMerge_Select1.SelectedIndex)
             {
                 case 0://処理
-                    ConfigMarge_Select3.DataSource = Enum.GetValues(typeof(ConfigMarge_Select3_Data));
+                    ConfigMerge_Select3.DataSource = Enum.GetValues(typeof(ConfigMerge_Select3_Data));
                     break;
                 case 1://表示
-                    ConfigMarge_Select3.DataSource = Enum.GetValues(typeof(ConfigMarge_Select3_View));
+                    ConfigMerge_Select3.DataSource = Enum.GetValues(typeof(ConfigMerge_Select3_View));
                     break;
                 case 2://その他
-                    ConfigMarge_Select3.DataSource = Enum.GetValues(typeof(ConfigMarge_Select3_Other));
-                    ConfigMarge_Select2.Enabled = false;
+                    ConfigMerge_Select3.DataSource = Enum.GetValues(typeof(ConfigMerge_Select3_Other));
+                    ConfigMerge_Select2.Enabled = false;
                     break;
             }
         }
 
-        private void ConfigMarge_Read_Click(object sender, EventArgs e)
+        private void ConfigMerge_Read_Click(object sender, EventArgs e)
         {
+            try
+            {
+                ExeLog("[ConfigMerge_Read_Click]読み込み開始");
+                int i = (int)ConfigMerge_Select2.Value;
+                string jsonText_ = File.ReadAllText(ConfigMerge_PathBox.Text);
+                string head_ = jsonText_.Split('\n')[0];
+                string[] head = head_.Split(',');
 
+                string version = head.Where(x => x == "version") == null ? "null" : head.Where(x => x == "version").First().Split(':')[1];
+                string type = head.Where(x => x == "type") == null ? "null" : head.Where(x => x == "type").First().Split(':')[1];
+                ExeLog($"[ConfigMerge_Read_Click]version:{version},type:{type}");
+
+                string jsonText = jsonText_.Split('\n')[1];
+                switch (ConfigMerge_Select1.SelectedIndex)
+                {
+                    case 0:
+                        switch ((ConfigMerge_Select3_Data)ConfigMerge_Select3.SelectedIndex)
+                        {
+                            case ConfigMerge_Select3_Data.All:
+                                config.Datas[i] = JsonConvert.DeserializeObject<Config.Data_>(jsonText);
+                                break;
+                            case ConfigMerge_Select3_Data.Update:
+                                config.Datas[i].Update = JsonConvert.DeserializeObject<Config.Data_.Update_>(jsonText);
+                                break;
+                            case ConfigMerge_Select3_Data.Sound:
+                                config.Datas[i].Sound = JsonConvert.DeserializeObject<Config.Data_.Sound_>(jsonText);
+                                break;
+                            case ConfigMerge_Select3_Data.Bouyomi:
+                                config.Datas[i].Bouyomi = JsonConvert.DeserializeObject<Config.Data_.Bouyomi_>(jsonText);
+                                break;
+                            case ConfigMerge_Select3_Data.Socket:
+                                config.Datas[i].Socket = JsonConvert.DeserializeObject<Config.Data_.Socket_>(jsonText);
+                                break;
+                            case ConfigMerge_Select3_Data.Webhook:
+                                config.Datas[i].Webhook = JsonConvert.DeserializeObject<Config.Data_.Webhook_>(jsonText);
+                                break;
+                            case ConfigMerge_Select3_Data.LogE:
+                                config.Datas[i].LogE = JsonConvert.DeserializeObject<Config.Data_.LogE_>(jsonText);
+                                break;
+                            default:
+                                throw new Exception($"ConfigMerge_Select3.SelectedIndex({ConfigMerge_Select3.SelectedIndex})がConfigMerge_Select3_Dataとして不正です。");
+                        }
+                        break;
+                    case 1:
+                        switch ((ConfigMerge_Select3_View)ConfigMerge_Select3.SelectedIndex)
+                        {
+                            case ConfigMerge_Select3_View.All:
+                                config.Views[i] = JsonConvert.DeserializeObject<Config.View_>(jsonText);
+                                break;
+                            case ConfigMerge_Select3_View.Color:
+                                config.Views[i].Colors = JsonConvert.DeserializeObject<Config.View_.Colors_>(jsonText);
+                                break;
+                            default:
+                                throw new Exception($"ConfigMerge_Select3.SelectedIndex({ConfigMerge_Select3.SelectedIndex})がConfigMerge_Select3_Viewとして不正です。");
+                        }
+                        break;
+                    case 2:
+                        switch ((ConfigMerge_Select3_Other)ConfigMerge_Select3.SelectedIndex)
+                        {
+                            case ConfigMerge_Select3_Other.All:
+                                config.Other = JsonConvert.DeserializeObject<Config.Other_>(jsonText);
+                                break;
+                            case ConfigMerge_Select3_Other.LogN:
+                                config.Other.LogN = JsonConvert.DeserializeObject<Config.Other_.LogN_>(jsonText);
+                                break;
+                            default:
+                                throw new Exception($"ConfigMerge_Select3.SelectedIndex({ConfigMerge_Select3.SelectedIndex})がConfigMerge_Select3_Otherとして不正です。");
+                        }
+                        break;
+                    default:
+                        throw new Exception($"ConfigMerge_Select1.SelectedIndex({ConfigMerge_Select1.SelectedIndex})が不正です。");
+                }
+                ExeLog("[ConfigMerge_Read_Click]読み込み完了");
+                ConfigReload();
+            }
+            catch (Exception ex)
+            {
+                ExeLog($"[ConfigMerge_Read_Click]エラー:{ex.Message}", true);
+                LogSave(LogKind.Error, ex.ToString());
+                MessageBox.Show(topMost, "読み込みに失敗しました。内容:" + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        private void ConfigMarge_Write_Click(object sender, EventArgs e)
+        private void ConfigMerge_Write_Click(object sender, EventArgs e)
         {
 
         }
