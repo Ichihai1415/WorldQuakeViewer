@@ -189,7 +189,7 @@ namespace WorldQuakeViewer
         }
 
         /// <summary>
-        /// 更新時処理
+        /// 更新時処理(音声以外)
         /// </summary>
         /// <remarks>地震ログのみ起動直後も行います。</remarks>
         /// <param name="data">データ</param>
@@ -205,7 +205,6 @@ namespace WorldQuakeViewer
                 int level = Mag2Level(data.Mag);
                 if (noFirst)
                 {
-                    Sound(level, dataAuthor);
                     if (config.Datas[(int)dataAuthor].Bouyomi.Enable)
                         if (data.Mag >= config.Datas[(int)dataAuthor].Bouyomi.LowerMagLimit)
                             Bouyomichan(Data2String(data, FormatPros.Bouyomichan, isNew), dataAuthor);
@@ -228,67 +227,68 @@ namespace WorldQuakeViewer
         }
 
         /// <summary>
-        /// 音声を再生します。
+        /// 音声を再生します。レベルは事前に最大レベルを計算してください。
         /// </summary>
         /// <param name="level">レベル</param>
         /// <param name="dataAuthor">データ元</param>
-        public static void Sound(int level, DataAuthor dataAuthor)
+        public static void Sound_Play(int level, DataAuthor dataAuthor)
         {
-            try
-            {
-                Console.WriteLine("音声処理開始");
-                bool end = false;
-                string path = "";
-                switch (level)
+            if (noFirst)
+                try
                 {
-                    case 1:
-                        end = !config.Datas[(int)dataAuthor].Sound.L1_Enable;
-                        path = config.Datas[(int)dataAuthor].Sound.L1_Path;
-                        break;
-                    case 2:
-                        end = !config.Datas[(int)dataAuthor].Sound.L2_Enable;
-                        path = config.Datas[(int)dataAuthor].Sound.L2_Path;
-                        break;
-                    case 3:
-                        end = !config.Datas[(int)dataAuthor].Sound.L3_Enable;
-                        path = config.Datas[(int)dataAuthor].Sound.L3_Path;
-                        break;
-                    case 4:
-                        end = !config.Datas[(int)dataAuthor].Sound.L4_Enable;
-                        path = config.Datas[(int)dataAuthor].Sound.L4_Path;
-                        break;
-                    case 5:
-                        end = !config.Datas[(int)dataAuthor].Sound.L5_Enable;
-                        path = config.Datas[(int)dataAuthor].Sound.L5_Path;
-                        break;
-                    default:
-                        throw new ArgumentException($"レベル({level})が不正です。", nameof(level));
+                    Console.WriteLine("音声処理開始");
+                    bool end = false;
+                    string path = "";
+                    switch (level)
+                    {
+                        case 0:
+                            return;
+                        case 1:
+                            end = !config.Datas[(int)dataAuthor].Sound.L1_Enable;
+                            path = config.Datas[(int)dataAuthor].Sound.L1_Path;
+                            break;
+                        case 2:
+                            end = !config.Datas[(int)dataAuthor].Sound.L2_Enable;
+                            path = config.Datas[(int)dataAuthor].Sound.L2_Path;
+                            break;
+                        case 3:
+                            end = !config.Datas[(int)dataAuthor].Sound.L3_Enable;
+                            path = config.Datas[(int)dataAuthor].Sound.L3_Path;
+                            break;
+                        case 4:
+                            end = !config.Datas[(int)dataAuthor].Sound.L4_Enable;
+                            path = config.Datas[(int)dataAuthor].Sound.L4_Path;
+                            break;
+                        case 5:
+                            end = !config.Datas[(int)dataAuthor].Sound.L5_Enable;
+                            path = config.Datas[(int)dataAuthor].Sound.L5_Path;
+                            break;
+                        default:
+                            throw new ArgumentException($"レベル({level})が不正です。", nameof(level));
+                    }
+                    if (end)
+                    {
+                        Console.WriteLine("再生対象外です。");
+                        return;
+                    }
+                    if (!File.Exists(path))
+                        throw new FileNotFoundException("ファイルが見つかりませんでした。", path);
+                    ExeLog($"[Sound_Play]音声再生開始({path})");
+                    if (player != null)
+                    {
+                        player.Stop();
+                        player.Dispose();
+                        player = null;
+                    }
+                    player = new SoundPlayer(path);
+                    player.Play();
+                    ExeLog($"[Sound_Play]音声再生成功");
                 }
-                if (end)
+                catch (Exception ex)
                 {
-                    Console.WriteLine("再生対象外です。");
-                    return;
+                    ExeLog($"[Sound_Play]エラー:{ex.Message}", true);
+                    LogSave(LogKind.Error, ex.ToString());
                 }
-                if (!File.Exists(path))
-                {
-                    throw new FileNotFoundException("ファイルが見つかりませんでした。", path);
-                }
-                ExeLog($"[Sound]音声再生開始({path})");
-                if (player != null)
-                {
-                    player.Stop();
-                    player.Dispose();
-                    player = null;
-                }
-                player = new SoundPlayer(path);
-                player.Play();
-                ExeLog($"[Sound]音声再生成功");
-            }
-            catch (Exception ex)
-            {
-                ExeLog($"[Sound]エラー:{ex.Message}", true);
-                LogSave(LogKind.Error, ex.ToString());
-            }
         }
 
         /// <summary>

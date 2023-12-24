@@ -94,6 +94,7 @@ namespace WorldQuakeViewer
             ExeLog($"[Get_Text][{dataAuthor}]処理中...");
             Config.Data_ config_data = config.Datas[(int)dataAuthor];
             string[] datas = res.Split('\n').Skip(1).ToArray();
+            int maxLevel = 0;
             foreach (string data_ in datas.Reverse())
             {
                 try
@@ -109,16 +110,15 @@ namespace WorldQuakeViewer
                         continue;
                     }
                     if (data_tmp.ContainsKey(data.ID))
-                    {
-                        bool update = UpdateCheck(data_tmp[data.ID], data, dataAuthor);
-                        if (update)
+                        if (UpdateCheck(data_tmp[data.ID], data, dataAuthor))
                         {
                             ExeLog($"[Get_Text][{dataAuthor}]更新を検知");
                             data_tmp[data.ID] = data;
                             data_All[data.ID] = data;
                             UpdtPros(data);
                         }
-                    }
+                        else
+                            continue;
                     else
                     {
                         ExeLog($"[Get_Text][{dataAuthor}]新規を検知");
@@ -126,6 +126,7 @@ namespace WorldQuakeViewer
                         data_All[data.ID] = data;
                         UpdtPros(data, true);
                     }
+                    maxLevel = Math.Max(maxLevel, Mag2Level(data.Mag));
                 }
                 catch (Exception ex)
                 {
@@ -133,6 +134,7 @@ namespace WorldQuakeViewer
                     LogSave(LogKind.Error, ex.ToString());
                 }
             }
+            Sound_Play(maxLevel, dataAuthor);
             ExeLog($"[Get_Text][{dataAuthor}]処理終了");
             return Task.CompletedTask;
         }
@@ -156,6 +158,7 @@ namespace WorldQuakeViewer
             ns.AddNamespace("ee", "http://net.alomax/earlyest/xmlns/ee");
             ns.AddNamespace("anss", "http://anss.org/xmlns/event/0.1");
             ns.AddNamespace("catalog", "http://anss.org/xmlns/catalog/0.1");
+            int maxLevel = 0;
             foreach (XmlNode info in xml.SelectNodes("q:quakeml/qml:eventParameters/qml:event", ns).Cast<XmlNode>().Reverse())
             {
                 try
@@ -176,16 +179,15 @@ namespace WorldQuakeViewer
                         continue;
                     }
                     if (data_tmp.ContainsKey(data.ID))
-                    {
-                        bool update = UpdateCheck(data_tmp[data.ID], data, dataAuthor);
-                        if (update)
+                        if (UpdateCheck(data_tmp[data.ID], data, dataAuthor))
                         {
                             ExeLog($"[Get_QuakeML][{dataAuthor}]更新を検知");
                             data_tmp[data.ID] = data;
                             data_All[data.ID] = data;
                             UpdtPros(data);
                         }
-                    }
+                        else
+                            continue;
                     else
                     {
                         ExeLog($"[Get_QuakeML][{dataAuthor}]新規を検知");
@@ -193,6 +195,7 @@ namespace WorldQuakeViewer
                         data_All[data.ID] = data;
                         UpdtPros(data, true);
                     }
+                    maxLevel = Math.Max(maxLevel, Mag2Level(data.Mag));
                 }
                 catch (Exception ex)
                 {
@@ -200,6 +203,7 @@ namespace WorldQuakeViewer
                     LogSave(LogKind.Error, ex.ToString());
                 }
             }
+            Sound_Play(maxLevel, dataAuthor);
             ExeLog($"[Get_QuakeML][{dataAuthor}]処理終了");
             return;
         }
@@ -215,6 +219,7 @@ namespace WorldQuakeViewer
             ExeLog($"[Get_GeoJSON][{dataAuthor}]処理中...");
             Config.Data_ config_data = config.Datas[(int)dataAuthor];
             JObject json = JObject.Parse(res);
+            int maxLevel = 0;
             foreach (JToken info in json.SelectToken("features").Reverse())
             {
                 try
@@ -237,16 +242,15 @@ namespace WorldQuakeViewer
                         continue;
                     }
                     if (data_tmp.ContainsKey(data.ID))
-                    {
-                        bool update = UpdateCheck(data_tmp[data.ID], data, dataAuthor);
-                        if (update)
+                        if (UpdateCheck(data_tmp[data.ID], data, dataAuthor))
                         {
                             ExeLog($"[Get_GeoJSON][{dataAuthor}]更新を検知");
                             data_tmp[data.ID] = data;
                             data_All[data.ID] = data;
                             UpdtPros(data);
                         }
-                    }
+                        else
+                            continue;
                     else
                     {
                         ExeLog($"[Get_GeoJSON][{dataAuthor}]新規を検知");
@@ -254,6 +258,7 @@ namespace WorldQuakeViewer
                         data_All[data.ID] = data;
                         UpdtPros(data, true);
                     }
+                    maxLevel = Math.Max(maxLevel, Mag2Level(data.Mag));
                 }
                 catch (Exception ex)
                 {
@@ -261,6 +266,7 @@ namespace WorldQuakeViewer
                     LogSave(LogKind.Error, ex.ToString());
                 }
             }
+            Sound_Play(maxLevel, dataAuthor);
             ExeLog($"[Get_GeoJSON][{dataAuthor}]処理終了");
             return Task.CompletedTask;
         }

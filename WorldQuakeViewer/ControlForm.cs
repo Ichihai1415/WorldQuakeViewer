@@ -33,6 +33,7 @@ namespace WorldQuakeViewer
         public static SoundPlayer player = null;
         public static string exeLogs = "";
         public static bool noFirst = false;
+        public static int playLevel = 0;
 
         public static DataView[] dataViews = new DataView[] { null, null, null, null, null, null, null, null, null, null };
 
