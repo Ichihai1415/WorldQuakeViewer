@@ -518,7 +518,7 @@ namespace WorldQuakeViewer
             catch (Exception ex)
             {
                 ExeLog($"[IntConvert]エラー:{ex.Message}", true);
-                MessageBox.Show(topMost,"変換に失敗しました。値を確認してください。内容:" + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(topMost, "変換に失敗しました。値を確認してください。内容:" + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return double.NaN;
         }

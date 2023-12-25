@@ -216,7 +216,7 @@ namespace WorldQuakeViewer
                             Webhook(Data2String(data, FormatPros.Webhook, isNew), dataAuthor);
                 }
                 else
-                    ExeLog("[UpdatePros]初回のため地震ログ書き込みのみ");
+                    ExeLog("[UpdatePros]初回または停止中のため地震ログ書き込みのみ");
                 LogE(data, isNew, level, dataAuthor);
             }
             catch (Exception ex)

@@ -64,7 +64,7 @@
             this.Config_Reset = new System.Windows.Forms.Button();
             this.Config_Save = new System.Windows.Forms.Button();
             this.ConfigWebLink = new System.Windows.Forms.LinkLabel();
-            this.ConsigInfoText = new System.Windows.Forms.Label();
+            this.ConfigInfoText = new System.Windows.Forms.Label();
             this.TabCtrl_Setting = new System.Windows.Forms.TabControl();
             this.Tab_Setting_Pro = new System.Windows.Forms.TabPage();
             this.ProG_pro_Text1 = new System.Windows.Forms.Label();
@@ -84,6 +84,7 @@
             this.GetTimer = new System.Windows.Forms.Timer(this.components);
             this.LogClearTimer = new System.Windows.Forms.Timer(this.components);
             this.ConfigMerge_CurrentDir = new System.Windows.Forms.Button();
+            this.ConfigNoFirstCheck = new System.Windows.Forms.CheckBox();
             this.TabCtrl_Main.SuspendLayout();
             this.Tab_Main_Info.SuspendLayout();
             this.Tab_Main_Log.SuspendLayout();
@@ -164,10 +165,10 @@
             // Tab_Main_Log
             // 
             this.Tab_Main_Log.Controls.Add(this.LogTextBox);
-            this.Tab_Main_Log.Location = new System.Drawing.Point(4, 22);
+            this.Tab_Main_Log.Location = new System.Drawing.Point(4, 27);
             this.Tab_Main_Log.Name = "Tab_Main_Log";
             this.Tab_Main_Log.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_Main_Log.Size = new System.Drawing.Size(492, 474);
+            this.Tab_Main_Log.Size = new System.Drawing.Size(492, 469);
             this.Tab_Main_Log.TabIndex = 0;
             this.Tab_Main_Log.Text = "ログ";
             this.Tab_Main_Log.UseVisualStyleBackColor = true;
@@ -473,10 +474,11 @@
             // 
             // Tab_Main_Setting
             // 
+            this.Tab_Main_Setting.Controls.Add(this.ConfigNoFirstCheck);
             this.Tab_Main_Setting.Controls.Add(this.Config_Reset);
             this.Tab_Main_Setting.Controls.Add(this.Config_Save);
             this.Tab_Main_Setting.Controls.Add(this.ConfigWebLink);
-            this.Tab_Main_Setting.Controls.Add(this.ConsigInfoText);
+            this.Tab_Main_Setting.Controls.Add(this.ConfigInfoText);
             this.Tab_Main_Setting.Controls.Add(this.TabCtrl_Setting);
             this.Tab_Main_Setting.Location = new System.Drawing.Point(4, 27);
             this.Tab_Main_Setting.Name = "Tab_Main_Setting";
@@ -508,22 +510,23 @@
             // ConfigWebLink
             // 
             this.ConfigWebLink.AutoSize = true;
-            this.ConfigWebLink.Location = new System.Drawing.Point(220, 448);
+            this.ConfigWebLink.Font = new System.Drawing.Font("メイリオ", 10F);
+            this.ConfigWebLink.Location = new System.Drawing.Point(358, 405);
             this.ConfigWebLink.Name = "ConfigWebLink";
-            this.ConfigWebLink.Size = new System.Drawing.Size(116, 18);
+            this.ConfigWebLink.Size = new System.Drawing.Size(134, 21);
             this.ConfigWebLink.TabIndex = 2;
             this.ConfigWebLink.TabStop = true;
-            this.ConfigWebLink.Text = "設定の詳細はこちら";
+            this.ConfigWebLink.Text = "設定の詳細(要確認)";
             this.ConfigWebLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ConfigWebLink_LinkClicked);
             // 
-            // ConsigInfoText
+            // ConfigInfoText
             // 
-            this.ConsigInfoText.AutoSize = true;
-            this.ConsigInfoText.Location = new System.Drawing.Point(4, 373);
-            this.ConsigInfoText.Name = "ConsigInfoText";
-            this.ConsigInfoText.Size = new System.Drawing.Size(488, 90);
-            this.ConsigInfoText.TabIndex = 1;
-            this.ConsigInfoText.Text = "> ←これを押して展開してください。保存を押さないと反映されません。\r\n《処理》取得先別の処理の設定。Otherは処理できれば自由です。\r\n《表示》表示する処理の" +
+            this.ConfigInfoText.AutoSize = true;
+            this.ConfigInfoText.Location = new System.Drawing.Point(4, 373);
+            this.ConfigInfoText.Name = "ConfigInfoText";
+            this.ConfigInfoText.Size = new System.Drawing.Size(488, 90);
+            this.ConfigInfoText.TabIndex = 1;
+            this.ConfigInfoText.Text = "> ←これを押して展開してください。保存を押さないと反映されません。\r\n《処理》取得先別の処理の設定。Otherは処理できれば自由です。\r\n《表示》表示する処理の" +
     "設定。[0]はコピー用で表示されません。\r\n追加を押して画面を追加できます。削除は一番最後のを削除するので注意してください。\r\n《その他》上記以外の設定。   " +
     "      ";
             // 
@@ -749,6 +752,18 @@
             this.ConfigMerge_CurrentDir.UseVisualStyleBackColor = true;
             this.ConfigMerge_CurrentDir.Click += new System.EventHandler(this.ConfigMerge_CurrentDir_Click);
             // 
+            // ConfigNoFirstCheck
+            // 
+            this.ConfigNoFirstCheck.AutoSize = true;
+            this.ConfigNoFirstCheck.ForeColor = System.Drawing.Color.Red;
+            this.ConfigNoFirstCheck.Location = new System.Drawing.Point(172, 447);
+            this.ConfigNoFirstCheck.Name = "ConfigNoFirstCheck";
+            this.ConfigNoFirstCheck.Size = new System.Drawing.Size(171, 22);
+            this.ConfigNoFirstCheck.TabIndex = 5;
+            this.ConfigNoFirstCheck.Text = "更新処理を無効にしておく";
+            this.ConfigNoFirstCheck.UseVisualStyleBackColor = true;
+            this.ConfigNoFirstCheck.CheckedChanged += new System.EventHandler(this.ConfigNoFirstCheck_CheckedChanged);
+            // 
             // CtrlForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -811,7 +826,7 @@
         private System.Windows.Forms.Label ProG_pro_Text1;
         private System.Windows.Forms.NumericUpDown ProG_view_CopyNum;
         private System.Windows.Forms.Button ProG_view_Copy;
-        private System.Windows.Forms.Label ConsigInfoText;
+        private System.Windows.Forms.Label ConfigInfoText;
         private System.Windows.Forms.LinkLabel ConfigWebLink;
         private System.Windows.Forms.Button Config_Reset;
         private System.Windows.Forms.Button Config_Save;
@@ -846,5 +861,6 @@
         private System.Windows.Forms.Button ConfigMerge_Write;
         private System.Windows.Forms.Button ConfigMerge_Read;
         private System.Windows.Forms.Button ConfigMerge_CurrentDir;
+        private System.Windows.Forms.CheckBox ConfigNoFirstCheck;
     }
 }
