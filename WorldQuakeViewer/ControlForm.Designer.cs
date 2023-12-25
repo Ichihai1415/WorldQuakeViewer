@@ -83,6 +83,7 @@
             this.ProG_other = new System.Windows.Forms.PropertyGrid();
             this.GetTimer = new System.Windows.Forms.Timer(this.components);
             this.LogClearTimer = new System.Windows.Forms.Timer(this.components);
+            this.ConfigMerge_CurrentDir = new System.Windows.Forms.Button();
             this.TabCtrl_Main.SuspendLayout();
             this.Tab_Main_Info.SuspendLayout();
             this.Tab_Main_Log.SuspendLayout();
@@ -186,16 +187,17 @@
             // 
             this.Tab_Main_Tool.Controls.Add(this.GroupBox_ConfigMerge);
             this.Tab_Main_Tool.Controls.Add(this.GroupBox_IntConv);
-            this.Tab_Main_Tool.Location = new System.Drawing.Point(4, 22);
+            this.Tab_Main_Tool.Location = new System.Drawing.Point(4, 27);
             this.Tab_Main_Tool.Name = "Tab_Main_Tool";
             this.Tab_Main_Tool.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_Main_Tool.Size = new System.Drawing.Size(492, 474);
+            this.Tab_Main_Tool.Size = new System.Drawing.Size(492, 469);
             this.Tab_Main_Tool.TabIndex = 3;
             this.Tab_Main_Tool.Text = "ツール";
             this.Tab_Main_Tool.UseVisualStyleBackColor = true;
             // 
             // GroupBox_ConfigMerge
             // 
+            this.GroupBox_ConfigMerge.Controls.Add(this.ConfigMerge_CurrentDir);
             this.GroupBox_ConfigMerge.Controls.Add(this.ConfigMerge_Write);
             this.GroupBox_ConfigMerge.Controls.Add(this.ConfigMerge_Read);
             this.GroupBox_ConfigMerge.Controls.Add(this.ConfigMerge_Select3);
@@ -206,7 +208,7 @@
             this.GroupBox_ConfigMerge.Controls.Add(this.ConfigMerge_Text);
             this.GroupBox_ConfigMerge.Location = new System.Drawing.Point(8, 138);
             this.GroupBox_ConfigMerge.Name = "GroupBox_ConfigMerge";
-            this.GroupBox_ConfigMerge.Size = new System.Drawing.Size(478, 122);
+            this.GroupBox_ConfigMerge.Size = new System.Drawing.Size(478, 124);
             this.GroupBox_ConfigMerge.TabIndex = 1;
             this.GroupBox_ConfigMerge.TabStop = false;
             this.GroupBox_ConfigMerge.Text = "設定結合ツール";
@@ -215,7 +217,7 @@
             // 
             this.ConfigMerge_Write.Location = new System.Drawing.Point(408, 90);
             this.ConfigMerge_Write.Name = "ConfigMerge_Write";
-            this.ConfigMerge_Write.Size = new System.Drawing.Size(64, 23);
+            this.ConfigMerge_Write.Size = new System.Drawing.Size(64, 26);
             this.ConfigMerge_Write.TabIndex = 7;
             this.ConfigMerge_Write.Text = "書き出す";
             this.ConfigMerge_Write.UseVisualStyleBackColor = true;
@@ -225,7 +227,7 @@
             // 
             this.ConfigMerge_Read.Location = new System.Drawing.Point(344, 90);
             this.ConfigMerge_Read.Name = "ConfigMerge_Read";
-            this.ConfigMerge_Read.Size = new System.Drawing.Size(64, 23);
+            this.ConfigMerge_Read.Size = new System.Drawing.Size(64, 26);
             this.ConfigMerge_Read.TabIndex = 6;
             this.ConfigMerge_Read.Text = "読み込む";
             this.ConfigMerge_Read.UseVisualStyleBackColor = true;
@@ -235,7 +237,7 @@
             // 
             this.ConfigMerge_Select3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ConfigMerge_Select3.FormattingEnabled = true;
-            this.ConfigMerge_Select3.Location = new System.Drawing.Point(158, 89);
+            this.ConfigMerge_Select3.Location = new System.Drawing.Point(158, 90);
             this.ConfigMerge_Select3.Name = "ConfigMerge_Select3";
             this.ConfigMerge_Select3.Size = new System.Drawing.Size(100, 26);
             this.ConfigMerge_Select3.TabIndex = 5;
@@ -265,7 +267,7 @@
             // 
             this.ConfigMerge_PathBox.Location = new System.Drawing.Point(42, 60);
             this.ConfigMerge_PathBox.Name = "ConfigMerge_PathBox";
-            this.ConfigMerge_PathBox.Size = new System.Drawing.Size(430, 25);
+            this.ConfigMerge_PathBox.Size = new System.Drawing.Size(366, 25);
             this.ConfigMerge_PathBox.TabIndex = 2;
             // 
             // ConfigMerge_Select1
@@ -276,7 +278,7 @@
             "Data",
             "View",
             "Other"});
-            this.ConfigMerge_Select1.Location = new System.Drawing.Point(7, 89);
+            this.ConfigMerge_Select1.Location = new System.Drawing.Point(7, 90);
             this.ConfigMerge_Select1.Name = "ConfigMerge_Select1";
             this.ConfigMerge_Select1.Size = new System.Drawing.Size(100, 26);
             this.ConfigMerge_Select1.TabIndex = 1;
@@ -289,7 +291,7 @@
             this.ConfigMerge_Text.Name = "ConfigMerge_Text";
             this.ConfigMerge_Text.Size = new System.Drawing.Size(464, 90);
             this.ConfigMerge_Text.TabIndex = 0;
-            this.ConfigMerge_Text.Text = "部分的な設定のファイルの読み込みや書き出しができます。\r\n自動で上書きされるので注意してください。設定例を詳細ページで公開しています。\r\n\r\n\r\n        " +
+            this.ConfigMerge_Text.Text = "部分的な設定のファイルの読み込みや書き出しができます。\r\n設定は上書きされるので注意してください。設定例を詳細ページで公開しています。\r\n\r\n\r\n        " +
     "                         の                           を";
             // 
             // GroupBox_IntConv
@@ -476,9 +478,9 @@
             this.Tab_Main_Setting.Controls.Add(this.ConfigWebLink);
             this.Tab_Main_Setting.Controls.Add(this.ConsigInfoText);
             this.Tab_Main_Setting.Controls.Add(this.TabCtrl_Setting);
-            this.Tab_Main_Setting.Location = new System.Drawing.Point(4, 22);
+            this.Tab_Main_Setting.Location = new System.Drawing.Point(4, 27);
             this.Tab_Main_Setting.Name = "Tab_Main_Setting";
-            this.Tab_Main_Setting.Size = new System.Drawing.Size(492, 474);
+            this.Tab_Main_Setting.Size = new System.Drawing.Size(492, 469);
             this.Tab_Main_Setting.TabIndex = 2;
             this.Tab_Main_Setting.Text = "設定";
             this.Tab_Main_Setting.UseVisualStyleBackColor = true;
@@ -737,6 +739,16 @@
             this.LogClearTimer.Interval = 1000;
             this.LogClearTimer.Tick += new System.EventHandler(this.LogClearTimer_Tick);
             // 
+            // ConfigMerge_CurrentDir
+            // 
+            this.ConfigMerge_CurrentDir.Location = new System.Drawing.Point(408, 60);
+            this.ConfigMerge_CurrentDir.Name = "ConfigMerge_CurrentDir";
+            this.ConfigMerge_CurrentDir.Size = new System.Drawing.Size(64, 25);
+            this.ConfigMerge_CurrentDir.TabIndex = 8;
+            this.ConfigMerge_CurrentDir.Text = "current";
+            this.ConfigMerge_CurrentDir.UseVisualStyleBackColor = true;
+            this.ConfigMerge_CurrentDir.Click += new System.EventHandler(this.ConfigMerge_CurrentDir_Click);
+            // 
             // CtrlForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -833,5 +845,6 @@
         private System.Windows.Forms.ComboBox ConfigMerge_Select3;
         private System.Windows.Forms.Button ConfigMerge_Write;
         private System.Windows.Forms.Button ConfigMerge_Read;
+        private System.Windows.Forms.Button ConfigMerge_CurrentDir;
     }
 }

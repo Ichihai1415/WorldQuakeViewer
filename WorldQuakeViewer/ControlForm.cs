@@ -509,7 +509,94 @@ namespace WorldQuakeViewer
 
         private void ConfigMerge_Write_Click(object sender, EventArgs e)
         {
+            try
+            {
+                ExeLog("[ConfigMerge_Write_Click]書き込み開始");
+                int i = (int)ConfigMerge_Select2.Value;
+                string jsonText;
+                switch (ConfigMerge_Select1.SelectedIndex)
+                {
+                    case 0:
+                        switch ((ConfigMerge_Select3_Data)ConfigMerge_Select3.SelectedIndex)
+                        {
+                            case ConfigMerge_Select3_Data.All:
+                                jsonText = JsonConvert.SerializeObject(config.Datas[i]);
+                                break;
+                            case ConfigMerge_Select3_Data.Update:
+                                jsonText = JsonConvert.SerializeObject(config.Datas[i].Update);
+                                break;
+                            case ConfigMerge_Select3_Data.Sound:
+                                jsonText = JsonConvert.SerializeObject(config.Datas[i].Sound);
+                                break;
+                            case ConfigMerge_Select3_Data.Bouyomi:
+                                jsonText = JsonConvert.SerializeObject(config.Datas[i].Bouyomi);
+                                break;
+                            case ConfigMerge_Select3_Data.Socket:
+                                jsonText = JsonConvert.SerializeObject(config.Datas[i].Socket);
+                                break;
+                            case ConfigMerge_Select3_Data.Webhook:
+                                jsonText = JsonConvert.SerializeObject(config.Datas[i].Webhook);
+                                break;
+                            case ConfigMerge_Select3_Data.LogE:
+                                jsonText = JsonConvert.SerializeObject(config.Datas[i].LogE);
+                                break;
+                            default:
+                                throw new Exception($"ConfigMerge_Select3.SelectedIndex({ConfigMerge_Select3.SelectedIndex})がConfigMerge_Select3_Dataとして不正です。");
+                        }
+                        break;
+                    case 1:
+                        switch ((ConfigMerge_Select3_View)ConfigMerge_Select3.SelectedIndex)
+                        {
+                            case ConfigMerge_Select3_View.All:
+                                jsonText = JsonConvert.SerializeObject(config.Views[i]);
+                                break;
+                            case ConfigMerge_Select3_View.Color:
+                                jsonText = JsonConvert.SerializeObject(config.Views[i].Colors);
+                                break;
+                            default:
+                                throw new Exception($"ConfigMerge_Select3.SelectedIndex({ConfigMerge_Select3.SelectedIndex})がConfigMerge_Select3_Viewとして不正です。");
+                        }
+                        break;
+                    case 2:
+                        switch ((ConfigMerge_Select3_Other)ConfigMerge_Select3.SelectedIndex)
+                        {
+                            case ConfigMerge_Select3_Other.All:
+                                jsonText = JsonConvert.SerializeObject(config.Other);
+                                break;
+                            case ConfigMerge_Select3_Other.LogN:
+                                jsonText = JsonConvert.SerializeObject(config.Other.LogN);
+                                break;
+                            default:
+                                throw new Exception($"ConfigMerge_Select3.SelectedIndex({ConfigMerge_Select3.SelectedIndex})がConfigMerge_Select3_Otherとして不正です。");
+                        }
+                        break;
+                    default:
+                        throw new Exception($"ConfigMerge_Select1.SelectedIndex({ConfigMerge_Select1.SelectedIndex})が不正です。");
+                }
+                if (File.Exists(ConfigMerge_PathBox.Text))
+                {
+                    DialogResult ok = MessageBox.Show(topMost, "既にファイルが存在します。上書きしてもよろしいですか？", "確認", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                    if (ok == DialogResult.Cancel)
+                    {
+                        ExeLog("[ConfigMerge_Write_Click]取り消されました。");
+                        return;
+                    }
+                }
+                File.WriteAllText(ConfigMerge_PathBox.Text, jsonText);
+                ExeLog("[ConfigMerge_Write_Click]書き込み完了");
+                ConfigReload();
+            }
+            catch (Exception ex)
+            {
+                ExeLog($"[ConfigMerge_Write_Click]エラー:{ex.Message}", true);
+                LogSave(LogKind.Error, ex.ToString());
+                MessageBox.Show(topMost, "書き込みに失敗しました。内容:" + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
+        private void ConfigMerge_CurrentDir_Click(object sender, EventArgs e)
+        {
+            ConfigMerge_PathBox.Text = Path.GetFullPath("WorldQuakeViewer.exe").Replace("WorldQuakeViewer.exe", "");
         }
     }
 }
