@@ -510,10 +510,6 @@ namespace WorldQuakeViewer
         public enum ConfigMerge_Select3_Data
         {
             /// <summary>
-            /// すべて
-            /// </summary>
-            All = 0,
-            /// <summary>
             /// 更新検知対象
             /// </summary>
             Update = 1,

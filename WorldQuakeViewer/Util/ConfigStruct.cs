@@ -1590,13 +1590,13 @@ namespace WorldQuakeViewer
             /// <summary>
             /// 最新のタイトルのテキスト
             /// </summary>
-            [Description("最新のタイトルのテキスト")]
+            [Description("最新のタイトルのテキスト\nDataがAll_LatestMultiの場合コンマ区切りでタイトル")]
             public string LatestTitleText { get; set; }
 
             /// <summary>
             /// 履歴のタイトルのテキスト
             /// </summary>
-            [Description("履歴のタイトルのテキスト")]
+            [Description("履歴のタイトルのテキスト\nDataがAll_LatestMultiの場合コンマ区切りでデータの数字")]
             public string HistoryTitleText { get; set; }
 
             /// <summary>

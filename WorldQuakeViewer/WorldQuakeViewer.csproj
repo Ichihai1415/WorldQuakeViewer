@@ -162,7 +162,6 @@
     </None>
     <None Include="Resources\Koruri-LICENSE" />
     <None Include="Resources\Koruri-Regular.ttf" />
-    <None Include="Resources\Sound.zip" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -187,6 +186,7 @@
   <ItemGroup>
     <None Include="Resources\Back_USGS.png" />
     <None Include="Resources\Back.png" />
+    <None Include="Resources\Sound.zip" />
     <None Include="Resources\WQV.ico" />
     <None Include="Resources\hypo.png" />
     <None Include="Resources\map.png" />

@@ -23,7 +23,7 @@ namespace WorldQuakeViewer
         {
             try
             {
-                ExeLog($"[Get][{dataAuthor}]取得準備中...");
+                ExeLog($"[Get][{dataAuthor}]取得中...");
                 Dictionary<string, Data> data_tmp = new Dictionary<string, Data>();
                 switch (dataAuthor)
                 {
@@ -46,7 +46,6 @@ namespace WorldQuakeViewer
                         throw new ArgumentException($"データ元({dataAuthor})が不正です。", nameof(dataAuthor));
                 }
                 string URL = config.Datas[(int)dataAuthor].URL;
-                ExeLog($"[Get][{dataAuthor}]取得中...({dataAuthor},{URL})");
                 string res = await client.GetStringAsync(URL);
                 switch (config.Datas[(int)dataAuthor].DataProType)
                 {

@@ -39,6 +39,7 @@
             this.LogTextBox = new System.Windows.Forms.TextBox();
             this.Tab_Main_Tool = new System.Windows.Forms.TabPage();
             this.GroupBox_ConfigMerge = new System.Windows.Forms.GroupBox();
+            this.ConfigMerge_CurrentDir = new System.Windows.Forms.Button();
             this.ConfigMerge_Write = new System.Windows.Forms.Button();
             this.ConfigMerge_Read = new System.Windows.Forms.Button();
             this.ConfigMerge_Select3 = new System.Windows.Forms.ComboBox();
@@ -61,12 +62,14 @@
             this.IntConv_ComBox2 = new System.Windows.Forms.ComboBox();
             this.IntConv_ComBox1 = new System.Windows.Forms.ComboBox();
             this.Tab_Main_Setting = new System.Windows.Forms.TabPage();
+            this.ConfigNoFirstCheck = new System.Windows.Forms.CheckBox();
             this.Config_Reset = new System.Windows.Forms.Button();
             this.Config_Save = new System.Windows.Forms.Button();
             this.ConfigWebLink = new System.Windows.Forms.LinkLabel();
             this.ConfigInfoText = new System.Windows.Forms.Label();
             this.TabCtrl_Setting = new System.Windows.Forms.TabControl();
             this.Tab_Setting_Pro = new System.Windows.Forms.TabPage();
+            this.ProG_pro_ClearHist = new System.Windows.Forms.Button();
             this.ProG_pro_Text1 = new System.Windows.Forms.Label();
             this.ProG_pro = new System.Windows.Forms.PropertyGrid();
             this.Tab_Setting_View = new System.Windows.Forms.TabPage();
@@ -83,8 +86,7 @@
             this.ProG_other = new System.Windows.Forms.PropertyGrid();
             this.GetTimer = new System.Windows.Forms.Timer(this.components);
             this.LogClearTimer = new System.Windows.Forms.Timer(this.components);
-            this.ConfigMerge_CurrentDir = new System.Windows.Forms.Button();
-            this.ConfigNoFirstCheck = new System.Windows.Forms.CheckBox();
+            this.UpdtProEnabler = new System.Windows.Forms.Timer(this.components);
             this.TabCtrl_Main.SuspendLayout();
             this.Tab_Main_Info.SuspendLayout();
             this.Tab_Main_Log.SuspendLayout();
@@ -165,10 +167,10 @@
             // Tab_Main_Log
             // 
             this.Tab_Main_Log.Controls.Add(this.LogTextBox);
-            this.Tab_Main_Log.Location = new System.Drawing.Point(4, 27);
+            this.Tab_Main_Log.Location = new System.Drawing.Point(4, 22);
             this.Tab_Main_Log.Name = "Tab_Main_Log";
             this.Tab_Main_Log.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_Main_Log.Size = new System.Drawing.Size(492, 469);
+            this.Tab_Main_Log.Size = new System.Drawing.Size(492, 474);
             this.Tab_Main_Log.TabIndex = 0;
             this.Tab_Main_Log.Text = "ログ";
             this.Tab_Main_Log.UseVisualStyleBackColor = true;
@@ -188,10 +190,10 @@
             // 
             this.Tab_Main_Tool.Controls.Add(this.GroupBox_ConfigMerge);
             this.Tab_Main_Tool.Controls.Add(this.GroupBox_IntConv);
-            this.Tab_Main_Tool.Location = new System.Drawing.Point(4, 27);
+            this.Tab_Main_Tool.Location = new System.Drawing.Point(4, 22);
             this.Tab_Main_Tool.Name = "Tab_Main_Tool";
             this.Tab_Main_Tool.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_Main_Tool.Size = new System.Drawing.Size(492, 469);
+            this.Tab_Main_Tool.Size = new System.Drawing.Size(492, 474);
             this.Tab_Main_Tool.TabIndex = 3;
             this.Tab_Main_Tool.Text = "ツール";
             this.Tab_Main_Tool.UseVisualStyleBackColor = true;
@@ -213,6 +215,16 @@
             this.GroupBox_ConfigMerge.TabIndex = 1;
             this.GroupBox_ConfigMerge.TabStop = false;
             this.GroupBox_ConfigMerge.Text = "設定結合ツール";
+            // 
+            // ConfigMerge_CurrentDir
+            // 
+            this.ConfigMerge_CurrentDir.Location = new System.Drawing.Point(408, 60);
+            this.ConfigMerge_CurrentDir.Name = "ConfigMerge_CurrentDir";
+            this.ConfigMerge_CurrentDir.Size = new System.Drawing.Size(64, 25);
+            this.ConfigMerge_CurrentDir.TabIndex = 8;
+            this.ConfigMerge_CurrentDir.Text = "current";
+            this.ConfigMerge_CurrentDir.UseVisualStyleBackColor = true;
+            this.ConfigMerge_CurrentDir.Click += new System.EventHandler(this.ConfigMerge_CurrentDir_Click);
             // 
             // ConfigMerge_Write
             // 
@@ -487,6 +499,18 @@
             this.Tab_Main_Setting.Text = "設定";
             this.Tab_Main_Setting.UseVisualStyleBackColor = true;
             // 
+            // ConfigNoFirstCheck
+            // 
+            this.ConfigNoFirstCheck.AutoSize = true;
+            this.ConfigNoFirstCheck.ForeColor = System.Drawing.Color.Red;
+            this.ConfigNoFirstCheck.Location = new System.Drawing.Point(161, 448);
+            this.ConfigNoFirstCheck.Name = "ConfigNoFirstCheck";
+            this.ConfigNoFirstCheck.Size = new System.Drawing.Size(181, 22);
+            this.ConfigNoFirstCheck.TabIndex = 5;
+            this.ConfigNoFirstCheck.Text = "更新処理無効(内部変更あり)";
+            this.ConfigNoFirstCheck.UseVisualStyleBackColor = true;
+            this.ConfigNoFirstCheck.CheckedChanged += new System.EventHandler(this.ConfigNoFirstCheck_CheckedChanged);
+            // 
             // Config_Reset
             // 
             this.Config_Reset.Location = new System.Drawing.Point(417, 446);
@@ -544,6 +568,7 @@
             // 
             // Tab_Setting_Pro
             // 
+            this.Tab_Setting_Pro.Controls.Add(this.ProG_pro_ClearHist);
             this.Tab_Setting_Pro.Controls.Add(this.ProG_pro_Text1);
             this.Tab_Setting_Pro.Controls.Add(this.ProG_pro);
             this.Tab_Setting_Pro.Location = new System.Drawing.Point(4, 27);
@@ -553,6 +578,16 @@
             this.Tab_Setting_Pro.TabIndex = 1;
             this.Tab_Setting_Pro.Text = "処理";
             this.Tab_Setting_Pro.UseVisualStyleBackColor = true;
+            // 
+            // ProG_pro_ClearHist
+            // 
+            this.ProG_pro_ClearHist.Location = new System.Drawing.Point(393, 3);
+            this.ProG_pro_ClearHist.Name = "ProG_pro_ClearHist";
+            this.ProG_pro_ClearHist.Size = new System.Drawing.Size(88, 23);
+            this.ProG_pro_ClearHist.TabIndex = 6;
+            this.ProG_pro_ClearHist.Text = "履歴のクリア";
+            this.ProG_pro_ClearHist.UseVisualStyleBackColor = true;
+            this.ProG_pro_ClearHist.Click += new System.EventHandler(this.ProG_pro_ClearHist_Click);
             // 
             // ProG_pro_Text1
             // 
@@ -742,27 +777,10 @@
             this.LogClearTimer.Interval = 1000;
             this.LogClearTimer.Tick += new System.EventHandler(this.LogClearTimer_Tick);
             // 
-            // ConfigMerge_CurrentDir
+            // UpdtProEnabler
             // 
-            this.ConfigMerge_CurrentDir.Location = new System.Drawing.Point(408, 60);
-            this.ConfigMerge_CurrentDir.Name = "ConfigMerge_CurrentDir";
-            this.ConfigMerge_CurrentDir.Size = new System.Drawing.Size(64, 25);
-            this.ConfigMerge_CurrentDir.TabIndex = 8;
-            this.ConfigMerge_CurrentDir.Text = "current";
-            this.ConfigMerge_CurrentDir.UseVisualStyleBackColor = true;
-            this.ConfigMerge_CurrentDir.Click += new System.EventHandler(this.ConfigMerge_CurrentDir_Click);
-            // 
-            // ConfigNoFirstCheck
-            // 
-            this.ConfigNoFirstCheck.AutoSize = true;
-            this.ConfigNoFirstCheck.ForeColor = System.Drawing.Color.Red;
-            this.ConfigNoFirstCheck.Location = new System.Drawing.Point(172, 447);
-            this.ConfigNoFirstCheck.Name = "ConfigNoFirstCheck";
-            this.ConfigNoFirstCheck.Size = new System.Drawing.Size(171, 22);
-            this.ConfigNoFirstCheck.TabIndex = 5;
-            this.ConfigNoFirstCheck.Text = "更新処理を無効にしておく";
-            this.ConfigNoFirstCheck.UseVisualStyleBackColor = true;
-            this.ConfigNoFirstCheck.CheckedChanged += new System.EventHandler(this.ConfigNoFirstCheck_CheckedChanged);
+            this.UpdtProEnabler.Interval = 60000;
+            this.UpdtProEnabler.Tick += new System.EventHandler(this.UpdtProEnabler_Tick);
             // 
             // CtrlForm
             // 
@@ -861,6 +879,8 @@
         private System.Windows.Forms.Button ConfigMerge_Write;
         private System.Windows.Forms.Button ConfigMerge_Read;
         private System.Windows.Forms.Button ConfigMerge_CurrentDir;
+        private System.Windows.Forms.Button ProG_pro_ClearHist;
         private System.Windows.Forms.CheckBox ConfigNoFirstCheck;
+        private System.Windows.Forms.Timer UpdtProEnabler;
     }
 }

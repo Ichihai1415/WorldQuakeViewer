@@ -138,6 +138,7 @@
   </data>
   <data name="Sound" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Sound.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <comment>v1.2.0</comment>
   </data>
   <data name="WQV" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\WQV.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

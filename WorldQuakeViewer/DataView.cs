@@ -50,7 +50,7 @@ namespace WorldQuakeViewer
                     ClientSize = new Size(800, 500);
                     break;
                 default:
-                    throw new Exception("DataViewの初期化に失敗しました。", new ArgumentException($"{viewType}は種類として不正です。", nameof(viewType)));
+                    throw new Exception($"DataViewの初期化に失敗しました。{viewType}は種類として不正です。");
             }
             dataAuthorN = (int)viewData / 10;
             switch (dataAuthorN)
@@ -74,7 +74,7 @@ namespace WorldQuakeViewer
                     data_ = data_All;
                     break;
                 default:
-                    throw new Exception("DataViewの初期化に失敗しました。", new ArgumentException($"{dataAuthorN}はデータ元として不正です。"));
+                    throw new Exception($"DataViewの初期化に失敗しました。{dataAuthorN}はデータ元として不正です。");
             }
             ConfigReload();
             //todo:一定時間でgreenにするやつ(必要なら)

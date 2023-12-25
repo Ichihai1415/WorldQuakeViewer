@@ -245,7 +245,7 @@ namespace WorldQuakeViewer
                 Author = dataAuthor,
                 ID = info[0],
                 ID2 = info[8],
-                Time = DateTimeOffset.Parse(info[1] + "Z"),//ZをつけないとLocalTime判定になる
+                Time = DateTimeOffset.Parse($"{info[1]}Z".Replace("ZZ", "Z")),//Zがついていないものがある　つけないとLocalTime判定になる
                 Hypo = NameJP(double.Parse(info[2]), double.Parse(info[3])),
                 Lat = double.Parse(info[2]),
                 Lon = double.Parse(info[3]),
@@ -268,14 +268,14 @@ namespace WorldQuakeViewer
         {
             XmlNode origin = info.SelectSingleNode("qml:origin", ns);
             XmlNodeList magnitude = info.SelectNodes("qml:magnitude", ns);
-            string id = ((XmlElement)info).GetAttribute("publicID").Split('/').Last().Replace(".quakeml","");//USGSには.quakemlが付く
+            string id = ((XmlElement)info).GetAttribute("publicID").Split('/').Last().Replace(".quakeml", "");//USGSには.quakemlが付く
             return new Data
             {
                 Author = dataAuthor,
                 ID = id,
                 ID2 = id,
-                Time = DateTimeOffset.Parse(origin.SelectSingleNode("qml:time/qml:value", ns).InnerText),
-                UpdtTime = info.SelectSingleNode("qml:creationInfo/qml:creationTime", ns) != null ? DateTimeOffset.Parse(info.SelectSingleNode("qml:creationInfo/qml:creationTime", ns).InnerText) : DateTimeOffset.MinValue,
+                Time = DateTimeOffset.Parse($"{origin.SelectSingleNode("qml:time/qml:value", ns).InnerText}Z".Replace("ZZ", "Z")),
+                UpdtTime = info.SelectSingleNode("qml:creationInfo/qml:creationTime", ns) != null ? DateTimeOffset.Parse($"{info.SelectSingleNode("qml:creationInfo/qml:creationTime", ns).InnerText}Z".Replace("ZZ", "Z")) : DateTimeOffset.MinValue,
                 Hypo = NameJP(double.Parse(origin.SelectSingleNode("qml:latitude/qml:value", ns).InnerText), double.Parse(origin.SelectSingleNode("qml:longitude/qml:value", ns).InnerText)),
                 Lat = double.Parse(origin.SelectSingleNode("qml:latitude/qml:value", ns).InnerText),
                 Lon = double.Parse(origin.SelectSingleNode("qml:longitude/qml:value", ns).InnerText),

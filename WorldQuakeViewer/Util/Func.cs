@@ -30,7 +30,7 @@ namespace WorldQuakeViewer
         {
             if ((!isError && config.Other.LogN.Normal_Enable) || isError)
             {
-                exeLogs += $"{DateTime.Now:HH:mm:ss.ffff} {text}\n";
+                exeLogs.Append(DateTime.Now.ToString("HH:mm:ss.ffff ")).AppendLine(text);
                 ExeLogView($"{DateTime.Now:HH:mm:ss.ffff} {text}\r\n");
             }
             Console.WriteLine(text);
@@ -436,6 +436,7 @@ namespace WorldQuakeViewer
         /// <summary>
         /// 画像ファイルがない場合リソースからコピーします。
         /// </summary>
+        /// <remarks>Image\\からの相対パス。</remarks>
         /// <param name="fileName">ファイル名。</param>
         /// <exception cref="Exception">画像指定が間違っている場合。</exception>
         public static void ImageCheck(string fileName)

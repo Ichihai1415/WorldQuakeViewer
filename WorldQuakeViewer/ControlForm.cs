@@ -1,14 +1,17 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Media;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WorldQuakeViewer.Properties;
@@ -32,7 +35,7 @@ namespace WorldQuakeViewer
         public static Dictionary<string, Data> data_All = new Dictionary<string, Data>();
         public static HttpClient client = new HttpClient();
         public static SoundPlayer player = null;
-        public static string exeLogs = "";
+        public static StringBuilder exeLogs = new StringBuilder();
         public static bool noFirst = false;
         public static int playLevel = 0;
 
@@ -42,6 +45,9 @@ namespace WorldQuakeViewer
         {
             InitializeComponent();
             logTextBox = LogTextBox;
+            IntConv_ComBox1.SelectedIndex = 0;
+            IntConv_ComBox2.SelectedIndex = 1;
+            IntConv_ComBox3.SelectedIndex = 2;
         }
 
         private async void CtrlForm_Load(object sender, EventArgs e)
@@ -82,6 +88,17 @@ namespace WorldQuakeViewer
                 Directory.CreateDirectory("Setting");
                 File.WriteAllText("Setting\\config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
                 ExeLog($"[CtrlForm_Load]設定保存完了");
+
+                DialogResult yes = MessageBox.Show(topMost, "v1.2.0より前のバージョンを使用したことがありますか？(更新時に必要な処理を行います)", "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                if (yes == DialogResult.Yes)
+                {
+                    Configuration config_old = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);//1.2.0未満の設定を消さないとなんかエラーが出る
+                    if (File.Exists(config_old.FilePath))
+                        File.Delete(config_old.FilePath);
+                    if (Directory.Exists("Sound"))
+                        Directory.Delete("Sound");
+                    ExeLog("更新用処理(~v1.1.1 => v1.2.0~)を行いました。");
+                }
             }
             ConfigReload();
             LogClearTimer.Enabled = true;
@@ -108,14 +125,18 @@ namespace WorldQuakeViewer
             font = pfc.Families[0];
             ExeLog($"[CtrlForm_Load]フォント確認完了");
 
+            if (!Directory.Exists("Sound"))
+            {
+                File.WriteAllBytes("Sound.zip", Resources.Sound);
+                ZipFile.ExtractToDirectory("Sound.zip", "Sound");
+                ExeLog($"[CtrlForm_Load]音声ファイルを展開しました(\"Sound\\*\")");
+                File.Delete("Sound.zip");
+            }
+            //初期化開始
             ColorMap[] colorChange = new ColorMap[] { new ColorMap() };
             colorChange[0].OldColor = Color.Black;
             colorChange[0].NewColor = Color.Transparent;
             ia.SetRemapTable(colorChange);
-
-            IntConv_ComBox1.SelectedIndex = 0;
-            IntConv_ComBox2.SelectedIndex = 1;
-            IntConv_ComBox3.SelectedIndex = 2;
 
             int c = config_display.Views.Count();
             if (c == 1)
@@ -123,7 +144,7 @@ namespace WorldQuakeViewer
             if (c == 9)
                 ProG_view_Add.Enabled = false;
             ProG_view_Copy.Enabled = c > ProG_view_CopyNum.Value;
-
+            //初期化完了
             ExeLog($"[CtrlForm_Load]初回取得中...");
             InfoText0.Text = "<初回取得中...>WorldQuakeViewer";
             for (int i = 0; i < config.Datas.Count(); i++)
@@ -154,6 +175,7 @@ namespace WorldQuakeViewer
             ProG_view.SelectedObject = config_display.Views;
             ProG_other.SelectedObject = config_display.Other;
             LogClearTimer.Interval = (int)config.Other.LogN.Normal_AutoDelete.TotalMilliseconds;
+            ExeLog("[ConfigReload]設定を反映しました。");
         }
 
         private async void GetTimer_Tick(object sender, EventArgs e)
@@ -203,6 +225,8 @@ namespace WorldQuakeViewer
             for (int i = 1; i < config.Views.Count(); i++)
                 if (dataViews[i] != null)
                     ReDraw((DataAuthor)dataViews[i].dataAuthorN);
+            ExeLog("[Config_Save_Click]設定を保存しました。");
+            UpdtProEnableCtrl();
         }
 
         private void Config_Reset_Click(object sender, EventArgs e)
@@ -263,16 +287,16 @@ namespace WorldQuakeViewer
         private void CtrlForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (config.Other.LogN.Normal_AutoSave)
-                LogSave(LogKind.Exe, exeLogs);
+                LogSave(LogKind.Exe, exeLogs.ToString());
         }
 
         private void LogClearTimer_Tick(object sender, EventArgs e)
         {
             if (config.Other.LogN.Normal_AutoSave)
-                LogSave(LogKind.Exe, exeLogs);
-            exeLogs = "";
+                LogSave(LogKind.Exe, exeLogs.ToString());
+            exeLogs =new StringBuilder();
             ExeLog("[LogClearTimer_Tick]動作ログをクリアしました。");
-            logTextBox.Text = exeLogs;
+            logTextBox.Text = "";
         }
 
         private void ProG_view_Open_Click(object sender, EventArgs e)
@@ -433,8 +457,8 @@ namespace WorldQuakeViewer
                 string head_ = jsonText_.Split('\n')[0];
                 string[] head = head_.Split(',');
 
-                string version = head.Where(x => x == "version") == null ? "null" : head.Where(x => x == "version").First().Split(':')[1];
-                string type = head.Where(x => x == "type") == null ? "null" : head.Where(x => x == "type").First().Split(':')[1];
+                string version = head.Where(x => x.StartsWith("version")).Count() == 0 ? "null" : head.Where(x => x.StartsWith("version")).First().Split(':')[1];
+                string type = head.Where(x => x.StartsWith("type")).Count() == 0 ? "null" : head.Where(x => x.StartsWith("type")).First().Split(':')[1];
                 ExeLog($"[ConfigMerge_Read_Click]version:{version},type:{type}");
 
                 string jsonText = jsonText_.Split('\n')[1];
@@ -443,9 +467,6 @@ namespace WorldQuakeViewer
                     case 0:
                         switch ((ConfigMerge_Select3_Data)ConfigMerge_Select3.SelectedIndex)
                         {
-                            case ConfigMerge_Select3_Data.All:
-                                config.Datas[i] = JsonConvert.DeserializeObject<Config.Data_>(jsonText);
-                                break;
                             case ConfigMerge_Select3_Data.Update:
                                 config.Datas[i].Update = JsonConvert.DeserializeObject<Config.Data_.Update_>(jsonText);
                                 break;
@@ -520,26 +541,23 @@ namespace WorldQuakeViewer
                     case 0:
                         switch ((ConfigMerge_Select3_Data)ConfigMerge_Select3.SelectedIndex)
                         {
-                            case ConfigMerge_Select3_Data.All:
-                                jsonText = JsonConvert.SerializeObject(config.Datas[i]);
-                                break;
                             case ConfigMerge_Select3_Data.Update:
-                                jsonText = JsonConvert.SerializeObject(config.Datas[i].Update);
+                                jsonText = $"version:{version},type:config.Datas[{i}].Update\n{JsonConvert.SerializeObject(config.Datas[i].Update)}";
                                 break;
                             case ConfigMerge_Select3_Data.Sound:
-                                jsonText = JsonConvert.SerializeObject(config.Datas[i].Sound);
+                                jsonText = $"version:{version},type:config.Datas[{i}].Sound\n{JsonConvert.SerializeObject(config.Datas[i].Sound)}";
                                 break;
                             case ConfigMerge_Select3_Data.Bouyomi:
-                                jsonText = JsonConvert.SerializeObject(config.Datas[i].Bouyomi);
+                                jsonText = $"version:{version},type:config.Datas[{i}].Bouyomi\n{JsonConvert.SerializeObject(config.Datas[i].Bouyomi)}";
                                 break;
                             case ConfigMerge_Select3_Data.Socket:
-                                jsonText = JsonConvert.SerializeObject(config.Datas[i].Socket);
+                                jsonText = $"version:{version},type:config.Datas[{i}].Socket\n{JsonConvert.SerializeObject(config.Datas[i].Socket)}";
                                 break;
                             case ConfigMerge_Select3_Data.Webhook:
-                                jsonText = JsonConvert.SerializeObject(config.Datas[i].Webhook);
+                                jsonText = $"version:{version},type:config.Datas[{i}].Webhook\n{JsonConvert.SerializeObject(config.Datas[i].Webhook)}";
                                 break;
                             case ConfigMerge_Select3_Data.LogE:
-                                jsonText = JsonConvert.SerializeObject(config.Datas[i].LogE);
+                                jsonText = $"version:{version},type:config.Datas[{i}].LogE\n{JsonConvert.SerializeObject(config.Datas[i].LogE)}";
                                 break;
                             default:
                                 throw new Exception($"ConfigMerge_Select3.SelectedIndex({ConfigMerge_Select3.SelectedIndex})がConfigMerge_Select3_Dataとして不正です。");
@@ -549,10 +567,10 @@ namespace WorldQuakeViewer
                         switch ((ConfigMerge_Select3_View)ConfigMerge_Select3.SelectedIndex)
                         {
                             case ConfigMerge_Select3_View.All:
-                                jsonText = JsonConvert.SerializeObject(config.Views[i]);
+                                jsonText = $"version:{version},type:config.Views[{i}]\n{JsonConvert.SerializeObject(config.Views[i])}";
                                 break;
                             case ConfigMerge_Select3_View.Color:
-                                jsonText = JsonConvert.SerializeObject(config.Views[i].Colors);
+                                jsonText = $"version:{version},type:config.Views[{i}].Colors\n{JsonConvert.SerializeObject(config.Views[i].Colors)}";
                                 break;
                             default:
                                 throw new Exception($"ConfigMerge_Select3.SelectedIndex({ConfigMerge_Select3.SelectedIndex})がConfigMerge_Select3_Viewとして不正です。");
@@ -562,10 +580,10 @@ namespace WorldQuakeViewer
                         switch ((ConfigMerge_Select3_Other)ConfigMerge_Select3.SelectedIndex)
                         {
                             case ConfigMerge_Select3_Other.All:
-                                jsonText = JsonConvert.SerializeObject(config.Other);
+                                jsonText = $"version:{version},type:config.Other\n{JsonConvert.SerializeObject(config.Other)}";
                                 break;
                             case ConfigMerge_Select3_Other.LogN:
-                                jsonText = JsonConvert.SerializeObject(config.Other.LogN);
+                                jsonText = $"version:{version},type:config.Other.LogN\n{JsonConvert.SerializeObject(config.Other.LogN)}";
                                 break;
                             default:
                                 throw new Exception($"ConfigMerge_Select3.SelectedIndex({ConfigMerge_Select3.SelectedIndex})がConfigMerge_Select3_Otherとして不正です。");
@@ -586,6 +604,7 @@ namespace WorldQuakeViewer
                 File.WriteAllText(ConfigMerge_PathBox.Text, jsonText);
                 ExeLog("[ConfigMerge_Write_Click]書き込み完了");
                 ConfigReload();
+                UpdtProEnableCtrl();
             }
             catch (Exception ex)
             {
@@ -604,6 +623,33 @@ namespace WorldQuakeViewer
         {
             noFirst = !ConfigNoFirstCheck.Checked;
             ExeLog($"更新処理を{(noFirst ? "再開" : "停止")}しました。");
+        }
+
+        private void ProG_pro_ClearHist_Click(object sender, EventArgs e)
+        {
+            data_Other = new Dictionary<string, Data>();
+            data_USGS = new Dictionary<string, Data>();
+            data_EMSC = new Dictionary<string, Data>();
+            data_GFZ = new Dictionary<string, Data>();
+            data_EarlyEst = new Dictionary<string, Data>();
+            data_All = new Dictionary<string, Data>();
+            ExeLog("[ProG_pro_ClearHist_Click]履歴をクリアしました。");
+            UpdtProEnableCtrl();
+        }
+
+        /// <summary>
+        /// 更新処理を無効化し1分後に有効化します。
+        /// </summary>
+        public void UpdtProEnableCtrl()
+        {
+            ConfigNoFirstCheck.Checked = true;
+            UpdtProEnabler.Enabled = false;
+            UpdtProEnabler.Enabled = true;
+        }
+
+        private void UpdtProEnabler_Tick(object sender, EventArgs e)
+        {
+            ConfigNoFirstCheck.Checked = false;
         }
     }
 }
