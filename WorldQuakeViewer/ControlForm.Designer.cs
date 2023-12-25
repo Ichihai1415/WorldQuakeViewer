@@ -131,10 +131,10 @@
             // InfoPageLink
             // 
             this.InfoPageLink.AutoSize = true;
-            this.InfoPageLink.Font = new System.Drawing.Font("メイリオ", 10F);
-            this.InfoPageLink.Location = new System.Drawing.Point(341, 445);
+            this.InfoPageLink.Font = new System.Drawing.Font("メイリオ", 12F);
+            this.InfoPageLink.Location = new System.Drawing.Point(3, 40);
             this.InfoPageLink.Name = "InfoPageLink";
-            this.InfoPageLink.Size = new System.Drawing.Size(148, 21);
+            this.InfoPageLink.Size = new System.Drawing.Size(168, 24);
             this.InfoPageLink.TabIndex = 2;
             this.InfoPageLink.TabStop = true;
             this.InfoPageLink.Text = "解説ページ(確認推奨)";
@@ -154,7 +154,7 @@
             // 
             this.InfoText1.AutoSize = true;
             this.InfoText1.Font = new System.Drawing.Font("メイリオ", 9F);
-            this.InfoText1.Location = new System.Drawing.Point(4, 41);
+            this.InfoText1.Location = new System.Drawing.Point(4, 80);
             this.InfoText1.Name = "InfoText1";
             this.InfoText1.Size = new System.Drawing.Size(490, 342);
             this.InfoText1.TabIndex = 0;
@@ -186,10 +186,10 @@
             // 
             this.Tab_Main_Tool.Controls.Add(this.GroupBox_ConfigMerge);
             this.Tab_Main_Tool.Controls.Add(this.GroupBox_IntConv);
-            this.Tab_Main_Tool.Location = new System.Drawing.Point(4, 27);
+            this.Tab_Main_Tool.Location = new System.Drawing.Point(4, 22);
             this.Tab_Main_Tool.Name = "Tab_Main_Tool";
             this.Tab_Main_Tool.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_Main_Tool.Size = new System.Drawing.Size(492, 469);
+            this.Tab_Main_Tool.Size = new System.Drawing.Size(492, 474);
             this.Tab_Main_Tool.TabIndex = 3;
             this.Tab_Main_Tool.Text = "ツール";
             this.Tab_Main_Tool.UseVisualStyleBackColor = true;

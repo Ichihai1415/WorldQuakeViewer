@@ -42,12 +42,12 @@ namespace WorldQuakeViewer
         {
             InitializeComponent();
             logTextBox = LogTextBox;
-            InfoText0.Text = $"WorldQuakeViewer v{version}";
         }
 
         private async void CtrlForm_Load(object sender, EventArgs e)
         {
             ExeLog($"[CtrlForm_Load]起動しました。");
+            InfoText0.Text = "<起動処理中...>";
             if (File.Exists("Setting\\config.json"))
                 try
                 {
@@ -125,6 +125,7 @@ namespace WorldQuakeViewer
             ProG_view_Copy.Enabled = c > ProG_view_CopyNum.Value;
 
             ExeLog($"[CtrlForm_Load]初回取得中...");
+            InfoText0.Text = "<初回取得中...>";
             for (int i = 0; i < config.Datas.Count(); i++)
                 foreach (int time in config.Datas[i].GetTimes)//2個じゃない可能性もなくはないため
                     if (0 <= time && time < 60)
@@ -137,6 +138,7 @@ namespace WorldQuakeViewer
 
             GetTimer.Interval = 10000 - DateTime.Now.Millisecond;
             GetTimer.Enabled = true;
+            InfoText0.Text = $"WorldQuakeViewer v{version}";
             ExeLog($"[CtrlForm_Load]起動処理完了 約10秒後に通常取得を開始します。");
             noFirst = true;
         }
