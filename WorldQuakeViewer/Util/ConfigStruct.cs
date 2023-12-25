@@ -62,7 +62,7 @@ namespace WorldQuakeViewer
                 public bool Normal_Enable { get; set; } = true;
 
                 /// <summary>
-                /// 動作ログ自動消去の間隔 0で無効
+                /// 動作ログ自動消去の間隔
                 /// </summary>
                 public TimeSpan Normal_AutoDelete { get; set; } = TimeSpan.FromHours(1);
 
@@ -878,10 +878,10 @@ namespace WorldQuakeViewer
                 public bool Normal_Enable { get; set; }
 
                 /// <summary>
-                /// 動作ログ自動消去の間隔 0で無効
+                /// 動作ログ自動消去の間隔
                 /// </summary>
                 [Category("ログ出力関連")]
-                [Description("動作ログ自動消去の間隔 0で無効")]
+                [Description("動作ログ自動消去の間隔")]
                 public TimeSpan Normal_AutoDelete { get; set; }
 
                 /// <summary>
@@ -933,19 +933,19 @@ namespace WorldQuakeViewer
             /// 取得元
             /// </summary>
             [ReadOnly(true)]
-            [Description("取得元")]
+            [Description("取得元(固定)")]
             public string Name { get; set; }
 
             /// <summary>
             /// 取得するURL
             /// </summary>
-            [Description("取得するURL")]
+            [Description("取得するURL\n更新処理を無効にして、設定後再起動を推奨します。予期しない更新処理が行われる可能性が高いです。")]
             public string URL { get; set; }
 
             /// <summary>
             /// データの種類
             /// </summary>
-            [Description("データの種類")]
+            [Description("データの種類\n基本はAutoでいいです。")]
             public DataProType DataProType { get; set; }
 
             /// <summary>

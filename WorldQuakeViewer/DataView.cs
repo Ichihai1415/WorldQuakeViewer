@@ -81,7 +81,7 @@ namespace WorldQuakeViewer
         }
 
         /// <summary>
-        /// 設定を再読み込みします。
+        /// 設定を反映させます。
         /// </summary>
         private void ConfigReload()
         {
@@ -90,6 +90,11 @@ namespace WorldQuakeViewer
             {
                 FormBorderStyle = FormBorderStyle.FixedSingle;
                 MaximizeBox = false;
+            }
+            else
+            {
+                FormBorderStyle = FormBorderStyle.Sizable;
+                MaximizeBox = true;
             }
         }
 

@@ -268,17 +268,7 @@ namespace WorldQuakeViewer
         {
             XmlNode origin = info.SelectSingleNode("qml:origin", ns);
             XmlNodeList magnitude = info.SelectNodes("qml:magnitude", ns);
-            string id;
-            switch (dataAuthor)
-            {
-                case DataAuthor.USGS:
-                    id = ((XmlElement)info).GetAttribute("catalog:dataid").Split('/').Last();
-                    break;
-                default:
-                    id = ((XmlElement)info).GetAttribute("publicID").Split('/').Last();
-                    break;
-            }
-
+            string id = ((XmlElement)info).GetAttribute("publicID").Split('/').Last().Replace(".quakeml","");//USGSには.quakemlが付く
             return new Data
             {
                 Author = dataAuthor,
@@ -518,7 +508,7 @@ namespace WorldQuakeViewer
             catch (Exception ex)
             {
                 ExeLog($"[IntConvert]エラー:{ex.Message}", true);
-                MessageBox.Show(topMost,"変換に失敗しました。値を確認してください。内容:" + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(topMost, "変換に失敗しました。値を確認してください。内容:" + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return double.NaN;
         }

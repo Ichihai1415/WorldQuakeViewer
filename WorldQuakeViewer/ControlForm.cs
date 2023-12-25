@@ -47,7 +47,7 @@ namespace WorldQuakeViewer
         private async void CtrlForm_Load(object sender, EventArgs e)
         {
             ExeLog($"[CtrlForm_Load]起動しました。");
-            InfoText0.Text = "<起動処理中...>";
+            InfoText0.Text = "<起動処理中...>WorldQuakeViewer";
             if (File.Exists("Setting\\config.json"))
                 try
                 {
@@ -125,7 +125,7 @@ namespace WorldQuakeViewer
             ProG_view_Copy.Enabled = c > ProG_view_CopyNum.Value;
 
             ExeLog($"[CtrlForm_Load]初回取得中...");
-            InfoText0.Text = "<初回取得中...>";
+            InfoText0.Text = "<初回取得中...>WorldQuakeViewer";
             for (int i = 0; i < config.Datas.Count(); i++)
                 foreach (int time in config.Datas[i].GetTimes)//2個じゃない可能性もなくはないため
                     if (0 <= time && time < 60)
@@ -141,6 +141,7 @@ namespace WorldQuakeViewer
             InfoText0.Text = $"WorldQuakeViewer v{version}";
             ExeLog($"[CtrlForm_Load]起動処理完了 約10秒後に通常取得を開始します。");
             noFirst = true;
+            ConfigNoFirstCheck.Checked = false;
         }
 
         /// <summary>
@@ -597,6 +598,12 @@ namespace WorldQuakeViewer
         private void ConfigMerge_CurrentDir_Click(object sender, EventArgs e)
         {
             ConfigMerge_PathBox.Text = Path.GetFullPath("WorldQuakeViewer.exe").Replace("WorldQuakeViewer.exe", "");
+        }
+
+        private void ConfigNoFirstCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            noFirst = !ConfigNoFirstCheck.Checked;
+            ExeLog($"更新処理を{(noFirst ? "再開" : "停止")}しました。");
         }
     }
 }
