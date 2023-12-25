@@ -328,7 +328,7 @@ namespace WorldQuakeViewer
                 /// <summary>
                 /// ホスト名
                 /// </summary>
-                public string Host { get; set; } = "172.0.0.1";
+                public string Host { get; set; } = "127.0.0.1";
 
                 /// <summary>
                 /// ポート

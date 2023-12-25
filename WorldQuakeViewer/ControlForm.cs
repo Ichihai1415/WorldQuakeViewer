@@ -464,7 +464,7 @@ namespace WorldQuakeViewer
                 string jsonText = jsonText_.Split('\n')[1];
                 switch (ConfigMerge_Select1.SelectedIndex)
                 {
-                    case 0:
+                    case 0://todo:違ったら確認画面
                         switch ((ConfigMerge_Select3_Data)ConfigMerge_Select3.SelectedIndex)
                         {
                             case ConfigMerge_Select3_Data.Update:

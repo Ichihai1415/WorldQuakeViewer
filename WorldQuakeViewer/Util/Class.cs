@@ -512,27 +512,27 @@ namespace WorldQuakeViewer
             /// <summary>
             /// 更新検知対象
             /// </summary>
-            Update = 1,
+            Update = 0,
             /// <summary>
             /// 音声再生
             /// </summary>
-            Sound = 2,
+            Sound = 1,
             /// <summary>
             /// 棒読みちゃん送信
             /// </summary>
-            Bouyomi = 3,
+            Bouyomi = 2,
             /// <summary>
             /// socket送信
             /// </summary>
-            Socket = 4,
+            Socket = 3,
             /// <summary>
             /// webhook送信
             /// </summary>
-            Webhook = 5,
+            Webhook = 4,
             /// <summary>
             /// ログ出力関連(地震)
             /// </summary>
-            LogE = 6
+            LogE = 5
         }
 
         /// <summary>

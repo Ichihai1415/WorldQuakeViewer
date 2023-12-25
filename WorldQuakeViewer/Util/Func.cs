@@ -296,7 +296,6 @@ namespace WorldQuakeViewer
         /// </summary>
         /// <remarks>事前に有効確認が必要です。</remarks>
         /// <param name="text">読み上げさせる文</param>
-        /// <param name="mag">マグニチュード</param>
         /// <param name="dataAuthor">データ元</param>
         public static void Bouyomichan(string text, DataAuthor dataAuthor)
         {
@@ -333,7 +332,6 @@ namespace WorldQuakeViewer
         /// </summary>
         /// <remarks>事前に有効確認が必要です。</remarks>
         /// <param name="text">送信する文</param>
-        /// <param name="mag">マグニチュード</param>
         /// <param name="dataAuthor">データ元</param>
         public static async void Socket(string text, DataAuthor dataAuthor)
         {
@@ -361,7 +359,6 @@ namespace WorldQuakeViewer
         /// </summary>
         /// <remarks>事前に有効確認が必要です。</remarks>
         /// <param name="text">送信する文</param>
-        /// <param name="mag">マグニチュード</param>
         /// <param name="dataAuthor">データ元</param>
         public static async void Webhook(string text, DataAuthor dataAuthor)
         {
