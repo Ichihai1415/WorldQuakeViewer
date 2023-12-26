@@ -190,10 +190,10 @@
             // 
             this.Tab_Main_Tool.Controls.Add(this.GroupBox_ConfigMerge);
             this.Tab_Main_Tool.Controls.Add(this.GroupBox_IntConv);
-            this.Tab_Main_Tool.Location = new System.Drawing.Point(4, 22);
+            this.Tab_Main_Tool.Location = new System.Drawing.Point(4, 27);
             this.Tab_Main_Tool.Name = "Tab_Main_Tool";
             this.Tab_Main_Tool.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_Main_Tool.Size = new System.Drawing.Size(492, 474);
+            this.Tab_Main_Tool.Size = new System.Drawing.Size(492, 469);
             this.Tab_Main_Tool.TabIndex = 3;
             this.Tab_Main_Tool.Text = "ツール";
             this.Tab_Main_Tool.UseVisualStyleBackColor = true;
@@ -250,21 +250,21 @@
             // 
             this.ConfigMerge_Select3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ConfigMerge_Select3.FormattingEnabled = true;
-            this.ConfigMerge_Select3.Location = new System.Drawing.Point(158, 90);
+            this.ConfigMerge_Select3.Location = new System.Drawing.Point(157, 90);
             this.ConfigMerge_Select3.Name = "ConfigMerge_Select3";
             this.ConfigMerge_Select3.Size = new System.Drawing.Size(100, 26);
             this.ConfigMerge_Select3.TabIndex = 5;
             // 
             // ConfigMerge_Select2
             // 
-            this.ConfigMerge_Select2.Location = new System.Drawing.Point(108, 90);
+            this.ConfigMerge_Select2.Location = new System.Drawing.Point(107, 90);
             this.ConfigMerge_Select2.Maximum = new decimal(new int[] {
             9,
             0,
             0,
             0});
             this.ConfigMerge_Select2.Name = "ConfigMerge_Select2";
-            this.ConfigMerge_Select2.Size = new System.Drawing.Size(30, 25);
+            this.ConfigMerge_Select2.Size = new System.Drawing.Size(32, 25);
             this.ConfigMerge_Select2.TabIndex = 4;
             // 
             // ConfigMerge_Text2

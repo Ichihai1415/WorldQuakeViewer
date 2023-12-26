@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using static WorldQuakeViewer.CtrlForm;
 using static WorldQuakeViewer.Util_Class;
 
 namespace WorldQuakeViewer

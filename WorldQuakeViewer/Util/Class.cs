@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Windows.Forms;
 
 namespace WorldQuakeViewer
 {
@@ -11,26 +8,6 @@ namespace WorldQuakeViewer
     /// </summary>
     public class Util_Class
     {
-        /// <summary>
-        /// プログラムのバージョン
-        /// </summary>
-        public static readonly string version = "1.2.0";
-
-        /// <summary>
-        /// ダイアログ等を最前面に表示する用
-        /// </summary>
-        public static Form topMost = new Form { TopMost = true };
-
-        /// <summary>
-        /// 文字描画用フォント
-        /// </summary>
-        public static FontFamily font;
-
-        /// <summary>
-        /// 震央マーク用色置換
-        /// </summary>
-        public static ImageAttributes ia = new ImageAttributes();
-
         /// <summary>
         /// データ元
         /// </summary>

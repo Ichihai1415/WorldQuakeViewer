@@ -7,6 +7,7 @@ using System.Media;
 using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
+using System.Windows.Forms;
 using WorldQuakeViewer.Properties;
 using static WorldQuakeViewer.Config;
 using static WorldQuakeViewer.CtrlForm;
@@ -472,6 +473,19 @@ namespace WorldQuakeViewer
                 if (dataViews[i] != null)
                     if (dataViews[i].dataAuthorN == (int)dataAuthor || dataViews[i].dataAuthorN == 9)
                         dataViews[i].Draw();
+        }
+
+        /// <summary>
+        /// メッセージボックスを表示し、応答を返します。
+        /// </summary>
+        /// <param name="text">表示する文字</param>
+        /// <param name="title">タイトル文字(既定は"確認")</param>
+        /// <param name="icon">表示するアイコン(既定はMessageBoxIcon.Information)</param>
+        /// <returns>OKが押された場合true</returns>
+        public static bool DialogOK(string text, string title = "確認", MessageBoxIcon icon = MessageBoxIcon.Information)
+        {
+            DialogResult ok = MessageBox.Show(topMost, text, title, MessageBoxButtons.OKCancel, icon);
+            return ok == DialogResult.OK;
         }
     }
 }

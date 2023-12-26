@@ -24,6 +24,27 @@ namespace WorldQuakeViewer
 {
     public partial class CtrlForm : Form
     {
+        /// <summary>
+        /// プログラムのバージョン
+        /// </summary>
+        public static readonly string version = "1.2.0";
+
+        /// <summary>
+        /// ダイアログ等を最前面に表示する用
+        /// </summary>
+        public static Form topMost = new Form { TopMost = true };
+
+        /// <summary>
+        /// 文字描画用フォント
+        /// </summary>
+        public static FontFamily font;
+
+        /// <summary>
+        /// 震央マーク用色置換
+        /// </summary>
+        public static ImageAttributes ia = new ImageAttributes();
+
+
         public static TextBox logTextBox;//staticでアクセスできるよう
         public static Config config = new Config();
         public static Config_Display config_display = new Config_Display();
@@ -294,7 +315,7 @@ namespace WorldQuakeViewer
         {
             if (config.Other.LogN.Normal_AutoSave)
                 LogSave(LogKind.Exe, exeLogs.ToString());
-            exeLogs =new StringBuilder();
+            exeLogs = new StringBuilder();
             ExeLog("[LogClearTimer_Tick]動作ログをクリアしました。");
             logTextBox.Text = "";
         }
@@ -363,7 +384,10 @@ namespace WorldQuakeViewer
             {
                 double afterValue = IntConvert((double)IntConv_NumBox2.Value, IntConv_ComBox2.SelectedIndex, IntConv_ComBox1.SelectedIndex);
                 if (afterValue == double.NaN)
+                {
+                    ExeLog("[ConfigMerge_Read_Click]取り消されました。");
                     return;
+                }
                 IntConv_NumBox1.Value = (decimal)afterValue;
             }
             catch (Exception ex)
@@ -379,7 +403,10 @@ namespace WorldQuakeViewer
             {
                 double afterValue = IntConvert((double)IntConv_NumBox1.Value, IntConv_ComBox1.SelectedIndex, IntConv_ComBox2.SelectedIndex);
                 if (afterValue == double.NaN)
+                {
+                    ExeLog("[ConfigMerge_Read_Click]取り消されました。");
                     return;
+                }
                 IntConv_NumBox2.Value = (decimal)afterValue;
             }
             catch (Exception ex)
@@ -395,7 +422,10 @@ namespace WorldQuakeViewer
             {
                 double afterValue = IntConvert((double)IntConv_NumBox3.Value, IntConv_ComBox3.SelectedIndex, IntConv_ComBox2.SelectedIndex);
                 if (afterValue == double.NaN)
+                {
+                    ExeLog("[ConfigMerge_Read_Click]取り消されました。");
                     return;
+                }
                 IntConv_NumBox2.Value = (decimal)afterValue;
             }
             catch (Exception ex)
@@ -411,7 +441,10 @@ namespace WorldQuakeViewer
             {
                 double afterValue = IntConvert((double)IntConv_NumBox2.Value, IntConv_ComBox2.SelectedIndex, IntConv_ComBox3.SelectedIndex);
                 if (afterValue == double.NaN)
+                {
+                    ExeLog("[ConfigMerge_Read_Click]取り消されました。");
                     return;
+                }
                 IntConv_NumBox3.Value = (decimal)afterValue;
             }
             catch (Exception ex)
@@ -451,8 +484,21 @@ namespace WorldQuakeViewer
         {
             try
             {
-                ExeLog("[ConfigMerge_Read_Click]読み込み開始");
+                string askText = "選択したものは設定したものとは異なるようです。続行してもよろしいですか？";
                 int i = (int)ConfigMerge_Select2.Value;
+                if (i == -1)
+                {
+                    if (ConfigMerge_Select1.SelectedIndex == 0)
+                    {
+                        if (DialogOK("選択した項目について、すべてのデータ元に反映させます。よろしいですか？"))
+                            ConfigMerge_Read_Click_Auto(sender, e);
+                    }
+                    else
+                        MessageBox.Show("-1はDataのみで有効です。", "お知らせ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+
+                }
+                ExeLog("[ConfigMerge_Read_Click]読み込み開始");
                 string jsonText_ = File.ReadAllText(ConfigMerge_PathBox.Text);
                 string head_ = jsonText_.Split('\n')[0];
                 string[] head = head_.Split(',');
@@ -461,28 +507,70 @@ namespace WorldQuakeViewer
                 string type = head.Where(x => x.StartsWith("type")).Count() == 0 ? "null" : head.Where(x => x.StartsWith("type")).First().Split(':')[1];
                 ExeLog($"[ConfigMerge_Read_Click]version:{version},type:{type}");
 
+                if (CtrlForm.version != version)
+                    if (!DialogOK($"このバージョンは設定したバージョンとは異なるようです。続行してもよろしいですか？\n現在:{CtrlForm.version} 設定:{version}"))
+                    {
+                        ExeLog("[ConfigMerge_Read_Click]取り消されました。");
+                        return;
+                    }
                 string jsonText = jsonText_.Split('\n')[1];
                 switch (ConfigMerge_Select1.SelectedIndex)
                 {
-                    case 0://todo:違ったら確認画面
+                    case 0:
                         switch ((ConfigMerge_Select3_Data)ConfigMerge_Select3.SelectedIndex)
                         {
                             case ConfigMerge_Select3_Data.Update:
+                                if ($"config.Datas[{i}].Update" != type)
+                                    if (!DialogOK($"{askText}\n選択:config.Datas[{i}].Update 設定:{type}"))
+                                    {
+                                        ExeLog("[ConfigMerge_Read_Click]取り消されました。");
+                                        return;
+                                    }
                                 config.Datas[i].Update = JsonConvert.DeserializeObject<Config.Data_.Update_>(jsonText);
                                 break;
                             case ConfigMerge_Select3_Data.Sound:
+                                if ($"config.Datas[{i}].Sound" != type)
+                                    if (!DialogOK($"{askText}\n選択:config.Datas[{i}].Sound 設定:{type}"))
+                                    {
+                                        ExeLog("[ConfigMerge_Read_Click]取り消されました。");
+                                        return;
+                                    }
                                 config.Datas[i].Sound = JsonConvert.DeserializeObject<Config.Data_.Sound_>(jsonText);
                                 break;
                             case ConfigMerge_Select3_Data.Bouyomi:
+                                if ($"config.Datas[{i}].Bouyomi" != type)
+                                    if (!DialogOK($"{askText}\n選択:config.Datas[{i}].Bouyomi 設定:{type}"))
+                                    {
+                                        ExeLog("[ConfigMerge_Read_Click]取り消されました。");
+                                        return;
+                                    }
                                 config.Datas[i].Bouyomi = JsonConvert.DeserializeObject<Config.Data_.Bouyomi_>(jsonText);
                                 break;
                             case ConfigMerge_Select3_Data.Socket:
+                                if ($"config.Datas[{i}].Socket" != type)
+                                    if (!DialogOK($"{askText}\n選択:config.Datas[{i}].Socket 設定:{type}"))
+                                    {
+                                        ExeLog("[ConfigMerge_Read_Click]取り消されました。");
+                                        return;
+                                    }
                                 config.Datas[i].Socket = JsonConvert.DeserializeObject<Config.Data_.Socket_>(jsonText);
                                 break;
                             case ConfigMerge_Select3_Data.Webhook:
+                                if ($"config.Datas[{i}].Webhook" != type)
+                                    if (!DialogOK($"{askText}\n選択:config.Datas[{i}].Webhook 設定:{type}"))
+                                    {
+                                        ExeLog("[ConfigMerge_Read_Click]取り消されました。");
+                                        return;
+                                    }
                                 config.Datas[i].Webhook = JsonConvert.DeserializeObject<Config.Data_.Webhook_>(jsonText);
                                 break;
                             case ConfigMerge_Select3_Data.LogE:
+                                if ($"config.Datas[{i}].LogE" != type)
+                                    if (!DialogOK($"{askText}\n選択:config.Datas[{i}].LogE 設定:{type}"))
+                                    {
+                                        ExeLog("[ConfigMerge_Read_Click]取り消されました。");
+                                        return;
+                                    }
                                 config.Datas[i].LogE = JsonConvert.DeserializeObject<Config.Data_.LogE_>(jsonText);
                                 break;
                             default:
@@ -493,9 +581,21 @@ namespace WorldQuakeViewer
                         switch ((ConfigMerge_Select3_View)ConfigMerge_Select3.SelectedIndex)
                         {
                             case ConfigMerge_Select3_View.All:
+                                if ($"config.Views[{i}]" != type.Replace($"[{i}]", ""))
+                                    if (!DialogOK($"{askText}\n選択:config.Views[{i}] 設定:{type}"))
+                                    {
+                                        ExeLog("[ConfigMerge_Read_Click]取り消されました。");
+                                        return;
+                                    }
                                 config.Views[i] = JsonConvert.DeserializeObject<Config.View_>(jsonText);
                                 break;
                             case ConfigMerge_Select3_View.Color:
+                                if ($"config.Views[{i}].Colors" != type.Replace($"[{i}]", ""))
+                                    if (!DialogOK($"{askText}\n選択:config.Views[{i}].Colors 設定:{type}"))
+                                    {
+                                        ExeLog("[ConfigMerge_Read_Click]取り消されました。");
+                                        return;
+                                    }
                                 config.Views[i].Colors = JsonConvert.DeserializeObject<Config.View_.Colors_>(jsonText);
                                 break;
                             default:
@@ -506,9 +606,21 @@ namespace WorldQuakeViewer
                         switch ((ConfigMerge_Select3_Other)ConfigMerge_Select3.SelectedIndex)
                         {
                             case ConfigMerge_Select3_Other.All:
+                                if ($"config.Other" != type)
+                                    if (!DialogOK($"{askText}\n選択:config.Other 設定:{type}"))
+                                    {
+                                        ExeLog("[ConfigMerge_Read_Click]取り消されました。");
+                                        return;
+                                    }
                                 config.Other = JsonConvert.DeserializeObject<Config.Other_>(jsonText);
                                 break;
                             case ConfigMerge_Select3_Other.LogN:
+                                if ($"config.Other.LogN" != type)
+                                    if (!DialogOK($"{askText}\n選択:config.Other.LogN 設定:{type}"))
+                                    {
+                                        ExeLog("[ConfigMerge_Read_Click]取り消されました。");
+                                        return;
+                                    }
                                 config.Other.LogN = JsonConvert.DeserializeObject<Config.Other_.LogN_>(jsonText);
                                 break;
                             default:
@@ -519,7 +631,9 @@ namespace WorldQuakeViewer
                         throw new Exception($"ConfigMerge_Select1.SelectedIndex({ConfigMerge_Select1.SelectedIndex})が不正です。");
                 }
                 ExeLog("[ConfigMerge_Read_Click]読み込み完了");
+                File.WriteAllText("Setting\\config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
                 ConfigReload();
+                UpdtProEnableCtrl();
             }
             catch (Exception ex)
             {
@@ -529,6 +643,21 @@ namespace WorldQuakeViewer
             }
         }
 
+        /// <summary>
+        /// ConfigMerge_Read_ClickをDataの数ぶん実行します。ConfigMerge_Select2は自動で変わります。
+        /// </summary>
+        /// <param name="sender">ConfigMerge_Read_Clickを呼び出したときのもの</param>
+        /// <param name="e">ConfigMerge_Read_Clickを呼び出したときのもの</param>
+        private void ConfigMerge_Read_Click_Auto(object sender, EventArgs e)
+        {
+            for (int j = 0; j < DataAuthorCount; j++)
+            {
+                ConfigMerge_Select2.Value = j;
+                ConfigMerge_Read_Click(sender, e);
+            }
+            ConfigMerge_Select2.Value = -1;
+        }
+
         private void ConfigMerge_Write_Click(object sender, EventArgs e)
         {
             try
@@ -536,6 +665,11 @@ namespace WorldQuakeViewer
                 ExeLog("[ConfigMerge_Write_Click]書き込み開始");
                 int i = (int)ConfigMerge_Select2.Value;
                 string jsonText;
+                if (i == -1)
+                {
+                    MessageBox.Show("-1は読み込みのみで有効です。", "お知らせ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
                 switch (ConfigMerge_Select1.SelectedIndex)
                 {
                     case 0:
@@ -603,8 +737,6 @@ namespace WorldQuakeViewer
                 }
                 File.WriteAllText(ConfigMerge_PathBox.Text, jsonText);
                 ExeLog("[ConfigMerge_Write_Click]書き込み完了");
-                ConfigReload();
-                UpdtProEnableCtrl();
             }
             catch (Exception ex)
             {
