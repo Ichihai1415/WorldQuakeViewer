@@ -122,13 +122,13 @@ namespace WorldQuakeViewer
             if (config_data_update.Time)
                 if (data_n.Time != data_o.Time)
                 {
-                    ExeLog($"{data_o.Time}->{data_n.Time}");
+                    ExeLog($"{data_o.Time:yyyy/MM/dd HH:mm:ss.ffff}->{data_n.Time:yyyy/MM/dd HH:mm:ss.ffff}");
                     return true;
                 }
             if (config_data_update.UpdtTime)
                 if (data_n.UpdtTime != data_o.UpdtTime)
                 {
-                    ExeLog($"{data_o.UpdtTime}->{data_n.UpdtTime}");
+                    ExeLog($"{data_o.UpdtTime:yyyy/MM/dd HH:mm:ss.ffff}->{data_n.UpdtTime:yyyy/MM/dd HH:mm:ss.ffff}");
                     return true;
                 }
             if (config_data_update.Hypo)

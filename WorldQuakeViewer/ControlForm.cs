@@ -734,7 +734,7 @@ namespace WorldQuakeViewer
                         throw new Exception($"ConfigMerge_Select1.SelectedIndex({ConfigMerge_Select1.SelectedIndex})が不正です。");
                 }
                 if (File.Exists(ConfigMerge_PathBox.Text))
-                    if (DialogOK("既にファイルが存在します。上書きしてもよろしいですか？", MessageBoxIcon.Warning))
+                    if (!DialogOK("既にファイルが存在します。上書きしてもよろしいですか？", MessageBoxIcon.Warning))
                     {
                         ExeLog("[ConfigMerge_Write_Click]取り消されました。");
                         return;
