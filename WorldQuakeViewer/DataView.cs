@@ -77,6 +77,7 @@ namespace WorldQuakeViewer
                     throw new Exception($"DataViewの初期化に失敗しました。{dataAuthorN}はデータ元として不正です。");
             }
             ConfigReload();
+            ExeLog($"DataView[{i}]を初期化しました。");
             //todo:一定時間でgreenにするやつ(必要なら)
         }
 
@@ -328,16 +329,16 @@ namespace WorldQuakeViewer
             return histImg;
         }
 
-        /// <summary>
-        /// 閉じるか確認
-        /// </summary>
         private void DataView_FormClosing(object sender, FormClosingEventArgs e)
         {
-            DialogResult ok = MessageBox.Show(topMost, "閉じてもいいですか？メイン画面から再表示できます。", "確認", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
-            if (ok == DialogResult.Cancel)
-                e.Cancel = true;
-            else
-                showing = false;
+            if (e.CloseReason == CloseReason.UserClosing)
+                if (!DialogOK("閉じてもよろしいですか？メイン画面から再表示できます。"))
+                {
+                    e.Cancel = true;
+                    return;
+                }
+            ExeLog($"[DataView_FormClosing]{e.CloseReason}により閉じられました。");
+            showing = false;
         }
     }
 }

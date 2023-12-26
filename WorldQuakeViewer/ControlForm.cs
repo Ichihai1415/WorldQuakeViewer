@@ -93,7 +93,7 @@ namespace WorldQuakeViewer
                 {
                     ExeLog($"[CtrlForm_Load]エラー:{ex.Message}", true);
                     LogSave(LogKind.Error, ex.ToString());
-                    if (MessageBox.Show($"設定の読み込みに失敗しました。OKを押すとバックアップしてリセットされます。({ex.Message})", "エラー", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
+                    if (DialogOK("設定の読み込みに失敗しました。OKを押すとバックアップしてリセットされます。({ex.Message})", "エラー", MessageBoxIcon.Error))
                     {
                         File.Copy("Setting\\config.json", $"Setting\\config-backup-{DateTime.Now:yyyyMMddHHmmss}.json", true);
                         File.WriteAllText("Setting\\config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
@@ -307,6 +307,12 @@ namespace WorldQuakeViewer
 
         private void CtrlForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (e.CloseReason == CloseReason.UserClosing)
+                if (!DialogOK("ソフトを終了してもよろしいですか？"))
+                {
+                    e.Cancel = true;
+                    return;
+                }
             if (config.Other.LogN.Normal_AutoSave)
                 LogSave(LogKind.Exe, exeLogs.ToString());
         }
@@ -349,15 +355,16 @@ namespace WorldQuakeViewer
                 else if (dataViews[num].showing)
                 {
                     ExeLog($"[Open]画面[{num}]はすでに表示されています。");
-                    DialogResult res = MessageBox.Show(topMost, $"画面[{num}]はすでに表示されています。再試行を押すと閉じる要求を送信します。(確認画面が表示されるのでOKを押してください。)", "確認", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Information);
+                    DialogResult res = MessageBox.Show(topMost, $"画面[{num}]はすでに表示されています。再試行を押すと開きなおします。確認画面が表示されるのでOKを押してください。", "確認", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Information);
                     switch (res)
                     {
                         case DialogResult.Retry:
                             dataViews[num].Close();
+                            Open(num);
                             break;
                         case DialogResult.Ignore:
                             dataViews[num].Show();
-                            ExeLog($"[Open]画面[{num}]を表示しました。強制的に開いたため一部の動作がおかしくなる可能性があります。");
+                            ExeLog($"[Open]画面[{num}]を表示しました。強制的に開いたため一部の動作がおかしくなる可能性があります。開いていない場合は再起動してください。");
                             break;
                     }
                 }
@@ -727,14 +734,11 @@ namespace WorldQuakeViewer
                         throw new Exception($"ConfigMerge_Select1.SelectedIndex({ConfigMerge_Select1.SelectedIndex})が不正です。");
                 }
                 if (File.Exists(ConfigMerge_PathBox.Text))
-                {
-                    DialogResult ok = MessageBox.Show(topMost, "既にファイルが存在します。上書きしてもよろしいですか？", "確認", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
-                    if (ok == DialogResult.Cancel)
+                    if (DialogOK("既にファイルが存在します。上書きしてもよろしいですか？", MessageBoxIcon.Warning))
                     {
                         ExeLog("[ConfigMerge_Write_Click]取り消されました。");
                         return;
                     }
-                }
                 File.WriteAllText(ConfigMerge_PathBox.Text, jsonText);
                 ExeLog("[ConfigMerge_Write_Click]書き込み完了");
             }

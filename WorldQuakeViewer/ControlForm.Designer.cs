@@ -619,10 +619,10 @@
             this.Tab_Setting_View.Controls.Add(this.ProG_view_Delete);
             this.Tab_Setting_View.Controls.Add(this.ProG_view_Add);
             this.Tab_Setting_View.Controls.Add(this.ProG_view);
-            this.Tab_Setting_View.Location = new System.Drawing.Point(4, 22);
+            this.Tab_Setting_View.Location = new System.Drawing.Point(4, 27);
             this.Tab_Setting_View.Name = "Tab_Setting_View";
             this.Tab_Setting_View.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_Setting_View.Size = new System.Drawing.Size(484, 343);
+            this.Tab_Setting_View.Size = new System.Drawing.Size(484, 338);
             this.Tab_Setting_View.TabIndex = 2;
             this.Tab_Setting_View.Text = "表示";
             this.Tab_Setting_View.UseVisualStyleBackColor = true;
@@ -745,7 +745,7 @@
             this.ProG_view.Location = new System.Drawing.Point(3, 3);
             this.ProG_view.Name = "ProG_view";
             this.ProG_view.PropertySort = System.Windows.Forms.PropertySort.Categorized;
-            this.ProG_view.Size = new System.Drawing.Size(478, 337);
+            this.ProG_view.Size = new System.Drawing.Size(478, 332);
             this.ProG_view.TabIndex = 1;
             // 
             // Tab_Setting_Other
