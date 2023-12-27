@@ -273,16 +273,6 @@ namespace WorldQuakeViewer
             public string ID { get; set; } = "";
 
             /// <summary>
-            /// 発生日時(UTC)
-            /// </summary>
-            public string TimeUTC_Format { get; set; } = "";
-
-            /// <summary>
-            /// 発生日時(ユーザー)
-            /// </summary>
-            public string TimeUser_Format { get; set; } = "";
-
-            /// <summary>
             /// 震源名(日本語)
             /// </summary>
             public string HypoJP { get; set; } = "";

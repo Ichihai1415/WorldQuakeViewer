@@ -69,7 +69,7 @@ namespace WorldQuakeViewer
             IntConv_ComBox1.SelectedIndex = 0;
             IntConv_ComBox2.SelectedIndex = 1;
             IntConv_ComBox3.SelectedIndex = 2;
-        }
+        }//todo:過去の取得用(catarog)のやつ
 
         private async void CtrlForm_Load(object sender, EventArgs e)
         {
@@ -86,7 +86,7 @@ namespace WorldQuakeViewer
                         int[] nowVer = version.Split('.').Select(n => int.Parse(n.Replace("α", "-"))).ToArray();
                         int[] setVer = config.Version.Split('.').Select(n => int.Parse(n.Replace("α", "-"))).ToArray();
                         if (setVer[1] <= 1 && setVer[2] <= 1)//x.1.1以下の場合
-                            throw new Exception("バージョンが間違っています。製作者に報告してください。");
+                            Console.WriteLine();
                     }
                 }
                 catch (Exception ex)
@@ -117,7 +117,7 @@ namespace WorldQuakeViewer
                     if (File.Exists(config_old.FilePath))
                         File.Delete(config_old.FilePath);
                     if (Directory.Exists("Sound"))
-                        Directory.Delete("Sound");
+                        Directory.Delete("Sound", true);
                     ExeLog("更新用処理(~v1.1.1 => v1.2.0~)を行いました。");
                 }
             }
@@ -176,7 +176,7 @@ namespace WorldQuakeViewer
                         continue;
                     }
             for (int i = 1; i < config.Views.Count(); i++)
-                Open(i);
+                Open(i);//起動したとき表示されない時がある
 
             GetTimer.Interval = 10000 - DateTime.Now.Millisecond;
             GetTimer.Enabled = true;

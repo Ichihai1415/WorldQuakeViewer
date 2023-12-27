@@ -199,7 +199,7 @@ namespace WorldQuakeViewer
                 catch (Exception ex)
                 {
                     ExeLog($"[Get_QuakeML][{dataAuthor}]エラー:{ex.Message}", true);
-                    LogSave(LogKind.Error, ex.ToString());
+                    LogSave(LogKind.Error, ex.ToString() + info.InnerXml);//todo:確認用臨時
                 }
             }
             Sound_Play(maxLevel, dataAuthor);

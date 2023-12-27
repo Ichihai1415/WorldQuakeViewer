@@ -95,7 +95,7 @@ namespace WorldQuakeViewer
                 Lon60s = lon60s,
                 Depth = data.Depth.ToString(),
                 MagType = data.MagType,
-                Mag = data.Mag.ToString(),
+                Mag = data.Mag.ToString("0.0#"),
                 MMI = data.MMI == null ? "" : data.MMI.ToString(),
                 MMIAra = MMI2Ara(data.MMI),
                 AlertJP = Alert2JP(data.Alert),
@@ -143,6 +143,7 @@ namespace WorldQuakeViewer
                 .Replace("[AlertJP]", f.AlertJP).Replace("[AlertEN]", f.AlertEN)
                 .Replace("[Source]", f.Source)
                 .Replace("[UpdateJP]", f.UpdateJP).Replace("[UpdateEN]", f.UpdateEN)
+                .Replace("[dataJSON]", JsonConvert.SerializeObject(data))
                 .Replace("[formatJSON]", JsonConvert.SerializeObject(f));
             foreach (Config.Data_.LogE_.TextReplace_ replace in config.Datas[(int)data.Author].LogE.TextReplace)
                 format = format.Replace(replace.OldValue, replace.NewValue);
@@ -231,7 +232,6 @@ namespace WorldQuakeViewer
             }
         }
 
-
         /// <summary>
         /// テキスト形式からリスト形式に変換します。
         /// </summary>
@@ -319,7 +319,7 @@ namespace WorldQuakeViewer
                         Author = dataAuthor,
                         ID = (string)properties.SelectToken("source_id"),
                         ID2 = (string)properties.SelectToken("source_id"),
-                        Time = DateTimeOffset.Parse((string)properties.SelectToken("time")),
+                        Time = DateTimeOffset.Parse((string)properties.SelectToken("time")),//Zが付いてるはず
                         UpdtTime = DateTimeOffset.Parse((string)properties.SelectToken("lastupdate")),
                         Hypo = NameJP((double)properties.SelectToken("lat"), (double)properties.SelectToken("lon")),
                         Lat = (double)properties.SelectToken("lat"),
@@ -329,6 +329,8 @@ namespace WorldQuakeViewer
                         Mag = (double)properties.SelectToken("mag"),
                         Source = (string)properties.SelectToken("auth")
                     };
+                case DataAuthor.Other:
+                    throw new ArgumentException($"未対応のデータ元({dataAuthor})です(USGSやEMSCのGeoJSONはここでは処理できません。別のタイプを指定してください。)。", nameof(dataAuthor));
                 default:
                     throw new ArgumentException($"未対応のデータ元({dataAuthor})です。", nameof(dataAuthor));
             }

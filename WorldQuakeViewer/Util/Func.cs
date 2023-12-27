@@ -72,7 +72,24 @@ namespace WorldQuakeViewer
                     case LogKind.EarlyEst:
                         if (id == "")
                             throw new ArgumentException($"地震idが指定されていません。", nameof(id));
-                        dir = $"Log\\{logKind}\\{DateTime.Now:yyyyMM\\\\dd}";
+                        switch (logKind)
+                        {
+                            case LogKind.Other:
+                                dir = $"Log\\{logKind}\\{data_Other[id].Time:yyyyMM\\\\dd}";
+                                break;
+                            case LogKind.USGS:
+                                dir = $"Log\\{logKind}\\{data_USGS[id].Time:yyyyMM\\\\dd}";
+                                break;
+                            case LogKind.EMSC:
+                                dir = $"Log\\{logKind}\\{data_EMSC[id].Time:yyyyMM\\\\dd}";
+                                break;
+                            case LogKind.GFZ:
+                                dir = $"Log\\{logKind}\\{data_GFZ[id].Time:yyyyMM\\\\dd}";
+                                break;
+                            case LogKind.EarlyEst:
+                                dir = $"Log\\{logKind}\\{data_EarlyEst[id].Time:yyyyMM\\\\dd}";
+                                break;
+                        }
                         name = $"{id}.txt";
                         if (File.Exists($"{dir}\\{name}"))
                             text = $"{File.ReadAllText($"{dir}\\{name}")}\n--------------------------------------------------\n{text}";
@@ -122,67 +139,67 @@ namespace WorldQuakeViewer
             if (config_data_update.Time)
                 if (data_n.Time != data_o.Time)
                 {
-                    ExeLog($"{data_o.Time:yyyy/MM/dd HH:mm:ss.ffff}->{data_n.Time:yyyy/MM/dd HH:mm:ss.ffff}");
+                    ExeLog($"Time:{data_o.Time:yyyy/MM/dd HH:mm:ss.ffff}->{data_n.Time:yyyy/MM/dd HH:mm:ss.ffff}");
                     return true;
                 }
             if (config_data_update.UpdtTime)
                 if (data_n.UpdtTime != data_o.UpdtTime)
                 {
-                    ExeLog($"{data_o.UpdtTime:yyyy/MM/dd HH:mm:ss.ffff}->{data_n.UpdtTime:yyyy/MM/dd HH:mm:ss.ffff}");
+                    ExeLog($"UpdtTime:{data_o.UpdtTime:yyyy/MM/dd HH:mm:ss.ffff}->{data_n.UpdtTime:yyyy/MM/dd HH:mm:ss.ffff}");
                     return true;
                 }
             if (config_data_update.Hypo)
                 if (data_n.Hypo != data_o.Hypo)
                 {
-                    ExeLog($"{data_o.Hypo}->{data_n.Hypo}");
+                    ExeLog($"Hypo:{data_o.Hypo}->{data_n.Hypo}");
                     return true;
                 }
             if (config_data_update.LatLon)
                 if (data_n.Lat != data_o.Lat)
                 {
-                    ExeLog($"{data_o.Lat}->{data_n.Lat}");
+                    ExeLog($"Lat:{data_o.Lat}->{data_n.Lat}");
                     return true;
                 }
             if (config_data_update.LatLon)
                 if (data_n.Lon != data_o.Lon)
                 {
-                    ExeLog($"{data_o.Lon}->{data_n.Lon}");
+                    ExeLog($"Lon:{data_o.Lon}->{data_n.Lon}");
                     return true;
                 }
             if (config_data_update.Depth)
                 if (data_n.Depth != data_o.Depth)
                 {
-                    ExeLog($"{data_o.Depth}->{data_n.Depth}");
+                    ExeLog($"Depth:{data_o.Depth}->{data_n.Depth}");
                     return true;
                 }
             if (config_data_update.MagType)
                 if (data_n.MagType != data_o.MagType)
                 {
-                    ExeLog($"{data_o.MagType}->{data_n.MagType}");
+                    ExeLog($"MagType:{data_o.MagType}->{data_n.MagType}");
                     return true;
                 }
             if (config_data_update.Mag)
                 if (data_n.Mag != data_o.Mag)
                 {
-                    ExeLog($"{data_o.Mag}->{data_n.Mag}");
+                    ExeLog($"Mag:{data_o.Mag}->{data_n.Mag}");
                     return true;
                 }
             if (config_data_update.MMI)
                 if (data_n.MMI != data_o.MMI)
                 {
-                    ExeLog($"{data_o.MMI}->{data_n.MMI}");
+                    ExeLog($"MMI:{data_o.MMI}->{data_n.MMI}");
                     return true;
                 }
             if (config_data_update.Alert)
                 if (data_n.Alert != data_o.Alert)
                 {
-                    ExeLog($"{data_o.Alert}->{data_n.Alert}");
+                    ExeLog($"Alert:{data_o.Alert}->{data_n.Alert}");
                     return true;
                 }
             if (config_data_update.Source)
                 if (data_n.Source != data_o.Source)
                 {
-                    ExeLog($"{data_o.Source}->{data_n.Source}");
+                    ExeLog($"Source:{data_o.Source}->{data_n.Source}");
                     return true;
                 }
             Console.WriteLine("更新なし");
@@ -274,7 +291,7 @@ namespace WorldQuakeViewer
                     }
                     if (!File.Exists(path))
                         throw new FileNotFoundException("ファイルが見つかりませんでした。", path);
-                    ExeLog($"[Sound_Play]音声再生開始({path})");
+                    ExeLog($"[Sound_Play][{dataAuthor}]音声再生開始({path})");
                     if (player != null)
                     {
                         player.Stop();
@@ -283,11 +300,11 @@ namespace WorldQuakeViewer
                     }
                     player = new SoundPlayer(path);
                     player.Play();
-                    ExeLog($"[Sound_Play]音声再生成功");
+                    ExeLog($"[Sound_Play][{dataAuthor}]音声再生成功");
                 }
                 catch (Exception ex)
                 {
-                    ExeLog($"[Sound_Play]エラー:{ex.Message}", true);
+                    ExeLog($"[Sound_Play][{dataAuthor}]エラー:{ex.Message}", true);
                     LogSave(LogKind.Error, ex.ToString());
                 }
         }
@@ -305,7 +322,7 @@ namespace WorldQuakeViewer
                 Console.WriteLine("棒読みちゃん処理開始");
                 Data_.Bouyomi_ config_bouyomi = config.Datas[(int)dataAuthor].Bouyomi;
                 byte[] message = Encoding.UTF8.GetBytes(text);
-                ExeLog($"[Bouyomichan]棒読みちゃん送信中…({config_bouyomi.Host}:{config_bouyomi.Port})");
+                ExeLog($"[Bouyomichan][{dataAuthor}]棒読みちゃん送信中...");
                 using (TcpClient tcpClient = new TcpClient(config_bouyomi.Host, config_bouyomi.Port))
                 using (NetworkStream networkStream = tcpClient.GetStream())
                 using (BinaryWriter binaryWriter = new BinaryWriter(networkStream))
@@ -319,11 +336,11 @@ namespace WorldQuakeViewer
                     binaryWriter.Write(message.Length);
                     binaryWriter.Write(message);
                 }
-                ExeLog($"[Bouyomichan]棒読みちゃん送信成功");
+                ExeLog($"[Bouyomichan][{dataAuthor}]棒読みちゃん送信成功");
             }
             catch (Exception ex)
             {
-                ExeLog($"[Bouyomichan]エラー:{ex.Message}", true);
+                ExeLog($"[Bouyomichan][{dataAuthor}]エラー:{ex.Message}", true);
                 LogSave(LogKind.Error, ex.ToString());
             }
         }
@@ -342,15 +359,15 @@ namespace WorldQuakeViewer
                 Data_.Socket_ config_socket = config.Datas[(int)dataAuthor].Socket;
                 byte[] message = new byte[4096];
                 message = Encoding.UTF8.GetBytes(text);
-                ExeLog($"[Socket]Socket送信中…({config_socket.Host}:{config_socket.Port})");
+                ExeLog($"[Socket][{dataAuthor}]Socket送信中…");
                 using (TcpClient tcpClient = new TcpClient(config_socket.Host, config_socket.Port))
                 using (NetworkStream networkStream = tcpClient.GetStream())
                     await networkStream.WriteAsync(message, 0, message.Length);
-                ExeLog($"[Socket]Socket送信成功");
+                ExeLog($"[Socket][{dataAuthor}]Socket送信成功");
             }
             catch (Exception ex)
             {
-                ExeLog($"[Socket]エラー:{ex.Message}", true);
+                ExeLog($"[Socket][{dataAuthor}]エラー:{ex.Message}", true);
                 LogSave(LogKind.Error, ex.ToString());
             }
         }
@@ -371,13 +388,13 @@ namespace WorldQuakeViewer
                 {
                     { "content", text }
                 };
-                ExeLog($"[Webhook]Webhook送信中…({config_webhook.URL})");
+                ExeLog($"[Webhook][{dataAuthor}]Webhook送信中…");
                 await client.PostAsync(config_webhook.URL, new FormUrlEncodedContent(strs));
-                ExeLog($"[Webhook]Webhook送信成功");
+                ExeLog($"[Webhook][{dataAuthor}]Webhook送信成功");
             }
             catch (Exception ex)
             {
-                ExeLog($"[Webhook]エラー:{ex.Message}", true);
+                ExeLog($"[Webhook][{dataAuthor}]エラー:{ex.Message}", true);
                 LogSave(LogKind.Error, ex.ToString());
             }
         }

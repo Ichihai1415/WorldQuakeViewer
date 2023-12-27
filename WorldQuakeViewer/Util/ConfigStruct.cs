@@ -5,7 +5,7 @@ using System.Linq;
 using static WorldQuakeViewer.CtrlForm;
 using static WorldQuakeViewer.Util_Class;
 
-namespace WorldQuakeViewer
+namespace WorldQuakeViewer//MMI Alertをformat頑張る
 {
     /// <summary>
     /// 設定保存用クラス
@@ -233,7 +233,8 @@ namespace WorldQuakeViewer
                     MagType = from.MagType,
                     Mag = from.Mag,
                     MMI = from.MMI,
-                    Alert = from.Alert
+                    Alert = from.Alert,
+                    Source = from.Source
                 };
             }
 
@@ -359,7 +360,7 @@ namespace WorldQuakeViewer
                 /// <summary>
                 /// 送信する文のフォーマット
                 /// </summary>
-                public string Format { get; set; } = "[Author]地震情報、[UpdateJP]、{TimeUser*d日H時m分s秒}発生、マグニチュード[Mag]、震源、[HypoJP]、深さ[Depth]km。";
+                public string Format { get; set; } = "[Author]地震情報、[UpdateJP]、{TimeUser*d日H時m分s秒}発生、マグニチュード[Mag]、震源、[HypoJP]、[LatNSJP][Lat60d]度[Lat60m]分[Lat60s]秒、[LonEWJP][Lon60d]度[Lon60m]分[Lon60s]秒、深さ[Depth]km。";
 
                 /// <summary>
                 /// 送信する文の置換
@@ -515,7 +516,7 @@ namespace WorldQuakeViewer
                 /// <summary>
                 /// 送信する文の置換
                 /// </summary>
-                public TextReplace_[] TextReplace { get; set; } = new TextReplace_[] { new TextReplace_ { OldValue = "()", NewValue = "" }, new TextReplace_() };
+                public TextReplace_[] TextReplace { get; set; } = new TextReplace_[] { new TextReplace_ { OldValue = "()", NewValue = "" } };
 
                 /// <summary>
                 /// 送信する文の置換
@@ -596,7 +597,7 @@ namespace WorldQuakeViewer
                 /// <summary>
                 /// 保存する文の置換
                 /// </summary>
-                public TextReplace_[] TextReplace { get; set; } = new TextReplace_[] { new TextReplace_ { OldValue = "()", NewValue = "" }, new TextReplace_() };
+                public TextReplace_[] TextReplace { get; set; } = new TextReplace_[] { new TextReplace_ { OldValue = "()", NewValue = "" } };
 
                 /// <summary>
                 /// 保存する文の置換
@@ -927,7 +928,7 @@ namespace WorldQuakeViewer
         /// データ処理
         /// </summary>
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        [Description("データ処理")]
+        [Description("データ処理関連")]
         public class Data_
         {
             /// <summary>
@@ -1001,7 +1002,7 @@ namespace WorldQuakeViewer
             /// 更新検知対象
             /// </summary>
             [TypeConverter(typeof(ExpandableObjectConverter))]
-            [Description("更新検知対象")]
+            [Description("更新検知対象関連")]
             public class Update_
             {
                 /// <summary>
@@ -1013,63 +1014,63 @@ namespace WorldQuakeViewer
                 /// <summary>
                 /// 発生時刻
                 /// </summary>
-                [Description("発生時刻")]
+                [Description("発生時刻が変化したとき更新とするか")]
                 public bool Time { get; set; }
 
                 /// <summary>
                 /// 更新時刻
                 /// </summary>
-                [Description("更新時刻")]
+                [Description("更新時刻が変化したとき更新とするか")]
                 public bool UpdtTime { get; set; }
 
                 /// <summary>
                 /// 震源名
                 /// </summary>
-                [Description("震源名")]
+                [Description("震源名が変化したとき更新とするか")]
                 public bool Hypo { get; set; }
 
                 /// <summary>
                 /// 緯度経度
                 /// </summary>
-                [Description("緯度経度")]
+                [Description("緯度経度が変化したとき更新とするか")]
                 public bool LatLon { get; set; }
 
                 /// <summary>
                 /// 深さ
                 /// </summary>
-                [Description("深さ")]
+                [Description("深さが変化したとき更新とするか")]
                 public bool Depth { get; set; }
 
                 /// <summary>
                 /// マグニチュードの種類
                 /// </summary>
-                [Description("マグニチュードの種類")]
+                [Description("マグニチュードの種類が変化したとき更新とするか")]
                 public bool MagType { get; set; }
 
                 /// <summary>
                 /// マグニチュード
                 /// </summary>
-                [Description("マグニチュード")]
+                [Description("マグニチュードが変化したとき更新とするか")]
                 public bool Mag { get; set; }
 
                 /// <summary>
                 /// (USGSのみ)改正メルカリ震度階級(ShakeMap)
                 /// </summary>
-                [Description("(USGSのみ)改正メルカリ震度階級(ShakeMap)")]
+                [Description("(USGSのみ)改正メルカリ震度階級(ShakeMap)が変化したとき更新とするか")]
                 public bool MMI { get; set; }
 
                 /// <summary>
                 /// (USGSのみ)アラート(PAGER)
                 /// </summary>
-                [Description("(USGSのみ)アラート(PAGER)")]
+                [Description("(USGSのみ)アラート(PAGER)が変化したとき更新とするか")]
                 public bool Alert { get; set; }
-
+                
                 /// <summary>
                 /// (一部のみ)データのソース
                 /// </summary>
-                [Description("(一部のみ)データのソース")]
+                [Description("(一部のみ)データのソースが変化したとき更新とするか")]
                 public bool Source { get; set; }
-
+                
                 /// <summary>
                 /// ConfigからConfig_Displayに変換します。
                 /// </summary>
@@ -1085,7 +1086,8 @@ namespace WorldQuakeViewer
                     MagType = from.MagType,
                     Mag = from.Mag,
                     MMI = from.MMI,
-                    Alert = from.Alert
+                    Alert = from.Alert,
+                    Source = from.Source
                 };
             }
 
@@ -1093,7 +1095,7 @@ namespace WorldQuakeViewer
             /// 音声再生
             /// </summary>
             [TypeConverter(typeof(ExpandableObjectConverter))]
-            [Description("音声再生")]
+            [Description("音声再生関連")]
             public class Sound_
             {
                 /// <summary>
@@ -1179,7 +1181,7 @@ namespace WorldQuakeViewer
             /// 棒読みちゃん送信
             /// </summary>
             [TypeConverter(typeof(ExpandableObjectConverter))]
-            [Description("棒読みちゃん送信")]
+            [Description("棒読みちゃん送信関連")]
             public class Bouyomi_
             {
                 /// <summary>
@@ -1197,37 +1199,37 @@ namespace WorldQuakeViewer
                 /// <summary>
                 /// ホスト名
                 /// </summary>
-                [Description("ホスト名")]
+                [Description("ホスト名(基本変更する必要はありません)")]
                 public string Host { get; set; }
 
                 /// <summary>
                 /// ポート
                 /// </summary>
-                [Description("ポート")]
+                [Description("ポート(基本変更する必要はありません)")]
                 public int Port { get; set; }
 
                 /// <summary>
                 /// 声質
                 /// </summary>
-                [Description("声質")]
+                [Description("声質\n0:画面上の設定  1:女性1  2:女性2  3:男性1  4:男性2  5:中性  6:ロボット  7:機械1  8:機械2  10001～:SAPI5")]
                 public short Voice { get; set; }
 
                 /// <summary>
                 /// 速さ
                 /// </summary>
-                [Description("速さ")]
+                [Description("速さ\n-1で画面上の設定")]
                 public short Speed { get; set; }
 
                 /// <summary>
                 /// 音程
                 /// </summary>
-                [Description("音程")]
+                [Description("音程\n-1で画面上の設定")]
                 public short Tone { get; set; }
 
                 /// <summary>
                 /// 音量
                 /// </summary>
-                [Description("音量")]
+                [Description("音量\n-1で画面上の設定")]
                 public short Volume { get; set; }
 
                 /// <summary>
@@ -1579,7 +1581,7 @@ namespace WorldQuakeViewer
         /// 表示処理
         /// </summary>
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        [Description("表示処理")]
+        [Description("表示処理関連")]
         public class View_
         {
             /// <summary>
@@ -1643,7 +1645,7 @@ namespace WorldQuakeViewer
             /// </summary>
             /// <remarks>マップはWorldQuakeViewer.MapGenerator</remarks>
             [TypeConverter(typeof(ExpandableObjectConverter))]
-            [Description("描画色\nマップはWorldQuakeViewer.MapGenerator.exeで")]
+            [Description("描画色関連\nマップはWorldQuakeViewer.MapGenerator.exeで")]
             public class Colors_
             {
                 /// <summary>
