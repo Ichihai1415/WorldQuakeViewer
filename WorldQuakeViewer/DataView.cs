@@ -77,7 +77,7 @@ namespace WorldQuakeViewer
                     throw new Exception($"DataViewの初期化に失敗しました。{dataAuthorN}はデータ元として不正です。");
             }
             ConfigReload();
-            ExeLog($"DataView[{i}]を初期化しました。");
+            ExeLog($"[DataView]DataView[{i}]を初期化しました。");
             //todo:一定時間でgreenにするやつ(必要なら)
         }
 

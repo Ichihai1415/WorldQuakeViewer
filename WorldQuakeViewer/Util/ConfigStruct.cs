@@ -5,7 +5,7 @@ using System.Linq;
 using static WorldQuakeViewer.CtrlForm;
 using static WorldQuakeViewer.Util_Class;
 
-namespace WorldQuakeViewer//MMI Alertをformat頑張る
+namespace WorldQuakeViewer
 {
     /// <summary>
     /// 設定保存用クラス

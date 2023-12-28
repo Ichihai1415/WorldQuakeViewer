@@ -95,7 +95,7 @@ namespace WorldQuakeViewer
                 Lon60s = lon60s,
                 Depth = data.Depth.ToString(),
                 MagType = data.MagType,
-                Mag = data.Mag.ToString("0.0#"),
+                Mag = data.Mag.ToString("0.0######"),
                 MMI = data.MMI == null ? "" : data.MMI.ToString(),
                 MMIAra = MMI2Ara(data.MMI),
                 AlertJP = Alert2JP(data.Alert),
@@ -115,17 +115,22 @@ namespace WorldQuakeViewer
                     {
                         case "TimeUTC":
                             format = format.Replace(match.Value, data.Time.ToString(texts[1]));
-                            break;
+                            continue;
                         case "TimeUser":
                             format = format.Replace(match.Value, timeUser.ToString(texts[1]));
-                            break;
-                        default:
-                            ExeLog($"[Data2String]警告:パターンが一致しません(値:{match.Value})。設定を確認してください。", true);
-                            break;
+                            continue;
+                        case "MMI":
+                            format = data.MMI == null ? format.Replace(match.Value, "") : format.Replace(match.Value, texts[1]);
+                            continue;
+                        case "Alert":
+                            format = NoValueCheck(data.Alert) ? format.Replace(match.Value, "") : format.Replace(match.Value, texts[1]);
+                            continue;
+                        case "Source":
+                            format = NoValueCheck(data.Source) ? format.Replace(match.Value, "") : format.Replace(match.Value, texts[1]);
+                            continue;
                     }
                 }
-                else
-                    ExeLog($"[Data2String]警告:パターンが一致しません(値:{match.Value})。設定を確認してください。", true);
+                ExeLog($"[Data2String]警告:パターンが処理できません。(値:{match.Value})。設定を確認してください。", true);
             }
 
             //.Replace("[]",f.)
@@ -146,7 +151,8 @@ namespace WorldQuakeViewer
                 .Replace("[dataJSON]", JsonConvert.SerializeObject(data))
                 .Replace("[formatJSON]", JsonConvert.SerializeObject(f));
             foreach (Config.Data_.LogE_.TextReplace_ replace in config.Datas[(int)data.Author].LogE.TextReplace)
-                format = format.Replace(replace.OldValue, replace.NewValue);
+                if (replace.OldValue != "")
+                    format = format.Replace(replace.OldValue, replace.NewValue);
             return format;
         }
 
@@ -455,6 +461,18 @@ namespace WorldQuakeViewer
                     }
                     return config.Views[viewIndex].Colors.Main_Latest_Back_Color;
             }
+        }
+
+        /// <summary>
+        /// 値がないか判定します。
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns>値がない場合True</returns>
+        public static bool NoValueCheck(string value)
+        {
+            if (value == null || value == "" || value == "null" || value == "-")
+                return true;
+            return false;
         }
 
         /// <summary>

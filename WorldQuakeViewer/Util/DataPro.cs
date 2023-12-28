@@ -162,6 +162,9 @@ namespace WorldQuakeViewer
             {
                 try
                 {
+                    if (dataAuthor == DataAuthor.EarlyEst)
+                        if (info.SelectSingleNode("type").InnerText == "not existing")//データがないものがある(NullRefになる)
+                            continue;
                     Data data = QuakeML2Data(info, ns, dataAuthor);
                     if (dataAuthor == DataAuthor.EMSC && config.Other.EMSCqmlIDConv)
                         if (data_tmp.ContainsKey(data.ID))
@@ -199,7 +202,7 @@ namespace WorldQuakeViewer
                 catch (Exception ex)
                 {
                     ExeLog($"[Get_QuakeML][{dataAuthor}]エラー:{ex.Message}", true);
-                    LogSave(LogKind.Error, ex.ToString() + info.InnerXml);//todo:確認用臨時
+                    LogSave(LogKind.Error, ex.ToString());
                 }
             }
             Sound_Play(maxLevel, dataAuthor);
