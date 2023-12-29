@@ -77,7 +77,7 @@ namespace WorldQuakeViewer
             catch (Exception ex)
             {
                 ExeLog($"[Get][{dataAuthor}]エラー:{ex.Message}", true);
-                LogSave(LogKind.Error, ex.ToString());
+                LogSave(ex);
             }
         }
 
@@ -130,7 +130,7 @@ namespace WorldQuakeViewer
                 catch (Exception ex)
                 {
                     ExeLog($"[Get_Text][{dataAuthor}]エラー:{ex.Message}", true);
-                    LogSave(LogKind.Error, ex.ToString());
+                    LogSave(ex);
                 }
             }
             Sound_Play(maxLevel, dataAuthor);
@@ -163,7 +163,7 @@ namespace WorldQuakeViewer
                 try
                 {
                     if (dataAuthor == DataAuthor.EarlyEst)
-                        if (info.SelectSingleNode("type").InnerText == "not existing")//データがないものがある(NullRefになる)
+                        if (info.SelectSingleNode("qml:type", ns).InnerText == "not existing")//データがないものがある(NullRefになる)
                             continue;
                     Data data = QuakeML2Data(info, ns, dataAuthor);
                     if (dataAuthor == DataAuthor.EMSC && config.Other.EMSCqmlIDConv)
@@ -202,7 +202,7 @@ namespace WorldQuakeViewer
                 catch (Exception ex)
                 {
                     ExeLog($"[Get_QuakeML][{dataAuthor}]エラー:{ex.Message}", true);
-                    LogSave(LogKind.Error, ex.ToString());
+                    LogSave(ex);
                 }
             }
             Sound_Play(maxLevel, dataAuthor);
@@ -265,7 +265,7 @@ namespace WorldQuakeViewer
                 catch (Exception ex)
                 {
                     ExeLog($"[Get_GeoJSON][{dataAuthor}]エラー:{ex.Message}", true);
-                    LogSave(LogKind.Error, ex.ToString());
+                    LogSave(ex);
                 }
             }
             Sound_Play(maxLevel, dataAuthor);

@@ -10,6 +10,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Media;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +28,7 @@ namespace WorldQuakeViewer
         /// <summary>
         /// プログラムのバージョン
         /// </summary>
-        public static readonly string version = "1.2.0";
+        public static readonly string version = "1.2.0dev";
 
         /// <summary>
         /// ダイアログ等を最前面に表示する用
@@ -75,6 +76,36 @@ namespace WorldQuakeViewer
         {
             ExeLog($"[CtrlForm_Load]起動しました。");
             InfoText0.Text = "<起動処理中...>WorldQuakeViewer";
+            try
+            {
+                ExeLog($"[CtrlForm_Load]ソフト更新確認中...");
+                string latestVersion = (await client.GetStringAsync("https://raw.githubusercontent.com/Ichihai1415/WorldQuakeViewer/main/_version")).Replace("\n", "");//なんか改行ある
+                if (latestVersion != version)
+                {
+                    ExeLog($"[CtrlForm_Load]ソフト更新を確認({version}->{latestVersion})");
+                    if (DialogOK($"更新があります(v{version}->v{latestVersion})。更新してもよろしいですか？\n失敗する場合は公開ページから手動で更新してください。"))
+                    {
+                        ExeLog($"[CtrlForm_Load]WorldQuakeViewer v{latestVersion}のダウンロード中...");
+                        using (WebClient wc = new WebClient())
+                            wc.DownloadFile($"https://github.com/Ichihai1415/WorldQuakeViewer/releases/download/v{latestVersion}/WorldQuakeViewer.v{latestVersion}.zip", "tmp.zip");
+                        ExeLog($"[CtrlForm_Load]ダウンロード完了");
+                        if (!File.Exists("WorldQuakeViewer.Updater.exe"))
+                        {
+                            ExeLog($"[CtrlForm_Load]アップデータのダウンロード中...");
+                            using (WebClient wc = new WebClient())
+                                wc.DownloadFile("https://github.com/Ichihai1415/WorldQuakeViewer.Updater/releases/download/v1.0.1/WorldQuakeViewer.Updater.exe", "WorldQuakeViewer.Updater.exe");
+                            ExeLog($"[CtrlForm_Load]ダウンロード完了");
+                        }
+                        Process.Start("WorldQuakeViewer.Updater.exe");
+                        Application.Exit();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ExeLog($"[CtrlForm_Load]エラー:{ex.Message}", true);
+                LogSave(ex);
+            }
             if (File.Exists("Setting\\config.json"))
                 try
                 {
@@ -92,8 +123,8 @@ namespace WorldQuakeViewer
                 catch (Exception ex)
                 {
                     ExeLog($"[CtrlForm_Load]エラー:{ex.Message}", true);
-                    LogSave(LogKind.Error, ex.ToString());
-                    if (DialogOK("設定の読み込みに失敗しました。OKを押すとバックアップしてリセットされます。({ex.Message})", "エラー", MessageBoxIcon.Error))
+                    LogSave(ex);
+                    if (DialogOK($"設定の読み込みに失敗しました。OKを押すとバックアップしてリセットされます。({ex.Message})", "エラー", MessageBoxIcon.Error))
                     {
                         File.Copy("Setting\\config.json", $"Setting\\config-backup-{DateTime.Now:yyyyMMddHHmmss}.json", true);
                         File.WriteAllText("Setting\\config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
@@ -214,7 +245,7 @@ namespace WorldQuakeViewer
             catch (Exception ex)//設定がおかしいとき
             {
                 ExeLog($"[GetTimer_Tick]エラー:{ex.Message}", true);
-                LogSave(LogKind.Error, ex.ToString());
+                LogSave(ex);
             }
         }
 
@@ -252,8 +283,7 @@ namespace WorldQuakeViewer
 
         private void Config_Reset_Click(object sender, EventArgs e)
         {
-            DialogResult ans = MessageBox.Show(topMost, "設定をリセットしてもよろしいですか？", "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-            if (ans == DialogResult.Yes)
+            if (DialogOK("設定をリセットしてもよろしいですか？"))
             {
                 config = new Config();
                 config_display = (Config_Display)config;
@@ -645,7 +675,7 @@ namespace WorldQuakeViewer
             catch (Exception ex)
             {
                 ExeLog($"[ConfigMerge_Read_Click]エラー:{ex.Message}", true);
-                LogSave(LogKind.Error, ex.ToString());
+                LogSave(ex);
                 MessageBox.Show(topMost, "読み込みに失敗しました。内容:" + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -745,7 +775,7 @@ namespace WorldQuakeViewer
             catch (Exception ex)
             {
                 ExeLog($"[ConfigMerge_Write_Click]エラー:{ex.Message}", true);
-                LogSave(LogKind.Error, ex.ToString());
+                LogSave(ex);
                 MessageBox.Show(topMost, "書き込みに失敗しました。内容:" + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -786,6 +816,11 @@ namespace WorldQuakeViewer
         private void UpdtProEnabler_Tick(object sender, EventArgs e)
         {
             ConfigNoFirstCheck.Checked = false;
+        }
+
+        private void MapGenOpen_Click(object sender, EventArgs e)
+        {
+            new MapGen().Show();
         }
     }
 }

@@ -38,6 +38,7 @@
             this.Tab_Main_Log = new System.Windows.Forms.TabPage();
             this.LogTextBox = new System.Windows.Forms.TextBox();
             this.Tab_Main_Tool = new System.Windows.Forms.TabPage();
+            this.MapGenOpen = new System.Windows.Forms.Button();
             this.GroupBox_ConfigMerge = new System.Windows.Forms.GroupBox();
             this.ConfigMerge_CurrentDir = new System.Windows.Forms.Button();
             this.ConfigMerge_Write = new System.Windows.Forms.Button();
@@ -87,7 +88,6 @@
             this.GetTimer = new System.Windows.Forms.Timer(this.components);
             this.LogClearTimer = new System.Windows.Forms.Timer(this.components);
             this.UpdtProEnabler = new System.Windows.Forms.Timer(this.components);
-            this.button1 = new System.Windows.Forms.Button();
             this.TabCtrl_Main.SuspendLayout();
             this.Tab_Main_Info.SuspendLayout();
             this.Tab_Main_Log.SuspendLayout();
@@ -168,10 +168,10 @@
             // Tab_Main_Log
             // 
             this.Tab_Main_Log.Controls.Add(this.LogTextBox);
-            this.Tab_Main_Log.Location = new System.Drawing.Point(4, 27);
+            this.Tab_Main_Log.Location = new System.Drawing.Point(4, 22);
             this.Tab_Main_Log.Name = "Tab_Main_Log";
             this.Tab_Main_Log.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_Main_Log.Size = new System.Drawing.Size(492, 469);
+            this.Tab_Main_Log.Size = new System.Drawing.Size(492, 474);
             this.Tab_Main_Log.TabIndex = 0;
             this.Tab_Main_Log.Text = "ログ";
             this.Tab_Main_Log.UseVisualStyleBackColor = true;
@@ -189,7 +189,7 @@
             // 
             // Tab_Main_Tool
             // 
-            this.Tab_Main_Tool.Controls.Add(this.button1);
+            this.Tab_Main_Tool.Controls.Add(this.MapGenOpen);
             this.Tab_Main_Tool.Controls.Add(this.GroupBox_ConfigMerge);
             this.Tab_Main_Tool.Controls.Add(this.GroupBox_IntConv);
             this.Tab_Main_Tool.Location = new System.Drawing.Point(4, 27);
@@ -199,6 +199,16 @@
             this.Tab_Main_Tool.TabIndex = 3;
             this.Tab_Main_Tool.Text = "ツール";
             this.Tab_Main_Tool.UseVisualStyleBackColor = true;
+            // 
+            // MapGenOpen
+            // 
+            this.MapGenOpen.Location = new System.Drawing.Point(35, 424);
+            this.MapGenOpen.Name = "MapGenOpen";
+            this.MapGenOpen.Size = new System.Drawing.Size(112, 23);
+            this.MapGenOpen.TabIndex = 2;
+            this.MapGenOpen.Text = "マップ生成ツール";
+            this.MapGenOpen.UseVisualStyleBackColor = true;
+            this.MapGenOpen.Click += new System.EventHandler(this.MapGenOpen_Click);
             // 
             // GroupBox_ConfigMerge
             // 
@@ -789,15 +799,6 @@
             this.UpdtProEnabler.Interval = 60000;
             this.UpdtProEnabler.Tick += new System.EventHandler(this.UpdtProEnabler_Tick);
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(35, 424);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(112, 23);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "マップ生成ツール";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
             // CtrlForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -898,6 +899,6 @@
         private System.Windows.Forms.Button ProG_pro_ClearHist;
         private System.Windows.Forms.CheckBox ConfigNoFirstCheck;
         private System.Windows.Forms.Timer UpdtProEnabler;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button MapGenOpen;
     }
 }

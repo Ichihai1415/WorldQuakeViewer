@@ -365,7 +365,7 @@ namespace WorldQuakeViewer
             catch (Exception ex)
             {
                 ExeLog($"[IDconvert]エラー:{ex.Message}", true);
-                LogSave(LogKind.Error, ex.ToString());
+                LogSave(ex);
             }
             return sourceID;
         }
@@ -395,7 +395,7 @@ namespace WorldQuakeViewer
                         }
                         catch (Exception ex)
                         {
-                            LogSave(LogKind.Error, ex.ToString());
+                            LogSave(ex);
                         }
                         return new SolidBrush(config.Views[viewIndex].Colors.Main_Latest_Text_Color);
                 }
@@ -439,7 +439,7 @@ namespace WorldQuakeViewer
                     }
                     catch (Exception ex)
                     {
-                        LogSave(LogKind.Error, ex.ToString());
+                        LogSave(ex);
                     }
                     break;
             }
@@ -457,7 +457,7 @@ namespace WorldQuakeViewer
                     }
                     catch (Exception ex)
                     {
-                        LogSave(LogKind.Error, ex.ToString());
+                        LogSave(ex);
                     }
                     return config.Views[viewIndex].Colors.Main_Latest_Back_Color;
             }

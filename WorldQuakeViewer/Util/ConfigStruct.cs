@@ -10,7 +10,7 @@ namespace WorldQuakeViewer
     /// <summary>
     /// 設定保存用クラス
     /// </summary>
-    public class Config
+    public class Config//todo:必要ならマップ画像震源画像パス指定設定
     {
         /// <summary>
         /// 設定バージョン

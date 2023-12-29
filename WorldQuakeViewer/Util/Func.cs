@@ -38,6 +38,15 @@ namespace WorldQuakeViewer
         }
 
         /// <summary>
+        /// エラーログを保存します。
+        /// </summary>
+        /// <param name="ex">保存する例外</param>
+        public static void LogSave(Exception ex)
+        {
+            LogSave(LogKind.Error, ex.ToString());
+        }
+
+        /// <summary>
         /// ログを保存します。
         /// </summary>
         /// <param name="logKind">ログの種類</param>
@@ -106,7 +115,7 @@ namespace WorldQuakeViewer
             catch (Exception ex)
             {
                 ExeLog($"[LogSave]エラー:{ex.Message}", true);
-                LogSave(LogKind.Error, ex.ToString());
+                LogSave(ex);
             }
         }
 
@@ -240,7 +249,7 @@ namespace WorldQuakeViewer
             catch (Exception ex)
             {
                 ExeLog($"[UpdatePros]エラー:{ex.Message}", true);
-                LogSave(LogKind.Error, ex.ToString());
+                LogSave(ex);
             }
         }
 
@@ -254,7 +263,7 @@ namespace WorldQuakeViewer
             if (noFirst)
                 try
                 {
-                    Console.WriteLine("音声処理開始");
+                    Console.WriteLine($"音声処理開始({level})");
                     bool end = false;
                     string path = "";
                     switch (level)
@@ -305,7 +314,7 @@ namespace WorldQuakeViewer
                 catch (Exception ex)
                 {
                     ExeLog($"[Sound_Play][{dataAuthor}]エラー:{ex.Message}", true);
-                    LogSave(LogKind.Error, ex.ToString());
+                    LogSave(ex);
                 }
         }
 
@@ -341,7 +350,7 @@ namespace WorldQuakeViewer
             catch (Exception ex)
             {
                 ExeLog($"[Bouyomichan][{dataAuthor}]エラー:{ex.Message}", true);
-                LogSave(LogKind.Error, ex.ToString());
+                LogSave(ex);
             }
         }
 
@@ -368,7 +377,7 @@ namespace WorldQuakeViewer
             catch (Exception ex)
             {
                 ExeLog($"[Socket][{dataAuthor}]エラー:{ex.Message}", true);
-                LogSave(LogKind.Error, ex.ToString());
+                LogSave(ex);
             }
         }
 
@@ -395,7 +404,7 @@ namespace WorldQuakeViewer
             catch (Exception ex)
             {
                 ExeLog($"[Webhook][{dataAuthor}]エラー:{ex.Message}", true);
-                LogSave(LogKind.Error, ex.ToString());
+                LogSave(ex);
             }
         }
 
@@ -444,7 +453,7 @@ namespace WorldQuakeViewer
             catch (Exception ex)
             {
                 ExeLog($"[LogE]エラー:{ex.Message}", true);
-                LogSave(LogKind.Error, ex.ToString());
+                LogSave(ex);
             }
         }
 

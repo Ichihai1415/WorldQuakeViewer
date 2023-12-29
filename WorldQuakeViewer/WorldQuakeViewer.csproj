@@ -109,6 +109,12 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MapGen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MapGen.Designer.cs">
+      <DependentUpon>MapGen.cs</DependentUpon>
+    </Compile>
     <Compile Include="Util\ConfigStruct.cs" />
     <Compile Include="ControlForm.cs">
       <SubType>Form</SubType>
@@ -140,6 +146,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataView.resx">
       <DependentUpon>DataView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MapGen.resx">
+      <DependentUpon>MapGen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -186,10 +195,14 @@
   <ItemGroup>
     <None Include="Resources\Back_USGS.png" />
     <None Include="Resources\Back.png" />
+    <None Include="Resources\map-color.csv" />
     <None Include="Resources\Sound.zip" />
     <None Include="Resources\WQV.ico" />
     <None Include="Resources\hypo.png" />
     <None Include="Resources\map.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="_version" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

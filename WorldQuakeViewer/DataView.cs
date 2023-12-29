@@ -290,13 +290,13 @@ namespace WorldQuakeViewer
             catch (FormatException ex)
             {
                 ExeLog($"[Draw_AllLatestMulti]エラー:{ex.Message}(設定を確認してください。)", true);
-                LogSave(LogKind.Error, ex.ToString());
+                LogSave(ex);
                 return Draw_AllLatestMulti(null);
             }
             catch (Exception ex)
             {
                 ExeLog($"[Draw_AllLatestMulti]エラー:{ex.Message}", true);
-                LogSave(LogKind.Error, ex.ToString());
+                LogSave(ex);
                 return Draw_AllLatestMulti(null);
             }
             int h = 200 * latests.Count();
