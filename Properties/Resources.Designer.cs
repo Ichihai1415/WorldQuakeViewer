@@ -134,6 +134,25 @@ namespace WorldQuakeViewer.Properties {
         }
         
         /// <summary>
+        ///   Name,Alpha,Red,Green,Blue
+        ///ocean,255,30,30,60
+        ///land,255,100,100,150
+        ///land-line,50,255,255,255
+        ///plate-convergent,255,150,0,0
+        ///plate-transform,255,0,150,0
+        ///plate-divergent,255,0,0,150
+        ///graticules-normal,100,255,255,255
+        ///graticules-lat,200,255,0,0
+        ///graticules-lon1,200,0,0,255
+        ///graticules-lon2,200,0,0,255 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string map_color {
+            get {
+                return ResourceManager.GetString("map_color", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   型 System.Byte[] のローカライズされたリソースを検索します。
         /// </summary>
         internal static byte[] Sound {
