@@ -5,9 +5,10 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/Ichihai1415/WorldQuakeViewer)
 ![GitHub issues](https://img.shields.io/github/issues/Ichihai1415/WorldQuakeViewer)
 ![GitHub all releases](https://img.shields.io/github/downloads/Ichihai1415/WorldQuakeViewer/total)
+![GitHub all releases](https://img.shields.io/github/downloads-pre/Ichihai1415/WorldQuakeViewer/latest/total)
 
-![GitHub Release Date](https://img.shields.io/github/release-date/Ichihai1415/WorldQuakeViewer)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/Ichihai1415/WorldQuakeViewer)
+![GitHub Release Date](https://img.shields.io/github/release-date/Ichihai1415/WorldQuakeViewer)
 <!--古いから消しとく
 <div display="flex">
   <img alt="v1.0.0" src="https://github.com/Ichihai1415/WorldQuakeViewer/blob/main/image/WQV_20221224_v1.0.0.png" width="49%" />
