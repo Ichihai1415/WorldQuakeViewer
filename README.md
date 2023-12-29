@@ -26,7 +26,7 @@
 ## v1.2.0
 2023/12/29
 
-大規模な改修を行いました。流れは[masterのcommits](https://github.com/Ichihai1415/WorldQuakeViewer/commits/master/)などで確認できます。
+大規模な改修を行いました。流れは[43bb7e1...6c8f967](https://github.com/Ichihai1415/WorldQuakeViewer/compare/43bb7e1...6c8f967)などで確認できます。
 
 <details><summary>過去のバージョン</summary><div>
 
