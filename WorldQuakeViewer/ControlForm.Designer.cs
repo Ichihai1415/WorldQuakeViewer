@@ -164,9 +164,9 @@
             this.InfoText0.Font = new System.Drawing.Font("メイリオ", 20F);
             this.InfoText0.Location = new System.Drawing.Point(0, 0);
             this.InfoText0.Name = "InfoText0";
-            this.InfoText0.Size = new System.Drawing.Size(362, 41);
+            this.InfoText0.Size = new System.Drawing.Size(269, 41);
             this.InfoText0.TabIndex = 1;
-            this.InfoText0.Text = "WorldQuakeViewer v0.0.0";
+            this.InfoText0.Text = "WorldQuakeViewer";
             // 
             // InfoText1
             // 
@@ -181,10 +181,10 @@
             // Tab_Main_Log
             // 
             this.Tab_Main_Log.Controls.Add(this.LogTextBox);
-            this.Tab_Main_Log.Location = new System.Drawing.Point(4, 22);
+            this.Tab_Main_Log.Location = new System.Drawing.Point(4, 27);
             this.Tab_Main_Log.Name = "Tab_Main_Log";
             this.Tab_Main_Log.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_Main_Log.Size = new System.Drawing.Size(492, 474);
+            this.Tab_Main_Log.Size = new System.Drawing.Size(492, 469);
             this.Tab_Main_Log.TabIndex = 0;
             this.Tab_Main_Log.Text = "ログ";
             this.Tab_Main_Log.UseVisualStyleBackColor = true;
@@ -342,10 +342,10 @@
             this.ConfigMerge_Text.AutoSize = true;
             this.ConfigMerge_Text.Location = new System.Drawing.Point(6, 21);
             this.ConfigMerge_Text.Name = "ConfigMerge_Text";
-            this.ConfigMerge_Text.Size = new System.Drawing.Size(464, 90);
+            this.ConfigMerge_Text.Size = new System.Drawing.Size(332, 90);
             this.ConfigMerge_Text.TabIndex = 0;
-            this.ConfigMerge_Text.Text = "部分的な設定のファイルの読み込みや書き出しができます。\r\n設定は上書きされるので注意してください。設定例を詳細ページで公開しています。\r\n\r\n\r\n        " +
-    "                         の                           を";
+            this.ConfigMerge_Text.Text = "部分的な設定のファイルの読み込みや書き出しができます。\r\n設定は上書きされるので注意してください。\r\n\r\n\r\n                          " +
+    "       の                           を";
             // 
             // GroupBox_IntConv
             // 
@@ -601,9 +601,9 @@
             this.Past_Text1.AutoSize = true;
             this.Past_Text1.Location = new System.Drawing.Point(3, 2);
             this.Past_Text1.Name = "Past_Text1";
-            this.Past_Text1.Size = new System.Drawing.Size(284, 36);
+            this.Past_Text1.Size = new System.Drawing.Size(392, 36);
             this.Past_Text1.TabIndex = 1;
-            this.Past_Text1.Text = "過去の情報の表示はここを使用してください。\r\n最新の情報と混同しないように注意してください。";
+            this.Past_Text1.Text = "過去の情報の表示はここを使用してください。保存は必要ありません。\r\n最新の情報と混同しないように注意してください。";
             // 
             // Past_Open
             // 
@@ -623,9 +623,9 @@
             this.Tab_Main_Setting.Controls.Add(this.ConfigWebLink);
             this.Tab_Main_Setting.Controls.Add(this.ConfigInfoText);
             this.Tab_Main_Setting.Controls.Add(this.TabCtrl_Setting);
-            this.Tab_Main_Setting.Location = new System.Drawing.Point(4, 27);
+            this.Tab_Main_Setting.Location = new System.Drawing.Point(4, 22);
             this.Tab_Main_Setting.Name = "Tab_Main_Setting";
-            this.Tab_Main_Setting.Size = new System.Drawing.Size(492, 469);
+            this.Tab_Main_Setting.Size = new System.Drawing.Size(492, 474);
             this.Tab_Main_Setting.TabIndex = 2;
             this.Tab_Main_Setting.Text = "設定";
             this.Tab_Main_Setting.UseVisualStyleBackColor = true;

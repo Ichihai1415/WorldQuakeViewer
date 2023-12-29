@@ -31,7 +31,7 @@ namespace WorldQuakeViewer
         /// <summary>
         /// プログラムのバージョン
         /// </summary>
-        public static readonly string version = "1.2.0dev";
+        public static readonly string version = "1.2.0";
 
         /// <summary>
         /// ダイアログ等を最前面に表示する用
@@ -147,7 +147,7 @@ namespace WorldQuakeViewer
             IntConv_ComBox3.SelectedIndex = 2;
             ConfigMerge_PathBox.Text = Path.GetFullPath("WorldQuakeViewer.exe").Replace("WorldQuakeViewer.exe", "Setting\\merge-tmp.txt");
             Past_PathBox.Text = Path.GetFullPath("WorldQuakeViewer.exe").Replace("WorldQuakeViewer.exe", "Setting\\past-tmp.txt");
-        }//todo:過去の取得用(catarog)のやつ
+        }
 
         private async void CtrlForm_Load(object sender, EventArgs e)
         {
@@ -935,7 +935,7 @@ namespace WorldQuakeViewer
                         ExeLog("[Past_Write_Click]取り消されました。");
                         return;
                     }
-                File.WriteAllText(Past_PathBox.Text,JsonConvert.SerializeObject(pastConfig));
+                File.WriteAllText(Past_PathBox.Text, JsonConvert.SerializeObject(pastConfig));
                 ExeLog("[Past_Write_Click]書き込み完了");
             }
             catch (Exception ex)

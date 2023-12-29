@@ -19,32 +19,26 @@ namespace WorldQuakeViewer
         /// 表示するもののタイプ(viewData % 10)
         /// </summary>
         readonly int viewType;
-
         /// <summary>
         /// 表示インデックス
         /// </summary>
         readonly int i;
-
         /// <summary>
         /// ReDrawに使用
         /// </summary>
         readonly public int dataAuthorN;
-
         /// <summary>
         /// 表示するデータ
         /// </summary>
         readonly Dictionary<string, Data> data_;
-
         /// <summary>
         /// 表示設定
         /// </summary>
         private static Config.View_ config_view;
-
         /// <summary>
         /// 表示中か
         /// </summary>
         public bool showing = false;
-
         /// <summary>
         /// 閉じるときにメッセージを表示するか
         /// </summary>
@@ -121,6 +115,7 @@ namespace WorldQuakeViewer
             i = -1;
             Text = $"WorldQuakeViewer - 過去情報表示画面";
             data_ = data;
+            askClose = false;
         }
 
         /// <summary>
