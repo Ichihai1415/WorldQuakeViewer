@@ -117,46 +117,35 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Tab_Info_Text.Text" xml:space="preserve">
-    <value>情報:USGS M4.5+ Earthquakes Feed(week)
+  <data name="InfoText1.Text" xml:space="preserve">
+    <value>震源コード(FE領域識別番号):USGS Geoserve Regions Endpoint
+ - https://earthquake.usgs.gov/ws/geoserve/regions.php
 
-震源コード(FE領域識別番号)取得:USGS Geoserve Regions Endpoint
+震源日本語名:気象庁防災情報XMLフォーマット 個別コード表(20221118)
+地震火山関連コード表-シート43 AreaEpicenterDetailコード表(種別:"詳細震央地名")
+ - http://xml.kishou.go.jp/tec_material.html
 
-震源日本語名取得:気象庁防災情報XMLフォーマット 個別コード表(20221118)
-(地震火山関連コード表-シート43 AreaEpicenterDetailコード表(種別:"詳細震央地名"))
+既定地図:Natural Earth - 1:50m Physical Vectors, Graticules30°(5.1.0)
+ - https://www.naturalearthdata.com/
 
-地図:Natural Earth(1:50m Physical Vectors, Graticules30°(version 5.1.0))
+プレート境界:tectonicplates (from:Peter Bird "Geochemistry Geophysics
+                                       Geosystems", 4(3), 1027, [doi:10.1029/2001GC000252])
+ - https://github.com/fraxen/tectonicplates
 
-フォント:Koruri Regular(20210720)      既定効果音:OtoLogic(ニュース アラート02~04)
-</value>
+フォント:Koruri Regular(20210720)
+ - https://koruri.github.io/
+
+既定効果音:OtoLogic - ニュース アラート02~04
+ - https://otologic.jp</value>
   </data>
-  <data name="Tab_Sound_Text.Text" xml:space="preserve">
-    <value>鳴らす条件:                                                                                                               再生テスト
-
-
-
-
-
-
-
-優先度:M80.wav &gt; M80u.wav &gt; M60.wav
-          &gt; M60u.wav &gt; M45.wav &gt; M45u.wav</value>
-  </data>
-  <data name="Tab_Yomi_Text.Text" xml:space="preserve">
-    <value>
-
-ホスト,ポート:                                              規定は127.0.0.1 50001
-
-M              以上                     メルカリ震度              以上
-
-声質:
-
-速度:                音程:                音量:                -1で画面上の設定
-
-</value>
-  </data>
-  <metadata name="ProInfoChange.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="GetTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
+  </metadata>
+  <metadata name="LogClearTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>118, 17</value>
+  </metadata>
+  <metadata name="UpdtProEnabler.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>247, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

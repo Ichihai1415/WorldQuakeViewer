@@ -1,32 +1,47 @@
-<!--GitHub用開始-->
-![GitHub](https://img.shields.io/github/license/Ichihai1415/WorldQuakeViewer)
+# WorldQuakeViewer
+
+<!--更新時CtrlForm.csのversionと_versionとアセンブリのバージョンとこれを変更-->
+<!--画像開始-->
 ![GitHub last commit](https://img.shields.io/github/last-commit/Ichihai1415/WorldQuakeViewer)
 ![GitHub issues](https://img.shields.io/github/issues/Ichihai1415/WorldQuakeViewer)
 ![GitHub all releases](https://img.shields.io/github/downloads/Ichihai1415/WorldQuakeViewer/total)
 
-main:
 ![GitHub Release Date](https://img.shields.io/github/release-date/Ichihai1415/WorldQuakeViewer)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/Ichihai1415/WorldQuakeViewer)
-![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/Ichihai1415/WorldQuakeViewer/latest)
-<!--臨時-->
-pre:
-![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/Ichihai1415/WorldQuakeViewer)
-![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/Ichihai1415/WorldQuakeViewer?include_prereleases)
-
+<!--古いから消しとく
 <div display="flex">
   <img alt="v1.0.0" src="https://github.com/Ichihai1415/WorldQuakeViewer/blob/main/image/WQV_20221224_v1.0.0.png" width="49%" />
   <img alt="v1.0.4" src="https://github.com/Ichihai1415/WorldQuakeViewer/blob/main/image/WQV_20230206_v1.0.4.png" width="49%" />
-</div>
-<!--GitHub用終了-->
+</div>-->
+<!--画像終了-->
 
 世界の地震情報を表示します。
 
-バグ、予定等は[Issue](https://github.com/Ichihai1415/WorldQuakeViewer/issues)を確認してください。
+[詳細(Wiki)](https://github.com/Ichihai1415/WorldQuakeViewer/wiki)
 
-[詳細(現在制作中)](https://Ichihai1415.github.io/programs/released/wqv/)
+[バグ、予定等(Issue)](https://github.com/Ichihai1415/WorldQuakeViewer/issues)
 
 # 更新履歴
+## v1.2.0
+2023/12/29
+
+大規模な改修を行いました。流れは[masterのcommits](https://github.com/Ichihai1415/WorldQuakeViewer/commits/master/)などで確認できます。
+
+<details><summary>過去のバージョン</summary><div>
+
+# v1.1.1
+2023/11/29
+
+**v1.1.0と同じく、まだ完全ではありません。(臨時対応版です)**
+
+EMSCからの取得をGFZに変更
+
+EMSCの更新
+
+検知対象が変わらなかった?問題を修正(GFZ対応済み)
+
 ## v1.1.0
+
 2023/10/08
 
 **まだ完全ではないですが、ここから大規模な改修を行うためここでv1.1.0とします。問題が発生した場合過去のバージョンを使ってください。**
@@ -36,9 +51,6 @@ pre:
 処理・表示等調整
 
 自動ツイート機能廃止
-
----
-<details><summary>過去のバージョン</summary><div>
 
 ## v1.1.0α6(内部バージョン1.0.10)
 2023/07/05
@@ -143,7 +155,7 @@ Y座標がはみ出す場合収まるように
 
 </div></details>
 <details><summary>ベータバージョン</summary><div>
-[ここ](https://github.com/Ichihai1415/WorldQuakeViewer_Beta)にあります。
+https://github.com/Ichihai1415/WorldQuakeViewer_Beta にあります。
 
 ## v0.2.6
 7/16
