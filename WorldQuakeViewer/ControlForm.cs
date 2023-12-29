@@ -23,6 +23,9 @@ using static WorldQuakeViewer.Util_Func;
 
 namespace WorldQuakeViewer
 {
+    /// <summary>
+    /// コントロール画面
+    /// </summary>
     public partial class CtrlForm : Form
     {
         /// <summary>
@@ -45,23 +48,95 @@ namespace WorldQuakeViewer
         /// </summary>
         public static ImageAttributes ia = new ImageAttributes();
 
+        /// <summary>
+        /// staticでアクセスできるようにしたログ表示テキストボックス
+        /// </summary>
+        public static TextBox logTextBox;
 
-        public static TextBox logTextBox;//staticでアクセスできるよう
+        /// <summary>
+        /// 設定
+        /// </summary>
         public static Config config = new Config();
-        public static Config_Display config_display = new Config_Display();
-        public static Dictionary<string, Data> data_Other = new Dictionary<string, Data>();
-        public static Dictionary<string, Data> data_USGS = new Dictionary<string, Data>();
-        public static Dictionary<string, Data> data_EMSC = new Dictionary<string, Data>();
-        public static Dictionary<string, Data> data_GFZ = new Dictionary<string, Data>();
-        public static Dictionary<string, Data> data_EarlyEst = new Dictionary<string, Data>();
-        public static Dictionary<string, Data> data_All = new Dictionary<string, Data>();
-        public static HttpClient client = new HttpClient();
-        public static SoundPlayer player = null;
-        public static StringBuilder exeLogs = new StringBuilder();
-        public static bool noFirst = false;
-        public static int playLevel = 0;
 
+        /// <summary>
+        /// 表示する設定
+        /// </summary>
+        public static Config_Display config_display = new Config_Display();
+
+        /// <summary>
+        /// 過去情報表示用設定
+        /// </summary>
+        public static PastConfig pastConfig = new PastConfig();
+
+        /// <summary>
+        /// 過去情報表示用の表示する設定
+        /// </summary>
+        public static PastConfig_Display pastConfig_display = new PastConfig_Display();
+
+        /// <summary>
+        /// その他のデータのリスト
+        /// </summary>
+        public static Dictionary<string, Data> data_Other = new Dictionary<string, Data>();
+
+        /// <summary>
+        /// USGSのデータのリスト
+        /// </summary>
+        public static Dictionary<string, Data> data_USGS = new Dictionary<string, Data>();
+
+        /// <summary>
+        /// EMSCのデータのリスト
+        /// </summary>
+        public static Dictionary<string, Data> data_EMSC = new Dictionary<string, Data>();
+
+        /// <summary>
+        /// GFZのデータのリスト
+        /// </summary>
+        public static Dictionary<string, Data> data_GFZ = new Dictionary<string, Data>();
+
+        /// <summary>
+        /// Early-estのデータのリスト
+        /// </summary>
+        public static Dictionary<string, Data> data_EarlyEst = new Dictionary<string, Data>();
+
+        /// <summary>
+        /// すべてのデータのリスト
+        /// </summary>
+        public static Dictionary<string, Data> data_All = new Dictionary<string, Data>();
+
+        /// <summary>
+        /// 過去情報のデータのリスト
+        /// </summary>
+        public static Dictionary<string, Data> data_Past = new Dictionary<string, Data>();
+
+        /// <summary>
+        /// 取得用
+        /// </summary>
+        public static HttpClient client = new HttpClient();
+
+        /// <summary>
+        /// 音声再生用
+        /// </summary>
+        public static SoundPlayer player = null;
+
+        /// <summary>
+        /// 実行ログの高速追加用
+        /// </summary>
+        public static StringBuilder exeLogs = new StringBuilder();
+
+        /// <summary>
+        /// 更新処理の無効
+        /// </summary>
+        public static bool noFirst = false;
+
+        /// <summary>
+        /// 表示画面の配列
+        /// </summary>
         public static DataView[] dataViews = new DataView[] { null, null, null, null, null, null, null, null, null, null };
+
+        /// <summary>
+        /// 過去情報表示画面
+        /// </summary>
+        public static DataView pastDataView = null;
 
         public CtrlForm()
         {
@@ -70,6 +145,8 @@ namespace WorldQuakeViewer
             IntConv_ComBox1.SelectedIndex = 0;
             IntConv_ComBox2.SelectedIndex = 1;
             IntConv_ComBox3.SelectedIndex = 2;
+            ConfigMerge_PathBox.Text = Path.GetFullPath("WorldQuakeViewer.exe").Replace("WorldQuakeViewer.exe", "Setting\\merge-tmp.txt");
+            Past_PathBox.Text = Path.GetFullPath("WorldQuakeViewer.exe").Replace("WorldQuakeViewer.exe", "Setting\\past-tmp.txt");
         }//todo:過去の取得用(catarog)のやつ
 
         private async void CtrlForm_Load(object sender, EventArgs e)
@@ -156,6 +233,8 @@ namespace WorldQuakeViewer
             LogClearTimer.Enabled = true;
             if (!config.Other.LogN.Normal_Enable)
                 logTextBox.Text = "<動作ログを表示する場合、設定のその他のNormal_EnableをTrueにしてください>\n\r";
+            pastConfig_display = (PastConfig_Display)pastConfig;
+            ProG_Past.SelectedObject = pastConfig_display;
 
             if (!Directory.Exists("Font"))
             {
@@ -239,7 +318,9 @@ namespace WorldQuakeViewer
             try
             {
                 for (int i = 0; i < DataAuthorCount; i++)
-                    if (config.Datas[i].GetTimes[0] == DateTime.Now.Second || config.Datas[i].GetTimes[1] == DateTime.Now.Second)
+                    if (config.Datas[i].GetTimes[0] == DateTime.Now.Second)
+                        await Get((DataAuthor)i);
+                    else if (config.Datas[i].GetTimes[1] == DateTime.Now.Second)
                         await Get((DataAuthor)i);
             }
             catch (Exception ex)//設定がおかしいとき
@@ -259,7 +340,7 @@ namespace WorldQuakeViewer
 
         private void ConfigWebLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("https://ichihai1415.github.io/programs/wqv/config-info.html");
+            Process.Start("https://github.com/Ichihai1415/WorldQuakeViewer/wiki/config-info");
         }
 
         private void Config_Save_Click(object sender, EventArgs e)
@@ -384,19 +465,10 @@ namespace WorldQuakeViewer
                 }
                 else if (dataViews[num].showing)
                 {
-                    ExeLog($"[Open]画面[{num}]はすでに表示されています。");
-                    DialogResult res = MessageBox.Show(topMost, $"画面[{num}]はすでに表示されています。再試行を押すと開きなおします。確認画面が表示されるのでOKを押してください。", "確認", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Information);
-                    switch (res)
-                    {
-                        case DialogResult.Retry:
-                            dataViews[num].Close();
-                            Open(num);
-                            break;
-                        case DialogResult.Ignore:
-                            dataViews[num].Show();
-                            ExeLog($"[Open]画面[{num}]を表示しました。強制的に開いたため一部の動作がおかしくなる可能性があります。開いていない場合は再起動してください。");
-                            break;
-                    }
+                    ExeLog($"[Open]画面[{num}]はすでに表示されています。再表示します。");
+                    dataViews[num].askClose = false;
+                    dataViews[num].Close();
+                    Open(num);
                 }
                 else
                 {
@@ -412,7 +484,7 @@ namespace WorldQuakeViewer
 
         private void InfoPageLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("https://ichihai1415.github.io/programs/wqv/");
+            Process.Start("https://github.com/Ichihai1415/WorldQuakeViewer/wiki");
         }
 
         private void IntConv_Conv1_Click(object sender, EventArgs e)//2=>1
@@ -421,10 +493,7 @@ namespace WorldQuakeViewer
             {
                 double afterValue = IntConvert((double)IntConv_NumBox2.Value, IntConv_ComBox2.SelectedIndex, IntConv_ComBox1.SelectedIndex);
                 if (afterValue == double.NaN)
-                {
-                    ExeLog("[ConfigMerge_Read_Click]取り消されました。");
                     return;
-                }
                 IntConv_NumBox1.Value = (decimal)afterValue;
             }
             catch (Exception ex)
@@ -440,10 +509,7 @@ namespace WorldQuakeViewer
             {
                 double afterValue = IntConvert((double)IntConv_NumBox1.Value, IntConv_ComBox1.SelectedIndex, IntConv_ComBox2.SelectedIndex);
                 if (afterValue == double.NaN)
-                {
-                    ExeLog("[ConfigMerge_Read_Click]取り消されました。");
                     return;
-                }
                 IntConv_NumBox2.Value = (decimal)afterValue;
             }
             catch (Exception ex)
@@ -459,10 +525,7 @@ namespace WorldQuakeViewer
             {
                 double afterValue = IntConvert((double)IntConv_NumBox3.Value, IntConv_ComBox3.SelectedIndex, IntConv_ComBox2.SelectedIndex);
                 if (afterValue == double.NaN)
-                {
-                    ExeLog("[ConfigMerge_Read_Click]取り消されました。");
                     return;
-                }
                 IntConv_NumBox2.Value = (decimal)afterValue;
             }
             catch (Exception ex)
@@ -478,10 +541,7 @@ namespace WorldQuakeViewer
             {
                 double afterValue = IntConvert((double)IntConv_NumBox2.Value, IntConv_ComBox2.SelectedIndex, IntConv_ComBox3.SelectedIndex);
                 if (afterValue == double.NaN)
-                {
-                    ExeLog("[ConfigMerge_Read_Click]取り消されました。");
                     return;
-                }
                 IntConv_NumBox3.Value = (decimal)afterValue;
             }
             catch (Exception ex)
@@ -533,7 +593,6 @@ namespace WorldQuakeViewer
                     else
                         MessageBox.Show("-1はDataのみで有効です。", "お知らせ", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
-
                 }
                 ExeLog("[ConfigMerge_Read_Click]読み込み開始");
                 string jsonText_ = File.ReadAllText(ConfigMerge_PathBox.Text);
@@ -821,6 +880,70 @@ namespace WorldQuakeViewer
         private void MapGenOpen_Click(object sender, EventArgs e)
         {
             new MapGen().Show();
+        }
+
+        private async void Past_Open_Click(object sender, EventArgs e)
+        {
+            ExeLog("[Past_Open_Click]表示準備中...");
+            pastConfig = (PastConfig)pastConfig_display;
+            await Get_Past();
+            if (pastDataView != null)
+            {
+                pastDataView.askClose = false;
+                if (pastDataView.showing)
+                    pastDataView.Close();
+                pastDataView.Dispose();
+                pastDataView = null;
+            }
+            pastDataView = new DataView(data_Past);
+            pastDataView.Show();
+            ExeLog("[Past_Open_Click]表示しました。");
+        }
+
+        private void Past_CurrentDir_Click(object sender, EventArgs e)
+        {
+            Past_PathBox.Text = Path.GetFullPath("WorldQuakeViewer.exe").Replace("WorldQuakeViewer.exe", "");
+        }
+
+        private void Past_Read_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ExeLog("[Past_Read_Click]読み込み開始");
+                pastConfig = JsonConvert.DeserializeObject<PastConfig>(File.ReadAllText(Past_PathBox.Text));
+                pastConfig_display = (PastConfig_Display)pastConfig;
+                ProG_Past.SelectedObject = pastConfig_display;
+                ExeLog("[Past_Read_Click]読み込み完了");
+            }
+            catch (Exception ex)
+            {
+                ExeLog($"[Past_Read_Click]エラー:{ex.Message}", true);
+                LogSave(ex);
+                MessageBox.Show(topMost, "読み込みに失敗しました。内容:" + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void Past_Write_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ExeLog("[Past_Write_Click]書き込み開始");
+                pastConfig = (PastConfig)pastConfig_display;
+                if (File.Exists(Past_PathBox.Text))
+                    if (!DialogOK("既にファイルが存在します。上書きしてもよろしいですか？", MessageBoxIcon.Warning))
+                    {
+                        ExeLog("[Past_Write_Click]取り消されました。");
+                        return;
+                    }
+                File.WriteAllText(Past_PathBox.Text,JsonConvert.SerializeObject(pastConfig));
+                ExeLog("[Past_Write_Click]書き込み完了");
+            }
+            catch (Exception ex)
+            {
+                ExeLog($"[Past_Write_Click]エラー:{ex.Message}", true);
+                LogSave(ex);
+                MessageBox.Show(topMost, "書き込みに失敗しました。内容:" + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

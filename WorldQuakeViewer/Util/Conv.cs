@@ -55,7 +55,10 @@ namespace WorldQuakeViewer
                 case FormatPros.View:
                     if (viewIndex == 0)
                         throw new ArgumentException($"表示インデックス({viewIndex})が不正です。", nameof(viewIndex));
-                    format = config.Views[viewIndex].DisplayTextFormat;
+                    else if (viewIndex == -1)
+                        format = pastConfig.View.DisplayTextFormat;
+                    else
+                        format = config.Views[viewIndex].DisplayTextFormat;
                     break;
                 case FormatPros.Bouyomichan:
                     format = config.Datas[(int)data.Author].Bouyomi.Format;
@@ -384,9 +387,15 @@ namespace WorldQuakeViewer
                 switch (latestORhistory)
                 {
                     case 1:
-                        return new SolidBrush(config.Views[viewIndex].Colors.Main_Latest_Text_Color);
+                        if (viewIndex == -1)
+                            return new SolidBrush(pastConfig.View.Colors.Main_Latest_Text_Color);
+                        else
+                            return new SolidBrush(config.Views[viewIndex].Colors.Main_Latest_Text_Color);
                     case 2:
-                        return new SolidBrush(config.Views[viewIndex].Colors.Main_History_Text_Color);
+                        if (viewIndex == -1)
+                            return new SolidBrush(pastConfig.View.Colors.Main_History_Text_Color);
+                        else
+                            return new SolidBrush(config.Views[viewIndex].Colors.Main_History_Text_Color);
                     default:
                         ExeLog($"[Mag2Brush]警告:latestORhistory:{latestORhistory}は不正です。", true);
                         try
@@ -397,7 +406,10 @@ namespace WorldQuakeViewer
                         {
                             LogSave(ex);
                         }
-                        return new SolidBrush(config.Views[viewIndex].Colors.Main_Latest_Text_Color);
+                        if (viewIndex == -1)
+                            return new SolidBrush(pastConfig.View.Colors.Main_Latest_Text_Color);
+                        else
+                            return new SolidBrush(config.Views[viewIndex].Colors.Main_Latest_Text_Color);
                 }
             }
             else if (mag < 8)
@@ -446,9 +458,15 @@ namespace WorldQuakeViewer
             switch (latestORhistory)
             {
                 case 1:
-                    return config.Views[viewIndex].Colors.Main_Latest_Back_Color;
+                    if (viewIndex == -1)
+                        return pastConfig.View.Colors.Main_Latest_Back_Color;
+                    else
+                        return config.Views[viewIndex].Colors.Main_Latest_Back_Color;
                 case 2:
-                    return config.Views[viewIndex].Colors.Main_History_Back_Color;
+                    if (viewIndex == -1)
+                        return pastConfig.View.Colors.Main_History_Back_Color;
+                    else
+                        return config.Views[viewIndex].Colors.Main_History_Back_Color;
                 default:
                     ExeLog($"[Alert2Color]警告:latestORhistory:{latestORhistory}は不正です。", true);
                     try

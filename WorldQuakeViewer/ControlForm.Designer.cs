@@ -38,6 +38,7 @@
             this.Tab_Main_Log = new System.Windows.Forms.TabPage();
             this.LogTextBox = new System.Windows.Forms.TextBox();
             this.Tab_Main_Tool = new System.Windows.Forms.TabPage();
+            this.GroupBox_Other = new System.Windows.Forms.GroupBox();
             this.MapGenOpen = new System.Windows.Forms.Button();
             this.GroupBox_ConfigMerge = new System.Windows.Forms.GroupBox();
             this.ConfigMerge_CurrentDir = new System.Windows.Forms.Button();
@@ -62,6 +63,15 @@
             this.IntConv_ComBox3 = new System.Windows.Forms.ComboBox();
             this.IntConv_ComBox2 = new System.Windows.Forms.ComboBox();
             this.IntConv_ComBox1 = new System.Windows.Forms.ComboBox();
+            this.Tab_Main_Past = new System.Windows.Forms.TabPage();
+            this.Past_CurrentDir = new System.Windows.Forms.Button();
+            this.Past_Write = new System.Windows.Forms.Button();
+            this.Past_Read = new System.Windows.Forms.Button();
+            this.Past_Text2 = new System.Windows.Forms.Label();
+            this.Past_PathBox = new System.Windows.Forms.TextBox();
+            this.ProG_Past = new System.Windows.Forms.PropertyGrid();
+            this.Past_Text1 = new System.Windows.Forms.Label();
+            this.Past_Open = new System.Windows.Forms.Button();
             this.Tab_Main_Setting = new System.Windows.Forms.TabPage();
             this.ConfigNoFirstCheck = new System.Windows.Forms.CheckBox();
             this.Config_Reset = new System.Windows.Forms.Button();
@@ -92,12 +102,14 @@
             this.Tab_Main_Info.SuspendLayout();
             this.Tab_Main_Log.SuspendLayout();
             this.Tab_Main_Tool.SuspendLayout();
+            this.GroupBox_Other.SuspendLayout();
             this.GroupBox_ConfigMerge.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ConfigMerge_Select2)).BeginInit();
             this.GroupBox_IntConv.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.IntConv_NumBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.IntConv_NumBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.IntConv_NumBox1)).BeginInit();
+            this.Tab_Main_Past.SuspendLayout();
             this.Tab_Main_Setting.SuspendLayout();
             this.TabCtrl_Setting.SuspendLayout();
             this.Tab_Setting_Pro.SuspendLayout();
@@ -112,6 +124,7 @@
             this.TabCtrl_Main.Controls.Add(this.Tab_Main_Info);
             this.TabCtrl_Main.Controls.Add(this.Tab_Main_Log);
             this.TabCtrl_Main.Controls.Add(this.Tab_Main_Tool);
+            this.TabCtrl_Main.Controls.Add(this.Tab_Main_Past);
             this.TabCtrl_Main.Controls.Add(this.Tab_Main_Setting);
             this.TabCtrl_Main.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TabCtrl_Main.Location = new System.Drawing.Point(0, 0);
@@ -189,7 +202,7 @@
             // 
             // Tab_Main_Tool
             // 
-            this.Tab_Main_Tool.Controls.Add(this.MapGenOpen);
+            this.Tab_Main_Tool.Controls.Add(this.GroupBox_Other);
             this.Tab_Main_Tool.Controls.Add(this.GroupBox_ConfigMerge);
             this.Tab_Main_Tool.Controls.Add(this.GroupBox_IntConv);
             this.Tab_Main_Tool.Location = new System.Drawing.Point(4, 27);
@@ -200,9 +213,19 @@
             this.Tab_Main_Tool.Text = "ツール";
             this.Tab_Main_Tool.UseVisualStyleBackColor = true;
             // 
+            // GroupBox_Other
+            // 
+            this.GroupBox_Other.Controls.Add(this.MapGenOpen);
+            this.GroupBox_Other.Location = new System.Drawing.Point(8, 407);
+            this.GroupBox_Other.Name = "GroupBox_Other";
+            this.GroupBox_Other.Size = new System.Drawing.Size(478, 56);
+            this.GroupBox_Other.TabIndex = 4;
+            this.GroupBox_Other.TabStop = false;
+            this.GroupBox_Other.Text = "その他";
+            // 
             // MapGenOpen
             // 
-            this.MapGenOpen.Location = new System.Drawing.Point(35, 424);
+            this.MapGenOpen.Location = new System.Drawing.Point(9, 24);
             this.MapGenOpen.Name = "MapGenOpen";
             this.MapGenOpen.Size = new System.Drawing.Size(112, 23);
             this.MapGenOpen.TabIndex = 2;
@@ -501,6 +524,97 @@
             this.IntConv_ComBox1.Size = new System.Drawing.Size(150, 26);
             this.IntConv_ComBox1.TabIndex = 0;
             // 
+            // Tab_Main_Past
+            // 
+            this.Tab_Main_Past.Controls.Add(this.Past_CurrentDir);
+            this.Tab_Main_Past.Controls.Add(this.Past_Write);
+            this.Tab_Main_Past.Controls.Add(this.Past_Read);
+            this.Tab_Main_Past.Controls.Add(this.Past_Text2);
+            this.Tab_Main_Past.Controls.Add(this.Past_PathBox);
+            this.Tab_Main_Past.Controls.Add(this.ProG_Past);
+            this.Tab_Main_Past.Controls.Add(this.Past_Text1);
+            this.Tab_Main_Past.Controls.Add(this.Past_Open);
+            this.Tab_Main_Past.Location = new System.Drawing.Point(4, 27);
+            this.Tab_Main_Past.Name = "Tab_Main_Past";
+            this.Tab_Main_Past.Size = new System.Drawing.Size(492, 469);
+            this.Tab_Main_Past.TabIndex = 4;
+            this.Tab_Main_Past.Text = "過去情報表示";
+            this.Tab_Main_Past.UseVisualStyleBackColor = true;
+            // 
+            // Past_CurrentDir
+            // 
+            this.Past_CurrentDir.Location = new System.Drawing.Point(420, 39);
+            this.Past_CurrentDir.Name = "Past_CurrentDir";
+            this.Past_CurrentDir.Size = new System.Drawing.Size(64, 25);
+            this.Past_CurrentDir.TabIndex = 9;
+            this.Past_CurrentDir.Text = "current";
+            this.Past_CurrentDir.UseVisualStyleBackColor = true;
+            this.Past_CurrentDir.Click += new System.EventHandler(this.Past_CurrentDir_Click);
+            // 
+            // Past_Write
+            // 
+            this.Past_Write.Location = new System.Drawing.Point(420, 67);
+            this.Past_Write.Name = "Past_Write";
+            this.Past_Write.Size = new System.Drawing.Size(64, 26);
+            this.Past_Write.TabIndex = 8;
+            this.Past_Write.Text = "書き出す";
+            this.Past_Write.UseVisualStyleBackColor = true;
+            this.Past_Write.Click += new System.EventHandler(this.Past_Write_Click);
+            // 
+            // Past_Read
+            // 
+            this.Past_Read.Location = new System.Drawing.Point(354, 67);
+            this.Past_Read.Name = "Past_Read";
+            this.Past_Read.Size = new System.Drawing.Size(64, 26);
+            this.Past_Read.TabIndex = 7;
+            this.Past_Read.Text = "読み込む";
+            this.Past_Read.UseVisualStyleBackColor = true;
+            this.Past_Read.Click += new System.EventHandler(this.Past_Read_Click);
+            // 
+            // Past_Text2
+            // 
+            this.Past_Text2.AutoSize = true;
+            this.Past_Text2.Location = new System.Drawing.Point(4, 42);
+            this.Past_Text2.Name = "Past_Text2";
+            this.Past_Text2.Size = new System.Drawing.Size(37, 18);
+            this.Past_Text2.TabIndex = 5;
+            this.Past_Text2.Text = "パス:";
+            // 
+            // Past_PathBox
+            // 
+            this.Past_PathBox.Location = new System.Drawing.Point(39, 39);
+            this.Past_PathBox.Name = "Past_PathBox";
+            this.Past_PathBox.Size = new System.Drawing.Size(379, 25);
+            this.Past_PathBox.TabIndex = 4;
+            // 
+            // ProG_Past
+            // 
+            this.ProG_Past.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.ProG_Past.Location = new System.Drawing.Point(0, 99);
+            this.ProG_Past.Name = "ProG_Past";
+            this.ProG_Past.PropertySort = System.Windows.Forms.PropertySort.Categorized;
+            this.ProG_Past.Size = new System.Drawing.Size(492, 370);
+            this.ProG_Past.TabIndex = 3;
+            // 
+            // Past_Text1
+            // 
+            this.Past_Text1.AutoSize = true;
+            this.Past_Text1.Location = new System.Drawing.Point(3, 2);
+            this.Past_Text1.Name = "Past_Text1";
+            this.Past_Text1.Size = new System.Drawing.Size(284, 36);
+            this.Past_Text1.TabIndex = 1;
+            this.Past_Text1.Text = "過去の情報の表示はここを使用してください。\r\n最新の情報と混同しないように注意してください。";
+            // 
+            // Past_Open
+            // 
+            this.Past_Open.Location = new System.Drawing.Point(401, 3);
+            this.Past_Open.Name = "Past_Open";
+            this.Past_Open.Size = new System.Drawing.Size(88, 30);
+            this.Past_Open.TabIndex = 0;
+            this.Past_Open.Text = "取得・表示";
+            this.Past_Open.UseVisualStyleBackColor = true;
+            this.Past_Open.Click += new System.EventHandler(this.Past_Open_Click);
+            // 
             // Tab_Main_Setting
             // 
             this.Tab_Main_Setting.Controls.Add(this.ConfigNoFirstCheck);
@@ -509,9 +623,9 @@
             this.Tab_Main_Setting.Controls.Add(this.ConfigWebLink);
             this.Tab_Main_Setting.Controls.Add(this.ConfigInfoText);
             this.Tab_Main_Setting.Controls.Add(this.TabCtrl_Setting);
-            this.Tab_Main_Setting.Location = new System.Drawing.Point(4, 22);
+            this.Tab_Main_Setting.Location = new System.Drawing.Point(4, 27);
             this.Tab_Main_Setting.Name = "Tab_Main_Setting";
-            this.Tab_Main_Setting.Size = new System.Drawing.Size(492, 474);
+            this.Tab_Main_Setting.Size = new System.Drawing.Size(492, 469);
             this.Tab_Main_Setting.TabIndex = 2;
             this.Tab_Main_Setting.Text = "設定";
             this.Tab_Main_Setting.UseVisualStyleBackColor = true;
@@ -818,6 +932,7 @@
             this.Tab_Main_Log.ResumeLayout(false);
             this.Tab_Main_Log.PerformLayout();
             this.Tab_Main_Tool.ResumeLayout(false);
+            this.GroupBox_Other.ResumeLayout(false);
             this.GroupBox_ConfigMerge.ResumeLayout(false);
             this.GroupBox_ConfigMerge.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ConfigMerge_Select2)).EndInit();
@@ -826,6 +941,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.IntConv_NumBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.IntConv_NumBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.IntConv_NumBox1)).EndInit();
+            this.Tab_Main_Past.ResumeLayout(false);
+            this.Tab_Main_Past.PerformLayout();
             this.Tab_Main_Setting.ResumeLayout(false);
             this.Tab_Main_Setting.PerformLayout();
             this.TabCtrl_Setting.ResumeLayout(false);
@@ -900,5 +1017,15 @@
         private System.Windows.Forms.CheckBox ConfigNoFirstCheck;
         private System.Windows.Forms.Timer UpdtProEnabler;
         private System.Windows.Forms.Button MapGenOpen;
+        private System.Windows.Forms.GroupBox GroupBox_Other;
+        private System.Windows.Forms.TabPage Tab_Main_Past;
+        private System.Windows.Forms.Label Past_Text1;
+        private System.Windows.Forms.Button Past_Open;
+        private System.Windows.Forms.PropertyGrid ProG_Past;
+        private System.Windows.Forms.TextBox Past_PathBox;
+        private System.Windows.Forms.Button Past_Write;
+        private System.Windows.Forms.Button Past_Read;
+        private System.Windows.Forms.Label Past_Text2;
+        private System.Windows.Forms.Button Past_CurrentDir;
     }
 }

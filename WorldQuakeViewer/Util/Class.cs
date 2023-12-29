@@ -18,6 +18,10 @@ namespace WorldQuakeViewer
             /// </summary>
             Null = -1,
             /// <summary>
+            /// 過去情報用
+            /// </summary>
+            Past = -2,
+            /// <summary>
             /// 他(ユーザー指定)
             /// </summary>
             Other = 0,
@@ -40,20 +44,19 @@ namespace WorldQuakeViewer
         };
 
         /// <summary>
-        /// データ元の個数(null除く)
+        /// データ元の個数(null等除く)
         /// </summary>
-        public static readonly int DataAuthorCount = Enum.GetValues(typeof(DataAuthor)).Length - 1;
+        public static readonly int DataAuthorCount = Enum.GetValues(typeof(DataAuthor)).Length - 2;
 
         /// <summary>
         /// データ元別既定のURL
         /// </summary>
         public static Dictionary<DataAuthor, string> DataDefURL = new Dictionary<DataAuthor, string>
         {
-            { DataAuthor.Null, "" },
             { DataAuthor.Other, "" },
             { DataAuthor.USGS, "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson" },
-            { DataAuthor.EMSC, "https://www.seismicportal.eu/fdsnws/event/1/query?format=text&minmag=5.0&limit=10" },
-            { DataAuthor.GFZ, "https://geofon.gfz-potsdam.de/fdsnws/event/1/query?format=text&minmag=5.0&limit=10&end=2100-01-01" },
+            { DataAuthor.EMSC, "https://www.seismicportal.eu/fdsnws/event/1/query?format=text&minmag=4.5&limit=10" },
+            { DataAuthor.GFZ, "https://geofon.gfz-potsdam.de/fdsnws/event/1/query?format=text&minmag=4.5&limit=10&end=2100-01-01" },
             { DataAuthor.EarlyEst, "http://early-est.rm.ingv.it/monitor.xml" },
         };
 
@@ -225,9 +228,17 @@ namespace WorldQuakeViewer
             /// </summary>
             QuakeML = 2,
             /// <summary>
-            /// GeoJSON形式
+            /// GeoJSON形式(自動判別)
             /// </summary>
-            GeoJSON = 3
+            GeoJSON = 3,
+            /// <summary>
+            /// GeoJSON形式(USGS)
+            /// </summary>
+            GeoJSON_USGS = 31,
+            /// <summary>
+            /// GeoJSON形式(USGS)
+            /// </summary>
+            GeoJSON_EMSC = 32,
         }
 
         /// <summary>

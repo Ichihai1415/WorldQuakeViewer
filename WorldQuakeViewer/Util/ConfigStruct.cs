@@ -360,7 +360,7 @@ namespace WorldQuakeViewer
                 /// <summary>
                 /// 送信する文のフォーマット
                 /// </summary>
-                public string Format { get; set; } = "[Author]地震情報、[UpdateJP]、{TimeUser*d日H時m分s秒}発生、マグニチュード[Mag]、震源、[HypoJP]、[LatNSJP][Lat60d]度[Lat60m]分[Lat60s]秒、[LonEWJP][Lon60d]度[Lon60m]分[Lon60s]秒、深さ[Depth]km。";
+                public string Format { get; set; } = "[Author]地震情報、[UpdateJP]、{TimeUser*d日H時m分s秒}発生、マグニチュード[Mag]、震源、[HypoJP]、[LatNSJP][Lat60d]度[Lat60m]分[Lat60s]秒、[LonEWJP][Lon60d]度[Lon60m]分[Lon60s]秒、深さ[Depth]km。{MMI*改正メルカリ震度階級}[MMI]、{Alert*アラート、}[AlertJP]。";
 
                 /// <summary>
                 /// 送信する文の置換
@@ -440,7 +440,7 @@ namespace WorldQuakeViewer
                 /// <summary>
                 /// 送信する文のフォーマット
                 /// </summary>
-                public string Format { get; set; } = "[formatJSON]";
+                public string Format { get; set; } = "[dataJSON]";
 
                 /// <summary>
                 /// 送信する文の置換
@@ -511,7 +511,7 @@ namespace WorldQuakeViewer
                 /// <summary>
                 /// 送信する文のフォーマット
                 /// </summary>
-                public string Format { get; set; } = "[Author]地震情報([UpdateJP])【[MagType][Mag]】 {TimeUser*yyyy/MM/dd HH:mm:ss UTCzzz}発生\\n[HypoJP]([HypoEN])\\n[Lat60d]°[Lat60m]'[Lat60s]\"[LatNS], [Lon60d]°[Lon60m]'[Lon60s]\"[LonEW]  深さ[Depth]km";
+                public string Format { get; set; } = "[Author]地震情報([UpdateJP])【[MagType][Mag]】 {TimeUser*yyyy/MM/dd HH:mm:ss UTCzzz}発生\\n[HypoJP]([HypoEN])\\n[Lat60d]°[Lat60m]'[Lat60s]\"[LatNS], [Lon60d]°[Lon60m]'[Lon60s]\"[LonEW]  深さ[Depth]km\\n{MMI*改正メルカリ震度階級:}[MMI]  {Alert*アラート:}[AlertJP]";
 
                 /// <summary>
                 /// 送信する文の置換
@@ -592,7 +592,7 @@ namespace WorldQuakeViewer
                 /// 保存する文のフォーマット
                 /// </summary>
                 /// <remarks>情報の間にソフト情報等が入ります</remarks>
-                public string Format { get; set; } = "[Author]地震情報([UpdateJP])【[MagType][Mag]】 {TimeUser*yyyy/MM/dd HH:mm:ss UTCzzz}発生\\n[HypoJP]([HypoEN])\\n[Lat60d]°[Lat60m]'[Lat60s]\"[LatNS], [Lon60d]°[Lon60m]'[Lon60s]\"[LonEW]  深さ[Depth]km\\nraw:[formatJSON]";
+                public string Format { get; set; } = "[Author]地震情報([UpdateJP])【[MagType][Mag]】 {TimeUser*yyyy/MM/dd HH:mm:ss UTCzzz}発生\\n[HypoJP]([HypoEN])\\n[Lat60d]°[Lat60m]'[Lat60s]\"[LatNS], [Lon60d]°[Lon60m]'[Lon60s]\"[LonEW]  深さ[Depth]km{MMI*\\n改正メルカリ震度階級:}[MMI]  {Alert*アラート:}[AlertJP]";
 
                 /// <summary>
                 /// 保存する文の置換
@@ -683,7 +683,7 @@ namespace WorldQuakeViewer
             /// <summary>
             /// 表示するテキストのフォーマット
             /// </summary>
-            public string DisplayTextFormat { get; set; } = "{TimeUser*yyyy/MM/dd HH:mm:ss UTCzzz}発生\\n[HypoJP]\\n[Lat60d]°[Lat60m]'[Lat60s]\"[LatNS], [Lon60d]°[Lon60m]'[Lon60s]\"[LonEW]   深さ[Depth]km\\nID:[ID]";
+            public string DisplayTextFormat { get; set; } = "{TimeUser*yyyy/MM/dd HH:mm:ss UTCzzz}発生\\n[HypoJP]\\n[Lat60d]°[Lat60m]'[Lat60s]\"[LatNS], [Lon60d]°[Lon60m]'[Lon60s]\"[LonEW]   深さ[Depth]km\\nID:[ID] {MMI*MMI:}[MMI]";
 
             /// <summary>
             /// 表示する最小マグニチュード
@@ -1064,13 +1064,13 @@ namespace WorldQuakeViewer
                 /// </summary>
                 [Description("(USGSのみ)アラート(PAGER)が変化したとき更新とするか")]
                 public bool Alert { get; set; }
-                
+
                 /// <summary>
                 /// (一部のみ)データのソース
                 /// </summary>
                 [Description("(一部のみ)データのソースが変化したとき更新とするか")]
                 public bool Source { get; set; }
-                
+
                 /// <summary>
                 /// ConfigからConfig_Displayに変換します。
                 /// </summary>
@@ -1761,6 +1761,73 @@ namespace WorldQuakeViewer
             Datas = from.Datas.Select(n => (Data_)n).ToArray(),
             Views = from.Views.Select(n => (View_)n).ToArray(),
             Other = (Other_)from.Other
+        };
+    }
+
+    /// <summary>
+    /// 過去情報表示用クラス
+    /// </summary>
+    public class PastConfig
+    {
+        /// <summary>
+        /// 取得するURL
+        /// </summary>
+        public string URL { get; set; } = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2023-01-01&endtime=2023-12-31&minmmi=8";
+
+        /// <summary>
+        /// データの種類
+        /// </summary>
+        public DataProType ProType { get; set; } = DataProType.GeoJSON_USGS;
+
+        /// <summary>
+        /// 表示処理
+        /// </summary>
+        public Config.View_ View { get; set; } = new Config.View_();
+
+        /// <summary>
+        /// PastConfig_DisplayからPastConfigに変換します。
+        /// </summary>
+        /// <param name="from">変換元</param>
+        public static explicit operator PastConfig(PastConfig_Display from) => new PastConfig
+        {
+            URL = from.URL,
+            ProType = from.ProType,
+            View = (Config.View_)from.View
+        };
+    }
+
+    /// <summary>
+    /// 過去情報表示用設定表示用クラス
+    /// </summary>
+    public class PastConfig_Display
+    {
+        /// <summary>
+        /// 取得するURL
+        /// </summary>
+        [Description("取得するURL")]
+        public string URL { get; set; }
+
+        /// <summary>
+        /// データの種類
+        /// </summary>
+        [Description("データの種類")]
+        public DataProType ProType { get; set; }
+
+        /// <summary>
+        /// 表示処理
+        /// </summary>
+        [Description("表示処理\n設定の表示設定と同じです。")]
+        public Config_Display.View_ View { get; set; }
+
+        /// <summary>
+        /// PastConfig_DisplayからPastConfigに変換します。
+        /// </summary>
+        /// <param name="from">変換元</param>
+        public static explicit operator PastConfig_Display(PastConfig from) => new PastConfig_Display
+        {
+            URL = from.URL,
+            ProType = from.ProType,
+            View = (Config_Display.View_)from.View
         };
     }
 }

@@ -15,12 +15,40 @@ namespace WorldQuakeViewer
     /// </summary>
     public partial class DataView : Form
     {
+        /// <summary>
+        /// 表示するもののタイプ(viewData % 10)
+        /// </summary>
         readonly int viewType;
+
+        /// <summary>
+        /// 表示インデックス
+        /// </summary>
         readonly int i;
+
+        /// <summary>
+        /// ReDrawに使用
+        /// </summary>
         readonly public int dataAuthorN;
+
+        /// <summary>
+        /// 表示するデータ
+        /// </summary>
         readonly Dictionary<string, Data> data_;
+
+        /// <summary>
+        /// 表示設定
+        /// </summary>
         private static Config.View_ config_view;
+
+        /// <summary>
+        /// 表示中か
+        /// </summary>
         public bool showing = false;
+
+        /// <summary>
+        /// 閉じるときにメッセージを表示するか
+        /// </summary>
+        public bool askClose = true;
 
         /// <summary>
         /// データ表示Formを初期化します。
@@ -82,11 +110,28 @@ namespace WorldQuakeViewer
         }
 
         /// <summary>
+        /// データ表示Form(過去情報表示用)を初期化します。
+        /// </summary>
+        /// <param name="data"></param>
+        public DataView(Dictionary<string, Data> data)
+        {
+            InitializeComponent();
+
+            viewType = 3;
+            i = -1;
+            Text = $"WorldQuakeViewer - 過去情報表示画面";
+            data_ = data;
+        }
+
+        /// <summary>
         /// 設定を反映させます。
         /// </summary>
         private void ConfigReload()
         {
-            config_view = config.Views[i];
+            if (i == -1)
+                config_view = pastConfig.View;
+            else
+                config_view = config.Views[i];
             if (config_view.LockDataViewSize)
             {
                 FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -135,7 +180,7 @@ namespace WorldQuakeViewer
             }
             else
             {
-                List<Data> data = data_.Where(n => n.Value.Mag > config.Views[i].LowerMagLimit).Select(n => n.Value).ToList();
+                List<Data> data = data_.Where(n => n.Value.Mag > config_view.LowerMagLimit).Select(n => n.Value).ToList();
                 data.Sort((x, y) => y.Time.CompareTo(x.Time));//並び替え
                 switch (viewType)
                 {
@@ -331,7 +376,7 @@ namespace WorldQuakeViewer
 
         private void DataView_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (e.CloseReason == CloseReason.UserClosing)
+            if (e.CloseReason == CloseReason.UserClosing && askClose)
                 if (!DialogOK("閉じてもよろしいですか？メイン画面から再表示できます。"))
                 {
                     e.Cancel = true;
