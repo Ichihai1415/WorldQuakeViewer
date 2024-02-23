@@ -153,7 +153,8 @@ namespace WorldQuakeViewer
             ExeLog($"[Draw][{i}]描画中...");
             ConfigReload();
             Bitmap img;
-            if (data_.Count == 0)
+            List<Data> data = data_.Where(n => n.Value.Mag > config_view.LowerMagLimit).Select(n => n.Value).ToList();
+            if (data.Count == 0)
             {
                 switch (viewType)
                 {
@@ -175,8 +176,10 @@ namespace WorldQuakeViewer
             }
             else
             {
-                List<Data> data = data_.Where(n => n.Value.Mag > config_view.LowerMagLimit).Select(n => n.Value).ToList();
-                data.Sort((x, y) => y.Time.CompareTo(x.Time));//並び替え
+                if (config_view.SortUpdtTime)//並び替え
+                    data.Sort((x, y) => y.UpdtTime.CompareTo(x.UpdtTime));
+                else
+                    data.Sort((x, y) => y.Time.CompareTo(x.Time));
                 switch (viewType)
                 {
                     case 1:

@@ -16,7 +16,7 @@ namespace WorldQuakeViewer
         /// 設定バージョン
         /// </summary>
         /// <remarks>getonly</remarks>
-        public string Version { get; } = version;
+        public string Version { get; set; } = version;
 
         /// <summary>
         /// 処理するデータ元ごとのデータ処理
@@ -127,6 +127,11 @@ namespace WorldQuakeViewer
             /// 取得時間(毎分x秒) -1で無効
             /// </summary>
             public int[] GetTimes { get; set; } = new int[2] { -1, -1 };
+
+            /// <summary>
+            /// (QuakeMLのみ)必要最小観測点数
+            /// </summary>
+            public int MinObsPoints { get; set; } = 5;
 
             /// <summary>
             /// 更新検知対象
@@ -651,6 +656,7 @@ namespace WorldQuakeViewer
                 URL = from.URL,
                 DataProType = from.DataProType,
                 GetTimes = from.GetTimes,
+                MinObsPoints = from.MinObsPoints,
                 Update = (Update_)from.Update,
                 Bouyomi = (Bouyomi_)from.Bouyomi,
                 Sound = (Sound_)from.Sound,
@@ -689,6 +695,11 @@ namespace WorldQuakeViewer
             /// 表示する最小マグニチュード
             /// </summary>
             public double LowerMagLimit { get; set; } = 0;
+
+            /// <summary>
+            /// 更新時刻でソートするか
+            /// </summary>
+            public bool SortUpdtTime { get; set; } = false;
 
             /// <summary>
             /// マップの範囲(°)
@@ -804,6 +815,7 @@ namespace WorldQuakeViewer
                 HistoryTitleText = from.HistoryTitleText,
                 DisplayTextFormat = from.DisplayTextFormat,
                 LowerMagLimit = from.LowerMagLimit,
+                SortUpdtTime = from.SortUpdtTime,
                 MapRange = from.MapRange,
                 HypoShift = from.HypoShift,
                 LockDataViewSize = from.LockDataViewSize,
@@ -953,8 +965,14 @@ namespace WorldQuakeViewer
             /// <summary>
             /// 取得時間(毎分x秒) -1で無効
             /// </summary>
-            [Description("取得時間(毎分x秒)\n-1で無効 個数は2個にしてください")]
+            [Description("取得時間(毎分x秒)\n0~59以外は無視 個数は2個にしてください")]
             public int[] GetTimes { get; set; }
+
+            /// <summary>
+            /// (QuakeMLのみ)必要最小観測点数
+            /// </summary>
+            [Description("(QuakeMLのみ)必要最小観測点数")]
+            public int MinObsPoints { get; set; }
 
             /// <summary>
             /// 更新検知対象
@@ -1568,6 +1586,7 @@ namespace WorldQuakeViewer
                 URL = from.URL,
                 DataProType = from.DataProType,
                 GetTimes = from.GetTimes,
+                MinObsPoints = from.MinObsPoints,
                 Update = (Update_)from.Update,
                 Bouyomi = (Bouyomi_)from.Bouyomi,
                 Sound = (Sound_)from.Sound,
@@ -1613,6 +1632,12 @@ namespace WorldQuakeViewer
             /// </summary>
             [Description("表示する最小マグニチュード")]
             public double LowerMagLimit { get; set; }
+
+            /// <summary>
+            /// 更新時刻でソートするか
+            /// </summary>
+            [Description("更新時刻でソートするか\n対応していないものもあります")]
+            public bool SortUpdtTime { get; set; } = false;
 
             /// <summary>
             /// マップの範囲(°)
@@ -1745,6 +1770,7 @@ namespace WorldQuakeViewer
                 HistoryTitleText = from.HistoryTitleText,
                 DisplayTextFormat = from.DisplayTextFormat,
                 LowerMagLimit = from.LowerMagLimit,
+                SortUpdtTime = from.SortUpdtTime,
                 MapRange = from.MapRange,
                 HypoShift = from.HypoShift,
                 LockDataViewSize = from.LockDataViewSize,
@@ -1772,7 +1798,7 @@ namespace WorldQuakeViewer
         /// <summary>
         /// 取得するURL
         /// </summary>
-        public string URL { get; set; } = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2023-01-01&endtime=2023-12-31&minmmi=8";
+        public string URL { get; set; } = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2023-01-01&endtime=2024-12-31&minmmi=8";
 
         /// <summary>
         /// データの種類
