@@ -31,7 +31,7 @@ namespace WorldQuakeViewer
         /// <summary>
         /// プログラムのバージョン
         /// </summary>
-        public static readonly string version = "1.2.0";
+        public static readonly string version = "1.2.1";
 
         /// <summary>
         /// ダイアログ等を最前面に表示する用
@@ -193,8 +193,8 @@ namespace WorldQuakeViewer
                         ExeLog($"[CtrlForm_Load]更新を検知({config.Version}->{version})");
                         int[] nowVer = version.Split('.').Select(n => int.Parse(n.Replace("α", "-"))).ToArray();
                         int[] setVer = config.Version.Split('.').Select(n => int.Parse(n.Replace("α", "-"))).ToArray();
-                        if (setVer[1] <= 1 && setVer[2] <= 1)//x.1.1以下の場合
-                            Console.WriteLine();
+                        if (setVer[1] <= 2 && setVer[2] <= 0)//設定を追加したとき以下を変更//v1.2.0
+                            ConfigUpdate();
                     }
                 }
                 catch (Exception ex)
@@ -272,7 +272,7 @@ namespace WorldQuakeViewer
             int c = config_display.Views.Count();
             if (c == 1)
                 ProG_view_Delete.Enabled = false;
-            if (c == 9)
+            if (c == 10)
                 ProG_view_Add.Enabled = false;
             ProG_view_Copy.Enabled = c > ProG_view_CopyNum.Value;
             //初期化完了
@@ -285,6 +285,8 @@ namespace WorldQuakeViewer
                         await Get((DataAuthor)i);
                         continue;
                     }
+
+            await Task.Delay(100);
             for (int i = 1; i < config.Views.Count(); i++)
                 Open(i);//起動したとき表示されない時がある
 
@@ -294,6 +296,16 @@ namespace WorldQuakeViewer
             ExeLog($"[CtrlForm_Load]起動処理完了 約10秒後に通常取得を開始します。");
             noFirst = true;
             ConfigNoFirstCheck.Checked = false;
+        }
+
+        /// <summary>
+        /// ソフト更新時必要な設定を更新し上書きします。
+        /// </summary>
+        public void ConfigUpdate()
+        {
+            config.Version = version;
+            File.WriteAllText("Setting\\config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
+            ExeLog("[ConfigUpdate]設定を更新しました。");
         }
 
         /// <summary>
@@ -317,10 +329,11 @@ namespace WorldQuakeViewer
             Console.WriteLine(DateTime.Now.ToString("ss.ffff"));
             try
             {
+                int sec = DateTime.Now.Second;
                 for (int i = 0; i < DataAuthorCount; i++)
-                    if (config.Datas[i].GetTimes[0] == DateTime.Now.Second)
+                    if (config.Datas[i].GetTimes[0] == sec)
                         await Get((DataAuthor)i);
-                    else if (config.Datas[i].GetTimes[1] == DateTime.Now.Second)
+                    else if (config.Datas[i].GetTimes[1] == sec)
                         await Get((DataAuthor)i);
             }
             catch (Exception ex)//設定がおかしいとき
@@ -393,12 +406,18 @@ namespace WorldQuakeViewer
         private void ProG_view_Delete_Click(object sender, EventArgs e)
         {
             int c = config_display.Views.Count();
+            if (dataViews.Length > c + 1)
+                if (dataViews[c - 1].showing)
+                {
+                    dataViews[c - 1].askClose = false;
+                    dataViews[c - 1].Close();
+                }
             List<Config_Display.View_> tmp = config_display.Views.ToList();
             tmp.RemoveAt(c - 1);
             config_display.Views = tmp.ToArray();
             ProG_view.SelectedObject = config_display.Views;
             c--;
-            if (c != 9)
+            if (c != 10)
                 ProG_view_Add.Enabled = true;
             if (c == 1)
                 ProG_view_Delete.Enabled = false;

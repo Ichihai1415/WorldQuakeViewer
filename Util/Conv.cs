@@ -276,8 +276,21 @@ namespace WorldQuakeViewer
         public static Data QuakeML2Data(XmlNode info, XmlNamespaceManager ns, DataAuthor dataAuthor)
         {
             XmlNode origin = info.SelectSingleNode("qml:origin", ns);
-            XmlNodeList magnitude = info.SelectNodes("qml:magnitude", ns);
+            XmlNodeList magnitudes = info.SelectNodes("qml:magnitude", ns);
+            if (magnitudes.Count == 0)
+                return null;
             string id = ((XmlElement)info).GetAttribute("publicID").Split('/').Last().Replace(".quakeml", "");//USGSには.quakemlが付く
+            int magIndex = -1;
+            for (int i = magnitudes.Count - 1; i >= 0; i--)
+            {
+                if (magnitudes[i].SelectSingleNode("qml:stationCount", ns) == null || int.Parse(magnitudes[i].SelectSingleNode("qml:stationCount", ns).InnerText) >= config.Datas[(int)dataAuthor].MinObsPoints)
+                {//EMSCはMが一定以上だとstationCountがない?
+                    magIndex = i;
+                    break;
+                }
+            }
+            if (magIndex == -1)
+                return null;
             return new Data
             {
                 Author = dataAuthor,
@@ -289,8 +302,8 @@ namespace WorldQuakeViewer
                 Lat = double.Parse(origin.SelectSingleNode("qml:latitude/qml:value", ns).InnerText),
                 Lon = double.Parse(origin.SelectSingleNode("qml:longitude/qml:value", ns).InnerText),
                 Depth = double.Parse(origin.SelectSingleNode("qml:depth/qml:value", ns).InnerText) / 1000d,
-                MagType = magnitude[magnitude.Count - 1].SelectSingleNode("qml:type", ns).InnerText,
-                Mag = double.Parse(magnitude[magnitude.Count - 1].SelectSingleNode("qml:mag/qml:value", ns).InnerText)
+                MagType = magnitudes[magIndex].SelectSingleNode("qml:type", ns).InnerText,
+                Mag = double.Parse(magnitudes[magIndex].SelectSingleNode("qml:mag/qml:value", ns).InnerText)
             };
         }
 
@@ -464,7 +477,8 @@ namespace WorldQuakeViewer
                         return config.Views[viewIndex].Colors.Main_Latest_Back_Color;
                 case 2:
                     if (viewIndex == -1)
-                        return pastConfig.View.Colors.Main_History_Back_Color;
+                        return pastConfig.View
+                            .Colors.Main_History_Back_Color;
                     else
                         return config.Views[viewIndex].Colors.Main_History_Back_Color;
                 default:

@@ -170,6 +170,8 @@ namespace WorldQuakeViewer
                         if (info.SelectSingleNode("qml:type", ns).InnerText == "not existing")//データがないものがある(NullRefになる)
                             continue;
                     Data data = QuakeML2Data(info, ns, dataAuthor);
+                    if (data == null)
+                        continue;
                     if (dataAuthor == DataAuthor.EMSC && config.Other.EMSCqmlIDConv)
                         if (data_tmp.ContainsKey(data.ID))
                         {
