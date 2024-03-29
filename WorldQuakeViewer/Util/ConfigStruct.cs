@@ -1636,7 +1636,7 @@ namespace WorldQuakeViewer
             /// <summary>
             /// 更新時刻でソートするか
             /// </summary>
-            [Description("更新時刻でソートするか\n対応していないものもあります")]
+            [Description("更新時刻でソートするか\nデータの種類がTextなどは不可能、その場合基本古い順になるので注意")]
             public bool SortUpdtTime { get; set; } = false;
 
             /// <summary>

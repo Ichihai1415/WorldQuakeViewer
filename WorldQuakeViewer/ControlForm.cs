@@ -405,8 +405,8 @@ namespace WorldQuakeViewer
 
         private void ProG_view_Delete_Click(object sender, EventArgs e)
         {
-            int c = config_display.Views.Count();
-            if (dataViews.Length > c + 1)
+            int c = ((Config_Display.View_[])ProG_view.SelectedObject).Length;//画面上での表示数
+            if (dataViews[c - 1] != null)
                 if (dataViews[c - 1].showing)
                 {
                     dataViews[c - 1].askClose = false;
@@ -417,8 +417,7 @@ namespace WorldQuakeViewer
             config_display.Views = tmp.ToArray();
             ProG_view.SelectedObject = config_display.Views;
             c--;
-            if (c != 10)
-                ProG_view_Add.Enabled = true;
+            ProG_view_Add.Enabled = true;
             if (c == 1)
                 ProG_view_Delete.Enabled = false;
             ProG_view_Copy.Enabled = c > ProG_view_CopyNum.Value;
@@ -465,6 +464,10 @@ namespace WorldQuakeViewer
         {
             for (int i = 1; i < config.Views.Count(); i++)
                 Open(i);
+        }
+        private void ProG_Info_OpenAll2_Click(object sender, EventArgs e)
+        {
+            ProG_view_OpenAll_Click(sender, e);
         }
 
         /// <summary>
