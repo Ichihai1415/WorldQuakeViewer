@@ -99,6 +99,7 @@
             this.GetTimer = new System.Windows.Forms.Timer(this.components);
             this.LogClearTimer = new System.Windows.Forms.Timer(this.components);
             this.UpdtProEnabler = new System.Windows.Forms.Timer(this.components);
+            this.ProG_Info_OpenAll2 = new System.Windows.Forms.Button();
             this.TabCtrl_Main.SuspendLayout();
             this.Tab_Main_Info.SuspendLayout();
             this.Tab_Main_Log.SuspendLayout();
@@ -931,6 +932,17 @@
             // 
             this.UpdtProEnabler.Interval = 60000;
             this.UpdtProEnabler.Tick += new System.EventHandler(this.UpdtProEnabler_Tick);
+            // 
+            // ProG_Info_OpenAll2
+            // 
+            this.ProG_Info_OpenAll2.Font = new System.Drawing.Font("メイリオ", 9F);
+            this.ProG_Info_OpenAll2.Location = new System.Drawing.Point(437, 3);
+            this.ProG_Info_OpenAll2.Name = "ProG_Info_OpenAll2";
+            this.ProG_Info_OpenAll2.Size = new System.Drawing.Size(52, 23);
+            this.ProG_Info_OpenAll2.TabIndex = 10;
+            this.ProG_Info_OpenAll2.Text = "全表示";
+            this.ProG_Info_OpenAll2.UseVisualStyleBackColor = true;
+            this.ProG_Info_OpenAll2.Click += new System.EventHandler(this.ProG_Info_OpenAll2_Click);
             // 
             // CtrlForm
             // 
