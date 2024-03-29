@@ -31,7 +31,7 @@ namespace WorldQuakeViewer
         /// <summary>
         /// プログラムのバージョン
         /// </summary>
-        public static readonly string version = "1.2.1";
+        public static readonly string version = "1.2.2";
 
         /// <summary>
         /// ダイアログ等を最前面に表示する用
@@ -137,6 +137,11 @@ namespace WorldQuakeViewer
         /// 過去情報表示画面
         /// </summary>
         public static DataView pastDataView = null;
+
+        /// <summary>
+        /// ユーザー震央辞書
+        /// </summary>
+        public static LL2FERC.LL2FERC.FromFile hypoUser = null;
 
         public CtrlForm()
         {
@@ -269,12 +274,10 @@ namespace WorldQuakeViewer
             colorChange[0].NewColor = Color.Transparent;
             ia.SetRemapTable(colorChange);
 
-            int c = config_display.Views.Count();
-            if (c == 1)
-                ProG_view_Delete.Enabled = false;
-            if (c == 10)
-                ProG_view_Add.Enabled = false;
-            ProG_view_Copy.Enabled = c > ProG_view_CopyNum.Value;
+            if (File.Exists("LL2FERC.FromFile.csv"))
+                hypoUser = new LL2FERC.LL2FERC.FromFile();
+            else
+                hypoUser = null;
             //初期化完了
             ExeLog($"[CtrlForm_Load]初回取得中...");
             InfoText0.Text = "<初回取得中...>WorldQuakeViewer";
@@ -286,9 +289,11 @@ namespace WorldQuakeViewer
                         continue;
                     }
 
-            await Task.Delay(100);
             for (int i = 1; i < config.Views.Count(); i++)
+            {
+                await Task.Delay(100);
                 Open(i);//起動したとき表示されない時がある
+            }
 
             GetTimer.Interval = 10000 - DateTime.Now.Millisecond;
             GetTimer.Enabled = true;
@@ -296,6 +301,16 @@ namespace WorldQuakeViewer
             ExeLog($"[CtrlForm_Load]起動処理完了 約10秒後に通常取得を開始します。");
             noFirst = true;
             ConfigNoFirstCheck.Checked = false;
+
+            int c = config_display.Views.Count();
+            if (c != 1)
+                ProG_view_Delete.Enabled = true;
+            if (c != 10)
+                ProG_view_Add.Enabled = true;
+            ProG_view_Copy.Enabled = c > ProG_view_CopyNum.Value;
+            ProG_view_Open.Enabled = true;
+            ProG_view_OpenAll.Enabled = true;
+            ProG_Info_OpenAll2.Enabled = true;
         }
 
         /// <summary>
@@ -398,14 +413,14 @@ namespace WorldQuakeViewer
             c++;
             if (c == 10)
                 ProG_view_Add.Enabled = false;
-            if (c != 2)
-                ProG_view_Delete.Enabled = true;
+            ProG_view_Delete.Enabled = true;
             ProG_view_Copy.Enabled = c > ProG_view_CopyNum.Value;
+            Open(c - 1);
         }
 
         private void ProG_view_Delete_Click(object sender, EventArgs e)
         {
-            int c = ((Config_Display.View_[])ProG_view.SelectedObject).Length;//画面上での表示数
+            int c = config_display.Views.Length;//画面上での表示数
             if (dataViews[c - 1] != null)
                 if (dataViews[c - 1].showing)
                 {

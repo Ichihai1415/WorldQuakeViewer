@@ -1,6 +1,6 @@
 # WorldQuakeViewer
 
-<!--更新時CtrlForm.csのversionと_versionとアセンブリのバージョンとこれを変更-->
+<!--更新時ControlForm.csのversionとルートディレクトリのREADME.md,_versionとアセンブリのバージョンを変更-->
 <!--画像開始-->
 ![GitHub last commit](https://img.shields.io/github/last-commit/Ichihai1415/WorldQuakeViewer)
 ![GitHub issues](https://img.shields.io/github/issues/Ichihai1415/WorldQuakeViewer)
@@ -20,17 +20,28 @@
 
 [詳細(Wiki)](https://github.com/Ichihai1415/WorldQuakeViewer/wiki)
 
-[バグ、予定等(Issue)](https://github.com/Ichihai1415/WorldQuakeViewer/issues)
+[バグ、予定等(Issues)](https://github.com/Ichihai1415/WorldQuakeViewer/issues)
 
 # 更新履歴
+
+## v1.2.2
+2024/03/29  Milestones: [**v1.2.2**](https://github.com/Ichihai1415/WorldQuakeViewer/milestone/2?closed=1)
+
+- LL2FERCの更新と伴う修正
+- 震央名称ユーザー辞書追加
+- Text形式のデータの更新日時を処理時刻に
+- 表示、表示関係処理調整
+
+※mainブランチの構造をmaster,devと同じものにしました。
+
+<details><summary>過去のバージョン</summary><div>
+
 ## v1.2.1
 2024/02/23  Milestones: [**v1.2.1**](https://github.com/Ichihai1415/WorldQuakeViewer/milestone/1?closed=1)
 
 - Early-est等の精度が悪い情報を無視する機能を追加
 - 表示関連で特定の操作でエラーが出続ける問題を修正
 - 他処理調整 README調整
-
-<details><summary>過去のバージョン</summary><div>
 
 ## v1.2.0
 2023/12/29
