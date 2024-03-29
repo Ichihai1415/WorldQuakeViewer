@@ -82,8 +82,9 @@ namespace WorldQuakeViewer
             {
                 Author = data.Author.ToString(),
                 ID = data.ID2,
-                HypoJP = NameJP(data.Lat, data.Lon),
-                HypoEN = NameEN(data.Lat, data.Lon),
+                HypoJP = GetName_ja(data.Lat, data.Lon),
+                HypoEN = GetName_enUS(data.Lat, data.Lon),
+                HypoUSER = hypoUser == null ? "" : hypoUser.GetName_File(data.Lat, data.Lon),
                 Lat10 = lat10,
                 LatNS = latNS,
                 LatNSJP = latNSJP,
@@ -140,7 +141,7 @@ namespace WorldQuakeViewer
             format = format
                 .Replace("\\n", "\n")
                 .Replace("[Author]", f.Author).Replace("[ID]", f.ID)
-                .Replace("[HypoJP]", f.HypoJP).Replace("[HypoEN]", f.HypoEN)
+                .Replace("[HypoJP]", f.HypoJP).Replace("[HypoEN]", f.HypoEN).Replace("[HypoUSER]", f.HypoUSER)
                 .Replace("[Lat10]", f.Lat10).Replace("[LatNS]", f.LatNS).Replace("[LatNSJP]", f.LatNSJP)
                 .Replace("[Lat60d]", f.Lat60d).Replace("[Lat60m]", f.Lat60m).Replace("[Lat60s]", f.Lat60s)
                 .Replace("[Lon10]", f.Lon10).Replace("[LonEW]", f.LonEW).Replace("[LonEWJP]", f.LonEWJP)
@@ -255,7 +256,8 @@ namespace WorldQuakeViewer
                 ID = info[0],
                 ID2 = info[8],
                 Time = DateTimeOffset.Parse($"{info[1]}Z".Replace("ZZ", "Z")),//Zがついていないものがある　つけないとLocalTime判定になる
-                Hypo = NameJP(double.Parse(info[2]), double.Parse(info[3])),
+                UpdtTime = DateTimeOffset.Now,
+                Hypo = GetName_ja(double.Parse(info[2]), double.Parse(info[3])),
                 Lat = double.Parse(info[2]),
                 Lon = double.Parse(info[3]),
                 Depth = double.Parse(info[4]),
@@ -298,7 +300,7 @@ namespace WorldQuakeViewer
                 ID2 = id,
                 Time = DateTimeOffset.Parse($"{origin.SelectSingleNode("qml:time/qml:value", ns).InnerText}Z".Replace("ZZ", "Z")),
                 UpdtTime = info.SelectSingleNode("qml:creationInfo/qml:creationTime", ns) != null ? DateTimeOffset.Parse($"{info.SelectSingleNode("qml:creationInfo/qml:creationTime", ns).InnerText}Z".Replace("ZZ", "Z")) : DateTimeOffset.MinValue,
-                Hypo = NameJP(double.Parse(origin.SelectSingleNode("qml:latitude/qml:value", ns).InnerText), double.Parse(origin.SelectSingleNode("qml:longitude/qml:value", ns).InnerText)),
+                Hypo = GetName_ja(double.Parse(origin.SelectSingleNode("qml:latitude/qml:value", ns).InnerText), double.Parse(origin.SelectSingleNode("qml:longitude/qml:value", ns).InnerText)),
                 Lat = double.Parse(origin.SelectSingleNode("qml:latitude/qml:value", ns).InnerText),
                 Lon = double.Parse(origin.SelectSingleNode("qml:longitude/qml:value", ns).InnerText),
                 Depth = double.Parse(origin.SelectSingleNode("qml:depth/qml:value", ns).InnerText) / 1000d,
@@ -326,7 +328,7 @@ namespace WorldQuakeViewer
                         ID2 = (string)feature.SelectToken("id"),
                         Time = DateTimeOffset.FromUnixTimeMilliseconds((long)properties.SelectToken("time")),
                         UpdtTime = DateTimeOffset.FromUnixTimeMilliseconds((long)properties.SelectToken("updated")),
-                        Hypo = NameJP((double)feature.SelectToken("geometry.coordinates[1]"), (double)feature.SelectToken("geometry.coordinates[0]")),
+                        Hypo = GetName_ja((double)feature.SelectToken("geometry.coordinates[1]"), (double)feature.SelectToken("geometry.coordinates[0]")),
                         Lat = (double)feature.SelectToken("geometry.coordinates[1]"),
                         Lon = (double)feature.SelectToken("geometry.coordinates[0]"),
                         Depth = (double)feature.SelectToken("geometry.coordinates[2]"),
@@ -343,7 +345,7 @@ namespace WorldQuakeViewer
                         ID2 = (string)properties.SelectToken("source_id"),
                         Time = DateTimeOffset.Parse((string)properties.SelectToken("time")),//Zが付いてるはず
                         UpdtTime = DateTimeOffset.Parse((string)properties.SelectToken("lastupdate")),
-                        Hypo = NameJP((double)properties.SelectToken("lat"), (double)properties.SelectToken("lon")),
+                        Hypo = GetName_ja((double)properties.SelectToken("lat"), (double)properties.SelectToken("lon")),
                         Lat = (double)properties.SelectToken("lat"),
                         Lon = (double)properties.SelectToken("lon"),
                         Depth = (double)properties.SelectToken("depth"),
@@ -352,7 +354,7 @@ namespace WorldQuakeViewer
                         Source = (string)properties.SelectToken("auth")
                     };
                 case DataAuthor.Other:
-                    throw new ArgumentException($"未対応のデータ元({dataAuthor})です(USGSやEMSCのGeoJSONはここでは処理できません。別のタイプを指定してください。)。", nameof(dataAuthor));
+                    throw new ArgumentException($"未対応のデータ元({dataAuthor})です(USGSやEMSCのGeoJSONはこれでは処理できません。別のタイプを指定してください。)。", nameof(dataAuthor));
                 default:
                     throw new ArgumentException($"未対応のデータ元({dataAuthor})です。", nameof(dataAuthor));
             }
