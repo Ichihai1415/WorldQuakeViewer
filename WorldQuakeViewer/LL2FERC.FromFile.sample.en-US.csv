@@ -1,0 +1,758 @@
+code,name
+1,Central Alaska
+2,Southern Alaska
+3,Bering Sea
+4,Komandorsky Islands Region
+5,Near Islands, Aleutian Islands
+6,Rat Islands, Aleutian Islands
+7,Andreanof Islands, Aleutian Islands
+8,Pribilof Islands, Alaska Region
+9,Fox Islands, Aleutian Islands
+10,Unimak Island Region, Alaska
+11,Bristol Bay
+12,Alaska Peninsula
+13,Kodiak Island Region, Alaska
+14,Kenai Peninsula, Alaska
+15,Gulf of Alaska
+16,South of Aleutian Islands
+17,South of Alaska
+18,Southern Yukon Territory, Canada
+19,Southeastern Alaska
+20,Off Coast of Southeastern Alaska
+21,West of Vancouver Island
+22,Haida Gwaii Region
+23,British Columbia, Canada
+24,Alberta, Canada
+25,Vancouver Island, Canada Region
+26,Off Coast of Washington
+27,Near Coast of Washington
+28,Washington?Oregon Border Region
+29,Washington
+30,Off Coast of Oregon
+31,Near Coast of Oregon
+32,Oregon
+33,Western Idaho
+34,Off Coast of Northern California
+35,Near Coast of Northern California
+36,Northern California
+37,Nevada
+38,Off Coast of California
+39,Central California
+40,California?Nevada Border Region
+41,Southern Nevada
+42,Western Arizona
+43,Southern California
+44,California?Arizona Border Region
+45,California?Baja California Border Region
+46,Western Arizona?Sonora Border Region
+47,Off Western Coast of Baja California
+48,Baja California, Mexico
+49,Gulf of California
+50,Sonora, Mexico
+51,Off Coast of Central Mexico
+52,Near Coast of Central Mexico
+53,Revilla Gigedo Islands Region
+54,Off Coast of Jalisco, Mexico
+55,Near Coast of Jalisco, Mexico
+56,Near Coast of Michoacan, Mexico
+57,Michoacan, Mexico
+58,Near Coast of Guerrero, Mexico
+59,Guerrero, Mexico
+60,Oaxaca, Mexico
+61,Chiapas, Mexico
+62,Mexico?Guatemala Border Region
+63,Off Coast of Mexico
+64,Off Coast of Michoacan, Mexico
+65,Off Coast of Guerrero, Mexico
+66,Near Coast of Oaxaca, Mexico
+67,Off Coast of Oaxaca, Mexico
+68,Off Coast of Chiapas, Mexico
+69,Near Coast of Chiapas, Mexico
+70,Guatemala
+71,Near Coast of Guatemala
+72,Honduras
+73,El Salvador
+74,Near Coast of Nicaragua
+75,Nicaragua
+76,Off Coast of Central America
+77,Off Coast of Costa Rica
+78,Costa Rica
+79,North of Panama
+80,Panama?Costa Rica Border Region
+81,Panama
+82,Panama?Colombia Border Region
+83,South of Panama
+84,Yucatan Peninsula, Mexico
+85,Cuba Region
+86,Jamaica Region
+87,Haiti Region
+88,Dominican Republic Region
+89,Mona Passage
+90,Puerto Rico Region
+91,Virgin Islands
+92,Leeward Islands
+93,Belize
+94,Caribbean Sea
+95,Windward Islands
+96,Near North Coast of Colombia
+97,Near Coast of Venezuela
+98,Trinidad
+99,Northern Colombia
+100,Lake Maracaibo, Venezuela
+101,Venezuela
+102,Near West Coast of Colombia
+103,Colombia
+104,Off Coast of Ecuador
+105,Near Coast of Ecuador
+106,Colombia?Ecuador Border Region
+107,Ecuador
+108,Off Coast of Northern Peru
+109,Near Coast of Northern Peru
+110,Peru?Ecuador Border Region
+111,Northern Peru
+112,Peru?Brazil Border Region
+113,Western Brazil
+114,Off Coast of Peru
+115,Near Coast of Peru
+116,Central Peru
+117,Southern Peru
+118,Peru?Bolivia Border Region
+119,Northern Bolivia
+120,Central Bolivia
+121,Off Coast of Northern Chile
+122,Near Coast of Northern Chile
+123,Northern Chile
+124,Chile?Bolivia Border Region
+125,Southern Bolivia
+126,Paraguay
+127,Chile?Argentina Border Region
+128,Jujuy Province, Argentina
+129,Salta Province, Argentina
+130,Catamarca Province, Argentina
+131,Tucuman Province, Argentina
+132,Santiago Del Estero Province, Argentina
+133,Northeastern Argentina
+134,Off Coast of Central Chile
+135,Near Coast of Central Chile
+136,Central Chile
+137,San Juan Province, Argentina
+138,La Rioja Province, Argentina
+139,Mendoza Province, Argentina
+140,San Luis Province, Argentina
+141,Cordoba Province, Argentina
+142,Uruguay
+143,Off Coast of Southern Chile
+144,Southern Chile
+145,Southern Chile?Argentina Border Region
+146,Southern Argentina
+147,Tierra Del Fuego
+148,Falkland Islands Region
+149,Drake Passage
+150,Scotia Sea
+151,South Georgia Island Region
+152,South Georgia Rise
+153,South Sandwich Islands Region
+154,South Shetland Islands
+155,Antarctic Peninsula
+156,Southwestern Atlantic Ocean
+157,Weddell Sea
+158,Off West Coast of North Island, New Zealand
+159,North Island, New Zealand
+160,Off East Coast of North Island, New Zealand
+161,Off West Coast of South Island, New Zealand
+162,South Island, New Zealand
+163,Cook Strait, New Zealand
+164,Off East Coast of South Island, New Zealand
+165,North of Macquarie Island
+166,Auckland Islands, New Zealand Region
+167,Macquarie Island Region
+168,South of New Zealand
+169,Samoa Islands Region
+170,Samoa Islands
+171,South of Fiji Islands
+172,West of Tonga Islands
+173,Tonga Islands
+174,Tonga Islands Region
+175,South of Tonga Islands
+176,North of New Zealand
+177,Kermadec Islands Region
+178,Kermadec Islands, New Zealand
+179,South of Kermadec Islands
+180,North of Fiji Islands
+181,Fiji Islands Region
+182,Fiji Islands
+183,Santa Cruz Islands Region
+184,Santa Cruz Islands
+185,Vanuatu Islands Region
+186,Vanuatu Islands
+187,New Caledonia
+188,Loyalty Islands
+189,Southeast of Loyalty Islands
+190,New Ireland Region, Papua New Guinea
+191,North of Solomon Islands
+192,New Britain Region, Papua New Guinea
+193,Solomon Islands
+194,D'Entrecasteaux Islands Region
+195,South of Solomon Islands
+196,West Papua Region, Indonesia
+197,Near North Coast of West Papua
+198,Ninigo Islands Region, Papua New Guinea
+199,Admiralty Islands Region, Papua New Guinea
+200,Near North Coast of New Guinea, Papua New Guinea
+201,West Papua, Indonesia
+202,New Guinea, Papua New Guinea
+203,Bismarck Sea
+204,Aru Islands Region, Indonesia
+205,Near South Coast of West Papua
+206,Near South Coast of New Guinea, Papua New Guinea
+207,Eastern New Guinea Region, Papua New Guinea
+208,Arafura Sea
+209,Western Caroline Islands, Micronesia
+210,South of Mariana Islands
+211,Southeast of Honshu, Japan
+212,Bonin Islands, Japan Region
+213,Volcano Islands, Japan Region
+214,West of Mariana Islands
+215,Mariana Islands Region
+216,Mariana Islands
+217,Kamchatka Peninsula, Russia
+218,Near East Coast of Kamchatka
+219,Off East Coast of Kamchatka
+220,Northwest of Kuril Islands
+221,Kuril Islands
+222,East of Kuril Islands
+223,Eastern Sea of Japan
+224,Hokkaido, Japan Region
+225,Off Coast of Hokkaido, Japan
+226,Near West Coast of Honshu, Japan
+227,Eastern Honshu, Japan
+228,Near East Coast of Honshu, Japan
+229,Off East Coast of Honshu, Japan
+230,Near South Coast of Honshu, Japan
+231,South Korea
+232,Western Honshu, Japan
+233,Near South Coast of Western Honshu
+234,Northwest of Ryukyu Islands
+235,Kyushu, Japan
+236,Shikoku, Japan
+237,Southeast of Shikoku, Japan
+238,Ryukyu Islands, Japan
+239,Southeast of Ryukyu Islands
+240,West of Bonin Islands
+241,Philippine Sea
+242,Near Coast of southeastern China
+243,Taiwan Region
+244,Taiwan
+245,Northeast of Taiwan
+246,Southwestern Ryukyu Islands, Japan
+247,Southeast of Taiwan
+248,Philippine Islands Region
+249,Luzon, Philippines
+250,Mindoro, Philippines
+251,Samar, Philippines
+252,Palawan, Philippines
+253,Sulu Sea
+254,Panay, Philippines
+255,Cebu, Philippines
+256,Leyte, Philippines
+257,Negros, Philippines
+258,Sulu Archipelago, Philippines
+259,Mindanao, Philippines
+260,East of Philippine Islands
+261,Borneo
+262,Celebes Sea
+263,Talaud Islands, Indonesia
+264,North of Halmahera, Indonesia
+265,Minahassa Peninsula, Sulawesi
+266,Northern Molucca Sea
+267,Halmahera, Indonesia
+268,Sulawesi, Indonesia
+269,Southern Molucca Sea
+270,Ceram Sea
+271,Buru, Indonesia
+272,Seram, Indonesia
+273,Southwest of Sumatra, Indonesia
+274,Southern Sumatra, Indonesia
+275,Java Sea
+276,Sunda Strait, Indonesia
+277,Java, Indonesia
+278,Bali Sea
+279,Flores Sea
+280,Banda Sea
+281,Tanimbar Islands Region, Indonesia
+282,South of Java, Indonesia
+283,Bali Region, Indonesia
+284,South of Bali, Indonesia
+285,Sumbawa Region, Indonesia
+286,Flores Region, Indonesia
+287,Sumba Region, Indonesia
+288,Savu Sea
+289,Timor Region
+290,Timor Sea
+291,South of Sumbawa, Indonesia
+292,South of Sumba, Indonesia
+293,South of Timor, Indonesia
+294,Myanmar?India Border Region
+295,Myanmar?Bangladesh Border Region
+296,Myanmar
+297,Myanmar?China Border Region
+298,Near South Coast of Myanmar
+299,Southeast Asia
+300,Hainan Island, China
+301,South China Sea
+302,Eastern Kashmir
+303,Kashmir?India Border Region
+304,Kashmir?Xizang Border Region
+305,Western Xizang?India Border Region
+306,Xizang
+307,Sichuan, China
+308,Northern India
+309,Nepal-India Border Region
+310,Nepal
+311,Sikkim, India
+312,Bhutan
+313,Eastern Xizang?India Border Region
+314,Southern India
+315,India?Bangladesh Border Region
+316,Bangladesh
+317,Northeastern India
+318,Yunnan, China
+319,Bay of Bengal
+320,Kyrgyzstan?Xinjiang Border Region
+321,Southern Xinjiang, China
+322,Gansu, China
+323,Western Nei Mongol, China
+324,Kashmir?Xinjiang Border Region
+325,Qinghai, China
+326,Southwestern Siberia, Russia
+327,Lake Baykal Region, Russia
+328,East of Lake Baykal, Russia
+329,Eastern Kazakhstan
+330,Lake Issyk-Kul region
+331,Kazakhstan?Xinjiang Border Region
+332,Northern Xinjiang, China
+333,Russia?Mongolia Border Region
+334,Mongolia
+335,Ural Mountains Region, Russia
+336,Western Kazakhstan
+337,Eastern Caucasus
+338,Caspian Sea
+339,Northwestern Uzbekistan
+340,Turkmenistan
+341,Turkmenistan?Iran Border Region
+342,Turkmenistan?Afghanistan Border Region
+343,Turkey?Iran Border Region
+344,Armenia?Azerbaijan?Iran Border Region
+345,Northwestern Iran
+346,Iran?Iraq Border Region
+347,Western Iran
+348,Northern and Central Iran
+349,Northwestern Afghanistan
+350,Southwestern Afghanistan
+351,Eastern Arabian Peninsula
+352,Persian Gulf
+353,Southern Iran
+354,Southwestern Pakistan
+355,Gulf of Oman
+356,Off Coast of Pakistan
+357,Ukraine?Moldova?Southwestern Russia Region
+358,Romania
+359,Bulgaria
+360,Black Sea
+361,Crimea Region, Ukraine
+362,Western Caucasus
+363,Greece?Bulgaria Border Region
+364,Greece
+365,Aegean Sea
+366,Turkey
+367,Georgia?Armenia?Turkey Border Region
+368,Southern Greece
+369,Dodecanese Islands, Greece
+370,Crete, Greece
+371,Eastern Mediterranean Sea
+372,Cyprus Region
+373,Dead Sea Region
+374,Jordan?Syria Region
+375,Iraq
+376,Portugal
+377,Spain
+378,Pyrenees
+379,Near South Coast of France
+380,Corsica, France
+381,Central Italy
+382,Adriatic Sea
+383,Northwestern Balkan Region
+384,West of Gibraltar
+385,Strait of Gibraltar
+386,Balearic Islands, Spain
+387,Western Mediterranean Sea
+388,Sardinia, Italy
+389,Tyrrhenian Sea
+390,Southern Italy
+391,Albania
+392,Greece?Albania Border Region
+393,Madeira Islands, Portugal Region
+394,Canary Islands, Spain Region
+395,Morocco
+396,Northern Algeria
+397,Tunisia
+398,Sicily, Italy
+399,Ionian Sea
+400,Central Mediterranean Sea
+401,Near Coast of Libya
+402,North Atlantic Ocean
+403,Northern Mid-Atlantic Ridge
+404,Azores Islands Region
+405,Azores Islands, Portugal
+406,Central Mid-Atlantic Ridge
+407,North of Ascension Island
+408,Ascension Island Region
+409,South Atlantic Ocean
+410,Southern Mid-Atlantic Ridge
+411,Tristan Da Cunha Region
+412,Bouvet Island Region
+413,Southwest of Africa
+414,Southeastern Atlantic Ocean
+415,Eastern Gulf of Aden
+416,Socotra Region
+417,Arabian Sea
+418,Lakshadweep Region, India
+419,Northeastern Somalia
+420,North Indian Ocean
+421,Carlsberg Ridge
+422,Maldive Islands Region
+423,Laccadive Sea
+424,Sri Lanka
+425,South Indian Ocean
+426,Chagos Archipelago Region
+427,Mauritius-Reunion Region
+428,Southwest Indian Ridge
+429,Mid-Indian Ridge
+430,South of Africa
+431,Prince Edward Islands Region
+432,Crozet Islands Region
+433,Kerguelen Islands Region
+434,Broken Ridge
+435,Southeast Indian Ridge
+436,Southern Kerguelen Plateau
+437,South of Australia
+438,Saskatchewan, Canada
+439,Manitoba, Canada
+440,Hudson Bay
+441,Ontario, Canada
+442,Hudson Strait Region, Canada
+443,Northern Quebec, Canada
+444,Davis Strait
+445,Labrador, Canada
+446,Labrador Sea
+447,Southern Quebec, Canada
+448,Gaspe Peninsula, Canada
+449,Eastern Quebec, Canada
+450,Anticosti Island, Canada
+451,New Brunswick, Canada
+452,Nova Scotia, Canada
+453,Prince Edward Island, Canada
+454,Gulf of St. Lawrence
+455,Newfoundland, Canada
+456,Montana
+457,Eastern Idaho
+458,Hebgen Lake Region
+459,Yellowstone Region, Wyoming
+460,Wyoming
+461,North Dakota
+462,South Dakota
+463,Nebraska
+464,Minnesota
+465,Iowa
+466,Wisconsin
+467,Illinois
+468,Michigan
+469,Indiana
+470,Southern Ontario, Canada
+471,Ohio
+472,New York
+473,Pennsylvania
+474,Vermont?New Hampshire Region
+475,Maine
+476,Southern New England
+477,Gulf of Maine
+478,Utah
+479,Colorado
+480,Kansas
+481,Iowa?Missouri Border Region
+482,Missouri?Kansas Border Region
+483,Missouri
+484,Missouri?Arkansas Border Region
+485,Eastern Missouri
+486,New Madrid, Missouri Region
+487,Cape Girardeau, Missouri Region
+488,Southern Illinois
+489,Southern Indiana
+490,Kentucky
+491,West Virginia
+492,Virginia
+493,Chesapeake Bay Region
+494,New Jersey
+495,Eastern Arizona
+496,New Mexico
+497,Texas Panhandle Region
+498,Western Texas
+499,Oklahoma
+500,Central Texas
+501,Arkansas?Oklahoma Border Region
+502,Arkansas
+503,Louisiana?Texas Border Region
+504,Louisiana
+505,Mississippi
+506,Tennessee
+507,Alabama
+508,Western Florida
+509,Georgia, USA
+510,Florida-Georgia Border Region
+511,South Carolina
+512,North Carolina
+513,Off East Coast of United States
+514,Florida Peninsula
+515,Bahama Islands
+516,Eastern Arizona-Sonora Border Region
+517,New Mexico-Chihuahua Border Region
+518,Texas-Mexico Border Region
+519,Southern Texas
+520,Near Coast of Texas
+521,Chihuahua, Mexico
+522,Northern Mexico
+523,Central Mexico
+524,Jalisco, Mexico
+525,Veracruz, Mexico
+526,Gulf of Mexico
+527,Bay of Campeche
+528,Brazil
+529,Guyana
+530,Suriname
+531,French Guiana
+532,Ireland
+533,United Kingdom
+534,North Sea
+535,Southern Norway
+536,Sweden
+537,Baltic Sea
+538,France
+539,Bay of Biscay
+540,The Netherlands
+541,Belgium
+542,Denmark
+543,Germany
+544,Switzerland
+545,Northern Italy
+546,Austria
+547,Czechia and Slovakia
+548,Poland
+549,Hungary
+550,Northwest Africa
+551,Southern Algeria
+552,Libya
+553,Egypt
+554,Red Sea
+555,Western Arabian Peninsula
+556,Chad Region
+557,Sudan
+558,Ethiopia
+559,Western Gulf of Aden
+560,Northwestern Somalia
+561,Off South Coast of Northwest Africa
+562,Cameroon
+563,Equatorial Guinea
+564,Central African Republic
+565,Gabon
+566,Republic of Congo
+567,Democratic Republic of Congo
+568,Uganda
+569,Lake Victoria Region
+570,Kenya
+571,Southern Somalia
+572,Lake Tanganjika Region
+573,Tanzania
+574,Northwest of Madagascar
+575,Angola
+576,Zambia
+577,Malawi
+578,Namibia
+579,Botswana
+580,Zimbabwe
+581,Mozambique
+582,Mozambique Channel
+583,Madagascar
+584,South Africa
+585,Lesotho
+586,Swaziland
+587,Off Coast of South Africa
+588,Northwest of Australia
+589,West of Australia
+590,Western Australia
+591,Northern Territory, Australia
+592,South Australia
+593,Gulf of Carpentaria
+594,Queensland, Australia
+595,Coral Sea
+596,Northwest of New Caledonia
+597,Southwest of New Caledonia
+598,Southwest of Australia
+599,Off South Coast of Australia
+600,Near Coast of South Australia
+601,New South Wales, Australia
+602,Victoria, Australia
+603,Near Southeastern Coast of Australia
+604,Near East Coast of Australia
+605,East of Australia
+606,Norfolk Island Region
+607,Northwest of New Zealand
+608,Bass Strait
+609,Tasmania Region, Australia Region
+610,Southeast of Australia
+611,North Pacific Ocean
+612,Hawaiian Islands Region
+613,Hawaii
+614,Eastern Caroline Islands, Micronesia
+615,Marshall Islands Region
+616,Enewetak Atoll Region, Marshall Islands
+617,Bikini Atoll Region, Marshall Islands
+618,Gilbert Islands, Kiribati Region
+619,Johnston Island Region
+620,Line Islands Region, Kiribati
+621,Palmyra Island Region, Kiribati
+622,Kiritimati Region, Kiribati
+623,Tuvalu Region
+624,Phoenix Islands, Kiribati Region
+625,Tokelau Islands Region
+626,Northern Cook Islands
+627,Cook Islands Region
+628,Society Islands Region
+629,Tubuai Islands Region
+630,Marquesas Islands Region
+631,Tuamotu Archipelago Region
+632,South Pacific Ocean
+633,Lomonosov Ridge
+634,Arctic Ocean
+635,Near North Coast of Greenland
+636,Eastern Greenland
+637,Iceland Region
+638,Iceland
+639,Jan Mayen Island Region
+640,Greenland Sea
+641,North of Svalbard
+642,Norwegian Sea
+643,Svalbard Region
+644,North of Franz Josef Land
+645,Franz Josef Land, Russia
+646,Northern Norway
+647,Barents Sea
+648,Novaya Zemlya, Russia
+649,Kara Sea
+650,Near Coast of Western Siberia, Russia
+651,North of Severnaya Zemlya
+652,Severnaya Zemlya, Russia
+653,Near Coast of Central Siberia, Russia
+654,East of Severnaya Zemlya, Russia
+655,Laptev Sea
+656,Southeastern Siberia, Russia
+657,Eastern Russia-Northeastern China Border Region
+658,Northeastern China
+659,North Korea
+660,Sea of Japan
+661,Primor'ye, Russia
+662,Sakhalin, Russia
+663,Sea of Okhotsk
+664,Southeastern China
+665,Yellow Sea
+666,Off East Coast of Eastern China
+667,North of New Siberian Islands
+668,New Siberian Islands, Russia
+669,East Siberian Sea
+670,Near North Coast of Eastern Siberia
+671,Eastern Siberia, Russia
+672,Chukchi Sea
+673,Bering Strait
+674,St. Lawrence Island, Alaska Region
+675,Beaufort Sea
+676,Northern Alaska
+677,Northern Yukon Territory, Canada
+678,Queen Elizabeth Islands, Canada
+679,Northwest Territories -- Nunavut, Canada
+680,Western Greenland
+681,Baffin Bay
+682,Baffin Island Region, Canada
+683,Southeast Central Pacific Ocean
+684,Southern East Pacific Rise
+685,Easter Island Region
+686,West Chile Rise
+687,Juan Fernandez Islands Region
+688,East of North Island, New Zealand
+689,Chatham Islands, New Zealand Region
+690,South of Chatham Islands
+691,Pacific-Antarctic Ridge
+692,Southern Pacific Ocean
+693,East Central Pacific Ocean
+694,Central East Pacific Rise
+695,West of Galapagos Islands
+696,Galapagos Islands Region
+697,Galapagos Islands, Ecuador
+698,Southwest of Galapagos Islands
+699,Southeast of Galapagos Islands
+700,South of Tasmania
+701,West of Macquarie Island
+702,Balleny Islands Region
+703,Andaman Islands, India Region
+704,Nicobar Islands, India Region
+705,Off West Coast of Northern Sumatra
+706,Northern Sumatra, Indonesia
+707,Malay Peninsula
+708,Gulf of Thailand
+709,Southeastern Afghanistan
+710,Pakistan
+711,Southwestern Kashmir
+712,India-Pakistan Border Region
+713,Central Kazakhstan
+714,Southeastern Uzbekistan
+715,Tajikistan
+716,Kyrgyzstan
+717,Afghanistan-Tajikistan Border Region
+718,Hindu Kush Region, Afghanistan
+719,Tajikistan-Xinjiang Border Region
+720,Northwestern Kashmir
+721,Finland
+722,Norway-Russia Border Region
+723,Finland-Russia Border Region
+724,Baltic-Belarus-Northwestern Russia Region
+725,Northwestern Siberia, Russia
+726,Northcentral Siberia, Russia
+727,Victoria Land, Antarctica
+728,Ross Sea
+729,Antarctica
+730,Northern East Pacific Rise
+731,North of Honduras
+732,East of South Sandwich Islands
+733,Thailand
+734,Laos
+735,Cambodia
+736,Vietnam
+737,Gulf of Tongking
+738,Reykjanes Ridge
+739,Azores-Cape St. Vincent Ridge
+740,Owen Fracture Zone Region
+741,Indian Ocean Triple junction
+742,Western Indian-Antarctic Ridge
+743,Western Sahara
+744,Mauritania
+745,Mali
+746,Senegal-Gambia Region
+747,Guinea Region
+748,Sierra Leone
+749,Liberia Region
+750,Cote d'Ivoire
+751,Burkina Faso
+752,Ghana
+753,Benin-Togo Region
+754,Niger
+755,Nigeria
+756,Southeast of Easter Island
+757,Galapagos Triple Junction Region

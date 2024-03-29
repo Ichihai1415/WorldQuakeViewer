@@ -150,6 +150,7 @@
             // 
             // ProG_Info_OpenAll2
             // 
+            this.ProG_Info_OpenAll2.Enabled = false;
             this.ProG_Info_OpenAll2.Font = new System.Drawing.Font("メイリオ", 9F);
             this.ProG_Info_OpenAll2.Location = new System.Drawing.Point(438, 444);
             this.ProG_Info_OpenAll2.Name = "ProG_Info_OpenAll2";
@@ -218,10 +219,10 @@
             this.Tab_Main_Tool.Controls.Add(this.GroupBox_Other);
             this.Tab_Main_Tool.Controls.Add(this.GroupBox_ConfigMerge);
             this.Tab_Main_Tool.Controls.Add(this.GroupBox_IntConv);
-            this.Tab_Main_Tool.Location = new System.Drawing.Point(4, 22);
+            this.Tab_Main_Tool.Location = new System.Drawing.Point(4, 27);
             this.Tab_Main_Tool.Name = "Tab_Main_Tool";
             this.Tab_Main_Tool.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_Main_Tool.Size = new System.Drawing.Size(492, 474);
+            this.Tab_Main_Tool.Size = new System.Drawing.Size(492, 469);
             this.Tab_Main_Tool.TabIndex = 3;
             this.Tab_Main_Tool.Text = "ツール";
             this.Tab_Main_Tool.UseVisualStyleBackColor = true;
@@ -773,6 +774,7 @@
             // 
             // ProG_view_OpenAll
             // 
+            this.ProG_view_OpenAll.Enabled = false;
             this.ProG_view_OpenAll.Font = new System.Drawing.Font("メイリオ", 9F);
             this.ProG_view_OpenAll.Location = new System.Drawing.Point(427, 4);
             this.ProG_view_OpenAll.Name = "ProG_view_OpenAll";
@@ -784,6 +786,7 @@
             // 
             // ProG_view_Open
             // 
+            this.ProG_view_Open.Enabled = false;
             this.ProG_view_Open.Font = new System.Drawing.Font("メイリオ", 9F);
             this.ProG_view_Open.Location = new System.Drawing.Point(380, 4);
             this.ProG_view_Open.Name = "ProG_view_Open";
@@ -842,6 +845,7 @@
             // 
             // ProG_view_Copy
             // 
+            this.ProG_view_Copy.Enabled = false;
             this.ProG_view_Copy.Font = new System.Drawing.Font("メイリオ", 9F);
             this.ProG_view_Copy.Location = new System.Drawing.Point(270, 4);
             this.ProG_view_Copy.Name = "ProG_view_Copy";
@@ -863,6 +867,7 @@
             // 
             // ProG_view_Delete
             // 
+            this.ProG_view_Delete.Enabled = false;
             this.ProG_view_Delete.Font = new System.Drawing.Font("メイリオ", 9F);
             this.ProG_view_Delete.Location = new System.Drawing.Point(130, 4);
             this.ProG_view_Delete.Name = "ProG_view_Delete";
@@ -874,6 +879,7 @@
             // 
             // ProG_view_Add
             // 
+            this.ProG_view_Add.Enabled = false;
             this.ProG_view_Add.Font = new System.Drawing.Font("メイリオ", 9F);
             this.ProG_view_Add.Location = new System.Drawing.Point(90, 4);
             this.ProG_view_Add.Name = "ProG_view_Add";
@@ -895,10 +901,10 @@
             // Tab_Setting_Other
             // 
             this.Tab_Setting_Other.Controls.Add(this.ProG_other);
-            this.Tab_Setting_Other.Location = new System.Drawing.Point(4, 22);
+            this.Tab_Setting_Other.Location = new System.Drawing.Point(4, 27);
             this.Tab_Setting_Other.Name = "Tab_Setting_Other";
             this.Tab_Setting_Other.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_Setting_Other.Size = new System.Drawing.Size(484, 343);
+            this.Tab_Setting_Other.Size = new System.Drawing.Size(484, 338);
             this.Tab_Setting_Other.TabIndex = 3;
             this.Tab_Setting_Other.Text = "その他";
             this.Tab_Setting_Other.UseVisualStyleBackColor = true;
@@ -909,7 +915,7 @@
             this.ProG_other.Location = new System.Drawing.Point(3, 3);
             this.ProG_other.Name = "ProG_other";
             this.ProG_other.PropertySort = System.Windows.Forms.PropertySort.Categorized;
-            this.ProG_other.Size = new System.Drawing.Size(478, 337);
+            this.ProG_other.Size = new System.Drawing.Size(478, 332);
             this.ProG_other.TabIndex = 2;
             // 
             // GetTimer

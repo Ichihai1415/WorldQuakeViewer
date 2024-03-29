@@ -294,6 +294,11 @@ namespace WorldQuakeViewer
             public string HypoEN { get; set; } = "";
 
             /// <summary>
+            /// 震源名(ユーザー設定(LL2FERC.csv))
+            /// </summary>
+            public string HypoUSER { get; set; } = "";
+
+            /// <summary>
             /// 緯度(十進数)
             /// </summary>
             public string Lat10 { get; set; } = "";
