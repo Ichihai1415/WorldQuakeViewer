@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CtrlForm));
             this.TabCtrl_Main = new System.Windows.Forms.TabControl();
             this.Tab_Main_Info = new System.Windows.Forms.TabPage();
+            this.ProG_Info_OpenAll2 = new System.Windows.Forms.Button();
             this.InfoPageLink = new System.Windows.Forms.LinkLabel();
             this.InfoText0 = new System.Windows.Forms.Label();
             this.InfoText1 = new System.Windows.Forms.Label();
@@ -135,6 +136,7 @@
             // 
             // Tab_Main_Info
             // 
+            this.Tab_Main_Info.Controls.Add(this.ProG_Info_OpenAll2);
             this.Tab_Main_Info.Controls.Add(this.InfoPageLink);
             this.Tab_Main_Info.Controls.Add(this.InfoText0);
             this.Tab_Main_Info.Controls.Add(this.InfoText1);
@@ -145,6 +147,17 @@
             this.Tab_Main_Info.TabIndex = 1;
             this.Tab_Main_Info.Text = "情報";
             this.Tab_Main_Info.UseVisualStyleBackColor = true;
+            // 
+            // ProG_Info_OpenAll2
+            // 
+            this.ProG_Info_OpenAll2.Font = new System.Drawing.Font("メイリオ", 9F);
+            this.ProG_Info_OpenAll2.Location = new System.Drawing.Point(438, 444);
+            this.ProG_Info_OpenAll2.Name = "ProG_Info_OpenAll2";
+            this.ProG_Info_OpenAll2.Size = new System.Drawing.Size(52, 23);
+            this.ProG_Info_OpenAll2.TabIndex = 10;
+            this.ProG_Info_OpenAll2.Text = "全表示";
+            this.ProG_Info_OpenAll2.UseVisualStyleBackColor = true;
+            this.ProG_Info_OpenAll2.Click += new System.EventHandler(this.ProG_Info_OpenAll2_Click);
             // 
             // InfoPageLink
             // 
@@ -205,10 +218,10 @@
             this.Tab_Main_Tool.Controls.Add(this.GroupBox_Other);
             this.Tab_Main_Tool.Controls.Add(this.GroupBox_ConfigMerge);
             this.Tab_Main_Tool.Controls.Add(this.GroupBox_IntConv);
-            this.Tab_Main_Tool.Location = new System.Drawing.Point(4, 27);
+            this.Tab_Main_Tool.Location = new System.Drawing.Point(4, 22);
             this.Tab_Main_Tool.Name = "Tab_Main_Tool";
             this.Tab_Main_Tool.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_Main_Tool.Size = new System.Drawing.Size(492, 469);
+            this.Tab_Main_Tool.Size = new System.Drawing.Size(492, 474);
             this.Tab_Main_Tool.TabIndex = 3;
             this.Tab_Main_Tool.Text = "ツール";
             this.Tab_Main_Tool.UseVisualStyleBackColor = true;
@@ -534,9 +547,9 @@
             this.Tab_Main_Past.Controls.Add(this.ProG_Past);
             this.Tab_Main_Past.Controls.Add(this.Past_Text1);
             this.Tab_Main_Past.Controls.Add(this.Past_Open);
-            this.Tab_Main_Past.Location = new System.Drawing.Point(4, 27);
+            this.Tab_Main_Past.Location = new System.Drawing.Point(4, 22);
             this.Tab_Main_Past.Name = "Tab_Main_Past";
-            this.Tab_Main_Past.Size = new System.Drawing.Size(492, 469);
+            this.Tab_Main_Past.Size = new System.Drawing.Size(492, 474);
             this.Tab_Main_Past.TabIndex = 4;
             this.Tab_Main_Past.Text = "過去情報表示";
             this.Tab_Main_Past.UseVisualStyleBackColor = true;
@@ -590,7 +603,7 @@
             // ProG_Past
             // 
             this.ProG_Past.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.ProG_Past.Location = new System.Drawing.Point(0, 99);
+            this.ProG_Past.Location = new System.Drawing.Point(0, 104);
             this.ProG_Past.Name = "ProG_Past";
             this.ProG_Past.PropertySort = System.Windows.Forms.PropertySort.Categorized;
             this.ProG_Past.Size = new System.Drawing.Size(492, 370);
@@ -623,9 +636,9 @@
             this.Tab_Main_Setting.Controls.Add(this.ConfigWebLink);
             this.Tab_Main_Setting.Controls.Add(this.ConfigInfoText);
             this.Tab_Main_Setting.Controls.Add(this.TabCtrl_Setting);
-            this.Tab_Main_Setting.Location = new System.Drawing.Point(4, 27);
+            this.Tab_Main_Setting.Location = new System.Drawing.Point(4, 22);
             this.Tab_Main_Setting.Name = "Tab_Main_Setting";
-            this.Tab_Main_Setting.Size = new System.Drawing.Size(492, 469);
+            this.Tab_Main_Setting.Size = new System.Drawing.Size(492, 474);
             this.Tab_Main_Setting.TabIndex = 2;
             this.Tab_Main_Setting.Text = "設定";
             this.Tab_Main_Setting.UseVisualStyleBackColor = true;
@@ -750,10 +763,10 @@
             this.Tab_Setting_View.Controls.Add(this.ProG_view_Delete);
             this.Tab_Setting_View.Controls.Add(this.ProG_view_Add);
             this.Tab_Setting_View.Controls.Add(this.ProG_view);
-            this.Tab_Setting_View.Location = new System.Drawing.Point(4, 27);
+            this.Tab_Setting_View.Location = new System.Drawing.Point(4, 22);
             this.Tab_Setting_View.Name = "Tab_Setting_View";
             this.Tab_Setting_View.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_Setting_View.Size = new System.Drawing.Size(484, 338);
+            this.Tab_Setting_View.Size = new System.Drawing.Size(484, 343);
             this.Tab_Setting_View.TabIndex = 2;
             this.Tab_Setting_View.Text = "表示";
             this.Tab_Setting_View.UseVisualStyleBackColor = true;
@@ -876,7 +889,7 @@
             this.ProG_view.Location = new System.Drawing.Point(3, 3);
             this.ProG_view.Name = "ProG_view";
             this.ProG_view.PropertySort = System.Windows.Forms.PropertySort.Categorized;
-            this.ProG_view.Size = new System.Drawing.Size(478, 332);
+            this.ProG_view.Size = new System.Drawing.Size(478, 337);
             this.ProG_view.TabIndex = 1;
             // 
             // Tab_Setting_Other
@@ -1027,5 +1040,6 @@
         private System.Windows.Forms.Button Past_Read;
         private System.Windows.Forms.Label Past_Text2;
         private System.Windows.Forms.Button Past_CurrentDir;
+        private System.Windows.Forms.Button ProG_Info_OpenAll2;
     }
 }
