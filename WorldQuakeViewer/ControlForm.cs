@@ -398,14 +398,14 @@ namespace WorldQuakeViewer
             c++;
             if (c == 10)
                 ProG_view_Add.Enabled = false;
-            if (c != 2)
-                ProG_view_Delete.Enabled = true;
+            ProG_view_Delete.Enabled = true;
             ProG_view_Copy.Enabled = c > ProG_view_CopyNum.Value;
+            Open(c - 1);
         }
 
         private void ProG_view_Delete_Click(object sender, EventArgs e)
         {
-            int c = ((Config_Display.View_[])ProG_view.SelectedObject).Length;//画面上での表示数
+            int c = config_display.Views.Length;//画面上での表示数
             if (dataViews[c - 1] != null)
                 if (dataViews[c - 1].showing)
                 {
