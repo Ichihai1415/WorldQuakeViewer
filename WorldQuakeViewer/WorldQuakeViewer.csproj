@@ -160,7 +160,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="config-info.md" />
     <None Include="LICENSE">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
