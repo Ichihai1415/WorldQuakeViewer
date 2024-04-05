@@ -152,7 +152,7 @@
             // 
             this.ProG_Info_OpenAll2.Enabled = false;
             this.ProG_Info_OpenAll2.Font = new System.Drawing.Font("メイリオ", 9F);
-            this.ProG_Info_OpenAll2.Location = new System.Drawing.Point(437, 3);
+            this.ProG_Info_OpenAll2.Location = new System.Drawing.Point(437, 443);
             this.ProG_Info_OpenAll2.Name = "ProG_Info_OpenAll2";
             this.ProG_Info_OpenAll2.Size = new System.Drawing.Size(52, 23);
             this.ProG_Info_OpenAll2.TabIndex = 10;
