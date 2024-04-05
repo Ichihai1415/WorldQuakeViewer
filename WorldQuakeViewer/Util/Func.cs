@@ -490,6 +490,16 @@ namespace WorldQuakeViewer
         }
 
         /// <summary>
+        /// データ表示Formをすべて再描画します。
+        /// </summary>
+        public static void ReDraw()
+        {
+            for (int i = 0; i < dataViews.Length - 1; i++)
+                dataViews[i]?.Draw();
+        }
+
+
+        /// <summary>
         /// データ表示Formを再描画します。データ元と表示データが異なる場合はしません。
         /// </summary>
         /// <param name="dataAuthor">データ元</param>

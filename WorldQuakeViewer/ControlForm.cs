@@ -31,7 +31,7 @@ namespace WorldQuakeViewer
         /// <summary>
         /// プログラムのバージョン
         /// </summary>
-        public static readonly string version = "1.2.2";
+        public static readonly string version = "1.2.3";
 
         /// <summary>
         /// ダイアログ等を最前面に表示する用
@@ -382,10 +382,10 @@ namespace WorldQuakeViewer
                 }
             }
             config = (Config)config_display;
+            for (int i = config.Views.Length; i < dataViews.Length - 1; i++)//設定2個(表示1個)の時(index2の)3個目から
+                dataViews[i] = null;
             File.WriteAllText("Setting\\config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
-            for (int i = 1; i < config.Views.Count(); i++)
-                if (dataViews[i] != null)
-                    ReDraw((DataAuthor)dataViews[i].dataAuthorN);
+            ReDraw();
             ExeLog("[Config_Save_Click]設定を保存しました。");
             UpdtProEnableCtrl();
         }

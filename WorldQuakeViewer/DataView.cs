@@ -150,6 +150,11 @@ namespace WorldQuakeViewer
         /// </summary>
         public void Draw()
         {
+            if (config.Views.Length <= i)//設定2個(表示1)のときindex2番目以降呼び出し禁止
+            {
+                ExeLog($"[Draw][{i}]描画を呼び出されましたが、設定されていません。");
+                return;
+            }
             ExeLog($"[Draw][{i}]描画中...");
             ConfigReload();
             Bitmap img;
