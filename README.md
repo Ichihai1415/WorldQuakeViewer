@@ -1,6 +1,8 @@
 # WorldQuakeViewer
 
 <!--更新時ControlForm.csのversionとルートディレクトリのREADME.md,_versionとアセンブリのバージョンを変更-->
+<!-- C:\Ichihai1415\source\vs\WorldQuakeViewer\_version -->
+<!-- C:\Ichihai1415\source\vs\WorldQuakeViewer\README.md -->
 <!--画像開始-->
 ![GitHub last commit](https://img.shields.io/github/last-commit/Ichihai1415/WorldQuakeViewer)
 ![GitHub issues](https://img.shields.io/github/issues/Ichihai1415/WorldQuakeViewer)
@@ -24,6 +26,14 @@
 
 # 更新履歴
 
+## v1.2.3
+2024/04/05
+
+- 表示数を減らして保存するとエラーが出る問題を修正 
+- README.mdを削除、READMEとWikiのショートカットを追加
+
+<details><summary>過去のバージョン</summary><div>
+
 ## v1.2.2
 2024/03/29  Milestones: [**v1.2.2**](https://github.com/Ichihai1415/WorldQuakeViewer/milestone/2?closed=1)
 
@@ -33,8 +43,6 @@
 - 表示、表示関係処理調整
 
 ※mainブランチの構造をmaster,devと同じものにしました。
-
-<details><summary>過去のバージョン</summary><div>
 
 ## v1.2.1
 2024/02/23  Milestones: [**v1.2.1**](https://github.com/Ichihai1415/WorldQuakeViewer/milestone/1?closed=1)
