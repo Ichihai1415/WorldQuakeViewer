@@ -99,6 +99,7 @@ namespace WorldQuakeViewer
             Config.Data_ config_data = config.Datas[(int)dataAuthor];
             string[] datas = res.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Skip(1).ToArray();
             int maxLevel = 0;
+            bool isUpdateSound = true;
             foreach (string data_ in datas.Reverse())
             {
                 try
@@ -107,6 +108,7 @@ namespace WorldQuakeViewer
                         continue;
                     Data data = Text2Data(data_.Split('|'), dataAuthor);
                     data.Author = dataAuthor;
+                    bool isUpdate = false;
                     if (DateTime.Now - data.Time > config_data.Update.MaxPeriod)
                     {
                         ExeLog($"[Get_Text][{dataAuthor}]更新確認対象外です。");
@@ -116,6 +118,7 @@ namespace WorldQuakeViewer
                         if (UpdateCheck(data_tmp[data.ID], data, dataAuthor))
                         {
                             ExeLog($"[Get_Text][{dataAuthor}]更新を検知");
+                            isUpdate = true;
                             data_tmp[data.ID] = data;
                             data_All[data.ID] = data;
                             UpdtPros(data);
@@ -129,7 +132,14 @@ namespace WorldQuakeViewer
                         data_All[data.ID] = data;
                         UpdtPros(data, true);
                     }
-                    maxLevel = Math.Max(maxLevel, Mag2Level(data.Mag));
+                    int nowLevel = Mag2Level(data.Mag);
+                    if (nowLevel > maxLevel)
+                    {
+                        maxLevel = nowLevel;
+                        isUpdateSound = isUpdate;//大きい場合それ優先
+                    }
+                    else if (nowLevel == maxLevel && isUpdate)
+                        isUpdateSound = true;//同じ場合初回優先
                 }
                 catch (Exception ex)
                 {
@@ -137,7 +147,7 @@ namespace WorldQuakeViewer
                     LogSave(ex);
                 }
             }
-            Sound_Play(maxLevel, dataAuthor);
+            Sound_Play(maxLevel, isUpdateSound, dataAuthor);
             ExeLog($"[Get_Text][{dataAuthor}]処理終了");
             return Task.CompletedTask;
         }
@@ -162,6 +172,7 @@ namespace WorldQuakeViewer
             ns.AddNamespace("anss", "http://anss.org/xmlns/event/0.1");
             ns.AddNamespace("catalog", "http://anss.org/xmlns/catalog/0.1");
             int maxLevel = 0;
+            bool isUpdateSound = true;
             foreach (XmlNode info in xml.SelectNodes("q:quakeml/qml:eventParameters/qml:event", ns).Cast<XmlNode>().Reverse())
             {
                 try
@@ -181,6 +192,7 @@ namespace WorldQuakeViewer
                         else
                             data.ID2 = await IDconvert(data.ID, IDauthor.UNID, IDauthor.EMSC);
 
+                    bool isUpdate = false;
                     if (DateTime.Now - data.Time > config_data.Update.MaxPeriod)
                     {
                         ExeLog($"[Get_QuakeML][{dataAuthor}]更新確認対象外です。");
@@ -190,6 +202,7 @@ namespace WorldQuakeViewer
                         if (UpdateCheck(data_tmp[data.ID], data, dataAuthor))
                         {
                             ExeLog($"[Get_QuakeML][{dataAuthor}]更新を検知");
+                            isUpdate = true;
                             data_tmp[data.ID] = data;
                             data_All[data.ID] = data;
                             UpdtPros(data);
@@ -203,7 +216,14 @@ namespace WorldQuakeViewer
                         data_All[data.ID] = data;
                         UpdtPros(data, true);
                     }
-                    maxLevel = Math.Max(maxLevel, Mag2Level(data.Mag));
+                    int nowLevel = Mag2Level(data.Mag);
+                    if (nowLevel > maxLevel)
+                    {
+                        maxLevel = nowLevel;
+                        isUpdateSound = isUpdate;//大きい場合それ優先
+                    }
+                    else if (nowLevel == maxLevel && isUpdate)
+                        isUpdateSound = true;//同じ場合初回優先
                 }
                 catch (Exception ex)
                 {
@@ -211,7 +231,7 @@ namespace WorldQuakeViewer
                     LogSave(ex);
                 }
             }
-            Sound_Play(maxLevel, dataAuthor);
+            Sound_Play(maxLevel, isUpdateSound, dataAuthor);
             ExeLog($"[Get_QuakeML][{dataAuthor}]処理終了");
             return;
         }
@@ -229,6 +249,7 @@ namespace WorldQuakeViewer
             Config.Data_ config_data = config.Datas[(int)dataAuthor];
             JObject json = JObject.Parse(res);
             int maxLevel = 0;
+            bool isUpdateSound = true;
             foreach (JToken info in json.SelectToken("features").Reverse())
             {
                 try
@@ -245,6 +266,7 @@ namespace WorldQuakeViewer
                         }
                     }
                     Data data = GeoJSON2Data(info, dataAuthor);
+                    bool isUpdate = false;
                     if (DateTime.Now - data.Time > config_data.Update.MaxPeriod)
                     {
                         ExeLog($"[Get_GeoJSON][{dataAuthor}]更新確認対象外です。");
@@ -254,6 +276,7 @@ namespace WorldQuakeViewer
                         if (UpdateCheck(data_tmp[data.ID], data, dataAuthor))
                         {
                             ExeLog($"[Get_GeoJSON][{dataAuthor}]更新を検知");
+                            isUpdate = true;
                             data_tmp[data.ID] = data;
                             data_All[data.ID] = data;
                             UpdtPros(data);
@@ -267,7 +290,14 @@ namespace WorldQuakeViewer
                         data_All[data.ID] = data;
                         UpdtPros(data, true);
                     }
-                    maxLevel = Math.Max(maxLevel, Mag2Level(data.Mag));
+                    int nowLevel = Mag2Level(data.Mag);
+                    if (nowLevel > maxLevel)
+                    {
+                        maxLevel = nowLevel;
+                        isUpdateSound = isUpdate;//大きい場合それ優先
+                    }
+                    else if (nowLevel == maxLevel && isUpdate)
+                        isUpdateSound = true;//同じ場合初回優先
                 }
                 catch (Exception ex)
                 {
@@ -275,7 +305,7 @@ namespace WorldQuakeViewer
                     LogSave(ex);
                 }
             }
-            Sound_Play(maxLevel, dataAuthor);
+            Sound_Play(maxLevel, isUpdateSound, dataAuthor);
             ExeLog($"[Get_GeoJSON][{dataAuthor}]処理終了");
             return Task.CompletedTask;
         }
