@@ -31,7 +31,7 @@ namespace WorldQuakeViewer
         /// <summary>
         /// プログラムのバージョン
         /// </summary>
-        public static readonly string version = "1.2.3";
+        public static readonly string version = "1.2.4";
 
         /// <summary>
         /// ダイアログ等を最前面に表示する用
@@ -198,8 +198,15 @@ namespace WorldQuakeViewer
                         ExeLog($"[CtrlForm_Load]更新を検知({config.Version}->{version})");
                         int[] nowVer = version.Split('.').Select(n => int.Parse(n.Replace("α", "-"))).ToArray();
                         int[] setVer = config.Version.Split('.').Select(n => int.Parse(n.Replace("α", "-"))).ToArray();
-                        if (setVer[1] <= 2 && setVer[2] <= 0)//設定を追加したとき以下を変更//v1.2.0
+                        if (setVer[1] <= 2 && setVer[2] <= 3)//設定を追加したとき変更//v1.x.x
+                        {
                             ConfigUpdate();
+                            string showText = "設定を更新しました。\n" +
+                                "・処理.Sound : L1_Enable等を削除しました。再生を無効にする場合L1_Path等を空白にしておいてください。\n" +
+                                "・処理.Sound : L1U_Enable等を追加しました。更新時はこちらが再生されます。\n" +
+                                "・表示 : WindowCSizeを追加しました。データ表示画面のサイズ変更ができます。";
+                            _ = MessageBox.Show(topMost, showText, "お知らせ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
                     }
                 }
                 catch (Exception ex)

@@ -137,6 +137,7 @@ namespace WorldQuakeViewer
                 FormBorderStyle = FormBorderStyle.Sizable;
                 MaximizeBox = true;
             }
+            ClientSize = config_view.WindowCSize;
         }
 
         private void DataView_Load(object sender, EventArgs e)
@@ -158,7 +159,7 @@ namespace WorldQuakeViewer
             ExeLog($"[Draw][{i}]描画中...");
             ConfigReload();
             Bitmap img;
-            List<Data> data = data_.Where(n => n.Value.Mag > config_view.LowerMagLimit).Select(n => n.Value).ToList();
+            List<Data> data = data_.Where(n => n.Value.Mag >= config_view.LowerMagLimit).Select(n => n.Value).ToList();
             if (data.Count == 0)
             {
                 switch (viewType)

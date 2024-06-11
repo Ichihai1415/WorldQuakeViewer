@@ -257,43 +257,73 @@ namespace WorldQuakeViewer
         /// 音声を再生します。レベルは事前に最大レベルを計算してください。
         /// </summary>
         /// <param name="level">レベル</param>
+        /// <param name="isUpdate">更新か</param>
         /// <param name="dataAuthor">データ元</param>
-        public static void Sound_Play(int level, DataAuthor dataAuthor)
+        public static void Sound_Play(int level, bool isUpdate, DataAuthor dataAuthor)
         {
             if (noFirst)
                 try
                 {
                     Console.WriteLine($"音声処理開始({level})");
-                    bool end = false;
+                    bool noPlay = false;
                     string path = "";
-                    switch (level)
-                    {
-                        case 0:
-                            return;
-                        case 1:
-                            end = !config.Datas[(int)dataAuthor].Sound.L1_Enable;
-                            path = config.Datas[(int)dataAuthor].Sound.L1_Path;
-                            break;
-                        case 2:
-                            end = !config.Datas[(int)dataAuthor].Sound.L2_Enable;
-                            path = config.Datas[(int)dataAuthor].Sound.L2_Path;
-                            break;
-                        case 3:
-                            end = !config.Datas[(int)dataAuthor].Sound.L3_Enable;
-                            path = config.Datas[(int)dataAuthor].Sound.L3_Path;
-                            break;
-                        case 4:
-                            end = !config.Datas[(int)dataAuthor].Sound.L4_Enable;
-                            path = config.Datas[(int)dataAuthor].Sound.L4_Path;
-                            break;
-                        case 5:
-                            end = !config.Datas[(int)dataAuthor].Sound.L5_Enable;
-                            path = config.Datas[(int)dataAuthor].Sound.L5_Path;
-                            break;
-                        default:
-                            throw new ArgumentException($"レベル({level})が不正です。", nameof(level));
-                    }
-                    if (end)
+                    if (isUpdate)
+                        switch (level)
+                        {
+                            case 0:
+                                return;
+                            case 1:
+                                noPlay = config.Datas[(int)dataAuthor].Sound.L1U_Path == "";
+                                path = config.Datas[(int)dataAuthor].Sound.L1U_Path;
+                                break;
+                            case 2:
+                                noPlay = config.Datas[(int)dataAuthor].Sound.L2U_Path == "";
+                                path = config.Datas[(int)dataAuthor].Sound.L2U_Path;
+                                break;
+                            case 3:
+                                noPlay = config.Datas[(int)dataAuthor].Sound.L3U_Path == "";
+                                path = config.Datas[(int)dataAuthor].Sound.L3U_Path;
+                                break;
+                            case 4:
+                                noPlay = config.Datas[(int)dataAuthor].Sound.L4U_Path == "";
+                                path = config.Datas[(int)dataAuthor].Sound.L4U_Path;
+                                break;
+                            case 5:
+                                noPlay = config.Datas[(int)dataAuthor].Sound.L5U_Path == "";
+                                path = config.Datas[(int)dataAuthor].Sound.L5U_Path;
+                                break;
+                            default:
+                                throw new ArgumentException($"レベル({level})が不正です。", nameof(level));
+                        }
+                    else
+                        switch (level)
+                        {
+                            case 0:
+                                return;
+                            case 1:
+                                noPlay = config.Datas[(int)dataAuthor].Sound.L1_Path == "";
+                                path = config.Datas[(int)dataAuthor].Sound.L1_Path;
+                                break;
+                            case 2:
+                                noPlay = config.Datas[(int)dataAuthor].Sound.L2_Path == "";
+                                path = config.Datas[(int)dataAuthor].Sound.L2_Path;
+                                break;
+                            case 3:
+                                noPlay = config.Datas[(int)dataAuthor].Sound.L3_Path == "";
+                                path = config.Datas[(int)dataAuthor].Sound.L3_Path;
+                                break;
+                            case 4:
+                                noPlay = config.Datas[(int)dataAuthor].Sound.L4_Path == "";
+                                path = config.Datas[(int)dataAuthor].Sound.L4_Path;
+                                break;
+                            case 5:
+                                noPlay = config.Datas[(int)dataAuthor].Sound.L5_Path == "";
+                                path = config.Datas[(int)dataAuthor].Sound.L5_Path;
+                                break;
+                            default:
+                                throw new ArgumentException($"レベル({level})が不正です。", nameof(level));
+                        }
+                    if (noPlay)
                     {
                         Console.WriteLine("再生対象外です。");
                         return;
