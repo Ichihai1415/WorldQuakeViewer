@@ -137,6 +137,7 @@ namespace WorldQuakeViewer
                 FormBorderStyle = FormBorderStyle.Sizable;
                 MaximizeBox = true;
             }
+            ClientSize = config_view.WindowCSize;
         }
 
         private void DataView_Load(object sender, EventArgs e)

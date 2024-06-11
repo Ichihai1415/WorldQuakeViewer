@@ -26,13 +26,20 @@
 
 # 更新履歴
 
+## v1.2.4
+2024/06/11
+
+- 設定`Data[].Sound.L〇_Enable`(〇:1~5)を削除しました。代わりに`L〇_Path`を空白(空文字)にすることで無効にできます。
+- 設定`Data[].Sound.L〇U_Path`(〇:1~5)を追加しました。更新時はこちらが再生されます(同じレベルで新規情報があればそれ優先)。
+- 設定`View[].WindowCSize`を追加しました。データ表示画面サイズを設定し保存できます。`LockDataViewSize`を`false`→画面でサイズ変更をしても再表示時に元に戻ります。
+
+<details><summary>過去のバージョン</summary><div>
+
 ## v1.2.3
 2024/04/05
 
 - 表示数を減らして保存するとエラーが出る問題を修正 
 - README.mdを削除、READMEとWikiのショートカットを追加
-
-<details><summary>過去のバージョン</summary><div>
 
 ## v1.2.2
 2024/03/29  Milestones: [**v1.2.2**](https://github.com/Ichihai1415/WorldQuakeViewer/milestone/2?closed=1)

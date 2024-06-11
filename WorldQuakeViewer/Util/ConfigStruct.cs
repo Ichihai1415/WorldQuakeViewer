@@ -249,54 +249,54 @@ namespace WorldQuakeViewer
             public class Sound_
             {
                 /// <summary>
-                /// M4.5未満を有効か
-                /// </summary>
-                public bool L1_Enable { get; set; } = false;
-
-                /// <summary>
-                /// M4.5以上M6.0未満を有効か
-                /// </summary>
-                public bool L2_Enable { get; set; } = true;
-
-                /// <summary>
-                /// M6.0以上M7.0未満を有効か
-                /// </summary>
-                public bool L3_Enable { get; set; } = true;
-
-                /// <summary>
-                /// M7.0以上M8.0未満を有効か
-                /// </summary>
-                public bool L4_Enable { get; set; } = true;
-
-                /// <summary>
-                /// M8.0以上を有効か
-                /// </summary>
-                public bool L5_Enable { get; set; } = true;
-
-                /// <summary>
-                /// M4.5未満の音声ファイルのパス
+                /// M4.5未満(初報)の音声ファイルのパス
                 /// </summary>
                 public string L1_Path { get; set; } = "Sound\\L1.wav";
 
                 /// <summary>
-                /// M4.5以上M6.0未満の音声ファイルのパス
+                /// M4.5以上M6.0未満(初報)の音声ファイルのパス
                 /// </summary>
                 public string L2_Path { get; set; } = "Sound\\L2.wav";
 
                 /// <summary>
-                /// M6.0以上M7.0未満の音声ファイルのパス
+                /// M6.0以上M7.0未満(初報)の音声ファイルのパス
                 /// </summary>
                 public string L3_Path { get; set; } = "Sound\\L3.wav";
 
                 /// <summary>
-                /// M7.0以上M8.0未満の音声ファイルのパス
+                /// M7.0以上M8.0未満(初報)の音声ファイルのパス
                 /// </summary>
                 public string L4_Path { get; set; } = "Sound\\L4.wav";
 
                 /// <summary>
-                /// M8.0以上の音声ファイルのパス
+                /// M8.0以上(初報)の音声ファイルのパス
                 /// </summary>
                 public string L5_Path { get; set; } = "Sound\\L5.wav";
+
+                /// <summary>
+                /// M4.5未満(更新)の音声ファイルのパス
+                /// </summary>
+                public string L1U_Path { get; set; } = "Sound\\L1.wav";
+
+                /// <summary>
+                /// M4.5以上M6.0未満(更新)の音声ファイルのパス
+                /// </summary>
+                public string L2U_Path { get; set; } = "Sound\\L2.wav";
+
+                /// <summary>
+                /// M6.0以上M7.0未満(更新)の音声ファイルのパス
+                /// </summary>
+                public string L3U_Path { get; set; } = "Sound\\L3.wav";
+
+                /// <summary>
+                /// M7.0以上M8.0未満(更新)の音声ファイルのパス
+                /// </summary>
+                public string L4U_Path { get; set; } = "Sound\\L4.wav";
+
+                /// <summary>
+                /// M8.0以上(更新)の音声ファイルのパス
+                /// </summary>
+                public string L5U_Path { get; set; } = "Sound\\L5.wav";
 
                 /// <summary>
                 /// Config_DisplayからConfigに変換します。
@@ -304,16 +304,16 @@ namespace WorldQuakeViewer
                 /// <param name="from">変換元</param>
                 public static explicit operator Sound_(Config_Display.Data_.Sound_ from) => new Sound_
                 {
-                    L1_Enable = from.L1_Enable,
-                    L2_Enable = from.L2_Enable,
-                    L3_Enable = from.L3_Enable,
-                    L4_Enable = from.L4_Enable,
-                    L5_Enable = from.L5_Enable,
                     L1_Path = from.L1_Path,
                     L2_Path = from.L2_Path,
                     L3_Path = from.L3_Path,
                     L4_Path = from.L4_Path,
-                    L5_Path = from.L5_Path
+                    L5_Path = from.L5_Path,
+                    L1U_Path = from.L1U_Path,
+                    L2U_Path = from.L2U_Path,
+                    L3U_Path = from.L3U_Path,
+                    L4U_Path = from.L4U_Path,
+                    L5U_Path = from.L5U_Path
                 };
             }
 
@@ -718,6 +718,11 @@ namespace WorldQuakeViewer
             public bool LockDataViewSize { get; set; } = true;
 
             /// <summary>
+            /// 画面サイズ(タイトルバー等除く部分)
+            /// </summary>
+            public Size WindowCSize { get; set; } = new Size(800, 500);
+
+            /// <summary>
             /// 描画色
             /// </summary>
             /// <remarks>マップはWorldQuakeViewer.MapGenerator</remarks>
@@ -819,6 +824,7 @@ namespace WorldQuakeViewer
                 MapRange = from.MapRange,
                 HypoShift = from.HypoShift,
                 LockDataViewSize = from.LockDataViewSize,
+                WindowCSize = from.WindowCSize,
                 Colors = (Colors_)from.Colors
             };
         }
@@ -1117,64 +1123,64 @@ namespace WorldQuakeViewer
             public class Sound_
             {
                 /// <summary>
-                /// M4.5未満を有効か
+                /// M4.5未満(初報)の音声ファイルのパス
                 /// </summary>
-                [Description("M4.5未満を有効か")]
-                public bool L1_Enable { get; set; }
-
-                /// <summary>
-                /// M4.5以上M6.0未満を有効か
-                /// </summary>
-                [Description("M4.5以上M6.0未満を有効か")]
-                public bool L2_Enable { get; set; }
-
-                /// <summary>
-                /// M6.0以上M7.0未満を有効か
-                /// </summary>
-                [Description("M6.0以上M7.0未満を有効か")]
-                public bool L3_Enable { get; set; }
-
-                /// <summary>
-                /// M7.0以上M8.0未満を有効か
-                /// </summary>
-                [Description("M7.0以上M8.0未満を有効か")]
-                public bool L4_Enable { get; set; }
-
-                /// <summary>
-                /// M8.0以上を有効か
-                /// </summary>
-                [Description("M8.0以上を有効か")]
-                public bool L5_Enable { get; set; }
-
-                /// <summary>
-                /// M4.5未満の音声ファイルのパス
-                /// </summary>
-                [Description("M4.5未満の音声ファイルのパス")]
+                [Description("M4.5未満(初報)の音声ファイルのパス")]
                 public string L1_Path { get; set; }
 
                 /// <summary>
-                /// M4.5以上M6.0未満の音声ファイルのパス
+                /// M4.5以上M6.0未満(初報)の音声ファイルのパス
                 /// </summary>
-                [Description("M4.5以上M6.0未満の音声ファイルのパス")]
+                [Description("M4.5以上M6.0未満(初報)の音声ファイルのパス")]
                 public string L2_Path { get; set; }
 
                 /// <summary>
-                /// M6.0以上M7.0未満の音声ファイルのパス
+                /// M6.0以上M7.0未満(初報)の音声ファイルのパス
                 /// </summary>
-                [Description("M6.0以上M7.0未満の音声ファイルのパス")]
+                [Description("M6.0以上M7.0未満(初報)の音声ファイルのパス")]
                 public string L3_Path { get; set; }
 
                 /// <summary>
-                /// M7.0以上M8.0未満の音声ファイルのパス
+                /// M7.0以上M8.0未満(初報)の音声ファイルのパス
                 /// </summary>
-                [Description("M7.0以上M8.0未満の音声ファイルのパス")]
+                [Description("M7.0以上M8.0未満(初報)の音声ファイルのパス")]
                 public string L4_Path { get; set; }
 
                 /// <summary>
-                /// M8.0以上の音声ファイルのパス
+                /// M8.0以上(初報)の音声ファイルのパス
                 /// </summary>
-                [Description("M8.0以上の音声ファイルのパス")]
+                [Description("M8.0以上(初報)の音声ファイルのパス")]
                 public string L5_Path { get; set; }
+
+                /// <summary>
+                /// M4.5未満(更新)の音声ファイルのパス
+                /// </summary>
+                [Description("M4.5未満(更新)の音声ファイルのパス")]
+                public string L1U_Path { get; set; } = "Sound\\L1.wav";
+
+                /// <summary>
+                /// M4.5以上M6.0未満(更新)の音声ファイルのパス
+                /// </summary>
+                [Description("M4.5以上M6.0未満(更新)の音声ファイルのパス")]
+                public string L2U_Path { get; set; } = "Sound\\L2.wav";
+
+                /// <summary>
+                /// M6.0以上M7.0未満(更新)の音声ファイルのパス
+                /// </summary>
+                [Description("M6.0以上M7.0未満(更新)の音声ファイルのパス")]
+                public string L3U_Path { get; set; } = "Sound\\L3.wav";
+
+                /// <summary>
+                /// M7.0以上M8.0未満(更新)の音声ファイルのパス
+                /// </summary>
+                [Description("M7.0以上M8.0未満(更新)の音声ファイルのパス")]
+                public string L4U_Path { get; set; } = "Sound\\L4.wav";
+
+                /// <summary>
+                /// M8.0以上(更新)の音声ファイルのパス
+                /// </summary>
+                [Description("M8.0以上(更新)の音声ファイルのパス")]
+                public string L5U_Path { get; set; } = "Sound\\L5.wav";
 
                 /// <summary>
                 /// ConfigからConfig_Displayに変換します。
@@ -1182,16 +1188,16 @@ namespace WorldQuakeViewer
                 /// <param name="from">変換元</param>
                 public static explicit operator Sound_(Config.Data_.Sound_ from) => new Sound_
                 {
-                    L1_Enable = from.L1_Enable,
-                    L2_Enable = from.L2_Enable,
-                    L3_Enable = from.L3_Enable,
-                    L4_Enable = from.L4_Enable,
-                    L5_Enable = from.L5_Enable,
                     L1_Path = from.L1_Path,
                     L2_Path = from.L2_Path,
                     L3_Path = from.L3_Path,
                     L4_Path = from.L4_Path,
-                    L5_Path = from.L5_Path
+                    L5_Path = from.L5_Path,
+                    L1U_Path = from.L1U_Path,
+                    L2U_Path = from.L2U_Path,
+                    L3U_Path = from.L3U_Path,
+                    L4U_Path = from.L4U_Path,
+                    L5U_Path = from.L5U_Path
                 };
             }
 
@@ -1659,6 +1665,12 @@ namespace WorldQuakeViewer
             public bool LockDataViewSize { get; set; }
 
             /// <summary>
+            /// 画面サイズ(タイトルバー等除く部分)
+            /// </summary>
+            [Description("画面サイズ(タイトルバー等除く部分)\n画像比率は8:5で引き延ばして表示されます。ウィンドウを閉じてもこの値は自動で変わらないのでここで調整してください。")]
+            public Size WindowCSize { get; set; } = new Size(800, 500);
+
+            /// <summary>
             /// 描画色
             /// </summary>
             /// <remarks>マップはWorldQuakeViewer.MapGenerator</remarks>
@@ -1774,6 +1786,7 @@ namespace WorldQuakeViewer
                 MapRange = from.MapRange,
                 HypoShift = from.HypoShift,
                 LockDataViewSize = from.LockDataViewSize,
+                WindowCSize = from.WindowCSize,
                 Colors = (Colors_)from.Colors
             };
         }
