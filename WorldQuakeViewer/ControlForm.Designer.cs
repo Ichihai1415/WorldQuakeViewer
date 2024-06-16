@@ -32,10 +32,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CtrlForm));
             this.TabCtrl_Main = new System.Windows.Forms.TabControl();
             this.Tab_Main_Info = new System.Windows.Forms.TabPage();
-            this.ProG_Info_OpenAll2 = new System.Windows.Forms.Button();
             this.InfoPageLink = new System.Windows.Forms.LinkLabel();
             this.InfoText0 = new System.Windows.Forms.Label();
             this.InfoText1 = new System.Windows.Forms.Label();
+            this.ProG_Info_OpenAll2 = new System.Windows.Forms.Button();
             this.Tab_Main_Log = new System.Windows.Forms.TabPage();
             this.LogTextBox = new System.Windows.Forms.TextBox();
             this.Tab_Main_Tool = new System.Windows.Forms.TabPage();
@@ -148,18 +148,6 @@
             this.Tab_Main_Info.Text = "情報";
             this.Tab_Main_Info.UseVisualStyleBackColor = true;
             // 
-            // ProG_Info_OpenAll2
-            // 
-            this.ProG_Info_OpenAll2.Enabled = false;
-            this.ProG_Info_OpenAll2.Font = new System.Drawing.Font("メイリオ", 9F);
-            this.ProG_Info_OpenAll2.Location = new System.Drawing.Point(437, 443);
-            this.ProG_Info_OpenAll2.Name = "ProG_Info_OpenAll2";
-            this.ProG_Info_OpenAll2.Size = new System.Drawing.Size(52, 23);
-            this.ProG_Info_OpenAll2.TabIndex = 10;
-            this.ProG_Info_OpenAll2.Text = "全表示";
-            this.ProG_Info_OpenAll2.UseVisualStyleBackColor = true;
-            this.ProG_Info_OpenAll2.Click += new System.EventHandler(this.ProG_Info_OpenAll2_Click);
-            // 
             // InfoPageLink
             // 
             this.InfoPageLink.AutoSize = true;
@@ -191,6 +179,18 @@
             this.InfoText1.Size = new System.Drawing.Size(490, 342);
             this.InfoText1.TabIndex = 0;
             this.InfoText1.Text = resources.GetString("InfoText1.Text");
+            // 
+            // ProG_Info_OpenAll2
+            // 
+            this.ProG_Info_OpenAll2.Enabled = false;
+            this.ProG_Info_OpenAll2.Font = new System.Drawing.Font("メイリオ", 9F);
+            this.ProG_Info_OpenAll2.Location = new System.Drawing.Point(437, 443);
+            this.ProG_Info_OpenAll2.Name = "ProG_Info_OpenAll2";
+            this.ProG_Info_OpenAll2.Size = new System.Drawing.Size(52, 23);
+            this.ProG_Info_OpenAll2.TabIndex = 10;
+            this.ProG_Info_OpenAll2.Text = "全表示";
+            this.ProG_Info_OpenAll2.UseVisualStyleBackColor = true;
+            this.ProG_Info_OpenAll2.Click += new System.EventHandler(this.ProG_Info_OpenAll2_Click);
             // 
             // Tab_Main_Log
             // 
@@ -548,9 +548,9 @@
             this.Tab_Main_Past.Controls.Add(this.ProG_Past);
             this.Tab_Main_Past.Controls.Add(this.Past_Text1);
             this.Tab_Main_Past.Controls.Add(this.Past_Open);
-            this.Tab_Main_Past.Location = new System.Drawing.Point(4, 22);
+            this.Tab_Main_Past.Location = new System.Drawing.Point(4, 27);
             this.Tab_Main_Past.Name = "Tab_Main_Past";
-            this.Tab_Main_Past.Size = new System.Drawing.Size(492, 474);
+            this.Tab_Main_Past.Size = new System.Drawing.Size(492, 469);
             this.Tab_Main_Past.TabIndex = 4;
             this.Tab_Main_Past.Text = "過去情報表示";
             this.Tab_Main_Past.UseVisualStyleBackColor = true;
@@ -604,7 +604,7 @@
             // ProG_Past
             // 
             this.ProG_Past.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.ProG_Past.Location = new System.Drawing.Point(0, 104);
+            this.ProG_Past.Location = new System.Drawing.Point(0, 99);
             this.ProG_Past.Name = "ProG_Past";
             this.ProG_Past.PropertySort = System.Windows.Forms.PropertySort.Categorized;
             this.ProG_Past.Size = new System.Drawing.Size(492, 370);
@@ -637,9 +637,9 @@
             this.Tab_Main_Setting.Controls.Add(this.ConfigWebLink);
             this.Tab_Main_Setting.Controls.Add(this.ConfigInfoText);
             this.Tab_Main_Setting.Controls.Add(this.TabCtrl_Setting);
-            this.Tab_Main_Setting.Location = new System.Drawing.Point(4, 22);
+            this.Tab_Main_Setting.Location = new System.Drawing.Point(4, 27);
             this.Tab_Main_Setting.Name = "Tab_Main_Setting";
-            this.Tab_Main_Setting.Size = new System.Drawing.Size(492, 474);
+            this.Tab_Main_Setting.Size = new System.Drawing.Size(492, 469);
             this.Tab_Main_Setting.TabIndex = 2;
             this.Tab_Main_Setting.Text = "設定";
             this.Tab_Main_Setting.UseVisualStyleBackColor = true;

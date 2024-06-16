@@ -16,6 +16,10 @@ namespace WorldQuakeViewer
     public partial class DataView : Form
     {
         /// <summary>
+        /// 表示するデータ(外部から確認用)
+        /// </summary>
+        public readonly ViewData viewData;
+        /// <summary>
         /// 表示するもののタイプ(viewData % 10)
         /// </summary>
         readonly int viewType;
@@ -34,7 +38,7 @@ namespace WorldQuakeViewer
         /// <summary>
         /// 表示設定
         /// </summary>
-        private static Config.View_ config_view;
+        static Config.View_ config_view;
         /// <summary>
         /// 表示中か
         /// </summary>
@@ -55,6 +59,7 @@ namespace WorldQuakeViewer
         {
             if (viewData == ViewData.Null)
                 throw new ArgumentException($"ViewData({viewData})が不正です。", nameof(viewData));
+            this.viewData = viewData;
 
             InitializeComponent();
 
@@ -65,12 +70,9 @@ namespace WorldQuakeViewer
             {
                 case 1:
                 case 2:
-                case 4:
-                    ClientSize = new Size(400, 500);
-                    break;
                 case 3:
-                    ClientSize = new Size(800, 500);
-                    break;
+                case 4:
+                    break;//サイズ変更はConfigReloadに
                 default:
                     throw new Exception($"DataViewの初期化に失敗しました。{viewType}は種類として不正です。");
             }
@@ -137,27 +139,68 @@ namespace WorldQuakeViewer
                 FormBorderStyle = FormBorderStyle.Sizable;
                 MaximizeBox = true;
             }
-            ClientSize = config_view.WindowCSize;
+
+            if (config_view.WCS_AutoCorrect)
+            {
+                switch (viewType)
+                {
+                    case 1://基本:ClientSize = new Size(400, 500);
+                    case 2:
+                    case 4:
+                        if (config_view.WindowCSize.Width > config_view.WindowCSize.Height)
+                        {
+                            if (config_view.WindowCSize.Width <= 400)
+                                ClientSize = new Size(config_view.WindowCSize.Width, config_view.WindowCSize.Height * 2);
+                            else
+                                ClientSize = new Size(config_view.WindowCSize.Width / 2, config_view.WindowCSize.Height);
+                            ExeLog($"[ConfigReload][{i}]サイズを自動で修正しました。({config_view.WindowCSize.Width},{config_view.WindowCSize.Height}->{config_view.WindowCSize.Width / 2},{config_view.WindowCSize.Height})");
+                        }
+                        else
+                            ClientSize = config_view.WindowCSize;
+                        break;
+                    case 3://基本:ClientSize = new Size(800, 500);
+                        if (config_view.WindowCSize.Width < config_view.WindowCSize.Height)
+                        {
+                            if (config_view.WindowCSize.Height <= 500)
+                                ClientSize = new Size(config_view.WindowCSize.Width * 2, config_view.WindowCSize.Height);
+                            else
+                                ClientSize = new Size(config_view.WindowCSize.Width, config_view.WindowCSize.Height / 2);//400x500だと400x250と小さくなる　2倍して一定以上行かないなら2倍するようにしてもいいのでは
+                            ExeLog($"[ConfigReload][{i}]サイズを自動で修正しました。({config_view.WindowCSize.Width},{config_view.WindowCSize.Height}->{config_view.WindowCSize.Width},{config_view.WindowCSize.Height / 2})");
+                        }
+                        else
+                            ClientSize = config_view.WindowCSize;
+                        break;
+                    default:
+                        throw new Exception($"DataViewの初期化に失敗しました。{viewType}は種類として不正です。");
+                }
+            }
+            else
+                ClientSize = config_view.WindowCSize;
+            if (i == 2)
+                Console.WriteLine($"////[2]ConfigLoaded title:{config_view.LatestTitleText}");
         }
 
         private void DataView_Load(object sender, EventArgs e)
         {
             showing = true;
-            Draw();
+            Draw(true);
         }
 
         /// <summary>
         /// 描画して表示します。
         /// </summary>
-        public void Draw()
+        public void Draw(bool configReload = false)
         {
+                Console.WriteLine($"////[{i}]Draw title:{config_view.LatestTitleText}");
+
             if (config.Views.Length <= i)//設定2個(表示1)のときindex2番目以降呼び出し禁止
             {
                 ExeLog($"[Draw][{i}]描画を呼び出されましたが、設定されていません。");
                 return;
             }
             ExeLog($"[Draw][{i}]描画中...");
-            ConfigReload();
+            if (configReload || config_view == null)
+                ConfigReload();
             Bitmap img;
             List<Data> data = data_.Where(n => n.Value.Mag >= config_view.LowerMagLimit).Select(n => n.Value).ToList();
             if (data.Count == 0)
@@ -257,6 +300,7 @@ namespace WorldQuakeViewer
             g.DrawRectangle(new Pen(config_view.Colors.Border_Color), 0, 0, 800, 200);
             g.DrawRectangle(new Pen(config_view.Colors.Border_Color), 0, 200, 800, 800);
             g.Dispose();
+            hypoImg.Dispose();
             return latestImg;
         }
 
@@ -324,7 +368,10 @@ namespace WorldQuakeViewer
                 g_.DrawRectangle(new Pen(config_view.Colors.Border_Color), 0, 0, 800, 200);
 
                 g_.Dispose();
-                ClientSize = new Size(400, 100);
+                if (config_view.WCS_AutoCorrect)
+                    ClientSize = new Size(400, 100);
+                else
+                    ClientSize = config_view.WindowCSize;
                 return histImg_;
             }
             int[] latests;
@@ -338,7 +385,11 @@ namespace WorldQuakeViewer
             }
             catch (FormatException ex)
             {
-                ExeLog($"[Draw_AllLatestMulti]エラー:{ex.Message}(設定を確認してください。)", true);
+                var c = config;
+                var u = i;
+                var cc = config_view;
+                throw;
+                ExeLog($"[Draw_AllLatestMulti]エラー:{ex.Message}(設定を確認してください。)", true);//TODO:なんか初回取得以降[2]なのに[6]の設定が使われてる
                 LogSave(ex);
                 return Draw_AllLatestMulti(null);
             }
@@ -374,7 +425,10 @@ namespace WorldQuakeViewer
                 g.DrawRectangle(new Pen(config_view.Colors.Border_Color), 0, 200 * j, 800, 200);
             }
             g.Dispose();
-            ClientSize = new Size(400, h / 2);
+            if (config_view.WCS_AutoCorrect)
+                ClientSize = new Size(400, h / 2);
+            else
+                ClientSize = config_view.WindowCSize;
             return histImg;
         }
 

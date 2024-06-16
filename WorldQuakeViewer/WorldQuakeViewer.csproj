@@ -91,6 +91,9 @@
   <PropertyGroup>
     <ApplicationIcon>Resources\WQV.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>WorldQuakeViewer.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="LL2FERC, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\LL2FERC.1.3.0\lib\netstandard2.0\LL2FERC.dll</HintPath>

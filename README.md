@@ -27,7 +27,7 @@
 # 更新履歴
 
 ## v1.2.4
-2024/06/11
+2024/06/11  Milestones: [**v1.2.4**](https://github.com/Ichihai1415/WorldQuakeViewer/milestone/3?closed=1)
 
 - 設定`Data[].Sound.L〇_Enable`(〇:1~5)を削除しました。代わりに`L〇_Path`を空白(空文字)にすることで無効にできます。
 - 設定`Data[].Sound.L〇U_Path`(〇:1~5)を追加しました。更新時はこちらが再生されます(同じレベルで新規情報があればそれ優先)。

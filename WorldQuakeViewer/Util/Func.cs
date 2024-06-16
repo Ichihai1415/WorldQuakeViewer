@@ -522,10 +522,10 @@ namespace WorldQuakeViewer
         /// <summary>
         /// データ表示Formをすべて再描画します。
         /// </summary>
-        public static void ReDraw()
+        public static void ReDraw(bool configReload = false)
         {
             for (int i = 0; i < dataViews.Length - 1; i++)
-                dataViews[i]?.Draw();
+                dataViews[i]?.Draw(configReload);
         }
 
 

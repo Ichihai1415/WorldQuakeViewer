@@ -723,6 +723,11 @@ namespace WorldQuakeViewer
             public Size WindowCSize { get; set; } = new Size(800, 500);
 
             /// <summary>
+            /// 画面サイズの自動修正(比率が間違っている可能性があるものをどちらかを基準で)
+            /// </summary>
+            public bool WCS_AutoCorrect { get; set; } = true;
+
+            /// <summary>
             /// 描画色
             /// </summary>
             /// <remarks>マップはWorldQuakeViewer.MapGenerator</remarks>
@@ -825,6 +830,7 @@ namespace WorldQuakeViewer
                 HypoShift = from.HypoShift,
                 LockDataViewSize = from.LockDataViewSize,
                 WindowCSize = from.WindowCSize,
+                WCS_AutoCorrect = from.WCS_AutoCorrect,
                 Colors = (Colors_)from.Colors
             };
         }
@@ -1667,8 +1673,14 @@ namespace WorldQuakeViewer
             /// <summary>
             /// 画面サイズ(タイトルバー等除く部分)
             /// </summary>
-            [Description("画面サイズ(タイトルバー等除く部分)\n画像比率は8:5で引き延ばして表示されます。ウィンドウを閉じてもこの値は自動で変わらないのでここで調整してください。")]
+            [Description("画面サイズ(タイトルバー等除く部分)\n画像比率は8:5で引き延ばして表示されます。\nウィンドウを閉じてもこの値は自動で変わらないのでここで調整してください。\n最初は800x500になっているので_LatestHistoryでなければ400x500などに")]
             public Size WindowCSize { get; set; } = new Size(800, 500);
+
+            /// <summary>
+            /// 画面サイズの自動修正(比率が間違っている可能性があるものをどちらかを基準で)
+            /// </summary>
+            [Description("画面サイズの自動修正\n比率が間違っている可能性があるものをどちらかを基準で\n注意:All_LatestMultiのみ有効の場合既定サイズとなります")]
+            public bool WCS_AutoCorrect { get; set; } = true;
 
             /// <summary>
             /// 描画色
@@ -1787,6 +1799,7 @@ namespace WorldQuakeViewer
                 HypoShift = from.HypoShift,
                 LockDataViewSize = from.LockDataViewSize,
                 WindowCSize = from.WindowCSize,
+                WCS_AutoCorrect = from.WCS_AutoCorrect,
                 Colors = (Colors_)from.Colors
             };
         }

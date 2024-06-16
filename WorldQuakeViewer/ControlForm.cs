@@ -198,15 +198,26 @@ namespace WorldQuakeViewer
                         ExeLog($"[CtrlForm_Load]更新を検知({config.Version}->{version})");
                         int[] nowVer = version.Split('.').Select(n => int.Parse(n.Replace("α", "-"))).ToArray();
                         int[] setVer = config.Version.Split('.').Select(n => int.Parse(n.Replace("α", "-"))).ToArray();
-                        if (setVer[1] <= 2 && setVer[2] <= 3)//設定を追加したとき変更//v1.x.x
+                        bool updtConfig = false;
+                        if (setVer[1] <= 2)//設定を追加したとき以下に追加//v1.2.x
                         {
-                            ConfigUpdate();
-                            string showText = "設定を更新しました。\n" +
-                                "・処理.Sound : L1_Enable等を削除しました。再生を無効にする場合L1_Path等を空白にしておいてください。\n" +
-                                "・処理.Sound : L1U_Enable等を追加しました。更新時はこちらが再生されます。\n" +
-                                "・表示 : WindowCSizeを追加しました。データ表示画面のサイズ変更ができます。";
-                            _ = MessageBox.Show(topMost, showText, "お知らせ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            if (setVer[2] <= 0)
+                                updtConfig = true;
+                            if (setVer[2] <= 3)
+                            {
+                                updtConfig = true;
+                                string showText = "設定を更新しました。\n" +
+                                    "・処理.Sound : L1_Enable等を削除しました。再生を無効にする場合L1_Path等を空白にしておいてください。\n" +
+                                    "・処理.Sound : L1U_Enable等を追加しました。更新時はこちらが再生されます。\n" +
+                                    "・表示 : WindowCSizeを追加しました。データ表示画面のサイズ変更ができます。";
+                                _ = MessageBox.Show(topMost, showText, "お知らせ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }
+
+
+
                         }
+                        if (updtConfig)
+                            ConfigUpdate();
                     }
                 }
                 catch (Exception ex)
@@ -349,9 +360,11 @@ namespace WorldQuakeViewer
                 await Task.Delay(10);
             GetTimer.Interval = 1000 - DateTime.Now.Millisecond;
             Console.WriteLine(DateTime.Now.ToString("ss.ffff"));
+            int sec = DateTime.Now.Second;
+            if (sec == 0)
+                GC.Collect();
             try
             {
-                int sec = DateTime.Now.Second;
                 for (int i = 0; i < DataAuthorCount; i++)
                     if (config.Datas[i].GetTimes[0] == sec)
                         await Get((DataAuthor)i);
@@ -380,6 +393,7 @@ namespace WorldQuakeViewer
 
         private void Config_Save_Click(object sender, EventArgs e)
         {
+            List<int> ReOpenList = new List<int>();
             for (int i = 1; i < config_display.Views.Count(); i++)
             {
                 if (config_display.Views[i].Data == ViewData.Null)
@@ -387,12 +401,29 @@ namespace WorldQuakeViewer
                     MessageBox.Show($"表示[{i}]のDataが指定されていません。", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
+                if (dataViews[i] != null)
+                    if (config_display.Views[i].Data != dataViews[i].viewData)
+                        ReOpenList.Add(i);
             }
             config = (Config)config_display;
             for (int i = config.Views.Length; i < dataViews.Length - 1; i++)//設定2個(表示1個)の時(index2の)3個目から
                 dataViews[i] = null;
             File.WriteAllText("Setting\\config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
-            ReDraw();
+            foreach (int i in ReOpenList)
+            {
+                ExeLog($"[Config_Save_Click]表示[{i}]のDataが変更されました。再表示します。");
+                if (dataViews[i].showing)
+                {
+                    dataViews[i].askClose = false;
+                    dataViews[i].Close();
+                    dataViews[i] = null;
+                }
+                else
+                    dataViews[i] = null;
+                Open(i);
+            }
+
+            ReDraw(true);
             ExeLog("[Config_Save_Click]設定を保存しました。");
             UpdtProEnableCtrl();
         }
@@ -433,6 +464,7 @@ namespace WorldQuakeViewer
                 {
                     dataViews[c - 1].askClose = false;
                     dataViews[c - 1].Close();
+                    dataViews[c - 1] = null;
                 }
             List<Config_Display.View_> tmp = config_display.Views.ToList();
             tmp.RemoveAt(c - 1);
@@ -495,6 +527,7 @@ namespace WorldQuakeViewer
         /// <summary>
         /// データ表示Formを開きます。
         /// </summary>
+        /// <remarks>すでに表示中で再構成する場合先にnullに</remarks>
         /// <param name="num">表示インデックス</param>
         private void Open(int num)
         {
